@@ -369,15 +369,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         html += `</tbody></table></div>`;
       }
-      // WhatsApp share for this group
-      const shareText = rows.map((r, i) => `${i+1}. ${r.par} — ${r.pts||0}pts`).join('\n');
-      const waText = encodeURIComponent(`🏆 ${g.id} · Play Padel 2026\n${shareText}\n\nhttps://playpadel.co.mz/classificacoes.html`);
-      html += `<div style="padding:.4rem .75rem .6rem;text-align:right">
-        <a href="https://wa.me/?text=${waText}" target="_blank" rel="noopener"
-           style="display:inline-flex;align-items:center;gap:.35rem;font-size:.72rem;color:#25D366;text-decoration:none;padding:.3rem .6rem;border-radius:6px;background:rgba(37,211,102,.08)">
-          <i class="ph ph-whatsapp-logo"></i> Partilhar grupo
-        </a>
-      </div>`;
       html += `</div>`;
     });
     html += '</div>';

@@ -199,7 +199,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const opp    = isEq1 ? nextJogo.eq2 : nextJogo.eq1;
       const jogoDate = new Date(nextJogo.data + 'T' + nextJogo.hora);
       const isToday  = nextJogo.data === now.toISOString().slice(0,10);
-      const waLink   = `https://wa.me/?text=${encodeURIComponent(`🎾 Próximo jogo de ${p.nome}:\n📅 ${ppFormatDate(nextJogo.data)} às ${nextJogo.hora}\n🏟 ${nextJogo.campo} · ${nextJogo.grupo}\nvs ${opp}\n\nVeja em: ${location.href}?jogador=${encodeURIComponent(p.nome)}`)}`;
+
       nextMatchHtml = `
         <div style="margin:0 1rem .75rem;padding:.6rem .85rem;border-radius:8px;background:${isToday ? 'rgba(0,195,123,.1)' : 'var(--preto-card)'};border:1px solid ${isToday ? 'rgba(0,195,123,.35)' : 'var(--preto-borda)'}">
           <div style="display:flex;align-items:center;justify-content:space-between;gap:.5rem;flex-wrap:wrap">
@@ -210,10 +210,7 @@ document.addEventListener('DOMContentLoaded', () => {
               <div style="font-size:.82rem;font-weight:600;color:var(--branco)">${ppFormatDate(nextJogo.data)} · ${nextJogo.hora} · ${nextJogo.campo}</div>
               <div style="font-size:.75rem;color:var(--cinza-texto)">vs ${opp}</div>
             </div>
-            <a href="${waLink}" target="_blank" rel="noopener"
-               style="display:flex;align-items:center;gap:.35rem;padding:.35rem .75rem;border-radius:7px;background:#25D366;color:#fff;text-decoration:none;font-size:.72rem;font-weight:700;flex-shrink:0">
-              <i class="ph ph-whatsapp-logo"></i> Partilhar
-            </a>
+
           </div>
         </div>`;
     }
@@ -248,8 +245,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const winRate = played ? Math.round(wins / played * 100) : 0;
 
     const shareLink = `${location.origin}${location.pathname}?jogador=${encodeURIComponent(p.nome)}`;
-    const waShareLink = `https://wa.me/?text=${encodeURIComponent(`🎾 Estatísticas de ${p.nome} no Play Padel 2026:\n✅ ${wins}V · ❌ ${losses}D · ${winRate}% vitórias\n\nVeja em: ${shareLink}`)}`;
-
     return `
     <div class="player-card">
       <div class="player-card-top">
@@ -269,12 +264,7 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>
       </div>
       ${nextMatchHtml}
-      <div style="display:flex;justify-content:flex-end;padding:.3rem 1rem .5rem">
-        <a href="${waShareLink}" target="_blank" rel="noopener"
-           style="display:flex;align-items:center;gap:.35rem;font-size:.72rem;color:var(--cinza-texto);text-decoration:none">
-          <i class="ph ph-whatsapp-logo" style="color:#25D366"></i> Partilhar stats
-        </a>
-      </div>
+
       <div class="player-matches">${matchesHtml}</div>
     </div>`;
   }

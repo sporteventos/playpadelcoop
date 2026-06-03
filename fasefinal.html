@@ -275,20 +275,6 @@ document.addEventListener('DOMContentLoaded', () => {
           </div>`).join('')}
       </div>`;
 
-    // WhatsApp share for this bracket
-    const winner = catData?.winner;
-    const shareMsg = winner
-      ? `🏆 ${catId} Play Padel 2026 — Campeões: ${winner}\nVeja o bracket completo em: ${location.href}`
-      : `🎾 Fase Final ${catId} · Play Padel 2026\nVeja o bracket em: ${location.href}`;
-    const waBtn = content.querySelector('.wa-bracket-share');
-    const existing = content.querySelector('.wa-bracket-share');
-    const waEl = document.createElement('div');
-    waEl.style.cssText = 'text-align:right;padding:.5rem 0 .25rem';
-    waEl.innerHTML = `<a href="https://wa.me/?text=${encodeURIComponent(shareMsg)}" target="_blank" rel="noopener"
-      style="display:inline-flex;align-items:center;gap:.35rem;font-size:.78rem;color:#25D366;text-decoration:none;padding:.4rem .75rem;border-radius:7px;background:rgba(37,211,102,.08)">
-      <i class="ph ph-whatsapp-logo"></i> Partilhar bracket
-    </a>`;
-    content.insertBefore(waEl, content.firstChild);
   }
 
   function render() {
