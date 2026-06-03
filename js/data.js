@@ -196,7 +196,9 @@ function ppFormatDate(d) {
 (function () {
   if (typeof window === 'undefined') return;
   if (window.location.protocol === 'file:') return; // skip when opened locally
-  if (window.location.pathname.includes('admin')) return; // admin is the source of truth — never overwrite from remote
+  // On admin: only fetch remote data if localStorage is empty (fresh browser / new device).
+  // If the admin already has local data, skip — prevents session-expiry reload from overwriting unsaved work.
+  if (window.location.pathname.includes('admin') && localStorage.getItem('pp_jogos') !== null) return;
 
   window.ppDataReady = fetch('data.json?_=' + Date.now())
     .then(function (r) { return r.ok ? r.json() : Promise.reject('404'); })

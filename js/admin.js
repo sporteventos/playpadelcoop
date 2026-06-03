@@ -1052,7 +1052,10 @@ function salvarJogo() {
 // ============================================
 //  INIT
 // ============================================
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+  // On a fresh browser (empty localStorage) ppDataReady bootstraps data from GitHub.
+  // Await it so initAdmin always starts with the most up-to-date data.
+  await (window.ppDataReady || Promise.resolve(false));
 
   // Login
   const loginForm = document.getElementById('loginForm');
