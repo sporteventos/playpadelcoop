@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Backoffice · Play Padel Torneio</title>
+  <link rel="stylesheet" href="css/admin.css"/>
+  <script src="https://unpkg.com/@phosphor-icons/web@2.1.1/src/index.js" defer></script>
+</head>
+<body>
+
+<!-- ==========================================
+     LOGIN OVERLAY
+     ========================================== -->
+<div id="loginOverlay">
+  <div class="login-box">
+    <div class="login-logo">
+      <img src="playpadellogo.jpg" alt="Play Padel" style="height:52px;width:52px;border-radius:10px;object-fit:cover"/>
+      <div>
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:1.3rem;font-weight:800;text-transform:uppercase;letter-spacing:0.05em">Play Padel</div>
+        <div style="font-size:0.62rem;color:var(--verde);letter-spacing:0.12em;text-transform:uppercase">Backoffice · Admin</div>
+      </div>
+    </div>
+
+    <h1 class="login-heading">Área Reservada</h1>
+    <p class="login-sub">Introduza as suas credenciais de administrador para continuar.</p>
+
+    <div class="login-error" id="loginError">
+      <i class="ph ph-warning-circle"></i> Utilizador ou palavra-passe incorrectos.
+    </div>
+
+    <form id="loginForm" novalidate>
+      <div class="form-group">
+        <label class="form-label" for="loginUser">Utilizador</label>
+        <input class="form-input" type="text" id="loginUser" placeholder="admin" autocomplete="username" required/>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="loginPass">Palavra-passe</label>
+        <input class="form-input" type="password" id="loginPass" placeholder="••••••••" autocomplete="current-password" required/>
+      </div>
+      <button class="btn-login" type="submit">
+        <i class="ph ph-sign-in"></i>&nbsp; Entrar
+      </button>
+    </form>
+
+    <p class="login-hint">Introduza as credenciais fornecidas pelo administrador.</p>
+  </div>
+</div>
+
+
+<!-- ==========================================
+     ADMIN SHELL
+     ========================================== -->
+<div id="adminShell">
+
+  <!-- ---- SIDEBAR ---- -->
+  <aside class="sidebar" id="sidebar" role="navigation" aria-label="Menu do backoffice">
+    <div class="sidebar-header">
+      <a class="sidebar-logo" href="index.html" target="_blank" title="Ver site público">
+        <img src="playpadellogo.jpg" alt="Play Padel" style="height:34px;width:34px;border-radius:7px;object-fit:cover;flex-shrink:0"/>
+        <div class="sidebar-logo-text">
+          <span class="sidebar-logo-name">Play Padel</span>
+          <span class="sidebar-logo-badge">⚙ Backoffice</span>
+        </div>
+      </a>
+    </div>
+
+    <nav class="sidebar-nav">
+
+      <div class="sidebar-group">
+        <div class="sidebar-group-label">Geral</div>
+        <button class="sidebar-link" data-view="dashboard">
+          <i class="ph ph-squares-four sl-icon"></i>
+          Dashboard
+        </button>
+      </div>
+
+      <div class="sidebar-group">
+        <div class="sidebar-group-label">Torneio</div>
+        <button class="sidebar-link" data-view="campos">
+          <i class="ph ph-grid-four sl-icon"></i>
+          Campos
+        </button>
+        <button class="sidebar-link" data-view="categorias">
+          <i class="ph ph-tag sl-icon"></i>
+          Categorias &amp; Grupos
+        </button>
+        <button class="sidebar-link" data-view="jogadores">
+          <i class="ph ph-users sl-icon"></i>
+          Jogadores
+        </button>
+      </div>
+
+      <div class="sidebar-group">
+        <div class="sidebar-group-label">Competição</div>
+        <button class="sidebar-link" data-view="jogos">
+          <i class="ph ph-calendar sl-icon"></i>
+          Calendário de Jogos
+        </button>
+        <button class="sidebar-link" data-view="resultados">
+          <i class="ph ph-trophy sl-icon"></i>
+          Resultados
+          <span class="sl-badge" id="badgePendentes">—</span>
+        </button>
+        <button class="sidebar-link" data-view="fasefinal">
+          <i class="ph ph-brackets-round sl-icon"></i>
+          Fase Final
+        </button>
+      </div>
+
+      <div class="sidebar-group" id="sidebarSistema" style="display:none">
+        <div class="sidebar-group-label">Sistema</div>
+        <button class="sidebar-link" data-view="utilizadores">
+          <i class="ph ph-users-three sl-icon"></i>
+          Utilizadores
+        </button>
+        <button class="sidebar-link" data-view="logs">
+          <i class="ph ph-clipboard-text sl-icon"></i>
+          Logs de Auditoria
+        </button>
+        <button class="sidebar-link" data-view="sessoes">
+          <i class="ph ph-monitor sl-icon"></i>
+          Sessões Activas
+        </button>
+      </div>
+
+      <div class="sidebar-group">
+        <div class="sidebar-group-label">Relatórios</div>
+        <button class="sidebar-link" data-view="classificacoes">
+          <i class="ph ph-chart-bar sl-icon"></i>
+          Classificações
+        </button>
+        <button class="sidebar-link" data-view="estatisticas">
+          <i class="ph ph-chart-pie sl-icon"></i>
+          Estatísticas
+        </button>
+        <button class="sidebar-link" data-view="importar">
+          <i class="ph ph-upload-simple sl-icon"></i>
+          Importar Resultados
+        </button>
+        <button class="sidebar-link" data-view="horario">
+          <i class="ph ph-clock-countdown sl-icon"></i>
+          Construtor de Horário
+        </button>
+      </div>
+
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="sidebar-user-avatar" id="sidebarAvatar">A</div>
+        <div>
+          <div class="sidebar-user-name" id="sidebarName">Administrador</div>
+          <div class="sidebar-user-role" id="sidebarRole">Admin · Play Padel</div>
+        </div>
+        <button class="sidebar-logout" id="logoutBtn" title="Terminar sessão" aria-label="Terminar sessão">
+          <i class="ph ph-sign-out"></i>
+        </button>
+      </div>
+    </div>
+  </aside>
+
+
+  <!-- ---- MAIN ---- -->
+  <div class="admin-main">
+
+    <!-- Top header -->
+    <header class="admin-header">
+      <div class="admin-header-left">
+        <button class="sidebar-toggle" id="sidebarToggle" aria-label="Abrir menu lateral">
+          <i class="ph ph-list"></i>
+        </button>
+        <nav class="breadcrumb" aria-label="Localização actual">
+          <span>Backoffice</span>
+          <span class="breadcrumb-sep">/</span>
+          <strong id="breadcrumbTitle">Dashboard</strong>
+          <span class="breadcrumb-sep" style="margin-left:0.5rem;font-size:0.7rem;color:var(--verde)" id="breadcrumbTag">Visão Geral</span>
+        </nav>
+      </div>
+      <div class="admin-header-right">
+        <div class="header-search-wrap">
+          <i class="ph ph-magnifying-glass"></i>
+          <input class="header-search" id="headerSearch" type="search" placeholder="Pesquisar jogador…"/>
+        </div>
+        <a href="index.html" target="_blank" class="header-btn" title="Ver site público" aria-label="Ver site público">
+          <i class="ph ph-arrow-square-out"></i>
+        </a>
+      </div>
+    </header>
+
+    <!-- Alert Banner -->
+    <div id="alertBanner" style="display:none;background:rgba(245,197,24,.12);border-bottom:1px solid rgba(245,197,24,.3);padding:.55rem 1.5rem;display:none;align-items:center;gap:.75rem;font-size:.82rem">
+      <i class="ph ph-warning" style="color:var(--amarelo);font-size:1rem"></i>
+      <span id="alertBannerMsg" style="color:var(--amarelo);flex:1"></span>
+      <button onclick="navigate('resultados')" style="background:rgba(245,197,24,.2);border:1px solid rgba(245,197,24,.4);color:var(--amarelo);border-radius:6px;padding:.25rem .7rem;font-size:.75rem;cursor:pointer">Lançar resultados</button>
+      <button onclick="document.getElementById('alertBanner').style.display='none'" style="background:none;border:none;color:var(--cinza-texto);cursor:pointer;padding:.2rem"><i class="ph ph-x"></i></button>
+    </div>
+
+    <!-- Content -->
+    <main class="admin-content" id="adminContent">
+
+
+      <!-- ==========================================
+           VIEW: DASHBOARD
+           ========================================== -->
+      <section class="view" id="view-dashboard">
+        <div class="page-header">
+          <div class="page-title-wrap">
+            <p class="page-tag">Visão Geral</p>
+            <h1 class="page-title">Dashboard</h1>
+            <p class="page-desc">Estado actual do Torneio 2.º Aniversário Play Padel</p>
+          </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-grid">
+          <div class="stat-card stat-card--azul">
+            <div class="stat-card-icon">📅</div>
+            <div class="stat-card-value" id="dashTotalJogos">—</div>
+            <div class="stat-card-label">Total de Jogos</div>
+          </div>
+          <div class="stat-card stat-card--verde">
+            <div class="stat-card-icon">✅</div>
+            <div class="stat-card-value" id="dashComResultado">—</div>
+            <div class="stat-card-label">Com Resultado</div>
+          </div>
+          <div class="stat-card stat-card--amarelo">
+            <div class="stat-card-icon">⏳</div>
+            <div class="stat-card-value" id="dashPendentes">—</div>
+            <div class="stat-card-label">Pendentes</div>
+          </div>
+          <div class="stat-card stat-card--vermelho">
+            <div class="stat-card-icon">📊</div>
+            <div class="stat-card-value" id="dashProgresso">—</div>
+            <div class="stat-card-label">Progresso</div>
+          </div>
+        </div>
+
+        <!-- Progress per category -->
+        <div class="panel" style="margin-bottom:1.5rem">
+          <div class="panel-header">
+            <span class="panel-title">Progresso por Categoria</span>
+            <a href="scoreboard.html" target="_blank" style="font-size:.78rem;color:var(--verde);text-decoration:none"><i class="ph ph-monitor-play"></i> Scoreboard →</a>
+          </div>
+          <div id="dashCatProgress" style="padding:.75rem 1rem"></div>
+        </div>
+
+        <!-- Activity feed + next games -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.25rem">
+          <div class="panel">
+            <div class="panel-header">
+              <span class="panel-title">Próximos jogos sem resultado</span>
+              <button class="panel-action" onclick="navigate('resultados')">Ver todos →</button>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Data</th><th>Hora</th><th>Campo</th><th>Grupo</th>
+                    <th>Equipa 1</th><th></th><th>Equipa 2</th><th>Estado</th>
+                  </tr>
+                </thead>
+                <tbody id="dashProximosBody"></tbody>
+              </table>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="panel-header">
+              <span class="panel-title">Actividade Recente</span>
+              <button class="panel-action" onclick="navigate('logs')">Ver logs →</button>
+            </div>
+            <div id="dashActivityFeed" style="padding:.5rem 0"></div>
+          </div>
+        </div>
+
+      </section>
+
+
+      <!-- ==========================================
+           VIEW: CAMPOS
+           ========================================== -->
+      <section class="view" id="view-campos">
+        <div class="page-header">
+          <div class="page-title-wrap">
+            <p class="page-tag">Infraestrutura</p>
+            <h1 class="page-title">Campos</h1>
+            <p class="page-desc">Gerir os campos de padel disponíveis no clube</p>
+          </div>
+          <div class="page-actions">
+            <button class="btn btn-primary" onclick="APP.editingId=null; document.getElementById('campoNome').value=''; document.getElementById('campoIcone').value='🎾'; document.getElementById('modalCampoTitle').textContent='Novo Campo'; openModal('modalCampo')">
+              <i class="ph ph-plus"></i> Novo Campo
+            </button>
+          </div>
+        </div>
+        <div class="campos-grid" id="camposGrid"></div>
+      </section>
+
+
+      <!-- ==========================================
+           VIEW: CATEGORIAS & GRUPOS
+           ========================================== -->
+      <section class="view" id="view-categorias">
+        <div class="page-header">
+          <div class="page-title-wrap">
+            <p class="page-tag">Estrutura</p>
+            <h1 class="page-title">Categorias &amp; Grupos</h1>
+            <p class="page-desc">Categorias do torneio e divisão em grupos</p>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Código</th><th>Nome</th><th>Tipo</th><th>Grupos</th>
+                  <th>Letras</th><th>Ações</th>
+                </tr>
+              </thead>
+              <tbody id="catsTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ==========================================
+           VIEW: JOGADORES
+           ========================================== -->
+      <section class="view" id="view-jogadores">
+        <div class="page-header">
+          <div class="page-title-wrap">
+            <p class="page-tag">Participantes</p>
+            <h1 class="page-title">Jogadores <span style="font-size:1.2rem;color:var(--cinza-texto)" id="jogadoresCount"></span></h1>
+            <p class="page-desc">Lista de todos os participantes extraída do calendário</p>
+          </div>
+        </div>
+        <div class="toolbar">
+          <div class="page-search-wrap">
+            <i class="ph ph-magnifying-glass ph-icon"></i>
+            <input class="page-search" id="jogadoresSearch" type="search" placeholder="Pesquisar jogador…"/>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr><th>#</th><th>Nome</th><th>Grupo(s)</th><th>Jogos</th><th>Resultados</th><th></th></tr>
+              </thead>
+              <tbody id="jogadoresBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ==========================================
+           VIEW: JOGOS
+           ========================================== -->
+      <section class="view" id="view-jogos">
+        <div class="page-header">
+          <div class="page-title-wrap">
+            <p class="page-tag">Calendário</p>
+            <h1 class="page-title">Jogos <span style="font-size:1.2rem;color:var(--cinza-texto)" id="jogosCount"></span></h1>
+            <p class="page-desc">Todos os jogos do torneio por data, campo e grupo</p>
+          </div>
+          <div class="page-actions">
+            <button class="btn btn-ghost" onclick="gerarResultadosAleatorios()" title="Apenas para testes" style="border-color:rgba(245,197,24,.3);color:var(--amarelo);font-size:.75rem">
+              <i class="ph ph-shuffle"></i> Resultados Aleatórios
+            </button>
+            <button class="btn btn-ghost" onclick="limparTodosResultados()" title="Limpar todos os resultados" style="border-color:rgba(255,74,74,.3);color:var(--vermelho);font-size:.75rem">
+              <i class="ph ph-eraser"></i> Limpar Todos
+            </button>
+            <button class="btn btn-primary" onclick="abrirNovoJogo()">
+              <i class="ph ph-plus"></i> Novo Jogo
+            </button>
+          </div>
+        </div>
+
+        <div class="toolbar">
+          <div class="filter-group">
+            <select class="form-select filter-data" id="filtroDataJogos" style="min-width:170px"></select>
+            <select class="form-select filter-campo" id="filtroCampoJogos" style="min-width:150px"></select>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>#</th><th>Data</th><th>Hora</th><th>Campo</th><th>Grupo</th>
+                  <th>Equipa 1</th><th></th><th>Equipa 2</th><th style="text-align:center">Resultado</th><th>Ações</th>
+                </tr>
+              </thead>
+              <tbody id="jogosBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ==========================================
+           VIEW: RESULTADOS
+           ========================================== -->
+      <section class="view" id="view-resultados">
+        <div class="page-header">
+          <div class="page-title-wrap">
+            <p class="page-tag">Lançamento</p>
+            <h1 class="page-title">Resultados</h1>
+            <p class="page-desc">
+              <span id="resultadosPendentes">—</span> jogos aguardam resultado
+            </p>
+          </div>
+        </div>
+
+        <div class="toolbar">
+          <select class="form-select filter-data" id="filtroDataRes" style="min-width:170px"></select>
+        </div>
+
+        <div class="panel">
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Data / Hora</th><th>Campo</th><th>Grupo</th>
+                  <th>Equipa 1</th><th></th><th>Equipa 2</th><th>Ação</th>
+                </tr>
+              </thead>
+              <tbody id="resultadosBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- VIEW: FASE FINAL -->
+      <section class="view" id="view-fasefinal">
+        <style>
+          .ff-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:3rem;text-align:center;gap:.75rem}
+          /* Bracket layout */
+          .bk-bracket{display:flex;align-items:stretch;gap:32px;overflow-x:auto;padding-bottom:1.25rem;min-height:460px}
+          .bk-round{display:flex;flex-direction:column;flex-shrink:0;min-width:195px}
+          .bk-rhead{font-size:.6rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--cinza-texto);padding-bottom:.35rem;border-bottom:1px solid var(--preto-borda);margin-bottom:.1rem}
+          .bk-slot{flex:1;display:flex;flex-direction:column;justify-content:center;padding:7px 0;position:relative;overflow:visible}
+          /* Connector lines */
+          .bk-slot-top::after{content:'';position:absolute;top:50%;right:-32px;width:32px;height:50%;border-top:2px solid rgba(0,195,123,.22);border-right:2px solid rgba(0,195,123,.22);pointer-events:none;z-index:0}
+          .bk-slot-bot::after{content:'';position:absolute;top:0;right:-32px;width:32px;height:50%;border-bottom:2px solid rgba(0,195,123,.22);border-right:2px solid rgba(0,195,123,.22);pointer-events:none;z-index:0}
+          /* Game card */
+          .bk-card{background:var(--preto-card);border:1px solid var(--preto-borda);border-radius:10px;padding:.6rem .72rem;display:flex;flex-direction:column;gap:.22rem;position:relative;z-index:1;transition:border-color .2s}
+          .bk-card.done{border-color:rgba(0,195,123,.3)}
+          .bk-card.is-final{border-color:rgba(245,197,24,.32);box-shadow:0 0 20px rgba(245,197,24,.07)}
+          .bk-card-lbl{font-size:.54rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--cinza-texto);margin-bottom:.05rem}
+          .bk-card-team{display:flex;align-items:center;gap:.28rem;padding:.13rem 0}
+          .bk-card-team.win .bk-cname{color:var(--verde);font-weight:700}
+          .bk-card-team.tbd .bk-cname{color:var(--cinza-texto);font-style:italic;opacity:.65}
+          .bk-cname{font-size:.79rem;font-weight:500;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+          .bk-cseed{font-size:.55rem;font-weight:800;color:var(--cinza-texto);background:var(--cinza-escuro);width:1.2rem;height:1.2rem;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+          .bk-cgrp{font-size:.52rem;font-weight:700;padding:.08rem .28rem;border-radius:3px;background:var(--cinza-escuro);color:var(--cinza-texto);flex-shrink:0}
+          .bk-card-vs{font-size:.54rem;color:var(--cinza-texto);text-align:center;opacity:.38;font-weight:700}
+          .bk-card-score{font-size:.7rem;color:var(--verde);font-weight:600;text-align:center;padding:.12rem .4rem;background:rgba(0,195,123,.08);border-radius:4px;margin-top:.05rem}
+          .bk-card.is-final .bk-card-score{color:var(--amarelo);background:rgba(245,197,24,.08)}
+        </style>
+        <div class="page-header">
+          <div class="page-title-wrap">
+            <p class="page-tag">Eliminatórias</p>
+            <h1 class="page-title">Fase Final</h1>
+            <p class="page-desc">Quartos de final, meias-finais e finais por categoria</p>
+          </div>
+        </div>
+        <div id="ffCatTabs" class="toolbar" style="gap:.4rem;flex-wrap:wrap"></div>
+        <div id="ffBracket" style="margin-top:1rem"></div>
+      </section>
+
+      <!-- ── UTILIZADORES ─────────────────────────────── -->
+      <section class="view" id="view-utilizadores">
+        <div class="page-header" style="margin-bottom:1.5rem">
+          <div>
+            <h1 class="page-title">Utilizadores</h1>
+            <p class="page-desc">Gerir utilizadores e permissões do backoffice</p>
+          </div>
+          <button class="btn btn-primary" onclick="uiNewUser()">
+            <i class="ph ph-plus"></i> Novo Utilizador
+          </button>
+        </div>
+        <div id="tblUtilizadores"></div>
+      </section>
+
+      <!-- ── LOGS ─────────────────────────────────────── -->
+      <section class="view" id="view-logs">
+        <div class="page-header" style="margin-bottom:1.5rem">
+          <div>
+            <h1 class="page-title">Logs de Auditoria</h1>
+            <p class="page-desc">Registo de todas as acções no backoffice</p>
+          </div>
+          <button class="btn btn-ghost" style="gap:.4rem" onclick="renderLogs()">
+            <i class="ph ph-arrows-clockwise"></i> Actualizar
+          </button>
+        </div>
+        <div id="tblLogs"></div>
+      </section>
+
+      <!-- ── SESSÕES ───────────────────────────────────── -->
+      <section class="view" id="view-sessoes">
+        <div class="page-header" style="margin-bottom:1.5rem">
+          <div>
+            <h1 class="page-title">Sessões Activas</h1>
+            <p class="page-desc">Utilizadores actualmente com sessão iniciada</p>
+          </div>
+          <button class="btn btn-ghost" style="gap:.4rem" onclick="renderSessoes()">
+            <i class="ph ph-arrows-clockwise"></i> Actualizar
+          </button>
+        </div>
+        <div id="listSessoes"></div>
+      </section>
+
+      <!-- ── CLASSIFICAÇÕES ──────────────────────────────── -->
+      <section class="view" id="view-classificacoes">
+        <div class="page-header" style="margin-bottom:1.25rem">
+          <div>
+            <h1 class="page-title">Classificações</h1>
+            <p class="page-desc">Standings ao vivo por grupo e categoria</p>
+          </div>
+          <div style="display:flex;gap:.6rem">
+            <button class="btn btn-ghost" onclick="renderClassificacoes()"><i class="ph ph-arrows-clockwise"></i> Actualizar</button>
+            <a href="classificacoes.html" target="_blank" class="btn btn-ghost"><i class="ph ph-arrow-square-out"></i> Ver público</a>
+          </div>
+        </div>
+        <div id="adminClassTabs" class="toolbar" style="gap:.4rem;flex-wrap:wrap;margin-bottom:1rem"></div>
+        <div id="adminClassContent"></div>
+      </section>
+
+      <!-- ── ESTATÍSTICAS ────────────────────────────────── -->
+      <section class="view" id="view-estatisticas">
+        <div class="page-header" style="margin-bottom:1.5rem">
+          <div>
+            <h1 class="page-title">Estatísticas</h1>
+            <p class="page-desc">Resumo geral e ranking de jogadores</p>
+          </div>
+        </div>
+        <div id="statsContent"></div>
+      </section>
+
+      <!-- ── IMPORTAR RESULTADOS ─────────────────────────── -->
+      <section class="view" id="view-importar">
+        <div class="page-header" style="margin-bottom:1.5rem">
+          <div>
+            <h1 class="page-title">Importar Resultados</h1>
+            <p class="page-desc">Cole resultados em formato CSV para importação em lote</p>
+          </div>
+        </div>
+        <div id="importContent"></div>
+      </section>
+
+      <!-- ── CONSTRUTOR DE HORÁRIO ───────────────────────── -->
+      <section class="view" id="view-horario">
+        <div class="page-header" style="margin-bottom:1.25rem">
+          <div>
+            <h1 class="page-title">Construtor de Horário</h1>
+            <p class="page-desc">Vista de agenda por campo · Detecta conflitos de jogadores</p>
+          </div>
+          <div style="display:flex;gap:.6rem;align-items:center">
+            <select id="horarioDataFilter" class="form-input" style="width:auto;padding:.4rem .75rem;font-size:.82rem">
+              <option value="todos">Todas as datas</option>
+            </select>
+            <select id="horarioCampoFilter" class="form-input" style="width:auto;padding:.4rem .75rem;font-size:.82rem">
+              <option value="todos">Todos os campos</option>
+            </select>
+          </div>
+        </div>
+        <div id="horarioContent"></div>
+      </section>
+
+    </main><!-- /admin-content -->
+  </div><!-- /admin-main -->
+</div><!-- /adminShell -->
+
+
+<!-- ==========================================
+     MODAIS
+     ========================================== -->
+
+<!-- Modal: Session Timeout Warning -->
+<div class="modal-overlay" id="modalTimeout" role="alertdialog" aria-modal="true" aria-labelledby="modalTimeoutTitle" style="z-index:9999">
+  <div class="modal" style="max-width:400px;text-align:center">
+    <div class="modal-body" style="padding:2rem 2rem 1.5rem">
+      <i class="ph ph-clock-countdown" style="font-size:2.5rem;color:var(--amarelo);display:block;margin-bottom:1rem"></i>
+      <h2 class="modal-title" id="modalTimeoutTitle" style="margin-bottom:.5rem">Sessão prestes a expirar</h2>
+      <p style="color:var(--cinza-texto);font-size:.875rem;margin-bottom:1.5rem">A sua sessão irá expirar em <strong id="timeoutCountdown" style="color:var(--amarelo)">5 min</strong> por inactividade.</p>
+      <div style="display:flex;gap:.75rem;justify-content:center">
+        <button class="btn btn-ghost" onclick="doLogout()">Terminar sessão</button>
+        <button class="btn btn-primary" onclick="Auth.resetTimeout();closeModal('modalTimeout')">
+          <i class="ph ph-check"></i> Continuar sessão
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Utilizador -->
+<div class="modal-overlay" id="modalUser" role="dialog" aria-modal="true" aria-labelledby="modalUserTitle">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 class="modal-title" id="modalUserTitle">Novo Utilizador</h2>
+      <button class="modal-close" onclick="closeModal('modalUser')" aria-label="Fechar"><i class="ph ph-x"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group-modal">
+        <label class="form-label">Username *</label>
+        <input class="form-input" id="userUsername" type="text" placeholder="ex: joao.silva" autocomplete="off"/>
+      </div>
+      <div class="form-group-modal">
+        <label class="form-label">Nome completo *</label>
+        <input class="form-input" id="userName" type="text" placeholder="ex: João Silva" autocomplete="off"/>
+      </div>
+      <div class="form-group-modal">
+        <label class="form-label">Role *</label>
+        <select class="form-input" id="userRole">
+          <option value="operator">Operador</option>
+          <option value="admin">Administrador</option>
+        </select>
+      </div>
+      <div class="form-group-modal">
+        <label class="form-label" id="userPassLabel">Palavra-passe *</label>
+        <input class="form-input" id="userPass" type="password" placeholder="Mínimo 6 caracteres" autocomplete="new-password"/>
+      </div>
+      <div class="form-group-modal">
+        <label class="form-label" id="userPass2Label">Confirmar palavra-passe *</label>
+        <input class="form-input" id="userPass2" type="password" placeholder="Repetir palavra-passe" autocomplete="new-password"/>
+      </div>
+      <div class="form-group-modal" id="userCategoriesWrap" style="display:none">
+        <label class="form-label">Categorias permitidas <span style="color:var(--cinza-texto);font-weight:400">(vazio = todas)</span></label>
+        <div id="userCategoriesGrid" style="display:grid;grid-template-columns:repeat(4,1fr);gap:.4rem;margin-top:.4rem"></div>
+      </div>
+      <div class="login-error" id="userModalError" style="display:none;margin-bottom:.5rem">
+        <i class="ph ph-warning-circle"></i> <span id="userModalErrorMsg"></span>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modalUser')">Cancelar</button>
+      <button class="btn btn-primary" id="userSaveBtn" onclick="uiSaveUser()">
+        <i class="ph ph-floppy-disk"></i> Guardar
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Jogador -->
+<div class="modal-overlay" id="modalJogador" role="dialog" aria-modal="true" aria-labelledby="modalJogadorTitle">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 class="modal-title" id="modalJogadorTitle">Editar Jogador</h2>
+      <button class="modal-close" onclick="closeModal('modalJogador')" aria-label="Fechar"><i class="ph ph-x"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group-modal">
+        <label class="form-label">Nome actual</label>
+        <div class="form-input" style="background:rgba(255,255,255,.04);color:var(--cinza-texto);cursor:default" id="jogadorNomeActual"></div>
+      </div>
+      <div class="form-group-modal">
+        <label class="form-label" for="jogadorNomeNovo">Novo nome</label>
+        <input class="form-input" type="text" id="jogadorNomeNovo" placeholder="Nome corrigido"/>
+      </div>
+      <p class="form-hint" style="color:var(--amarelo);font-size:.78rem;margin-top:.5rem">
+        <i class="ph ph-warning"></i> O nome será actualizado em todos os jogos onde este jogador aparece.
+      </p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modalJogador')">Cancelar</button>
+      <button class="btn btn-primary" onclick="saveJogador()"><i class="ph ph-floppy-disk"></i> Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Campo -->
+<div class="modal-overlay" id="modalCampo" role="dialog" aria-modal="true" aria-labelledby="modalCampoTitle">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 class="modal-title" id="modalCampoTitle">Novo Campo</h2>
+      <button class="modal-close" onclick="closeModal('modalCampo')" aria-label="Fechar"><i class="ph ph-x"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group-modal">
+        <label class="form-label" for="campoNome">Nome do Campo</label>
+        <input class="form-input" type="text" id="campoNome" placeholder="ex: Campo Central"/>
+      </div>
+      <div class="form-group-modal">
+        <label class="form-label" for="campoIcone">Ícone / Emoji</label>
+        <input class="form-input" type="text" id="campoIcone" placeholder="🎾" maxlength="4"/>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modalCampo')">Cancelar</button>
+      <button class="btn btn-primary" onclick="saveCampo()"><i class="ph ph-floppy-disk"></i> Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Novo Jogo -->
+<div class="modal-overlay" id="modalJogo" role="dialog" aria-modal="true" aria-labelledby="modalJogoTitle">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 class="modal-title" id="modalJogoTitle">Novo Jogo</h2>
+      <button class="modal-close" onclick="closeModal('modalJogo')" aria-label="Fechar"><i class="ph ph-x"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="form-group-modal">
+          <label class="form-label" for="jogoData">Data</label>
+          <input class="form-input" type="date" id="jogoData" min="2026-06-05" max="2026-06-14"/>
+        </div>
+        <div class="form-group-modal">
+          <label class="form-label" for="jogoHora">Hora</label>
+          <input class="form-input" type="time" id="jogoHora" step="1800"/>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group-modal">
+          <label class="form-label" for="jogoCampo">Campo</label>
+          <select class="form-select" id="jogoCampo"></select>
+        </div>
+        <div class="form-group-modal">
+          <label class="form-label" for="jogoGrupo">Grupo</label>
+          <select class="form-select" id="jogoGrupo"></select>
+        </div>
+      </div>
+      <div class="form-group-modal">
+        <label class="form-label" for="jogoEq1">Equipa 1 (par)</label>
+        <input class="form-input" type="text" id="jogoEq1" placeholder="Jogador A & Jogador B"/>
+      </div>
+      <div class="form-group-modal">
+        <label class="form-label" for="jogoEq2">Equipa 2 (par)</label>
+        <input class="form-input" type="text" id="jogoEq2" placeholder="Jogador C & Jogador D"/>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modalJogo')">Cancelar</button>
+      <button class="btn btn-primary" onclick="salvarJogo()"><i class="ph ph-floppy-disk"></i> Guardar Jogo</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Resultado -->
+<div class="modal-overlay" id="modalResultado" role="dialog" aria-modal="true" aria-labelledby="modalResTitle">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 class="modal-title" id="modalResTitle">Lançar Resultado</h2>
+      <button class="modal-close" onclick="closeModal('modalResultado')" aria-label="Fechar"><i class="ph ph-x"></i></button>
+    </div>
+    <div class="modal-body">
+
+      <!-- Info do jogo -->
+      <div style="font-size:0.75rem;color:var(--cinza-texto);margin-bottom:0.75rem;letter-spacing:0.04em" id="resMatchInfo"></div>
+
+      <!-- Preview das equipas -->
+      <div class="result-match-preview">
+        <div class="result-teams">
+          <div class="result-team">
+            <div class="result-team-name" id="resTeam1"></div>
+          </div>
+          <div class="result-vs">VS</div>
+          <div class="result-team">
+            <div class="result-team-name" id="resTeam2"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sets -->
+      <style>
+        .set-block{margin-bottom:.6rem;padding:.6rem .75rem;background:var(--cinza-escuro);border-radius:8px}
+        .set-block-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:.5rem}
+        .set-status{font-size:.7rem;font-weight:700;padding:.12rem .4rem;border-radius:4px;transition:all .2s}
+        .set-status--ok{background:rgba(0,195,123,.15);color:var(--verde)}
+        .set-status--tie{background:rgba(245,197,24,.15);color:var(--amarelo)}
+        .set-status--err{background:rgba(255,74,74,.15);color:var(--vermelho)}
+        .tb-row{margin-top:.55rem;padding:.45rem .6rem;background:rgba(245,197,24,.06);border:1px solid rgba(245,197,24,.25);border-radius:6px;display:flex;flex-direction:column;align-items:center;gap:.4rem}
+        .tb-row-label{font-size:.67rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--amarelo);display:flex;align-items:center;gap:.3rem;white-space:nowrap}
+        .match-result-bar{margin-top:.55rem;padding:.45rem .75rem;border-radius:8px;font-size:.8rem;font-weight:600;text-align:center}
+        .match-result-bar--win{background:rgba(0,195,123,.12);color:var(--verde);border:1px solid rgba(0,195,123,.25)}
+        .match-result-bar--pending{background:rgba(255,74,74,.08);color:var(--cinza-texto);border:1px solid rgba(255,74,74,.15);font-weight:400;font-size:.74rem}
+      </style>
+
+      <!-- 1.º Set -->
+      <div class="set-block" id="setBlock1">
+        <div class="set-block-header">
+          <span class="form-label" style="margin:0">1.º Set <span style="color:var(--vermelho)">*</span></span>
+          <span class="set-status" id="setStatus1"></span>
+        </div>
+        <div class="score-inputs">
+          <input class="score-input" type="number" id="resS1E1" min="0" max="7" placeholder="0" oninput="onSetInput(1)"/>
+          <span class="score-sep">-</span>
+          <input class="score-input" type="number" id="resS1E2" min="0" max="7" placeholder="0" oninput="onSetInput(1)"/>
+        </div>
+        <div class="tb-row" id="tbRow1" style="display:none">
+          <span class="tb-row-label"><i class="ph ph-lightning"></i> Tie-Break</span>
+          <div class="score-inputs">
+            <input class="score-input" type="number" id="resTB1E1" min="0" placeholder="7" oninput="onSetInput(1)"/>
+            <span class="score-sep">-</span>
+            <input class="score-input" type="number" id="resTB1E2" min="0" placeholder="5" oninput="onSetInput(1)"/>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2.º Set -->
+      <div class="set-block" id="setBlock2" style="display:none">
+        <div class="set-block-header">
+          <span class="form-label" style="margin:0">2.º Set</span>
+          <span class="set-status" id="setStatus2"></span>
+        </div>
+        <div class="score-inputs">
+          <input class="score-input" type="number" id="resS2E1" min="0" max="7" placeholder="0" oninput="onSetInput(2)"/>
+          <span class="score-sep">-</span>
+          <input class="score-input" type="number" id="resS2E2" min="0" max="7" placeholder="0" oninput="onSetInput(2)"/>
+        </div>
+        <div class="tb-row" id="tbRow2" style="display:none">
+          <span class="tb-row-label"><i class="ph ph-lightning"></i> Tie-Break</span>
+          <div class="score-inputs">
+            <input class="score-input" type="number" id="resTB2E1" min="0" placeholder="7" oninput="onSetInput(2)"/>
+            <span class="score-sep">-</span>
+            <input class="score-input" type="number" id="resTB2E2" min="0" placeholder="5" oninput="onSetInput(2)"/>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3.º Set -->
+      <div class="set-block" id="setBlock3" style="display:none">
+        <div class="set-block-header">
+          <span class="form-label" style="margin:0">3.º Set</span>
+          <span class="set-status" id="setStatus3"></span>
+        </div>
+        <div class="score-inputs">
+          <input class="score-input" type="number" id="resS3E1" min="0" max="7" placeholder="0" oninput="onSetInput(3)"/>
+          <span class="score-sep">-</span>
+          <input class="score-input" type="number" id="resS3E2" min="0" max="7" placeholder="0" oninput="onSetInput(3)"/>
+        </div>
+        <div class="tb-row" id="tbRow3" style="display:none">
+          <span class="tb-row-label"><i class="ph ph-lightning"></i> Tie-Break</span>
+          <div class="score-inputs">
+            <input class="score-input" type="number" id="resTB3E1" min="0" placeholder="7" oninput="onSetInput(3)"/>
+            <span class="score-sep">-</span>
+            <input class="score-input" type="number" id="resTB3E2" min="0" placeholder="5" oninput="onSetInput(3)"/>
+          </div>
+        </div>
+      </div>
+
+      <!-- Resultado final -->
+      <div id="matchResultBar" style="display:none"></div>
+
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-danger" onclick="limparResultado()"><i class="ph ph-eraser"></i> Limpar</button>
+      <button class="btn btn-ghost" onclick="closeModal('modalResultado')">Cancelar</button>
+      <button class="btn btn-primary" onclick="salvarResultado()"><i class="ph ph-floppy-disk"></i> Guardar</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- Toast container -->
+<div class="toast-container" id="toastContainer" aria-live="polite" aria-atomic="false"></div>
+
+<script src="js/data.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/admin.js"></script>
+
+<script>
+  // Actualizar badge de pendentes na sidebar
+  function updateBadge() {
+    const jogos = (JSON.parse(localStorage.getItem('pp_jogos') || 'null')) || [];
+    const pend = jogos.filter(j => !j.resultado).length;
+    const b = document.getElementById('badgePendentes');
+    if (b) b.textContent = pend || '✓';
+  }
+  setInterval(updateBadge, 2000);
+</script>
+</body>
+</html>

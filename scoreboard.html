@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Scoreboard ao Vivo — Play Padel 2026</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/@phosphor-icons/web@2.1.1/src/index.js"></script>
+  <style>
+    :root {
+      --verde:#00C37B; --preto:#0A0F0D; --preto-card:#111815; --preto-borda:#1C2620;
+      --cinza-escuro:#1E2922; --cinza-texto:#8AA396; --branco:#F0F7F3;
+      --amarelo:#F5C518; --vermelho:#FF4A4A; --verde-neon:#39FF8F;
+      --radius:10px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', sans-serif; background: var(--preto); color: var(--branco); min-height: 100vh; }
+
+    /* TOP BAR */
+    .top-bar {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: .75rem 1.5rem; background: var(--preto-card);
+      border-bottom: 1px solid var(--preto-borda); position: sticky; top: 0; z-index: 50;
+    }
+    .top-bar-logo { font-family: 'Barlow Condensed', sans-serif; font-weight: 900; font-size: 1.4rem; color: var(--verde); letter-spacing: .04em; }
+    .top-bar-title { font-size: .82rem; color: var(--cinza-texto); }
+    .refresh-indicator { display: flex; align-items: center; gap: .5rem; font-size: .78rem; color: var(--cinza-texto); }
+    .refresh-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--verde); animation: pulse 2s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
+    .refresh-countdown { font-weight: 700; color: var(--verde); min-width: 2rem; text-align: right; }
+
+    /* TABS */
+    .cat-tabs { display: flex; gap: .4rem; padding: .75rem 1.5rem; flex-wrap: wrap; border-bottom: 1px solid var(--preto-borda); background: var(--preto-card); }
+    .cat-tab {
+      padding: .35rem .85rem; border-radius: 6px; font-size: .78rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .06em; cursor: pointer;
+      background: var(--cinza-escuro); color: var(--cinza-texto); border: none; transition: all .2s;
+    }
+    .cat-tab:hover { color: var(--branco); background: rgba(0,195,123,.15); }
+    .cat-tab.active { background: var(--verde); color: #000; }
+
+    /* CONTENT */
+    .content { padding: 1.25rem 1.5rem; }
+    .cat-section { display: none; }
+    .cat-section.active { display: block; }
+    .groups-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1rem; }
+
+    /* GROUP CARD */
+    .group-card {
+      background: var(--preto-card); border: 1px solid var(--preto-borda);
+      border-radius: var(--radius); overflow: hidden;
+    }
+    .group-card-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: .6rem 1rem; border-bottom: 1px solid var(--preto-borda);
+    }
+    .group-card-title { font-family: 'Barlow Condensed', sans-serif; font-size: 1.05rem; font-weight: 700; letter-spacing: .04em; }
+    .group-progress { font-size: .68rem; color: var(--cinza-texto); }
+    .std-table { width: 100%; border-collapse: collapse; font-size: .75rem; }
+    .std-table th { padding: .3rem .55rem; color: var(--cinza-texto); font-weight: 600; text-align: right; border-bottom: 1px solid var(--preto-borda); }
+    .std-table th:first-child, .std-table th:nth-child(2) { text-align: left; }
+    .std-table td { padding: .38rem .55rem; text-align: right; border-bottom: 1px solid rgba(255,255,255,.04); }
+    .std-table td:first-child, .std-table td:nth-child(2) { text-align: left; }
+    .std-table tr:last-child td { border-bottom: none; }
+    .std-q1 td:first-child { border-left: 3px solid var(--verde); }
+    .std-q2 td:first-child { border-left: 3px solid var(--amarelo); }
+    .pair-name { max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; display: block; }
+
+    /* LIVE BADGE */
+    .live-badge {
+      font-size: .6rem; font-weight: 900; text-transform: uppercase; letter-spacing: .1em;
+      background: var(--vermelho); color: #fff; padding: .15rem .45rem; border-radius: 4px; margin-left: .4rem;
+      animation: livepulse 1.5s infinite;
+    }
+    @keyframes livepulse { 0%,100%{opacity:1} 50%{opacity:.5} }
+
+    /* LEGEND */
+    .legend { display: flex; gap: 1.2rem; padding: .65rem 1.5rem; font-size: .72rem; color: var(--cinza-texto); border-bottom: 1px solid var(--preto-borda); background: var(--preto-card); }
+    .legend-item { display: flex; align-items: center; gap: .35rem; }
+    .legend-dot { width: 10px; height: 10px; border-radius: 2px; }
+
+    /* LAST UPDATE */
+    .last-update { text-align: center; padding: .75rem; font-size: .72rem; color: var(--cinza-texto); }
+  </style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="top-bar">
+  <div>
+    <div class="top-bar-logo">PLAY PADEL <span style="color:var(--branco);font-weight:400">2026</span></div>
+    <div class="top-bar-title">Scoreboard ao Vivo · Maputo</div>
+  </div>
+  <div class="refresh-indicator">
+    <div class="refresh-dot"></div>
+    <span>Actualiza em</span>
+    <span class="refresh-countdown" id="refreshCountdown">30</span>s
+  </div>
+</div>
+
+<!-- LEGEND -->
+<div class="legend">
+  <div class="legend-item"><div class="legend-dot" style="background:var(--verde)"></div> Qualifica directo</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--amarelo)"></div> Possível wildcard</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--cinza-escuro)"></div> Eliminado</div>
+  <span style="margin-left:auto"><span class="live-badge">LIVE</span></span>
+</div>
+
+<!-- CATEGORY TABS -->
+<div class="cat-tabs" id="catTabs"></div>
+
+<!-- STANDINGS CONTENT -->
+<div class="content" id="mainContent"></div>
+
+<div class="last-update">Última actualização: <span id="lastUpdate">—</span></div>
+
+<script src="js/data.js"></script>
+<script>
+  // ── Helpers ────────────────────────────────────────────────────────────────
+  function ppLoad(key) { try { return JSON.parse(localStorage.getItem('pp_' + key)); } catch(e) { return null; } }
+
+  function getData(key) {
+    const stored = ppLoad(key);
+    if (stored !== null) return stored;
+    return typeof INITIAL_DATA !== 'undefined' ? (INITIAL_DATA[key] || []) : [];
+  }
+
+  const CATS = ['M1','M2','M3','M4','M5','F1','F2'];
+
+  // ── Standings Calculation ──────────────────────────────────────────────────
+  function computeStandings(grupo, jogos) {
+    const gJogos = jogos.filter(j => j.grupo === grupo.id);
+    const table  = {};
+    grupo.pares.forEach(p => { table[p] = { par: p, pj:0, v:0, d:0, sw:0, sl:0, pts:0 }; });
+    gJogos.forEach(j => {
+      if (!j.resultado) return;
+      const allSets = j.resultado.trim().split(' ').map(s => { const [a,b] = s.split('-').map(Number); return [a,b]; });
+      let vEq1=0, vEq2=0, sw1=0, sl1=0, sw2=0, sl2=0;
+      allSets.forEach(([a,b]) => {
+        if (a>b) vEq1++; else vEq2++;
+        sw1+=a; sl1+=b; sw2+=b; sl2+=a;
+      });
+      const w1 = vEq1 > vEq2;
+      if (table[j.eq1]) { table[j.eq1].pj++; table[j.eq1].sw+=sw1; table[j.eq1].sl+=sl1; if(w1){table[j.eq1].v++;table[j.eq1].pts+=3;}else table[j.eq1].d++; }
+      if (table[j.eq2]) { table[j.eq2].pj++; table[j.eq2].sw+=sw2; table[j.eq2].sl+=sl2; if(!w1){table[j.eq2].v++;table[j.eq2].pts+=3;}else table[j.eq2].d++; }
+    });
+    return Object.values(table).sort((a,b) => b.pts - a.pts || (b.sw-b.sl)-(a.sw-a.sl) || b.sw - a.sw);
+  }
+
+  function escHtml(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+  // ── Render ──────────────────────────────────────────────────────────────────
+  function renderAll() {
+    const jogos  = getData('jogos');
+    const grupos = getData('grupos');
+
+    const tabsEl    = document.getElementById('catTabs');
+    const contentEl = document.getElementById('mainContent');
+
+    // Build tabs
+    tabsEl.innerHTML = CATS.map((c, i) => `
+      <button class="cat-tab${i===0?' active':''}" onclick="switchCat('${c}',this)">${c}</button>
+    `).join('');
+
+    // Build all sections
+    contentEl.innerHTML = CATS.map((cat, i) => {
+      const catGrupos = grupos.filter(g => g.categoria === cat);
+      const html = catGrupos.map(g => {
+        const rows  = computeStandings(g, jogos);
+        const gJogos= jogos.filter(j => j.grupo === g.id);
+        const done  = gJogos.filter(j => j.resultado).length;
+        const total = gJogos.length;
+        return `<div class="group-card">
+          <div class="group-card-header">
+            <span class="group-card-title">${g.id}</span>
+            <span class="group-progress">${done}/${total} jogos</span>
+          </div>
+          <table class="std-table">
+            <thead><tr><th>#</th><th>Par</th><th>PJ</th><th>V</th><th>D</th><th>Sets</th><th>Pts</th></tr></thead>
+            <tbody>${rows.map((r, idx) => `
+              <tr class="${idx===0?'std-q1':idx===1?'std-q2':''}">
+                <td>${idx+1}</td>
+                <td><span class="pair-name" title="${escHtml(r.par)}">${escHtml(r.par)}</span></td>
+                <td>${r.pj}</td>
+                <td style="color:var(--verde);font-weight:700">${r.v}</td>
+                <td style="color:var(--vermelho)">${r.d}</td>
+                <td>${r.sw}-${r.sl}</td>
+                <td style="font-weight:700;color:var(--branco)">${r.pts}</td>
+              </tr>`).join('')}
+            </tbody>
+          </table>
+        </div>`;
+      }).join('');
+      return `<div class="cat-section${i===0?' active':''}" id="cat-${cat}">
+        <div class="groups-grid">${html}</div>
+      </div>`;
+    }).join('');
+
+    document.getElementById('lastUpdate').textContent = new Date().toLocaleTimeString('pt-PT');
+  }
+
+  function switchCat(cat, btn) {
+    document.querySelectorAll('.cat-tab').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.cat-section').forEach(s => s.classList.remove('active'));
+    document.getElementById('cat-' + cat)?.classList.add('active');
+  }
+
+  // ── Auto-refresh countdown ──────────────────────────────────────────────────
+  let countdown = 30;
+  const countEl = document.getElementById('refreshCountdown');
+
+  function tick() {
+    countdown--;
+    countEl.textContent = countdown;
+    if (countdown <= 0) {
+      countdown = 30;
+      renderAll();
+    }
+    setTimeout(tick, 1000);
+  }
+
+  // ── Init ───────────────────────────────────────────────────────────────────
+  renderAll();
+  setTimeout(tick, 1000);
+</script>
+</body>
+</html>

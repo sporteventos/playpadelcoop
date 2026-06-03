@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Jogadores · Play Padel Torneio</title>
+  <link rel="stylesheet" href="css/style.css"/>
+  <link rel="stylesheet" href="css/pages.css"/>
+  <script src="https://unpkg.com/@phosphor-icons/web@2.1.1/src/index.js" defer></script>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar" id="navbar">
+  <a class="nav-logo" href="index.html">
+    <img src="playpadellogo.jpg" alt="Play Padel" style="height:34px;width:34px;border-radius:7px;object-fit:cover;flex-shrink:0"/>
+    <div class="nav-logo-text">
+      <span class="nav-logo-title">Play Padel</span>
+      <span class="nav-logo-sub">Torneio 2.º Aniversário</span>
+    </div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html"><i class="ph ph-house nav-icon"></i> Início</a></li>
+    <li><a href="calendario.html"><i class="ph ph-calendar nav-icon"></i> Calendário</a></li>
+    <li><a href="classificacoes.html"><i class="ph ph-trophy nav-icon"></i> Classificações</a></li>
+    <li><a href="fasefinal.html"><i class="ph ph-brackets-round nav-icon"></i> Fase Final</a></li>
+    <li><a href="jogadores.html" class="active"><i class="ph ph-users nav-icon"></i> Jogadores</a></li>
+    <li><a href="regulamento.html"><i class="ph ph-book-open nav-icon"></i> Regulamento</a></li>
+  </ul>
+  <button class="nav-hamburger" id="hamburger" aria-label="Menu" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+<div class="nav-drawer" id="navDrawer">
+  <ul>
+    <li><a href="index.html"><i class="ph ph-house"></i> Início</a></li>
+    <li><a href="calendario.html"><i class="ph ph-calendar"></i> Calendário</a></li>
+    <li><a href="classificacoes.html"><i class="ph ph-trophy"></i> Classificações</a></li>
+    <li><a href="fasefinal.html"><i class="ph ph-brackets-round nav-icon"></i> Fase Final</a></li>
+    <li><a href="jogadores.html" class="active"><i class="ph ph-users"></i> Jogadores</a></li>
+    <li><a href="regulamento.html"><i class="ph ph-book-open"></i> Regulamento</a></li>
+  </ul>
+</div>
+
+<!-- PAGE HERO -->
+<div class="page-hero">
+  <div class="page-hero-content">
+    <p class="page-hero-tag"><i class="ph ph-users"></i> Participantes</p>
+    <h1 class="page-hero-title">Jogadores <span>&amp; Pares</span></h1>
+    <p class="page-hero-sub">Pesquise um jogador para ver os seus jogos e resultados</p>
+  </div>
+</div>
+
+<!-- PESQUISA -->
+<div class="filters-bar" id="filtersBar">
+  <div class="filters-inner">
+    <div class="search-wrap search-wrap--large">
+      <i class="ph ph-magnifying-glass"></i>
+      <input type="search" id="searchJogador" class="search-input" placeholder="Nome do jogador ou par…" autocomplete="off"/>
+      <span class="search-count" id="searchCount"></span>
+    </div>
+    <div class="filter-select-wrap">
+      <i class="ph ph-funnel"></i>
+      <select id="filtroAlpha" class="filter-select" aria-label="Filtrar por letra">
+        <option value="todos">Todas as letras</option>
+      </select>
+    </div>
+  </div>
+</div>
+
+<!-- CONTEÚDO -->
+<main class="page-main" id="jogadoresMain">
+  <div id="playerGrid" class="player-grid"></div>
+  <div class="empty-state hidden" id="emptyState">
+    <div class="empty-icon">🎾</div>
+    <p class="empty-title">Nenhum jogador encontrado</p>
+    <p class="empty-sub">Tente pesquisar por outro nome</p>
+  </div>
+</main>
+
+<footer class="footer">
+  <div class="footer-bottom" style="max-width:1200px;margin:0 auto">
+    <p class="footer-copy">© 2026 <span>Play Padel</span> · Torneio 2.º Aniversário</p>
+    <a href="index.html" class="footer-copy" style="color:var(--verde);text-decoration:none">← Voltar ao início</a>
+  </div>
+</footer>
+
+<script src="js/data.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+
+  // ---- Navbar scroll ----
+  const navbar = document.getElementById('navbar');
+  window.addEventListener('scroll', () => navbar.classList.toggle('scrolled', scrollY > 20));
+
+  // ---- Hamburger ----
+  const hamburger = document.getElementById('hamburger');
+  const drawer    = document.getElementById('navDrawer');
+  hamburger.addEventListener('click', () => {
+    const open = drawer.classList.toggle('open');
+    hamburger.setAttribute('aria-expanded', open);
+  });
+
+  // ---- Extrair jogadores individuais ----
+  const jogos = ppGet('jogos');
+
+  // Mapa: nomeJogador → { par, grupos[], jogos[] }
+  const playerMap = {};
+
+  function addPlayer(name, par, jogo) {
+    if (!name.trim()) return;
+    const key = name.trim();
+    if (!playerMap[key]) playerMap[key] = { nome: key, pares: new Set(), grupos: new Set(), jogos: [] };
+    playerMap[key].pares.add(par);
+    playerMap[key].grupos.add(jogo.grupo);
+    playerMap[key].jogos.push(jogo);
+  }
+
+  jogos.forEach(j => {
+    const eq1players = j.eq1.split('&').map(s => s.trim());
+    const eq2players = j.eq2.split('&').map(s => s.trim());
+    eq1players.forEach(p => addPlayer(p, j.eq1, j));
+    eq2players.forEach(p => addPlayer(p, j.eq2, j));
+  });
+
+  const allPlayers = Object.values(playerMap).sort((a, b) => a.nome.localeCompare(b.nome));
+
+  // ---- Filtro de letra ----
+  const letters = [...new Set(allPlayers.map(p => p.nome[0].toUpperCase()))].sort();
+  const alphaSelect = document.getElementById('filtroAlpha');
+  letters.forEach(l => {
+    const o = document.createElement('option');
+    o.value = o.textContent = l;
+    alphaSelect.appendChild(o);
+  });
+
+  let activeSearch = '';
+  let activeAlpha  = 'todos';
+
+  document.getElementById('searchJogador').addEventListener('input', e => {
+    activeSearch = e.target.value.trim();
+    render();
+  });
+  alphaSelect.addEventListener('change', e => { activeAlpha = e.target.value; render(); });
+
+  // ---- Render ----
+  function render() {
+    let list = allPlayers;
+
+    if (activeAlpha !== 'todos') list = list.filter(p => p.nome[0].toUpperCase() === activeAlpha);
+    if (activeSearch) {
+      const q = activeSearch.toLowerCase();
+      list = list.filter(p => p.nome.toLowerCase().includes(q) || [...p.pares].some(par => par.toLowerCase().includes(q)));
+    }
+
+    const grid  = document.getElementById('playerGrid');
+    const empty = document.getElementById('emptyState');
+    const count = document.getElementById('searchCount');
+
+    count.textContent = list.length ? `${list.length} jogador${list.length !== 1 ? 'es' : ''}` : '';
+
+    if (!list.length) {
+      grid.innerHTML = '';
+      empty.classList.remove('hidden');
+      return;
+    }
+    empty.classList.add('hidden');
+
+    grid.innerHTML = list.map(p => renderPlayer(p)).join('');
+  }
+
+  function _parseResultado(resultado, isEq1) {
+    // resultado is string "6-4 6-3" or "6-4 3-6 7-5" 
+    if (!resultado || typeof resultado !== 'string') return { wins: 0, losses: 0, selfSets: 0, oppSets: 0 };
+    let selfSets = 0, oppSets = 0;
+    resultado.trim().split(' ').forEach(s => {
+      const [a, b] = s.split('-').map(Number);
+      if (isNaN(a) || isNaN(b)) return;
+      if (isEq1) { if (a > b) selfSets++; else oppSets++; }
+      else       { if (b > a) selfSets++; else oppSets++; }
+    });
+    return { wins: selfSets > oppSets ? 1 : 0, losses: selfSets < oppSets ? 1 : 0, selfSets, oppSets };
+  }
+
+  function renderPlayer(p) {
+    const grupos = [...p.grupos].sort();
+    const pares  = [...p.pares];
+    const cat    = grupos[0] ? grupos[0].split('-')[0] : 'M1';
+    const initials = p.nome.split(' ').map(w => w[0]).slice(0, 2).join('').toUpperCase();
+
+    const sortedJogos = [...p.jogos].sort((a, b) => (a.data + a.hora).localeCompare(b.data + b.hora));
+    const now = new Date();
+
+    // Next unplayed match
+    const nextJogo = sortedJogos.find(j => !j.resultado);
+    let nextMatchHtml = '';
+    if (nextJogo) {
+      const isEq1  = nextJogo.eq1.split('&').map(s => s.trim()).includes(p.nome);
+      const opp    = isEq1 ? nextJogo.eq2 : nextJogo.eq1;
+      const jogoDate = new Date(nextJogo.data + 'T' + nextJogo.hora);
+      const isToday  = nextJogo.data === now.toISOString().slice(0,10);
+      const waLink   = `https://wa.me/?text=${encodeURIComponent(`🎾 Próximo jogo de ${p.nome}:\n📅 ${ppFormatDate(nextJogo.data)} às ${nextJogo.hora}\n🏟 ${nextJogo.campo} · ${nextJogo.grupo}\nvs ${opp}\n\nVeja em: ${location.href}?jogador=${encodeURIComponent(p.nome)}`)}`;
+      nextMatchHtml = `
+        <div style="margin:0 1rem .75rem;padding:.6rem .85rem;border-radius:8px;background:${isToday ? 'rgba(0,195,123,.1)' : 'var(--preto-card)'};border:1px solid ${isToday ? 'rgba(0,195,123,.35)' : 'var(--preto-borda)'}">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:.5rem;flex-wrap:wrap">
+            <div>
+              <div style="font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:${isToday ? 'var(--verde)' : 'var(--cinza-texto)'};margin-bottom:.2rem">
+                ${isToday ? '⚡ Hoje!' : '📅 Próximo Jogo'}
+              </div>
+              <div style="font-size:.82rem;font-weight:600;color:var(--branco)">${ppFormatDate(nextJogo.data)} · ${nextJogo.hora} · ${nextJogo.campo}</div>
+              <div style="font-size:.75rem;color:var(--cinza-texto)">vs ${opp}</div>
+            </div>
+            <a href="${waLink}" target="_blank" rel="noopener"
+               style="display:flex;align-items:center;gap:.35rem;padding:.35rem .75rem;border-radius:7px;background:#25D366;color:#fff;text-decoration:none;font-size:.72rem;font-weight:700;flex-shrink:0">
+              <i class="ph ph-whatsapp-logo"></i> Partilhar
+            </a>
+          </div>
+        </div>`;
+    }
+
+    const matchesHtml = sortedJogos.map(j => {
+      const isEq1  = j.eq1.split('&').map(s => s.trim()).includes(p.nome);
+      const opp    = isEq1 ? j.eq2 : j.eq1;
+      const temRes = !!j.resultado;
+
+      let resultLabel = '';
+      if (temRes) {
+        const { wins } = _parseResultado(j.resultado, isEq1);
+        const won = wins === 1;
+        resultLabel = `<span class="result-pill ${won ? 'result-win' : 'result-loss'}">${won ? 'V' : 'D'}</span>`;
+      }
+
+      return `<div class="player-match-row">
+        <span class="pm-hora">${ppFormatDate(j.data)} ${j.hora}</span>
+        <span class="pm-grupo cat-${j.grupo.split('-')[0]}">${j.grupo}</span>
+        <span class="pm-campo">${j.campo}</span>
+        <span class="pm-opp">vs ${opp}</span>
+        ${resultLabel || '<span class="result-pill result-pending">—</span>'}
+      </div>`;
+    }).join('');
+
+    const hl = activeSearch ? activeSearch.toLowerCase() : '';
+    const nomeHtml = hl ? p.nome.replace(new RegExp(`(${hl})`, 'gi'), '<mark>$1</mark>') : p.nome;
+
+    const wins   = countWins(p);
+    const losses = countLosses(p);
+    const played = p.jogos.filter(j => j.resultado).length;
+    const winRate = played ? Math.round(wins / played * 100) : 0;
+
+    const shareLink = `${location.origin}${location.pathname}?jogador=${encodeURIComponent(p.nome)}`;
+    const waShareLink = `https://wa.me/?text=${encodeURIComponent(`🎾 Estatísticas de ${p.nome} no Play Padel 2026:\n✅ ${wins}V · ❌ ${losses}D · ${winRate}% vitórias\n\nVeja em: ${shareLink}`)}`;
+
+    return `
+    <div class="player-card">
+      <div class="player-card-top">
+        <div class="player-avatar cat-${cat}">${initials}</div>
+        <div class="player-info">
+          <p class="player-name">${nomeHtml}</p>
+          <p class="player-par">${pares.join(' · ')}</p>
+          <div class="player-tags">
+            ${grupos.map(g => `<span class="match-grupo cat-${g.split('-')[0]}">${g}</span>`).join('')}
+          </div>
+        </div>
+        <div class="player-stats">
+          <span class="pstat">${p.jogos.length}<small>Jogos</small></span>
+          <span class="pstat pstat-win">${wins}<small>Vitórias</small></span>
+          <span class="pstat pstat-loss">${losses}<small>Derrotas</small></span>
+          <span class="pstat" style="color:var(--amarelo)">${winRate}%<small>Taxa V</small></span>
+        </div>
+      </div>
+      ${nextMatchHtml}
+      <div style="display:flex;justify-content:flex-end;padding:.3rem 1rem .5rem">
+        <a href="${waShareLink}" target="_blank" rel="noopener"
+           style="display:flex;align-items:center;gap:.35rem;font-size:.72rem;color:var(--cinza-texto);text-decoration:none">
+          <i class="ph ph-whatsapp-logo" style="color:#25D366"></i> Partilhar stats
+        </a>
+      </div>
+      <div class="player-matches">${matchesHtml}</div>
+    </div>`;
+  }
+
+  function countWins(p) {
+    let w = 0;
+    p.jogos.forEach(j => {
+      if (!j.resultado) return;
+      const isEq1 = j.eq1.split('&').map(s => s.trim()).includes(p.nome);
+      w += _parseResultado(j.resultado, isEq1).wins;
+    });
+    return w;
+  }
+
+  function countLosses(p) {
+    let l = 0;
+    p.jogos.forEach(j => {
+      if (!j.resultado) return;
+      const isEq1 = j.eq1.split('&').map(s => s.trim()).includes(p.nome);
+      l += _parseResultado(j.resultado, isEq1).losses;
+    });
+    return l;
+  }
+
+  render();
+
+  // Deep-link: ?jogador=Name auto-search
+  const urlParams = new URLSearchParams(location.search);
+  const paramJogador = urlParams.get('jogador');
+  if (paramJogador) {
+    const inp = document.getElementById('searchJogador');
+    inp.value = paramJogador;
+    activeSearch = paramJogador;
+    render();
+    setTimeout(() => inp.scrollIntoView({ behavior: 'smooth', block: 'center' }), 200);
+  }
+});
+</script>
+</body>
+</html>

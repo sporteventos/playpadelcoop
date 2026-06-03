@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="2.º Aniversário Play Padel — Torneio oficial de 5 a 14 de Junho 2026, Maputo"/>
+  <title>Play Padel · Torneio 2.º Aniversário</title>
+  <link rel="stylesheet" href="css/style.css"/>
+  <link rel="stylesheet" href="css/pages.css"/>
+  <script src="https://unpkg.com/@phosphor-icons/web@2.1.1/src/index.js" defer></script>
+</head>
+<body>
+
+<!-- ===================== NAVBAR ===================== -->
+<nav class="navbar" id="navbar">
+  <a class="nav-logo" href="#inicio">
+    <img src="playpadellogo.jpg" alt="Play Padel" style="height:34px;width:34px;border-radius:7px;object-fit:cover;flex-shrink:0"/>
+    <div class="nav-logo-text">
+      <span class="nav-logo-title">Play Padel</span>
+      <span class="nav-logo-sub">Torneio 2.º Aniversário</span>
+    </div>
+  </a>
+
+  <ul class="nav-links">
+    <li><a href="#inicio" class="active"><i class="ph ph-house nav-icon"></i> Início</a></li>
+    <li><a href="calendario.html"><i class="ph ph-calendar nav-icon"></i> Calendário</a></li>
+    <li><a href="classificacoes.html"><i class="ph ph-trophy nav-icon"></i> Classificações</a></li>
+    <li><a href="fasefinal.html"><i class="ph ph-brackets-round nav-icon"></i> Fase Final</a></li>
+    <li><a href="jogadores.html"><i class="ph ph-users nav-icon"></i> Jogadores</a></li>
+    <li><a href="regulamento.html"><i class="ph ph-book-open nav-icon"></i> Regulamento</a></li>
+  </ul>
+
+  <button class="nav-hamburger" id="hamburger" aria-label="Abrir menu" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- Drawer mobile -->
+<div class="nav-drawer" id="navDrawer">
+  <ul>
+    <li><a href="#inicio" class="active"><i class="ph ph-house"></i> Início</a></li>
+    <li><a href="calendario.html"><i class="ph ph-calendar"></i> Calendário</a></li>
+    <li><a href="classificacoes.html"><i class="ph ph-trophy"></i> Classificações</a></li>
+    <li><a href="fasefinal.html"><i class="ph ph-brackets-round"></i> Fase Final</a></li>
+    <li><a href="jogadores.html"><i class="ph ph-users"></i> Jogadores</a></li>
+    <li><a href="regulamento.html"><i class="ph ph-book-open"></i> Regulamento</a></li>
+  </ul>
+</div>
+
+<!-- ===================== HERO ===================== -->
+<section class="hero" id="inicio">
+  <div class="hero-orb hero-orb-1"></div>
+  <div class="hero-orb hero-orb-2"></div>
+
+  <div class="hero-content">
+
+    <div class="hero-badge">
+      <span class="hero-badge-dot"></span>
+      <i class="ph ph-map-pin"></i>&nbsp;Maputo &nbsp;·&nbsp; 5 – 14 Junho 2026
+    </div>
+
+    <h1 class="hero-title">
+      <span class="line-1">2.º Aniversário</span><br/>
+      <span class="line-2">Play Padel</span><br/>
+      <span class="line-3">Torneio Oficial</span>
+    </h1>
+
+    <p class="hero-subtitle">
+      O maior evento de padel de Moçambique.<br/>
+      <strong>7 categorias · 22 grupos · 177 jogos</strong>
+    </p>
+
+    <!-- Countdown -->
+    <div class="countdown-wrapper">
+      <div class="countdown-label" id="cdLabel">COMEÇA EM</div>
+      <div class="countdown">
+        <div class="countdown-unit">
+          <span class="countdown-value" id="cdDias">00</span>
+          <span class="countdown-name">DIAS</span>
+        </div>
+        <div class="countdown-unit">
+          <span class="countdown-value" id="cdHoras">00</span>
+          <span class="countdown-name">HORAS</span>
+        </div>
+        <div class="countdown-unit">
+          <span class="countdown-value" id="cdMins">00</span>
+          <span class="countdown-name">MIN</span>
+        </div>
+        <div class="countdown-unit">
+          <span class="countdown-value" id="cdSegs">00</span>
+          <span class="countdown-name">SEG</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-cta">
+      <a href="calendario.html" class="btn btn-primary">
+        <i class="ph ph-calendar"></i> Ver Calendário
+      </a>
+      <a href="classificacoes.html" class="btn btn-secondary">
+        <i class="ph ph-chart-bar"></i> Classificações
+      </a>
+    </div>
+  </div>
+
+  <div class="hero-scroll">
+    <span>EXPLORAR</span>
+    <div class="hero-scroll-arrow">↓</div>
+  </div>
+</section>
+
+<!-- ===================== STATS BAR ===================== -->
+<div class="stats-bar">
+  <div class="stats-bar-inner">
+    <div class="stat-item">
+      <span class="stat-value">10</span>
+      <span class="stat-label">DIAS DE TORNEIO</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-value">3</span>
+      <span class="stat-label">CAMPOS</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-value">7</span>
+      <span class="stat-label">CATEGORIAS</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-value">22</span>
+      <span class="stat-label">GRUPOS</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-value">177</span>
+      <span class="stat-label">JOGOS</span>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== NAV CARDS ===================== -->
+<section class="nav-cards-section" id="modulos">
+  <div class="main-container">
+    <div class="section-header">
+      <p class="section-tag">NAVEGAR</p>
+      <h2 class="section-title">O QUE <span>PRETENDE VER?</span></h2>
+    </div>
+
+    <div class="nav-cards-grid">
+
+      <a href="calendario.html" class="nav-card nav-card--calendario">
+        <div class="nav-card-glow"></div>
+        <span class="nav-card-badge badge-novo">Activo</span>
+        <div class="nav-card-icon">📅</div>
+        <h3 class="nav-card-title">Calendário</h3>
+        <p class="nav-card-desc">
+          Consulte todos os jogos por dia, campo ou grupo. Filtre e pesquise facilmente.
+        </p>
+        <div class="nav-card-arrow">→</div>
+      </a>
+
+      <a href="classificacoes.html" class="nav-card nav-card--classificacoes">
+        <div class="nav-card-glow"></div>
+        <div class="nav-card-icon">🏆</div>
+        <h3 class="nav-card-title">Classificações</h3>
+        <p class="nav-card-desc">
+          Tabelas de classificação actualizadas após cada jogo. Acompanhe a sua posição no grupo.
+        </p>
+        <div class="nav-card-arrow">→</div>
+      </a>
+
+      <a href="fasefinal.html" class="nav-card nav-card--classificacoes">
+        <div class="nav-card-glow"></div>
+        <div class="nav-card-icon">🥊</div>
+        <h3 class="nav-card-title">Fase Final</h3>
+        <p class="nav-card-desc">
+          Quartos de final, meias-finais e final. Acompanhe o bracket eliminatório por categoria.
+        </p>
+        <div class="nav-card-arrow">→</div>
+      </a>
+
+      <a href="jogadores.html" class="nav-card nav-card--jogadores">
+        <div class="nav-card-glow"></div>
+        <div class="nav-card-icon">👥</div>
+        <h3 class="nav-card-title">Jogadores</h3>
+        <p class="nav-card-desc">
+          Pesquise qualquer jogador e veja os seus jogos, resultados e estatísticas do torneio.
+        </p>
+        <div class="nav-card-arrow">→</div>
+      </a>
+
+
+
+
+
+    </div>
+  </div>
+</section>
+
+<!-- ===================== PRÓXIMOS JOGOS ===================== -->
+<section class="proximos-section" id="proximos">
+  <div class="main-container">
+    <div class="proximos-header">
+      <div>
+        <p class="section-tag">AGENDA</p>
+        <h2 class="section-title">PRÓXIMOS <span>JOGOS</span></h2>
+      </div>
+      <a href="calendario.html" class="proximos-link">Ver todos <i class="ph ph-arrow-right"></i></a>
+    </div>
+
+    <div id="jogosList"></div>
+  </div>
+</section>
+
+<!-- ===================== PATROCINADORES ===================== -->
+<section class="patrocinadores-section">
+  <p class="patrocinadores-label">Patrocinadores Oficiais</p>
+  <div class="patrocinadores-grid">
+    <div class="patrocinador-item">
+      <img src="patrocinadores/jetour.png" alt="Jetour" class="patrocinador-logo"/>
+      <span class="patrocinador-nome">Jetour</span>
+    </div>
+    <div class="patrocinador-item">
+      <img src="patrocinadores/stellaartois.png" alt="Stella Artois" class="patrocinador-logo"/>
+      <span class="patrocinador-nome">Stella Artois</span>
+    </div>
+    <div class="patrocinador-item">
+      <img src="patrocinadores/bonaqua.png" alt="Bona Aqua" class="patrocinador-logo"/>
+      <span class="patrocinador-nome">Bona Aqua</span>
+    </div>
+    <div class="patrocinador-item">
+      <img src="patrocinadores/tvcabo.png" alt="TV Cabo" class="patrocinador-logo"/>
+      <span class="patrocinador-nome">TV Cabo</span>
+    </div>
+    <div class="patrocinador-item">
+      <img src="patrocinadores/alcanceeditores.png" alt="Alcance Editores" class="patrocinador-logo"/>
+      <span class="patrocinador-nome">Alcance Editores</span>
+    </div>
+    <div class="patrocinador-item">
+      <img src="patrocinadores/Eclipse.png" alt="Eclipse" class="patrocinador-logo"/>
+      <span class="patrocinador-nome">Eclipse</span>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== PARCEIROS ===================== -->
+<section class="patrocinadores-section parceiros-section">
+  <p class="patrocinadores-label">Parceiros Oficiais</p>
+  <div class="patrocinadores-grid">
+    <div class="patrocinador-item">
+      <img src="parceiros/fisiolab.png" alt="Fisiolab" class="patrocinador-logo"/>
+      <span class="patrocinador-nome">Fisiolab</span>
+    </div>
+    <div class="patrocinador-item">
+      <img src="parceiros/montebelo hoteis.png" alt="Montebelo Hot&#233;is" class="patrocinador-logo"/>
+      <span class="patrocinador-nome">Montebelo Hot&#233;is</span>
+    </div>
+    <div class="patrocinador-item">
+      <img src="parceiros/tempo.png" alt="Tempo" class="patrocinador-logo"/>
+      <span class="patrocinador-nome">Tempo</span>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== FOOTER ===================== -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="footer-logo">
+        <img src="playpadellogo.jpg" alt="Play Padel" style="height:42px;width:42px;border-radius:9px;object-fit:cover"/>
+        <div>
+          <p class="footer-logo-title">Play Padel</p>
+        </div>
+      </div>
+      <p class="footer-desc">O padel que une Moçambique.<br/>5 a 14 de Junho 2026 · Maputo</p>
+    </div>
+
+    <nav class="footer-links">
+      <a href="calendario.html"><i class="ph ph-calendar"></i> Calendário</a>
+      <a href="classificacoes.html"><i class="ph ph-trophy"></i> Classificações</a>
+      <a href="jogadores.html"><i class="ph ph-users"></i> Jogadores</a>
+    </nav>
+  </div>
+
+  <div class="footer-bottom">
+    <p class="footer-copy">© 2026 <span>Play Padel</span> · Torneio 2.º Aniversário · Maputo, Moçambique</p>
+  </div>
+</footer>
+
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
+<script>
+(function () {
+  const jogos = ppGet('jogos');
+  const pending = jogos
+    .filter(j => !j.resultado)
+    .sort((a, b) => (a.data + a.hora).localeCompare(b.data + b.hora))
+    .slice(0, 6);
+
+  const list = document.getElementById('jogosList');
+  if (!list) return;
+
+  if (pending.length === 0) {
+    list.innerHTML = '<div class="jogo-card" style="justify-content:center;color:var(--cinza-texto)"><i class="ph ph-check-circle" style="margin-right:.4rem;color:var(--verde)"></i> Todos os jogos foram disputados.</div>';
+    return;
+  }
+
+  list.innerHTML = pending.map(j => `
+    <div class="jogo-card">
+      <div class="jogo-meta">
+        <span class="jogo-hora">${j.hora}</span>
+        <span class="jogo-campo">${j.campo}</span>
+        <span class="jogo-grupo-badge">${j.grupo}</span>
+        <span style="font-size:.65rem;color:var(--cinza-texto);margin-left:.2rem">${ppFormatDate(j.data)}</span>
+      </div>
+      <div class="jogo-equipa"><span class="jogo-equipa-nomes">${j.eq1}</span></div>
+      <div class="jogo-vs">VS</div>
+      <div class="jogo-equipa"><span class="jogo-equipa-nomes">${j.eq2}</span></div>
+      <div class="jogo-status status-pendente"><i class="ph ph-clock"></i> Pendente</div>
+    </div>`).join('');
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Regulamento · Play Padel Torneio</title>
+  <link rel="stylesheet" href="css/style.css"/>
+  <link rel="stylesheet" href="css/pages.css"/>
+  <script src="https://unpkg.com/@phosphor-icons/web@2.1.1/src/index.js" defer></script>
+  <style>
+    /* ---- Regulamento page styles ---- */
+    .reg-container {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 2.5rem 1.25rem 5rem;
+    }
+
+    .reg-section {
+      background: var(--preto-card);
+      border: 1px solid var(--preto-borda);
+      border-radius: 16px;
+      padding: 1.75rem 2rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .reg-section-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .reg-section-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      flex-shrink: 0;
+      background: rgba(0,195,123,.12);
+    }
+    .reg-section-icon.amarelo  { background: rgba(245,197,24,.12); }
+    .reg-section-icon.vermelho { background: rgba(255,74,74,.12); }
+    .reg-section-icon.azul     { background: rgba(56,182,255,.12); }
+
+    .reg-section-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--branco);
+      letter-spacing: .03em;
+      text-transform: uppercase;
+      line-height: 1.1;
+    }
+    .reg-section-title small {
+      display: block;
+      font-size: .7rem;
+      font-weight: 500;
+      color: var(--cinza-texto);
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      margin-top: 2px;
+    }
+
+    .reg-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .reg-list li {
+      position: relative;
+      padding: .55rem 0 .55rem 1.1rem;
+      border-bottom: 1px solid rgba(255,255,255,.04);
+      font-size: .9rem;
+      color: #b8ccc4;
+      line-height: 1.6;
+    }
+    .reg-list li:last-child { border-bottom: none; }
+
+    .reg-list li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: .72em;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--verde);
+    }
+
+    .reg-desempate {
+      counter-reset: desempate;
+    }
+    .reg-desempate li::before {
+      counter-increment: desempate;
+      content: counter(desempate);
+      background: transparent;
+      border: 1px solid var(--verde);
+      color: var(--verde);
+      font-size: .65rem;
+      font-weight: 700;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      position: absolute;
+      left: 0;
+      top: .5em;
+    }
+    .reg-desempate li {
+      padding-left: 1.6rem;
+    }
+
+    .reg-pontos-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: .75rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .reg-ponto-item {
+      background: rgba(255,255,255,.04);
+      border-radius: 10px;
+      padding: 1rem;
+      text-align: center;
+    }
+    .reg-ponto-valor {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--verde);
+      line-height: 1;
+    }
+    .reg-ponto-item.derrota .reg-ponto-valor { color: var(--vermelho); }
+    .reg-ponto-item.wo      .reg-ponto-valor { color: var(--amarelo); }
+    .reg-ponto-label {
+      font-size: .75rem;
+      color: var(--cinza-texto);
+      margin-top: .35rem;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+    }
+
+    .reg-disciplinar-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: .6rem;
+    }
+    .reg-disciplinar-list li {
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+      background: rgba(255,255,255,.03);
+      border-radius: 8px;
+      padding: .65rem .85rem;
+      font-size: .875rem;
+      color: #b8ccc4;
+    }
+    .reg-disc-badge {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: .7rem;
+      font-weight: 700;
+      letter-spacing: .05em;
+      text-transform: uppercase;
+      padding: .25rem .6rem;
+      border-radius: 5px;
+      white-space: nowrap;
+    }
+    .badge-adv1  { background: rgba(245,197,24,.15); color: var(--amarelo); }
+    .badge-adv2  { background: rgba(255,74,74,.15);  color: var(--vermelho); }
+    .badge-adv3  { background: rgba(255,74,74,.35);  color: #ff8888; }
+
+    .reg-footer-msg {
+      background: linear-gradient(135deg, rgba(0,195,123,.08), rgba(57,255,143,.05));
+      border: 1px solid rgba(0,195,123,.2);
+      border-radius: 16px;
+      padding: 2rem;
+      text-align: center;
+      margin-top: 2rem;
+    }
+    .reg-footer-msg h3 {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--branco);
+      margin-bottom: .5rem;
+    }
+    .reg-footer-msg p {
+      font-size: .9rem;
+      color: var(--cinza-texto);
+      line-height: 1.7;
+    }
+    .reg-footer-msg p strong { color: var(--verde); }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar" id="navbar">
+  <a class="nav-logo" href="index.html">
+    <img src="playpadellogo.jpg" alt="Play Padel" style="height:34px;width:34px;border-radius:7px;object-fit:cover;flex-shrink:0"/>
+    <div class="nav-logo-text">
+      <span class="nav-logo-title">Play Padel</span>
+      <span class="nav-logo-sub">Torneio 2.º Aniversário</span>
+    </div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html"><i class="ph ph-house nav-icon"></i> Início</a></li>
+    <li><a href="calendario.html"><i class="ph ph-calendar nav-icon"></i> Calendário</a></li>
+    <li><a href="classificacoes.html"><i class="ph ph-trophy nav-icon"></i> Classificações</a></li>
+    <li><a href="fasefinal.html"><i class="ph ph-brackets-round nav-icon"></i> Fase Final</a></li>
+    <li><a href="jogadores.html"><i class="ph ph-users nav-icon"></i> Jogadores</a></li>
+    <li><a href="regulamento.html" class="active"><i class="ph ph-book-open nav-icon"></i> Regulamento</a></li>
+  </ul>
+  <button class="nav-hamburger" id="hamburger" aria-label="Menu" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+<div class="nav-drawer" id="navDrawer">
+  <ul>
+    <li><a href="index.html"><i class="ph ph-house"></i> Início</a></li>
+    <li><a href="calendario.html"><i class="ph ph-calendar"></i> Calendário</a></li>
+    <li><a href="classificacoes.html"><i class="ph ph-trophy"></i> Classificações</a></li>
+    <li><a href="fasefinal.html"><i class="ph ph-brackets-round"></i> Fase Final</a></li>
+    <li><a href="jogadores.html"><i class="ph ph-users"></i> Jogadores</a></li>
+    <li><a href="regulamento.html" class="active"><i class="ph ph-book-open"></i> Regulamento</a></li>
+  </ul>
+</div>
+
+<!-- PAGE HERO -->
+<div class="page-hero">
+  <div class="page-hero-content">
+    <p class="page-hero-tag"><i class="ph ph-book-open"></i> Regulamento Oficial</p>
+    <h1 class="page-hero-title">Regulamento do <span>Torneio</span></h1>
+    <p class="page-hero-sub">2.º Aniversário Play Padel COOP · Maputo 2026</p>
+  </div>
+</div>
+
+<!-- CONTEÚDO -->
+<div class="reg-container">
+
+  <!-- Formato dos Jogos -->
+  <div class="reg-section">
+    <div class="reg-section-header">
+      <div class="reg-section-icon">🎾</div>
+      <div>
+        <div class="reg-section-title">Formato dos Jogos</div>
+        <small>Estrutura da competição</small>
+      </div>
+    </div>
+    <ul class="reg-list">
+      <li>Todos os jogos serão disputados à <strong>melhor de 3 sets</strong>.</li>
+      <li>Cada set é jogado até <strong>6 jogos</strong>, com vantagem mínima de 2 jogos para vencer o set.</li>
+      <li>Em caso de empate a <strong>6-6</strong>, será disputado um <strong>tie-break até 7 pontos</strong>, sendo obrigatória uma diferença mínima de 2 pontos.</li>
+    </ul>
+  </div>
+
+  <!-- Star Point -->
+  <div class="reg-section">
+    <div class="reg-section-header">
+      <div class="reg-section-icon amarelo">⭐</div>
+      <div>
+        <div class="reg-section-title">Star Point</div>
+        <small>Golden Point</small>
+      </div>
+    </div>
+    <ul class="reg-list">
+      <li>Cada jogo é disputado com <strong>2 vantagens por jogo</strong>.</li>
+      <li>À terceira igualdade (deuce), é jogado um <strong>Ponto de Ouro (Golden Point)</strong> que decide o jogo.</li>
+    </ul>
+  </div>
+
+  <!-- Pontuação -->
+  <div class="reg-section">
+    <div class="reg-section-header">
+      <div class="reg-section-icon azul">🔢</div>
+      <div>
+        <div class="reg-section-title">Sistema de Pontuação</div>
+        <small>Vitórias, derrotas e critérios de desempate</small>
+      </div>
+    </div>
+
+    <div class="reg-pontos-grid">
+      <div class="reg-ponto-item">
+        <div class="reg-ponto-valor">2</div>
+        <div class="reg-ponto-label">Vitória</div>
+      </div>
+      <div class="reg-ponto-item derrota">
+        <div class="reg-ponto-valor">0</div>
+        <div class="reg-ponto-label">Derrota</div>
+      </div>
+      <div class="reg-ponto-item wo">
+        <div class="reg-ponto-valor">WO</div>
+        <div class="reg-ponto-label">Walkover</div>
+      </div>
+    </div>
+
+    <p style="font-size:.8rem;color:var(--cinza-texto);margin-bottom:.85rem;text-transform:uppercase;letter-spacing:.07em;font-weight:600;">Critérios de Desempate</p>
+    <ul class="reg-list reg-desempate">
+      <li>Confronto direto</li>
+      <li>Diferença de sets</li>
+      <li>Diferença de jogos</li>
+      <li>Maior número de jogos ganhos</li>
+    </ul>
+  </div>
+
+  <!-- Pontualidade -->
+  <div class="reg-section">
+    <div class="reg-section-header">
+      <div class="reg-section-icon azul">⏰</div>
+      <div>
+        <div class="reg-section-title">Pontualidade e Walkover</div>
+        <small>Presença obrigatória no horário definido</small>
+      </div>
+    </div>
+    <ul class="reg-list">
+      <li>Todas as duplas deverão comparecer no <strong>horário definido pela organização</strong>.</li>
+      <li>O atraso ou ausência injustificada poderá resultar em <strong>derrota por Walkover (WO)</strong>.</li>
+    </ul>
+  </div>
+
+  <!-- Fair Play -->
+  <div class="reg-section">
+    <div class="reg-section-header">
+      <div class="reg-section-icon">🤝</div>
+      <div>
+        <div class="reg-section-title">Fair Play e Conduta Desportiva</div>
+        <small>O respeito é obrigatório</small>
+      </div>
+    </div>
+    <p style="font-size:.875rem;color:var(--cinza-texto);margin-bottom:1rem;line-height:1.6;">
+      O respeito pelos adversários, organização e espectadores é obrigatório durante todo o torneio. São considerados comportamentos antidesportivos:
+    </p>
+    <ul class="reg-list">
+      <li>Ofensas verbais ou gestuais</li>
+      <li>Intimidação ou comportamento agressivo</li>
+      <li>Discussões excessivas</li>
+      <li>Atitudes hostis para com adversários, parceiros, organização ou espectadores</li>
+      <li>Quebra propositada de raquetes</li>
+      <li>Danificação das instalações</li>
+      <li>Bater bolas contra vidros, rede ou para fora do recinto com o jogo interrompido</li>
+      <li>Qualquer atitude contrária ao espírito de fair play</li>
+    </ul>
+  </div>
+
+  <!-- Sistema Disciplinar -->
+  <div class="reg-section">
+    <div class="reg-section-header">
+      <div class="reg-section-icon vermelho">⚠️</div>
+      <div>
+        <div class="reg-section-title">Sistema Disciplinar</div>
+        <small>Advertências progressivas</small>
+      </div>
+    </div>
+    <p style="font-size:.875rem;color:var(--cinza-texto);margin-bottom:1rem;line-height:1.6;">
+      Cada jogador terá direito às seguintes advertências durante o torneio:
+    </p>
+    <ul class="reg-disciplinar-list">
+      <li>
+        <span class="reg-disc-badge badge-adv1">1.ª Advertência</span>
+        Aviso oficial e <strong>perda do set</strong> em disputa
+      </li>
+      <li>
+        <span class="reg-disc-badge badge-adv2">2.ª Advertência</span>
+        <strong>Perda imediata da partida</strong> em disputa — 0 pontos
+      </li>
+      <li>
+        <span class="reg-disc-badge badge-adv3">3.ª Advertência</span>
+        <strong>Expulsão do torneio</strong>
+      </li>
+    </ul>
+    <p style="font-size:.8rem;color:var(--cinza-texto);margin-top:1rem;line-height:1.5;border-top:1px solid var(--preto-borda);padding-top:.85rem;">
+      A reincidência em comportamentos impróprios ou qualquer situação considerada grave pela organização poderá resultar em <strong style="color:var(--vermelho)">desclassificação imediata</strong>.
+    </p>
+  </div>
+
+
+</div>
+
+<script>
+  // Navbar scroll
+  window.addEventListener('scroll', () => {
+    document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 20);
+  });
+
+  // Hamburger
+  const hamburger = document.getElementById('hamburger');
+  const navDrawer = document.getElementById('navDrawer');
+  hamburger.addEventListener('click', () => {
+    const open = navDrawer.classList.toggle('open');
+    hamburger.setAttribute('aria-expanded', open);
+    hamburger.classList.toggle('active', open);
+  });
+  navDrawer.querySelectorAll('a').forEach(a => {
+    a.addEventListener('click', () => {
+      navDrawer.classList.remove('open');
+      hamburger.setAttribute('aria-expanded', false);
+      hamburger.classList.remove('active');
+    });
+  });
+</script>
+</body>
+</html>
