@@ -601,7 +601,7 @@ function renderDashboard() {
           <td>—</td>
           <td>—</td>
           <td><span class="cat-pill cat-${j._cat}">${j._cat} · ${fLabel}</span></td>
-          <td>${j.eq1 ? j.eq1.split(' & ').join('<br>') : '—'}</td>
+          <td style="text-align:right">${j.eq1 ? j.eq1.split(' & ').join('<br>') : '—'}</td>
           <td style="color:var(--cinza-texto);padding:0 0.4rem">VS</td>
           <td>${j.eq2 ? j.eq2.split(' & ').join('<br>') : '—'}</td>
           <td><span class="badge badge-amarelo">Pendente</span></td>
@@ -613,7 +613,7 @@ function renderDashboard() {
         <td>${j.hora}</td>
         <td><span class="badge badge-cinza">${j.campo}</span></td>
         <td><span class="cat-pill cat-${j.grupo.split('-')[0]}">${j.grupo}</span></td>
-        <td>${j.eq1.split(' & ').join('<br>')}</td>
+        <td style="text-align:right">${j.eq1.split(' & ').join('<br>')}</td>
         <td style="color:var(--cinza-texto);padding:0 0.4rem">VS</td>
         <td>${j.eq2.split(' & ').join('<br>')}</td>
         <td><span class="badge badge-amarelo">Pendente</span></td>
@@ -1017,7 +1017,7 @@ function renderResultados(filtroData = 'todos') {
       <td><span class="td-mono">${formatDate(j.data)}</span> ${j.hora}</td>
       <td><span class="badge badge-cinza" style="font-size:0.65rem">${j.campo}</span></td>
       <td><span class="cat-pill cat-${cat}">${j.grupo}</span></td>
-      <td>${j.eq1.split(' & ').join('<br>')}</td>
+      <td style="text-align:right">${j.eq1.split(' & ').join('<br>')}</td>
       <td style="text-align:center;color:var(--cinza-texto)">VS</td>
       <td>${j.eq2.split(' & ').join('<br>')}</td>
       <td>
