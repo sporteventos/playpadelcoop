@@ -2578,6 +2578,7 @@ function _renderAdminClassCat(catId, grupos, jogos, el) {
                     ${p2?`<span style="display:block;font-size:.8rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:128px;color:var(--cinza-texto)">${escHtml(p2)}</span>`:''}
                   </div>
                   <button class="btn-icon" style="flex-shrink:0;font-size:.6rem;padding:.1rem .2rem;opacity:.45" data-par="${escHtml(r.par)}" data-cat="${catId}" data-grupo="${g.id}" onclick="editarGrupoPar(this.dataset.par,this.dataset.cat,this.dataset.grupo)" title="Mudar grupo"><i class="ph ph-swap"></i></button>
+                  <button class="btn-icon" style="flex-shrink:0;font-size:.6rem;padding:.1rem .2rem;opacity:.45;color:var(--vermelho)" data-par="${escHtml(r.par)}" data-grupo="${g.id}" onclick="removerParDoGrupo(this.dataset.par,this.dataset.grupo)" title="Remover par do grupo"><i class="ph ph-trash"></i></button>
                 </div>
               </td>
               <td>${r.pj}</td><td style="color:var(--verde)">${r.v}</td><td style="color:var(--vermelho)">${r.d}</td>
@@ -2590,6 +2591,21 @@ function _renderAdminClassCat(catId, grupos, jogos, el) {
     }).join('')}
   </div>`;
 }
+
+// ============================================
+//  REMOVER PAR DO GRUPO (apaga jogos)
+// ============================================
+window.removerParDoGrupo = function(par, grupoId) {
+  const jogos = getData('jogos');
+  const afetados = jogos.filter(j => j.grupo === grupoId && (j.eq1 === par || j.eq2 === par));
+  if (!afetados.length) { toast('Nenhum jogo encontrado para este par.', 'error'); return; }
+  if (!confirm(`Remover permanentemente "${par}" do grupo ${grupoId}?\n\n${afetados.length} jogo(s) serão eliminados.`)) return;
+  const novosJogos = jogos.filter(j => !(j.grupo === grupoId && (j.eq1 === par || j.eq2 === par)));
+  setData('jogos', novosJogos);
+  Auth.log('DELETE_PAR_GRUPO', 'jogos', `"${par}" removido de ${grupoId} (${afetados.length} jogo(s))`);
+  toast(`"${par}" removido — ${afetados.length} jogo(s) eliminado(s)`, 'success');
+  renderAdminClassificacoes();
+};
 
 // ============================================
 //  MUDAR GRUPO DO PAR
