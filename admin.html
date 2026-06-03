@@ -182,6 +182,10 @@
           <i class="ph ph-magnifying-glass"></i>
           <input class="header-search" id="headerSearch" type="search" placeholder="Pesquisar jogador…"/>
         </div>
+        <input type="file" id="importJsonInput" accept=".json" style="display:none" onchange="importLocalJson(event)">
+        <button class="header-btn" title="Importar data.json local (para usar em file://)" aria-label="Importar JSON" onclick="document.getElementById('importJsonInput').click()">
+          <i class="ph ph-upload-simple"></i>
+        </button>
         <button class="header-btn gh-sync-btn" id="ghSyncBtn" title="Sincronizar com GitHub (clique direito para configurar)" aria-label="Sincronizar" onclick="ghSyncAll()" oncontextmenu="event.preventDefault();ghShowConfig()">
           <i class="ph ph-cloud-arrow-up" id="ghSyncIcon"></i>
           <span class="gh-sync-label" id="ghSyncLabel">Sync</span>
