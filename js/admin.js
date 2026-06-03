@@ -18,10 +18,6 @@ const getData = ppGet;
 const setData = (k, v) => { ppSave(k, v); if (typeof GHSync !== 'undefined') GHSync.markDirty(); };
 const formatDate = ppFormatDate;
 
-// Preload do logo para o panfleto (carregado em background, usado no canvas)
-const _panfletoLogo = new Image();
-_panfletoLogo.src = 'playpadellogo.jpg';
-
 // ============================================
 //  WHATSAPP HELPERS
 // ============================================
@@ -92,8 +88,6 @@ window.gerarPanfleto = function() {
   if (!jogos.length) return toast('Sem jogos para o filtro actual.', 'error');
   jogos = [...jogos].sort((a, b) => (a.data + a.hora).localeCompare(b.data + b.hora) || a.campo.localeCompare(b.campo));
 
-  const logo = (_panfletoLogo.complete && _panfletoLogo.naturalWidth > 0) ? _panfletoLogo : null;
-
   const W      = 1080;
   const PAD    = 44;
   const ROW_H  = 82;
@@ -146,13 +140,6 @@ window.gerarPanfleto = function() {
   grad.addColorStop(0, '#00C37B'); grad.addColorStop(1, '#007A4E');
   ctx.fillStyle = grad;
   ctx.fillRect(0, 0, W, 10);
-
-  // ── Logo ─────────────────────────────────────────────────
-  if (logo) {
-    const logoH = 82;
-    const logoW = Math.round(logo.naturalWidth * (logoH / logo.naturalHeight));
-    ctx.drawImage(logo, W - PAD - logoW, 18, logoW, logoH);
-  }
 
   // ── Header text ──────────────────────────────────────────
   ctx.fillStyle = '#00C37B';
