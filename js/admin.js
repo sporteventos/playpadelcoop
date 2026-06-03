@@ -1006,6 +1006,7 @@ function renderJogadores(filter = '') {
       '<td style="font-size:.78rem;color:var(--cinza-texto)">' + (tel || '<span style="opacity:.35">\u2014</span>') + '</td>' +
       '<td><div style="display:flex;gap:.15rem">' + waBtn +
         '<button class="btn-icon" onclick="editarJogador(decodeURIComponent(\'' + nomeEnc + '\'))" title="Editar"><i class="ph ph-pencil"></i></button>' +
+        '<button class="btn-icon" style="color:var(--vermelho);opacity:.7" onclick="eliminarJogador(decodeURIComponent(\'' + nomeEnc + '\'))" title="Eliminar jogador"><i class="ph ph-trash"></i></button>' +
       '</div></td>' +
       '</tr>';
   }).join('');
@@ -1120,6 +1121,28 @@ function saveJogador() {
   renderJogadores();
   APP.editingId = null;
 }
+
+window.eliminarJogador = function(nome) {
+  if (!nome) return;
+  if (!confirm(`Eliminar "${nome}"?\n\nO nome será substituído por "A Definir" em todos os jogos onde aparece.`)) return;
+  const jogos = getData('jogos');
+  let count = 0;
+  jogos.forEach(j => {
+    const eq1parts = j.eq1.split('&').map(n => n.trim());
+    const eq2parts = j.eq2.split('&').map(n => n.trim());
+    const idx1 = eq1parts.indexOf(nome);
+    const idx2 = eq2parts.indexOf(nome);
+    if (idx1 !== -1) { eq1parts[idx1] = 'A Definir'; j.eq1 = eq1parts.join(' & '); count++; }
+    if (idx2 !== -1) { eq2parts[idx2] = 'A Definir'; j.eq2 = eq2parts.join(' & '); count++; }
+  });
+  setData('jogos', jogos);
+  setTelefone(nome, '');
+  Auth.log('DELETE_JOGADOR', 'jogadores', `"${nome}" eliminado de ${count} jogo(s)`);
+  closeModal('modalJogador');
+  toast(`"${nome}" eliminado de ${count} jogo(s)`, 'success');
+  renderJogadores();
+  APP.editingId = null;
+};
 
 // ---------- JOGOS ----------
 function matchSetsScore(r) {
