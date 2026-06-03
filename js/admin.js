@@ -1,4 +1,4 @@
-// ============================================
+﻿// ============================================
 //  PLAY PADEL — Admin Backoffice
 //  Dados iniciais + lógica completa
 // ============================================
@@ -2659,7 +2659,8 @@ window.gerarPanfletoClassificacoes = function() {
   toast('Panfleto gerado!', 'success');
 };
 
-�STICAS (player leaderboard)
+// ============================================
+//  ESTATISTICAS (player leaderboard)
 // ============================================
 function renderEstatisticas() {
   const el = document.getElementById('statsContent');
