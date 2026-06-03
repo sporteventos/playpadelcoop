@@ -984,7 +984,11 @@ function renderJogadores(filter = '') {
 
   const tbody = document.getElementById('jogadoresBody');
   tbody.innerHTML = lista.map((nome, i) => {
-    const jogosJogador = jogos.filter(j => j.eq1.includes(nome) || j.eq2.includes(nome));
+    const jogosJogador = jogos.filter(j => {
+      const p1 = j.eq1.split('&').map(n => n.trim());
+      const p2 = j.eq2.split('&').map(n => n.trim());
+      return p1.includes(nome) || p2.includes(nome);
+    });
     const grupos = [...new Set(jogosJogador.map(j => j.grupo))];
     const comRes  = jogosJogador.filter(j => j.resultado).length;
     const nomeEnc = encodeURIComponent(nome);
