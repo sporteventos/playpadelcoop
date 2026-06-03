@@ -59,12 +59,7 @@
       <input type="search" id="searchJogador" class="search-input" placeholder="Nome do jogador ou par…" autocomplete="off"/>
       <span class="search-count" id="searchCount"></span>
     </div>
-    <div class="filter-select-wrap">
-      <i class="ph ph-funnel"></i>
-      <select id="filtroAlpha" class="filter-select" aria-label="Filtrar por letra">
-        <option value="todos">Todas as letras</option>
-      </select>
-    </div>
+
   </div>
 </div>
 
@@ -125,29 +120,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const allPlayers = Object.values(playerMap).sort((a, b) => a.nome.localeCompare(b.nome));
 
-  // ---- Filtro de letra ----
-  const letters = [...new Set(allPlayers.map(p => p.nome[0].toUpperCase()))].sort();
-  const alphaSelect = document.getElementById('filtroAlpha');
-  letters.forEach(l => {
-    const o = document.createElement('option');
-    o.value = o.textContent = l;
-    alphaSelect.appendChild(o);
-  });
-
   let activeSearch = '';
-  let activeAlpha  = 'todos';
 
   document.getElementById('searchJogador').addEventListener('input', e => {
     activeSearch = e.target.value.trim();
     render();
   });
-  alphaSelect.addEventListener('change', e => { activeAlpha = e.target.value; render(); });
 
   // ---- Render ----
   function render() {
     let list = allPlayers;
 
-    if (activeAlpha !== 'todos') list = list.filter(p => p.nome[0].toUpperCase() === activeAlpha);
     if (activeSearch) {
       const q = activeSearch.toLowerCase();
       list = list.filter(p => p.nome.toLowerCase().includes(q) || [...p.pares].some(par => par.toLowerCase().includes(q)));

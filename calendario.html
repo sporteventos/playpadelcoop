@@ -139,12 +139,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // ---- Construir tabs de dias ----
   const jogos = ppGet('jogos');
-  const datas = [...new Set(jogos.map(j => j.data))].sort();
+  // Show all tournament dates Jun 5-14, regardless of games existing yet
+  const tournamentDates = [];
+  for (let d = new Date('2026-06-05'); d <= new Date('2026-06-14'); d.setDate(d.getDate() + 1)) {
+    tournamentDates.push(d.toISOString().slice(0, 10));
+  }
 
   const dayTabs = document.getElementById('dayTabs');
   const allTab = makeTab('todos', 'Todos', true);
   dayTabs.appendChild(allTab);
-  datas.forEach(d => {
+  tournamentDates.forEach(d => {
     const label = `${ppWeekday(d).substring(0,3)} ${ppFormatDate(d)}`;
     dayTabs.appendChild(makeTab(d, label, false));
   });
