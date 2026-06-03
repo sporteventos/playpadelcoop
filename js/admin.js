@@ -86,7 +86,7 @@ window.gerarPanfleto = function() {
 
   const W      = 1080;
   const PAD    = 44;
-  const ROW_H  = 68;
+  const ROW_H  = 82;
   const HEAD_H = 210;
   const FOOT_H = 64;
   const H      = HEAD_H + jogos.length * ROW_H + FOOT_H;
@@ -101,6 +101,16 @@ window.gerarPanfleto = function() {
     if (ctx.measureText(text).width <= maxW) return text;
     while (text.length && ctx.measureText(text + '\u2026').width > maxW) text = text.slice(0, -1);
     return text + '\u2026';
+  }
+  function drawTeamName(text, x, rowY, maxW) {
+    const parts = text.split(' & ');
+    ctx.font = '19px Arial, sans-serif';
+    if (parts.length === 1) {
+      ctx.fillText(trunc(parts[0], maxW), x, rowY + ROW_H * 0.57);
+    } else {
+      ctx.fillText(trunc(parts[0], maxW), x, rowY + ROW_H * 0.40);
+      ctx.fillText(trunc(parts[1], maxW), x, rowY + ROW_H * 0.72);
+    }
   }
   function badge(x, y, w, h, r, bg, fg, text, fs) {
     ctx.fillStyle = bg;
@@ -187,8 +197,7 @@ window.gerarPanfleto = function() {
     badge(CX.grupo, y + (ROW_H - 32) / 2, 88,  32, 6, gc + '28', gc, j.grupo, 14);
 
     ctx.fillStyle = '#F0F7F3';
-    ctx.font = '21px Arial, sans-serif';
-    ctx.fillText(trunc(j.eq1, 294), CX.eq1, cy);
+    drawTeamName(j.eq1, CX.eq1, y, 294);
 
     ctx.fillStyle = '#4A6058';
     ctx.font = 'bold 17px Arial, sans-serif';
@@ -197,21 +206,20 @@ window.gerarPanfleto = function() {
     ctx.textAlign = 'left';
 
     ctx.fillStyle = '#F0F7F3';
-    ctx.font = '21px Arial, sans-serif';
 
     if (j.resultado) {
       const { w1, w2 } = matchSetsScore(j.resultado);
       const r = j.resultado;
       const sets = [[r.s1eq1,r.s1eq2],[r.s2eq1,r.s2eq2],[r.s3eq1,r.s3eq2]]
         .filter(([a]) => a != null).map(([a, b]) => `${a}-${b}`).join(' ');
-      ctx.fillText(trunc(j.eq2, 240), CX.eq2, cy);
+      drawTeamName(j.eq2, CX.eq2, y, 240);
       ctx.font = 'bold 18px Arial, sans-serif';
       ctx.fillStyle = w1 > w2 ? '#FF4A4A' : '#39FF8F';
       ctx.textAlign = 'right';
       ctx.fillText(sets, W - PAD, cy);
       ctx.textAlign = 'left';
     } else {
-      ctx.fillText(trunc(j.eq2, 290), CX.eq2, cy);
+      drawTeamName(j.eq2, CX.eq2, y, 290);
     }
   });
 
