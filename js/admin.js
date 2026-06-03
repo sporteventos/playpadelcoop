@@ -1251,9 +1251,9 @@ function ffGetQualified(catId) {
 const FF_QF_DATE = '2026-06-11'; // Quinta-feira — Quartos de Final
 const FF_SF_DATE = '2026-06-13'; // Sábado — Meias-Finais
 const FF_F_DATE  = '2026-06-14'; // Domingo — Finais
-const FF_QF_SLOTS = ['09:00', '10:30', '12:00', '13:30'];
-const FF_SF_SLOTS = ['09:00', '11:00'];
-const FF_F_SLOT   = '11:00';
+const FF_QF_SLOTS = ['17:00', '18:00', '19:00', '20:00', '21:00'];
+const FF_SF_SLOTS = ['15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00', '22:00'];
+const FF_F_SLOT   = '15:00';
 
 function ffMakeJogo(catId, fase, num, e1, e2, feedFrom = null, data = null, hora = null) {
   return {
