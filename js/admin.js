@@ -554,9 +554,9 @@ function renderDashboard() {
           <td>—</td>
           <td>—</td>
           <td><span class="cat-pill cat-${j._cat}">${j._cat} · ${fLabel}</span></td>
-          <td style="max-width:220px">${j.eq1}</td>
+          <td>${j.eq1 ? j.eq1.split(' & ').join('<br>') : '—'}</td>
           <td style="color:var(--cinza-texto);padding:0 0.4rem">VS</td>
-          <td style="max-width:220px">${j.eq2}</td>
+          <td>${j.eq2 ? j.eq2.split(' & ').join('<br>') : '—'}</td>
           <td><span class="badge badge-amarelo">Pendente</span></td>
         </tr>`;
     }
@@ -566,9 +566,9 @@ function renderDashboard() {
         <td>${j.hora}</td>
         <td><span class="badge badge-cinza">${j.campo}</span></td>
         <td><span class="cat-pill cat-${j.grupo.split('-')[0]}">${j.grupo}</span></td>
-        <td style="max-width:220px">${j.eq1}</td>
+        <td>${j.eq1.split(' & ').join('<br>')}</td>
         <td style="color:var(--cinza-texto);padding:0 0.4rem">VS</td>
-        <td style="max-width:220px">${j.eq2}</td>
+        <td>${j.eq2.split(' & ').join('<br>')}</td>
         <td><span class="badge badge-amarelo">Pendente</span></td>
       </tr>`;
   }).join('');
@@ -879,9 +879,9 @@ function renderJogos(filtroData = 'todos', filtroCampo = 'todos', filtroGrupo = 
       <td>${j.hora}</td>
       <td><span class="badge badge-cinza" style="font-size:0.65rem">${j.campo}</span></td>
       <td><span class="cat-pill cat-${cat}">${j.grupo}</span></td>
-      <td style="white-space:nowrap">${j.eq1}</td>
+      <td>${j.eq1.split(' & ').join('<br>')}</td>
       <td style="text-align:center;color:var(--cinza-texto);font-size:0.7rem">VS</td>
-      <td style="white-space:nowrap">${j.eq2}</td>
+      <td>${j.eq2.split(' & ').join('<br>')}</td>
       <td style="text-align:center">${resHtml}</td>
       <td>
         <div style="display:flex;gap:0.3rem">
@@ -970,9 +970,9 @@ function renderResultados(filtroData = 'todos') {
       <td><span class="td-mono">${formatDate(j.data)}</span> ${j.hora}</td>
       <td><span class="badge badge-cinza" style="font-size:0.65rem">${j.campo}</span></td>
       <td><span class="cat-pill cat-${cat}">${j.grupo}</span></td>
-      <td>${j.eq1}</td>
+      <td>${j.eq1.split(' & ').join('<br>')}</td>
       <td style="text-align:center;color:var(--cinza-texto)">VS</td>
-      <td>${j.eq2}</td>
+      <td>${j.eq2.split(' & ').join('<br>')}</td>
       <td>
         <button class="btn btn-primary btn-sm" onclick="abrirResultado(${j.id})">
           <i class="ph ph-pencil-simple"></i> Resultado

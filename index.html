@@ -316,9 +316,9 @@
         <span class="jogo-grupo-badge">${j.grupo}</span>
         <span style="font-size:.65rem;color:var(--cinza-texto);margin-left:.2rem">${ppFormatDate(j.data)}</span>
       </div>
-      <div class="jogo-equipa"><span class="jogo-equipa-nomes">${j.eq1}</span></div>
+      <div class="jogo-equipa"><span class="jogo-equipa-nomes">${j.eq1.split(' & ').join('<br>')}</span></div>
       <div class="jogo-vs">VS</div>
-      <div class="jogo-equipa"><span class="jogo-equipa-nomes">${j.eq2}</span></div>
+      <div class="jogo-equipa"><span class="jogo-equipa-nomes">${j.eq2.split(' & ').join('<br>')}</span></div>
       <div class="jogo-status status-pendente"><i class="ph ph-clock"></i> Pendente</div>
     </div>`).join('');
 })();

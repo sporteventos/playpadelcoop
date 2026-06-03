@@ -402,7 +402,7 @@ document.addEventListener('DOMContentLoaded', () => {
       directQuals.forEach(q => {
         html += `<div class="apuramento-qual-item">
           <span class="apuramento-pos-label">${q.pos}º<span class="apuramento-group-tag">${q.group}</span></span>
-          <span class="apuramento-par-name">${q.par}</span>
+          <span class="apuramento-par-name">${q.par.split(' & ').join('<br>')}</span>
         </div>`;
       });
       html += `</div></div>`;

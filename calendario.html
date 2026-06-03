@@ -294,8 +294,8 @@ document.addEventListener('DOMContentLoaded', () => {
       </div>` : '';
 
     const hl = activeSearch ? activeSearch.toLowerCase() : '';
-    const eq1Html = hl ? j.eq1.replace(new RegExp(`(${hl})`, 'gi'), '<mark>$1</mark>') : j.eq1;
-    const eq2Html = hl ? j.eq2.replace(new RegExp(`(${hl})`, 'gi'), '<mark>$1</mark>') : j.eq2;
+    const eq1Html = j.eq1.split(' & ').map(n => hl ? n.replace(new RegExp(`(${hl})`, 'gi'), '<mark>$1</mark>') : n).join('<br>');
+    const eq2Html = j.eq2.split(' & ').map(n => hl ? n.replace(new RegExp(`(${hl})`, 'gi'), '<mark>$1</mark>') : n).join('<br>');
 
     return `
     <div class="match-card ${temRes ? 'match-card--done' : ''}">
