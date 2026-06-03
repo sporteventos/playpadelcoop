@@ -879,9 +879,9 @@ function renderJogos(filtroData = 'todos', filtroCampo = 'todos', filtroGrupo = 
       <td>${j.hora}</td>
       <td><span class="badge badge-cinza" style="font-size:0.65rem">${j.campo}</span></td>
       <td><span class="cat-pill cat-${cat}">${j.grupo}</span></td>
-      <td style="max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${j.eq1}</td>
+      <td style="white-space:nowrap">${j.eq1}</td>
       <td style="text-align:center;color:var(--cinza-texto);font-size:0.7rem">VS</td>
-      <td style="max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${j.eq2}</td>
+      <td style="white-space:nowrap">${j.eq2}</td>
       <td style="text-align:center">${resHtml}</td>
       <td>
         <div style="display:flex;gap:0.3rem">
