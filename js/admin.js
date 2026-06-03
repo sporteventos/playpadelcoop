@@ -280,6 +280,167 @@ window.gerarPanfleto = function() {
 };
 
 // ============================================
+//  PANFLETO RESULTADOS
+// ============================================
+window.gerarPanfletoResultados = function() {
+  const filtroData = document.getElementById('filtroDataRes').value;
+  let jogos = getData('jogos').filter(j => j.resultado);
+  if (filtroData !== 'todos') jogos = jogos.filter(j => j.data === filtroData);
+  if (!jogos.length) return toast('Sem resultados para o filtro actual.', 'error');
+  jogos = [...jogos].sort((a, b) => (a.data + a.hora).localeCompare(b.data + b.hora) || a.campo.localeCompare(b.campo));
+
+  const W = 1080, PAD = 44, ROW_H = 88, HEAD_H = 218, FOOT_H = 64;
+  const H = HEAD_H + jogos.length * ROW_H + FOOT_H;
+  const canvas = document.createElement('canvas');
+  canvas.width = W; canvas.height = H;
+  const ctx = canvas.getContext('2d');
+
+  function rTrunc(text, maxW) {
+    if (ctx.measureText(text).width <= maxW) return text;
+    while (text.length && ctx.measureText(text + '\u2026').width > maxW) text = text.slice(0, -1);
+    return text + '\u2026';
+  }
+  function rDrawTeam(text, x, rowY, maxW, align) {
+    const parts = text.split(' & ');
+    ctx.font = '18px Arial, sans-serif';
+    ctx.textAlign = align || 'left';
+    if (parts.length === 1) {
+      ctx.fillText(rTrunc(parts[0], maxW), x, rowY + ROW_H * 0.57);
+    } else {
+      ctx.fillText(rTrunc(parts[0], maxW), x, rowY + ROW_H * 0.40);
+      ctx.fillText(rTrunc(parts[1], maxW), x, rowY + ROW_H * 0.72);
+    }
+    ctx.textAlign = 'left';
+  }
+  function rBadge(x, y, w, h, r, bg, fg, text, fs) {
+    ctx.fillStyle = bg;
+    ctx.beginPath(); ctx.roundRect(x, y, w, h, r); ctx.fill();
+    ctx.fillStyle = fg;
+    ctx.font = `bold ${fs}px Arial, sans-serif`;
+    ctx.textAlign = 'center';
+    ctx.fillText(text, x + w / 2, y + h * 0.69);
+    ctx.textAlign = 'left';
+  }
+
+  const COURT_CLR = { 'Play Padel': '#00C37B', 'TVCabo': '#4A9EFF', 'Stella Artois': '#F5C518' };
+  const CAT_CLR   = { M1: '#4A9EFF', M2: '#00C37B', M3: '#39FF8F', M4: '#F5C518', M5: '#FF9A3C', F1: '#FF6BB0', F2: '#C97BFF' };
+  const CX = { data: PAD, hora: PAD + 66, campo: PAD + 148, grupo: PAD + 322, eq1r: 604, score_cx: 664, eq2: 726 };
+
+  // Background
+  ctx.fillStyle = '#0A0F0D';
+  ctx.fillRect(0, 0, W, H);
+
+  // Top bar
+  const grad = ctx.createLinearGradient(0, 0, W, 0);
+  grad.addColorStop(0, '#00C37B'); grad.addColorStop(1, '#007A4E');
+  ctx.fillStyle = grad; ctx.fillRect(0, 0, W, 10);
+
+  // Header
+  ctx.fillStyle = '#00C37B';
+  ctx.font = 'bold 52px Arial, sans-serif';
+  ctx.fillText('PLAY PADEL', PAD, 72);
+  ctx.fillStyle = '#F0F7F3';
+  ctx.font = '32px Arial, sans-serif';
+  ctx.fillText('TORNEIO ANIVERSÁRIO 2026', PAD, 112);
+  const dayStr = filtroData !== 'todos'
+    ? filtroData.split('-').reverse().join('/')
+    : 'TODOS OS DIAS';
+  ctx.fillStyle = '#8AA396';
+  ctx.font = '22px Arial, sans-serif';
+  ctx.fillText(dayStr, PAD, 146);
+  ctx.fillStyle = '#F0F7F3';
+  ctx.font = 'bold 20px Arial, sans-serif';
+  ctx.fillText(`RESULTADOS  \u00B7  ${jogos.length} JOGO${jogos.length !== 1 ? 'S' : ''}`, PAD, 176);
+
+  // Divider
+  ctx.fillStyle = '#1C2620'; ctx.fillRect(PAD, 188, W - PAD * 2, 2);
+
+  // Column headers
+  ctx.fillStyle = '#4A6058'; ctx.font = 'bold 13px Arial, sans-serif';
+  ctx.fillText('DATA',      CX.data,  205);
+  ctx.fillText('HORA',      CX.hora,  205);
+  ctx.textAlign = 'center';
+  ctx.fillText('CAMPO',     CX.campo + 78, 205);
+  ctx.fillText('GRUPO',     CX.grupo + 40, 205);
+  ctx.textAlign = 'right';
+  ctx.fillText('EQUIPA 1',  CX.eq1r,  205);
+  ctx.textAlign = 'center';
+  ctx.fillText('RESULTADO', CX.score_cx, 205);
+  ctx.textAlign = 'left';
+  ctx.fillText('EQUIPA 2',  CX.eq2,   205);
+
+  // Rows
+  jogos.forEach((j, i) => {
+    const y = HEAD_H + i * ROW_H;
+    const cat = j.grupo.split('-')[0];
+    const cc = COURT_CLR[j.campo] || '#8AA396';
+    const gc = CAT_CLR[cat] || '#8AA396';
+
+    const r = j.resultado;
+    const { w1, w2 } = matchSetsScore(r);
+    const winner = w1 > w2 ? 1 : 2;
+    const setsArr = [[r.s1eq1, r.s1eq2], [r.s2eq1, r.s2eq2], [r.s3eq1, r.s3eq2]].filter(([a]) => a != null);
+    const setsStr = setsArr.map(([a, b]) => `${a}-${b}`).join('  ');
+
+    ctx.fillStyle = i % 2 === 0 ? '#111815' : '#0D1410';
+    ctx.fillRect(0, y, W, ROW_H);
+    ctx.fillStyle = cc; ctx.fillRect(0, y + 1, 6, ROW_H - 2);
+
+    const cy = y + ROW_H / 2 + 9;
+
+    // Date
+    ctx.fillStyle = '#8AA396';
+    ctx.font = 'bold 14px "Courier New", monospace';
+    ctx.fillText(j.data ? j.data.split('-').slice(1).reverse().join('/') : '', CX.data, cy);
+
+    // Time
+    ctx.fillStyle = '#F0F7F3';
+    ctx.font = 'bold 22px "Courier New", monospace';
+    ctx.fillText(j.hora, CX.hora, cy);
+
+    rBadge(CX.campo, y + (ROW_H - 30) / 2, 156, 30, 6, cc + '28', cc, j.campo, 13);
+    rBadge(CX.grupo, y + (ROW_H - 30) / 2,  80, 30, 6, gc + '28', gc, j.grupo, 13);
+
+    // Eq1 (right-aligned, bright if winner)
+    ctx.fillStyle = winner === 1 ? '#39FF8F' : '#8AA396';
+    rDrawTeam(j.eq1, CX.eq1r, y, 196, 'right');
+
+    // Score badge
+    const sbW = 112, sbH = 32;
+    const sbX = CX.score_cx - sbW / 2;
+    const sbY = y + (ROW_H - sbH) / 2;
+    ctx.fillStyle = 'rgba(0,195,123,0.12)';
+    ctx.beginPath(); ctx.roundRect(sbX, sbY, sbW, sbH, 6); ctx.fill();
+    ctx.strokeStyle = 'rgba(0,195,123,0.40)'; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.roundRect(sbX, sbY, sbW, sbH, 6); ctx.stroke();
+    ctx.fillStyle = '#39FF8F';
+    ctx.font = 'bold 15px "Courier New", monospace';
+    ctx.textAlign = 'center';
+    ctx.fillText(setsStr, CX.score_cx, sbY + sbH * 0.70);
+    ctx.textAlign = 'left';
+
+    // Eq2 (left-aligned, bright if winner)
+    ctx.fillStyle = winner === 2 ? '#39FF8F' : '#8AA396';
+    rDrawTeam(j.eq2, CX.eq2, y, 308, 'left');
+  });
+
+  // Footer
+  const fy = H - FOOT_H;
+  ctx.fillStyle = '#111815'; ctx.fillRect(0, fy, W, FOOT_H);
+  ctx.fillStyle = '#1C2620'; ctx.fillRect(0, fy, W, 1);
+  ctx.fillStyle = '#4A6058'; ctx.font = '17px Arial, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('Play Padel  \u00B7  Torneio Aniversário 2026', W / 2, fy + 38);
+  ctx.textAlign = 'left';
+
+  const a = document.createElement('a');
+  a.download = `resultados-${filtroData !== 'todos' ? filtroData : 'todos'}.png`;
+  a.href = canvas.toDataURL('image/png');
+  a.click();
+  toast('Panfleto gerado!', 'success');
+};
+
+// ============================================
 //  DADOS INICIAIS (mantidos em data.js)
 // ============================================
 const _UNUSED_DEFAULTS = {
@@ -2229,6 +2390,9 @@ function updateUserCategoriesVisibility() {
 // ============================================
 //  ADMIN STANDINGS (Classifica��es view)
 // ============================================
+let _classActiveCat = null;
+window.renderClassificacoes = function() { renderAdminClassificacoes(); };
+
 function renderAdminClassificacoes() {
   const cats = getData('categorias').map(c => c.id);
   const grupos = getData('grupos');
@@ -2238,6 +2402,7 @@ function renderAdminClassificacoes() {
   const contentEl = document.getElementById('adminClassContent');
   if (!tabsEl || !contentEl) return;
 
+  _classActiveCat = cats[0] || null;
   tabsEl.innerHTML = cats.map((c, i) => `
     <button class="tab-btn${i===0?' active':''}" onclick="_adminClassTab('${c}',this)">${c}</button>
   `).join('');
@@ -2246,6 +2411,7 @@ function renderAdminClassificacoes() {
 }
 
 function _adminClassTab(catId, btn) {
+  _classActiveCat = catId;
   document.querySelectorAll('#adminClassTabs .tab-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   const grupos = getData('grupos');
@@ -2254,13 +2420,16 @@ function _adminClassTab(catId, btn) {
 }
 
 function _adminClassCatGroups(catId, grupos) {
-  return grupos.filter(g => g.categoria === catId);
+  return grupos.filter(g => g.cat === catId);
 }
 
 function _adminClassStandings(grupo, jogos) {
   const gJogos = jogos.filter(j => j.grupo === grupo.id);
   const pairs = {};
-  grupo.pares.forEach(p => { pairs[p] = { par: p, pj:0, v:0, d:0, pts:0, sw:0, sl:0, gw:0, gl:0 }; });
+  gJogos.forEach(j => {
+    if (!pairs[j.eq1]) pairs[j.eq1] = { par: j.eq1, pj:0, v:0, d:0, pts:0, sw:0, sl:0 };
+    if (!pairs[j.eq2]) pairs[j.eq2] = { par: j.eq2, pj:0, v:0, d:0, pts:0, sw:0, sl:0 };
+  });
   gJogos.forEach(j => {
     if (!j.resultado) return;
     const r = j.resultado;
@@ -2308,7 +2477,175 @@ function _renderAdminClassCat(catId, grupos, jogos, el) {
 }
 
 // ============================================
-//  ESTAT�STICAS (player leaderboard)
+//  PANFLETO CLASSIFICAÇÕES
+// ============================================
+window.gerarPanfletoClassificacoes = function() {
+  const catId = _classActiveCat;
+  if (!catId) return toast('Selecione uma categoria primeiro.', 'error');
+
+  const grupos = getData('grupos').filter(g => g.cat === catId);
+  const jogos  = getData('jogos');
+  if (!grupos.length) return toast('Sem grupos para esta categoria.', 'error');
+
+  const groupData = grupos.map(g => {
+    const rows = _adminClassStandings(g, jogos);
+    const gJogos = jogos.filter(j => j.grupo === g.id);
+    return { id: g.id, rows, total: gJogos.length, done: gJogos.filter(j => j.resultado).length };
+  });
+
+  const W = 1080, PAD = 44;
+  const COLS = 2, COL_GAP = 16;
+  const CARD_W = (W - PAD * 2 - COL_GAP * (COLS - 1)) / COLS;
+  const CP = 14, CARD_HEAD_H = 38, COL_HEAD_H = 26, ROW_H = 30, CARD_BOT = 10;
+  const HEAD_H = 195, FOOT_H = 56, ROW_GAP = 14;
+
+  function cardHeight(g) { return CARD_HEAD_H + COL_HEAD_H + g.rows.length * ROW_H + CARD_BOT; }
+
+  const cardRows = [];
+  for (let i = 0; i < groupData.length; i += COLS) cardRows.push(groupData.slice(i, i + COLS));
+
+  let contentH = 0;
+  cardRows.forEach(row => { contentH += Math.max(...row.map(cardHeight)) + ROW_GAP; });
+
+  const H = HEAD_H + contentH + FOOT_H;
+  const canvas = document.createElement('canvas');
+  canvas.width = W; canvas.height = H;
+  const ctx = canvas.getContext('2d');
+
+  const CAT_CLR = { M1:'#4A9EFF', M2:'#00C37B', M3:'#39FF8F', M4:'#F5C518', M5:'#FF9A3C', F1:'#FF6BB0', F2:'#C97BFF' };
+  const catColor = CAT_CLR[catId] || '#00C37B';
+
+  function cTrunc(text, maxW) {
+    if (ctx.measureText(text).width <= maxW) return text;
+    while (text.length && ctx.measureText(text + '\u2026').width > maxW) text = text.slice(0, -1);
+    return text + '\u2026';
+  }
+
+  // Background
+  ctx.fillStyle = '#0A0F0D'; ctx.fillRect(0, 0, W, H);
+
+  // Top bar
+  const grad = ctx.createLinearGradient(0, 0, W, 0);
+  grad.addColorStop(0, catColor); grad.addColorStop(1, '#007A4E');
+  ctx.fillStyle = grad; ctx.fillRect(0, 0, W, 10);
+
+  // Header
+  ctx.fillStyle = catColor;
+  ctx.font = 'bold 52px Arial, sans-serif';
+  ctx.fillText('PLAY PADEL', PAD, 72);
+  ctx.fillStyle = '#F0F7F3';
+  ctx.font = '32px Arial, sans-serif';
+  ctx.fillText('TORNEIO ANIVERSÁRIO 2026', PAD, 112);
+  ctx.fillStyle = '#8AA396';
+  ctx.font = '22px Arial, sans-serif';
+  ctx.fillText('CLASSIFICAÇÕES', PAD, 146);
+  ctx.fillStyle = catColor;
+  ctx.font = 'bold 28px Arial, sans-serif';
+  ctx.fillText(catId.toUpperCase(), PAD, 178);
+
+  // Divider
+  ctx.fillStyle = '#1C2620'; ctx.fillRect(PAD, 188, W - PAD * 2, 2);
+
+  // Group cards
+  let curY = HEAD_H;
+  cardRows.forEach(row => {
+    const maxCH = Math.max(...row.map(cardHeight));
+    row.forEach((g, col) => {
+      const cx = PAD + col * (CARD_W + COL_GAP);
+      const cy = curY;
+      const ch = cardHeight(g);
+      const gc = CAT_CLR[g.id.split('-')[0]] || catColor;
+
+      // Card background
+      ctx.fillStyle = '#111815';
+      ctx.beginPath(); ctx.roundRect(cx, cy, CARD_W, ch, 8); ctx.fill();
+      ctx.strokeStyle = '#1C2620'; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.roundRect(cx, cy, CARD_W, ch, 8); ctx.stroke();
+
+      // Card header
+      ctx.fillStyle = gc + '30';
+      ctx.beginPath(); ctx.roundRect(cx, cy, CARD_W, CARD_HEAD_H, [8, 8, 0, 0]); ctx.fill();
+      ctx.fillStyle = gc; ctx.fillRect(cx, cy + CARD_HEAD_H - 2, CARD_W, 2);
+
+      ctx.fillStyle = gc; ctx.font = 'bold 18px Arial, sans-serif';
+      ctx.fillText(g.id, cx + CP, cy + CARD_HEAD_H * 0.68);
+      ctx.fillStyle = '#4A6058'; ctx.font = '12px Arial, sans-serif';
+      ctx.textAlign = 'right';
+      ctx.fillText(`${g.done}/${g.total} jogos`, cx + CARD_W - CP, cy + CARD_HEAD_H * 0.68);
+      ctx.textAlign = 'left';
+
+      // Column headers
+      const colH = cy + CARD_HEAD_H + COL_HEAD_H * 0.80;
+      const rx = {
+        rank: cx + CP,
+        par:  cx + CP + 22,
+        pj:   cx + CARD_W - CP - 162,
+        v:    cx + CARD_W - CP - 126,
+        d:    cx + CARD_W - CP - 93,
+        sets: cx + CARD_W - CP - 62,
+        pts:  cx + CARD_W - CP,
+      };
+      ctx.fillStyle = '#4A6058'; ctx.font = 'bold 10px Arial, sans-serif';
+      ctx.fillText('#',   rx.rank, colH);
+      ctx.fillText('PAR', rx.par,  colH);
+      ctx.textAlign = 'center';
+      ctx.fillText('PJ', rx.pj,   colH);
+      ctx.fillText('V',  rx.v,    colH);
+      ctx.fillText('D',  rx.d,    colH);
+      ctx.fillText('S',  rx.sets, colH);
+      ctx.textAlign = 'right';
+      ctx.fillText('PTS', rx.pts, colH);
+      ctx.textAlign = 'left';
+
+      // Team rows
+      g.rows.forEach((r, ri) => {
+        const ry = cy + CARD_HEAD_H + COL_HEAD_H + ri * ROW_H;
+        if (ri === 0) { ctx.fillStyle = 'rgba(57,255,143,0.08)'; ctx.fillRect(cx, ry, CARD_W, ROW_H); }
+        else if (ri === 1) { ctx.fillStyle = 'rgba(57,255,143,0.04)'; ctx.fillRect(cx, ry, CARD_W, ROW_H); }
+        else if (ri % 2 === 0) { ctx.fillStyle = 'rgba(255,255,255,0.02)'; ctx.fillRect(cx, ry, CARD_W, ROW_H); }
+
+        const rcy = ry + ROW_H * 0.68;
+        ctx.fillStyle = ri === 0 ? '#39FF8F' : ri === 1 ? '#8AA396' : '#4A6058';
+        ctx.font = 'bold 12px Arial, sans-serif';
+        ctx.fillText(`${ri + 1}`, rx.rank, rcy);
+
+        ctx.fillStyle = ri === 0 ? '#F0F7F3' : '#C4D4CC';
+        ctx.font = '12px Arial, sans-serif';
+        ctx.fillText(cTrunc(r.par, rx.pj - rx.par - 8), rx.par, rcy);
+
+        ctx.fillStyle = '#8AA396'; ctx.textAlign = 'center';
+        ctx.fillText(r.pj, rx.pj, rcy);
+        ctx.fillStyle = r.v > 0 ? '#39FF8F' : '#8AA396';
+        ctx.fillText(r.v, rx.v, rcy);
+        ctx.fillStyle = r.d > 0 ? '#FF4A4A' : '#8AA396';
+        ctx.fillText(r.d, rx.d, rcy);
+        ctx.fillStyle = '#8AA396'; ctx.font = '11px Arial, sans-serif';
+        ctx.fillText(`${r.sw}-${r.sl}`, rx.sets, rcy);
+        ctx.fillStyle = '#F0F7F3'; ctx.font = 'bold 13px Arial, sans-serif';
+        ctx.textAlign = 'right';
+        ctx.fillText(r.pts, rx.pts, rcy);
+        ctx.textAlign = 'left';
+      });
+    });
+    curY += maxCH + ROW_GAP;
+  });
+
+  // Footer
+  ctx.fillStyle = '#111815'; ctx.fillRect(0, H - FOOT_H, W, FOOT_H);
+  ctx.fillStyle = '#1C2620'; ctx.fillRect(0, H - FOOT_H, W, 1);
+  ctx.fillStyle = '#4A6058'; ctx.font = '17px Arial, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('Play Padel  \u00B7  Torneio Aniversário 2026', W / 2, H - FOOT_H + 36);
+  ctx.textAlign = 'left';
+
+  const a = document.createElement('a');
+  a.download = `classificacoes-${catId}.png`;
+  a.href = canvas.toDataURL('image/png');
+  a.click();
+  toast('Panfleto gerado!', 'success');
+};
+
+�STICAS (player leaderboard)
 // ============================================
 function renderEstatisticas() {
   const el = document.getElementById('statsContent');
