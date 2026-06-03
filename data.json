@@ -1,4 +1,4 @@
-{
+﻿{
   "campos": [
     {
       "id": 1,
@@ -193,7 +193,7 @@
       "hora": "18:30",
       "campo": "Play Padel",
       "grupo": "F1-A",
-      "eq1": "Stacey & Marlou",
+      "eq1": "Helen Khumalo & Narcisa Nhamitambo",
       "eq2": "Cynthia Cavalcanti & Kátia Sousa",
       "resultado": null
     },
@@ -212,9 +212,9 @@
       "data": "2026-06-05",
       "hora": "20:30",
       "campo": "Play Padel",
-      "grupo": "M1-B",
-      "eq1": "Karim Kanifani & Octávio Barros",
-      "eq2": "Rehan Fayaz & Reehan M.",
+      "grupo": "M1-C",
+      "eq1": "Tayab & Badru Rosa",
+      "eq2": "Ahmad & Uzeir",
       "resultado": null
     },
     {
@@ -233,7 +233,7 @@
       "hora": "17:30",
       "campo": "TVCabo",
       "grupo": "F2-A",
-      "eq1": "Cristina Vasconcelos & Beatriz Madeira",
+      "eq1": "Cris Vasconcelos & Beatriz Madeira",
       "eq2": "Florence & Jinane",
       "resultado": null
     },
@@ -252,9 +252,9 @@
       "data": "2026-06-05",
       "hora": "19:30",
       "campo": "TVCabo",
-      "grupo": "M1-C",
-      "eq1": "Ahmad & Uzeir",
-      "eq2": "Carlos Cardeano & José Santos",
+      "grupo": "M4-D",
+      "eq1": "Jason & Bosch",
+      "eq2": "Luis Vaz & Sérgio Gomes",
       "resultado": null
     },
     {
@@ -292,9 +292,9 @@
       "data": "2026-06-05",
       "hora": "18:30",
       "campo": "Stella Artois",
-      "grupo": "M1-A",
-      "eq1": "Bruno Gaspar & Manuel Pinto Abreu",
-      "eq2": "Luis Antunes & Manuel Neto",
+      "grupo": "M4-A",
+      "eq1": "João Pignatelli & Joel Almeida",
+      "eq2": "André Reves & Francisco Morais",
       "resultado": null
     },
     {
@@ -312,9 +312,9 @@
       "data": "2026-06-05",
       "hora": "20:30",
       "campo": "Stella Artois",
-      "grupo": "F1-B",
-      "eq1": "Maria Tomaz & Isabel Ribeiro",
-      "eq2": "Érica Capela & Sarah Taillon",
+      "grupo": "M3-C",
+      "eq1": "Rui Veríssimo & Pedro Martins",
+      "eq2": "Sharik Omar & Muhamad Mussagy",
       "resultado": null
     },
     {
@@ -333,7 +333,7 @@
       "hora": "07:00",
       "campo": "Play Padel",
       "grupo": "F2-B",
-      "eq1": "Glória Baltazar & Luciana Lauriano",
+      "eq1": "Glória & Luciana Lauriano",
       "eq2": "Paty & Mila",
       "resultado": null
     },
@@ -352,9 +352,9 @@
       "data": "2026-06-06",
       "hora": "09:00",
       "campo": "Play Padel",
-      "grupo": "F1-A",
-      "eq1": "Helen Khumalo & Narcisa Nhamitambo",
-      "eq2": "Caironice & Carmen",
+      "grupo": "F1-C",
+      "eq1": "Marta Botelho & Ana Oliveira",
+      "eq2": "Omar Fernandes & Claudia",
       "resultado": null
     },
     {
@@ -370,16 +370,6 @@
     {
       "id": 20,
       "data": "2026-06-06",
-      "hora": "12:00",
-      "campo": "Play Padel",
-      "grupo": "F1-C",
-      "eq1": "Marta Botelho & Ana Oliveira",
-      "eq2": "Diana Carvalho & Ilga João",
-      "resultado": null
-    },
-    {
-      "id": 21,
-      "data": "2026-06-06",
       "hora": "13:00",
       "campo": "Play Padel",
       "grupo": "M1-A",
@@ -388,17 +378,17 @@
       "resultado": null
     },
     {
-      "id": 22,
+      "id": 21,
       "data": "2026-06-06",
       "hora": "14:00",
       "campo": "Play Padel",
       "grupo": "F1-C",
       "eq1": "Anouk Fumane & Letícia",
-      "eq2": "Ohmar Fernandes & Claudia",
+      "eq2": "Omar Fernandes & Claudia",
       "resultado": null
     },
     {
-      "id": 23,
+      "id": 22,
       "data": "2026-06-06",
       "hora": "15:00",
       "campo": "Play Padel",
@@ -408,7 +398,7 @@
       "resultado": null
     },
     {
-      "id": 24,
+      "id": 23,
       "data": "2026-06-06",
       "hora": "16:00",
       "campo": "Play Padel",
@@ -418,7 +408,7 @@
       "resultado": null
     },
     {
-      "id": 25,
+      "id": 24,
       "data": "2026-06-06",
       "hora": "17:00",
       "campo": "Play Padel",
@@ -428,7 +418,7 @@
       "resultado": null
     },
     {
-      "id": 26,
+      "id": 25,
       "data": "2026-06-06",
       "hora": "18:00",
       "campo": "Play Padel",
@@ -438,29 +428,19 @@
       "resultado": null
     },
     {
-      "id": 27,
+      "id": 26,
       "data": "2026-06-06",
       "hora": "19:00",
       "campo": "Play Padel",
-      "grupo": "M1-C",
-      "eq1": "Tayab & Badru Rosa",
-      "eq2": "Carlos Cardeano & José Santos",
+      "grupo": "F1-B",
+      "eq1": "Maria Tomaz & Isabel Ribeiro",
+      "eq2": "Érica Capela & Sarah Taillon",
       "resultado": null
     },
     {
-      "id": 28,
+      "id": 27,
       "data": "2026-06-06",
       "hora": "20:00",
-      "campo": "Play Padel",
-      "grupo": "M3-C",
-      "eq1": "Rui Veríssimo & Pedro Martins",
-      "eq2": "Sharik Omar & Muhamad Mussagy",
-      "resultado": null
-    },
-    {
-      "id": 29,
-      "data": "2026-06-06",
-      "hora": "21:00",
       "campo": "Play Padel",
       "grupo": "M3-C",
       "eq1": "Keiss Chiraze & Saif Issa",
@@ -468,17 +448,17 @@
       "resultado": null
     },
     {
-      "id": 30,
+      "id": 28,
       "data": "2026-06-06",
       "hora": "07:00",
       "campo": "TVCabo",
       "grupo": "M4-D",
-      "eq1": "Jason & Bosch",
-      "eq2": "Luis Vaz & Sérgio Gomes",
+      "eq1": "Luis Vaz & Sérgio Gomes",
+      "eq2": "Luis Trigo Morais & Pedro Mandlate",
       "resultado": null
     },
     {
-      "id": 31,
+      "id": 29,
       "data": "2026-06-06",
       "hora": "08:00",
       "campo": "TVCabo",
@@ -488,7 +468,7 @@
       "resultado": null
     },
     {
-      "id": 32,
+      "id": 30,
       "data": "2026-06-06",
       "hora": "09:00",
       "campo": "TVCabo",
@@ -498,7 +478,7 @@
       "resultado": null
     },
     {
-      "id": 33,
+      "id": 31,
       "data": "2026-06-06",
       "hora": "10:00",
       "campo": "TVCabo",
@@ -508,17 +488,27 @@
       "resultado": null
     },
     {
-      "id": 34,
+      "id": 32,
+      "data": "2026-06-06",
+      "hora": "13:00",
+      "campo": "TVCabo",
+      "grupo": "F1-A",
+      "eq1": "Caironice & Carmen",
+      "eq2": "Cynthia Cavalcanti & Kátia Sousa",
+      "resultado": null
+    },
+    {
+      "id": 33,
       "data": "2026-06-06",
       "hora": "14:00",
       "campo": "TVCabo",
       "grupo": "M2-C",
       "eq1": "Feizan Omar & Filipe Lobo",
-      "eq2": "Faheem Adamo & Yann Trivellin",
+      "eq2": "Faheem Adomo & Yann Trivellin",
       "resultado": null
     },
     {
-      "id": 35,
+      "id": 34,
       "data": "2026-06-06",
       "hora": "15:00",
       "campo": "TVCabo",
@@ -528,7 +518,7 @@
       "resultado": null
     },
     {
-      "id": 36,
+      "id": 35,
       "data": "2026-06-06",
       "hora": "16:00",
       "campo": "TVCabo",
@@ -538,17 +528,17 @@
       "resultado": null
     },
     {
-      "id": 37,
+      "id": 36,
       "data": "2026-06-06",
       "hora": "17:00",
       "campo": "TVCabo",
       "grupo": "F2-A",
-      "eq1": "Cristina Vasconcelos & Beatriz Madeira",
+      "eq1": "Cris Vasconcelos & Beatriz Madeira",
       "eq2": "Donatella Detto & Julianna",
       "resultado": null
     },
     {
-      "id": 38,
+      "id": 37,
       "data": "2026-06-06",
       "hora": "18:00",
       "campo": "TVCabo",
@@ -558,13 +548,23 @@
       "resultado": null
     },
     {
-      "id": 39,
+      "id": 38,
       "data": "2026-06-06",
       "hora": "19:00",
       "campo": "TVCabo",
-      "grupo": "M4-B",
-      "eq1": "Andrea & Mikel Álvarez",
-      "eq2": "Alão Almeida & Ayaan Mussa",
+      "grupo": "M3-B",
+      "eq1": "Shueb & Sahad",
+      "eq2": "Edson Uamusse & Salomão",
+      "resultado": null
+    },
+    {
+      "id": 39,
+      "data": "2026-06-06",
+      "hora": "20:00",
+      "campo": "TVCabo",
+      "grupo": "M1-C",
+      "eq1": "Ahmad & Uzeir",
+      "eq2": "Carlos Cardeano & José Santos",
       "resultado": null
     },
     {
@@ -582,9 +582,9 @@
       "data": "2026-06-06",
       "hora": "08:00",
       "campo": "Stella Artois",
-      "grupo": "M2-C",
-      "eq1": "Felipe Moniz & José Cossa",
-      "eq2": "Ricardo Oliveira & Vasco Silva",
+      "grupo": "M4-A",
+      "eq1": "João Pignatelli & Joel Almeida",
+      "eq2": "Pablo & Galo Rivera",
       "resultado": null
     },
     {
@@ -654,21 +654,31 @@
       "campo": "Stella Artois",
       "grupo": "M4-C",
       "eq1": "Fádhil Khan & Kelyo",
-      "eq2": "Reihan Adamo & Nabil Manga",
+      "eq2": "Reihan Adomo & Nabil Manga",
       "resultado": null
     },
     {
       "id": 49,
-      "data": "2026-06-07",
-      "hora": "07:00",
-      "campo": "Play Padel",
-      "grupo": "M4-A",
-      "eq1": "João Pignatelli & Joel Almeida",
-      "eq2": "Pablo & Galo Rivera",
+      "data": "2026-06-06",
+      "hora": "20:00",
+      "campo": "Stella Artois",
+      "grupo": "M4-B",
+      "eq1": "Andrea & Mikel Álvarez",
+      "eq2": "Alao Almeida & Ayaan Mussa",
       "resultado": null
     },
     {
       "id": 50,
+      "data": "2026-06-07",
+      "hora": "07:00",
+      "campo": "Play Padel",
+      "grupo": "F1-B",
+      "eq1": "Érica Capela & Sarah Taillon",
+      "eq2": "Inês Pires & Daniela Duarte",
+      "resultado": null
+    },
+    {
+      "id": 51,
       "data": "2026-06-07",
       "hora": "08:00",
       "campo": "Play Padel",
@@ -678,7 +688,7 @@
       "resultado": null
     },
     {
-      "id": 51,
+      "id": 52,
       "data": "2026-06-07",
       "hora": "09:00",
       "campo": "Play Padel",
@@ -688,7 +698,7 @@
       "resultado": null
     },
     {
-      "id": 52,
+      "id": 53,
       "data": "2026-06-07",
       "hora": "10:00",
       "campo": "Play Padel",
@@ -698,7 +708,7 @@
       "resultado": null
     },
     {
-      "id": 53,
+      "id": 54,
       "data": "2026-06-07",
       "hora": "11:00",
       "campo": "Play Padel",
@@ -708,7 +718,7 @@
       "resultado": null
     },
     {
-      "id": 54,
+      "id": 55,
       "data": "2026-06-07",
       "hora": "12:00",
       "campo": "Play Padel",
@@ -718,7 +728,7 @@
       "resultado": null
     },
     {
-      "id": 55,
+      "id": 56,
       "data": "2026-06-07",
       "hora": "13:00",
       "campo": "Play Padel",
@@ -728,7 +738,7 @@
       "resultado": null
     },
     {
-      "id": 56,
+      "id": 57,
       "data": "2026-06-07",
       "hora": "14:00",
       "campo": "Play Padel",
@@ -738,23 +748,13 @@
       "resultado": null
     },
     {
-      "id": 57,
+      "id": 58,
       "data": "2026-06-07",
       "hora": "15:00",
       "campo": "Play Padel",
       "grupo": "M1-C",
       "eq1": "Carlos Cardeano & José Santos",
       "eq2": "Fernando & Rui Rocha",
-      "resultado": null
-    },
-    {
-      "id": 58,
-      "data": "2026-06-07",
-      "hora": "16:00",
-      "campo": "Play Padel",
-      "grupo": "F1-B",
-      "eq1": "Érica Capela & Sarah Taillon",
-      "eq2": "Inês Pires & Daniela Duarte",
       "resultado": null
     },
     {
@@ -770,16 +770,6 @@
     {
       "id": 60,
       "data": "2026-06-07",
-      "hora": "18:00",
-      "campo": "Play Padel",
-      "grupo": "M1-C",
-      "eq1": "Tayab & Badru Rosa",
-      "eq2": "Ahmad & Uzeir",
-      "resultado": null
-    },
-    {
-      "id": 61,
-      "data": "2026-06-07",
       "hora": "19:00",
       "campo": "Play Padel",
       "grupo": "M3-C",
@@ -788,7 +778,7 @@
       "resultado": null
     },
     {
-      "id": 62,
+      "id": 61,
       "data": "2026-06-07",
       "hora": "20:00",
       "campo": "Play Padel",
@@ -798,17 +788,17 @@
       "resultado": null
     },
     {
-      "id": 63,
+      "id": 62,
       "data": "2026-06-07",
       "hora": "07:00",
       "campo": "TVCabo",
       "grupo": "F2-A",
-      "eq1": "Cristina Vasconcelos & Beatriz Madeira",
+      "eq1": "Cris Vasconcelos & Beatriz Madeira",
       "eq2": "Ilária & Monica",
       "resultado": null
     },
     {
-      "id": 64,
+      "id": 63,
       "data": "2026-06-07",
       "hora": "08:00",
       "campo": "TVCabo",
@@ -818,7 +808,7 @@
       "resultado": null
     },
     {
-      "id": 65,
+      "id": 64,
       "data": "2026-06-07",
       "hora": "09:00",
       "campo": "TVCabo",
@@ -828,37 +818,17 @@
       "resultado": null
     },
     {
-      "id": 66,
+      "id": 65,
       "data": "2026-06-07",
       "hora": "10:00",
       "campo": "TVCabo",
       "grupo": "F1-A",
-      "eq1": "Stacey & Marlou",
+      "eq1": "Helen Khumalo & Narcisa Nhamitambo",
       "eq2": "Caironice & Carmen",
       "resultado": null
     },
     {
-      "id": 67,
-      "data": "2026-06-07",
-      "hora": "11:00",
-      "campo": "TVCabo",
-      "grupo": "F1-A",
-      "eq1": "Helen Khumalo & Narcisa Nhamitambo",
-      "eq2": "Cynthia Cavalcanti & Kátia Sousa",
-      "resultado": null
-    },
-    {
-      "id": 68,
-      "data": "2026-06-07",
-      "hora": "12:00",
-      "campo": "TVCabo",
-      "grupo": "M4-B",
-      "eq1": "Duncan & James",
-      "eq2": "Andrea & Mikel Álvarez",
-      "resultado": null
-    },
-    {
-      "id": 69,
+      "id": 66,
       "data": "2026-06-07",
       "hora": "13:00",
       "campo": "TVCabo",
@@ -868,7 +838,7 @@
       "resultado": null
     },
     {
-      "id": 70,
+      "id": 67,
       "data": "2026-06-07",
       "hora": "14:00",
       "campo": "TVCabo",
@@ -878,29 +848,9 @@
       "resultado": null
     },
     {
-      "id": 71,
-      "data": "2026-06-07",
-      "hora": "15:00",
-      "campo": "TVCabo",
-      "grupo": "M3-B",
-      "eq1": "Shueb & Sahad",
-      "eq2": "Edson Uamusse & Salomão",
-      "resultado": null
-    },
-    {
-      "id": 72,
+      "id": 68,
       "data": "2026-06-07",
       "hora": "16:00",
-      "campo": "TVCabo",
-      "grupo": "M4-D",
-      "eq1": "Jason & Bosch",
-      "eq2": "Luis Trigo de Morais & Pedro Mandlate",
-      "resultado": null
-    },
-    {
-      "id": 73,
-      "data": "2026-06-07",
-      "hora": "17:00",
       "campo": "TVCabo",
       "grupo": "F1-C",
       "eq1": "Anouk Fumane & Letícia",
@@ -908,19 +858,19 @@
       "resultado": null
     },
     {
-      "id": 74,
+      "id": 69,
       "data": "2026-06-07",
-      "hora": "18:00",
+      "hora": "17:00",
       "campo": "TVCabo",
       "grupo": "M4-B",
       "eq1": "Nuno Resende & Gonçalo Bettencourt",
-      "eq2": "Alão Almeida & Ayaan Mussa",
+      "eq2": "Alao Almeida & Ayaan Mussa",
       "resultado": null
     },
     {
-      "id": 75,
+      "id": 70,
       "data": "2026-06-07",
-      "hora": "19:00",
+      "hora": "18:00",
       "campo": "TVCabo",
       "grupo": "M3-A",
       "eq1": "Burhan Hassan & Sarfaraz",
@@ -928,9 +878,9 @@
       "resultado": null
     },
     {
-      "id": 76,
+      "id": 71,
       "data": "2026-06-07",
-      "hora": "20:00",
+      "hora": "19:00",
       "campo": "TVCabo",
       "grupo": "M2-C",
       "eq1": "Feizan Omar & Filipe Lobo",
@@ -938,9 +888,9 @@
       "resultado": null
     },
     {
-      "id": 77,
+      "id": 72,
       "data": "2026-06-07",
-      "hora": "21:00",
+      "hora": "20:00",
       "campo": "TVCabo",
       "grupo": "M2-C",
       "eq1": "Faheem Adamo & Yann Trivellin",
@@ -948,17 +898,17 @@
       "resultado": null
     },
     {
-      "id": 78,
+      "id": 73,
       "data": "2026-06-07",
       "hora": "07:00",
       "campo": "Stella Artois",
-      "grupo": "F2-B",
-      "eq1": "Glória Baltazar & Luciana Lauriano",
-      "eq2": "Karina Darsan & Bethany",
+      "grupo": "M4-D",
+      "eq1": "Jason & Bosch",
+      "eq2": "Luis Trigo Morais & Pedro Mandlate",
       "resultado": null
     },
     {
-      "id": 79,
+      "id": 74,
       "data": "2026-06-07",
       "hora": "08:00",
       "campo": "Stella Artois",
@@ -968,7 +918,7 @@
       "resultado": null
     },
     {
-      "id": 80,
+      "id": 75,
       "data": "2026-06-07",
       "hora": "09:00",
       "campo": "Stella Artois",
@@ -978,7 +928,7 @@
       "resultado": null
     },
     {
-      "id": 81,
+      "id": 76,
       "data": "2026-06-07",
       "hora": "10:00",
       "campo": "Stella Artois",
@@ -988,19 +938,9 @@
       "resultado": null
     },
     {
-      "id": 82,
+      "id": 77,
       "data": "2026-06-07",
       "hora": "12:00",
-      "campo": "Stella Artois",
-      "grupo": "M4-D",
-      "eq1": "Luis Vaz & Sérgio Gomes",
-      "eq2": "Luis Trigo de Morais & Pedro Mandlate",
-      "resultado": null
-    },
-    {
-      "id": 83,
-      "data": "2026-06-07",
-      "hora": "13:00",
       "campo": "Stella Artois",
       "grupo": "M4-C",
       "eq1": "Paul & Xander",
@@ -1008,17 +948,27 @@
       "resultado": null
     },
     {
-      "id": 84,
+      "id": 78,
+      "data": "2026-06-07",
+      "hora": "13:00",
+      "campo": "Stella Artois",
+      "grupo": "F2-B",
+      "eq1": "Glória & Luciana Lauriano",
+      "eq2": "Karina Darsan & Bethany",
+      "resultado": null
+    },
+    {
+      "id": 79,
       "data": "2026-06-07",
       "hora": "14:00",
       "campo": "Stella Artois",
       "grupo": "M4-C",
       "eq1": "Shiraz & Kheizar",
-      "eq2": "Reihan Adamo & Nabil Manga",
+      "eq2": "Reihan Adomo & Nabil Manga",
       "resultado": null
     },
     {
-      "id": 85,
+      "id": 80,
       "data": "2026-06-07",
       "hora": "15:00",
       "campo": "Stella Artois",
@@ -1028,7 +978,7 @@
       "resultado": null
     },
     {
-      "id": 86,
+      "id": 81,
       "data": "2026-06-07",
       "hora": "16:00",
       "campo": "Stella Artois",
@@ -1038,7 +988,7 @@
       "resultado": null
     },
     {
-      "id": 87,
+      "id": 82,
       "data": "2026-06-07",
       "hora": "17:00",
       "campo": "Stella Artois",
@@ -1048,7 +998,7 @@
       "resultado": null
     },
     {
-      "id": 88,
+      "id": 83,
       "data": "2026-06-07",
       "hora": "18:00",
       "campo": "Stella Artois",
@@ -1058,7 +1008,7 @@
       "resultado": null
     },
     {
-      "id": 89,
+      "id": 84,
       "data": "2026-06-07",
       "hora": "19:00",
       "campo": "Stella Artois",
@@ -1068,7 +1018,7 @@
       "resultado": null
     },
     {
-      "id": 90,
+      "id": 85,
       "data": "2026-06-07",
       "hora": "20:00",
       "campo": "Stella Artois",
@@ -1078,7 +1028,7 @@
       "resultado": null
     },
     {
-      "id": 91,
+      "id": 86,
       "data": "2026-06-07",
       "hora": "21:00",
       "campo": "Stella Artois",
@@ -1088,19 +1038,9 @@
       "resultado": null
     },
     {
-      "id": 92,
+      "id": 87,
       "data": "2026-06-08",
       "hora": "17:30",
-      "campo": "Play Padel",
-      "grupo": "F1-C",
-      "eq1": "Marta Botelho & Ana Oliveira",
-      "eq2": "Ohmar Fernandes & Claudia",
-      "resultado": null
-    },
-    {
-      "id": 93,
-      "data": "2026-06-08",
-      "hora": "18:30",
       "campo": "Play Padel",
       "grupo": "M4-A",
       "eq1": "Joshua & Noah",
@@ -1108,7 +1048,17 @@
       "resultado": null
     },
     {
-      "id": 94,
+      "id": 88,
+      "data": "2026-06-08",
+      "hora": "18:30",
+      "campo": "Play Padel",
+      "grupo": "F1-A",
+      "eq1": "Stacey & Marlou",
+      "eq2": "Caironice & Carmen",
+      "resultado": null
+    },
+    {
+      "id": 89,
       "data": "2026-06-08",
       "hora": "19:30",
       "campo": "Play Padel",
@@ -1118,9 +1068,19 @@
       "resultado": null
     },
     {
-      "id": 95,
+      "id": 90,
       "data": "2026-06-08",
       "hora": "20:30",
+      "campo": "Play Padel",
+      "grupo": "F1-C",
+      "eq1": "Marta Botelho & Ana Oliveira",
+      "eq2": "Diana Carvalho & Ilga João",
+      "resultado": null
+    },
+    {
+      "id": 91,
+      "data": "2026-06-08",
+      "hora": "21:30",
       "campo": "Play Padel",
       "grupo": "M3-B",
       "eq1": "Ugo Gião & Nuno Henriques",
@@ -1128,37 +1088,27 @@
       "resultado": null
     },
     {
-      "id": 96,
-      "data": "2026-06-08",
-      "hora": "21:30",
-      "campo": "Play Padel",
-      "grupo": "M1-A",
-      "eq1": "Luis Antunes & Manuel Neto",
-      "eq2": "Faizal & Sherial",
-      "resultado": null
-    },
-    {
-      "id": 97,
+      "id": 92,
       "data": "2026-06-08",
       "hora": "17:30",
       "campo": "TVCabo",
       "grupo": "F2-B",
-      "eq1": "Glória Baltazar & Luciana Lauriano",
+      "eq1": "Glória & Luciana Lauriano",
       "eq2": "Shanel & Kaitlynn",
       "resultado": null
     },
     {
-      "id": 98,
+      "id": 93,
       "data": "2026-06-08",
       "hora": "18:30",
       "campo": "TVCabo",
-      "grupo": "M5-A",
-      "eq1": "Faizan Ravat & Ranim Ahmad",
-      "eq2": "Alcy Heim & Gabriel Heim",
+      "grupo": "M1-A",
+      "eq1": "Bruno Gaspar & Manuel Pinto Abreu",
+      "eq2": "Luis Antunes & Manuel Neto",
       "resultado": null
     },
     {
-      "id": 99,
+      "id": 94,
       "data": "2026-06-08",
       "hora": "19:30",
       "campo": "TVCabo",
@@ -1168,7 +1118,7 @@
       "resultado": null
     },
     {
-      "id": 100,
+      "id": 95,
       "data": "2026-06-08",
       "hora": "20:30",
       "campo": "TVCabo",
@@ -1178,7 +1128,7 @@
       "resultado": null
     },
     {
-      "id": 101,
+      "id": 96,
       "data": "2026-06-08",
       "hora": "21:30",
       "campo": "TVCabo",
@@ -1188,7 +1138,17 @@
       "resultado": null
     },
     {
-      "id": 102,
+      "id": 97,
+      "data": "2026-06-08",
+      "hora": "22:30",
+      "campo": "TVCabo",
+      "grupo": "M1-C",
+      "eq1": "Tayab & Badru Rosa",
+      "eq2": "Carlos Cardeano & José Santos",
+      "resultado": null
+    },
+    {
+      "id": 98,
       "data": "2026-06-08",
       "hora": "17:30",
       "campo": "Stella Artois",
@@ -1198,19 +1158,9 @@
       "resultado": null
     },
     {
-      "id": 103,
+      "id": 99,
       "data": "2026-06-08",
       "hora": "18:30",
-      "campo": "Stella Artois",
-      "grupo": "F1-A",
-      "eq1": "Caironice & Carmen",
-      "eq2": "Cynthia Cavalcanti & Kátia Sousa",
-      "resultado": null
-    },
-    {
-      "id": 104,
-      "data": "2026-06-08",
-      "hora": "19:30",
       "campo": "Stella Artois",
       "grupo": "M4-B",
       "eq1": "Duncan & James",
@@ -1218,17 +1168,27 @@
       "resultado": null
     },
     {
-      "id": 105,
+      "id": 100,
       "data": "2026-06-08",
-      "hora": "20:30",
+      "hora": "19:30",
       "campo": "Stella Artois",
-      "grupo": "F1-B",
-      "eq1": "Érica Capela & Sarah Taillon",
-      "eq2": "Celine Sieu & Ana Pezarat",
+      "grupo": "M2-B",
+      "eq1": "José Moreira & Nuno L. Pereira",
+      "eq2": "Dej Cruz & Fabio Damato",
       "resultado": null
     },
     {
-      "id": 106,
+      "id": 101,
+      "data": "2026-06-08",
+      "hora": "20:30",
+      "campo": "Stella Artois",
+      "grupo": "M4-D",
+      "eq1": "Muhammad Chona & Ibrahim Bilal",
+      "eq2": "Luis Trigo Morais & Pedro Mandlate",
+      "resultado": null
+    },
+    {
+      "id": 102,
       "data": "2026-06-08",
       "hora": "21:30",
       "campo": "Stella Artois",
@@ -1238,7 +1198,7 @@
       "resultado": null
     },
     {
-      "id": 107,
+      "id": 103,
       "data": "2026-06-09",
       "hora": "17:30",
       "campo": "Play Padel",
@@ -1248,7 +1208,7 @@
       "resultado": null
     },
     {
-      "id": 108,
+      "id": 104,
       "data": "2026-06-09",
       "hora": "18:30",
       "campo": "Play Padel",
@@ -1258,17 +1218,17 @@
       "resultado": null
     },
     {
-      "id": 109,
+      "id": 105,
       "data": "2026-06-09",
       "hora": "19:30",
       "campo": "Play Padel",
-      "grupo": "M1-C",
-      "eq1": "Tayab & Badru Rosa",
-      "eq2": "Fernando & Rui Rocha",
+      "grupo": "M4-B",
+      "eq1": "Duncan & James",
+      "eq2": "Alao Almeida & Ayaan Mussa",
       "resultado": null
     },
     {
-      "id": 110,
+      "id": 106,
       "data": "2026-06-09",
       "hora": "20:30",
       "campo": "Play Padel",
@@ -1278,7 +1238,7 @@
       "resultado": null
     },
     {
-      "id": 111,
+      "id": 107,
       "data": "2026-06-09",
       "hora": "21:30",
       "campo": "Play Padel",
@@ -1288,27 +1248,27 @@
       "resultado": null
     },
     {
-      "id": 112,
+      "id": 108,
       "data": "2026-06-09",
       "hora": "17:30",
       "campo": "TVCabo",
       "grupo": "M2-B",
-      "eq1": "José Moreira & Nuno L. Pereira",
-      "eq2": "Dej Cruz & Fabio Damato",
+      "eq1": "João Henriques & Bruno Morais",
+      "eq2": "Jameel & Tahir",
       "resultado": null
     },
     {
-      "id": 113,
+      "id": 109,
       "data": "2026-06-09",
       "hora": "18:30",
       "campo": "TVCabo",
-      "grupo": "M3-A",
-      "eq1": "José Mestre & Koenraad",
-      "eq2": "Dejan Petrovic & Isidro Simões",
+      "grupo": "F1-B",
+      "eq1": "Érica Capela & Sarah Taillon",
+      "eq2": "Celine Sieu & Ana Pezarat",
       "resultado": null
     },
     {
-      "id": 114,
+      "id": 110,
       "data": "2026-06-09",
       "hora": "19:30",
       "campo": "TVCabo",
@@ -1318,7 +1278,7 @@
       "resultado": null
     },
     {
-      "id": 115,
+      "id": 111,
       "data": "2026-06-09",
       "hora": "20:30",
       "campo": "TVCabo",
@@ -1328,7 +1288,7 @@
       "resultado": null
     },
     {
-      "id": 116,
+      "id": 112,
       "data": "2026-06-09",
       "hora": "21:30",
       "campo": "TVCabo",
@@ -1338,7 +1298,7 @@
       "resultado": null
     },
     {
-      "id": 117,
+      "id": 113,
       "data": "2026-06-09",
       "hora": "17:30",
       "campo": "Stella Artois",
@@ -1348,9 +1308,19 @@
       "resultado": null
     },
     {
-      "id": 118,
+      "id": 114,
       "data": "2026-06-09",
       "hora": "18:30",
+      "campo": "Stella Artois",
+      "grupo": "F1-A",
+      "eq1": "Stacey & Marlou",
+      "eq2": "Cynthia Cavalcanti & Kátia Sousa",
+      "resultado": null
+    },
+    {
+      "id": 115,
+      "data": "2026-06-09",
+      "hora": "19:30",
       "campo": "Stella Artois",
       "grupo": "M3-C",
       "eq1": "Sharik Omar & Muhamad Mussagy",
@@ -1358,9 +1328,9 @@
       "resultado": null
     },
     {
-      "id": 119,
+      "id": 116,
       "data": "2026-06-09",
-      "hora": "19:30",
+      "hora": "20:30",
       "campo": "Stella Artois",
       "grupo": "F1-C",
       "eq1": "Anouk Fumane & Letícia",
@@ -1368,27 +1338,27 @@
       "resultado": null
     },
     {
-      "id": 120,
+      "id": 117,
       "data": "2026-06-09",
-      "hora": "20:30",
+      "hora": "21:30",
       "campo": "Stella Artois",
-      "grupo": "M2-B",
-      "eq1": "João Henriques & Bruno Morais",
-      "eq2": "Jameel & Tahir",
+      "grupo": "M3-A",
+      "eq1": "José Mestre & Koenraad",
+      "eq2": "Dejan Petrovic & Isidro Simões",
       "resultado": null
     },
     {
-      "id": 121,
+      "id": 118,
       "data": "2026-06-10",
       "hora": "17:30",
       "campo": "Play Padel",
-      "grupo": "M4-A",
-      "eq1": "João Pignatelli & Joel Almeida",
-      "eq2": "André Reves & Francisco Morais",
+      "grupo": "M4-B",
+      "eq1": "Duncan & James",
+      "eq2": "Andrea & Mikel Álvarez",
       "resultado": null
     },
     {
-      "id": 122,
+      "id": 119,
       "data": "2026-06-10",
       "hora": "18:30",
       "campo": "Play Padel",
@@ -1398,7 +1368,7 @@
       "resultado": null
     },
     {
-      "id": 123,
+      "id": 120,
       "data": "2026-06-10",
       "hora": "19:30",
       "campo": "Play Padel",
@@ -1408,7 +1378,7 @@
       "resultado": null
     },
     {
-      "id": 124,
+      "id": 121,
       "data": "2026-06-10",
       "hora": "20:30",
       "campo": "Play Padel",
@@ -1418,7 +1388,17 @@
       "resultado": null
     },
     {
-      "id": 125,
+      "id": 122,
+      "data": "2026-06-10",
+      "hora": "21:30",
+      "campo": "Play Padel",
+      "grupo": "M1-A",
+      "eq1": "Luis Antunes & Manuel Neto",
+      "eq2": "Faizal & Sherial",
+      "resultado": null
+    },
+    {
+      "id": 123,
       "data": "2026-06-10",
       "hora": "17:30",
       "campo": "TVCabo",
@@ -1428,17 +1408,17 @@
       "resultado": null
     },
     {
-      "id": 126,
+      "id": 124,
       "data": "2026-06-10",
       "hora": "18:30",
       "campo": "TVCabo",
-      "grupo": "M4-A",
-      "eq1": "Joshua & Noah",
-      "eq2": "Pablo & Galo Rivera",
+      "grupo": "M1-B",
+      "eq1": "Karim Kanifani & Octávio Barros",
+      "eq2": "Rehan Fayaz & Reehan M.",
       "resultado": null
     },
     {
-      "id": 127,
+      "id": 125,
       "data": "2026-06-10",
       "hora": "19:30",
       "campo": "TVCabo",
@@ -1448,7 +1428,7 @@
       "resultado": null
     },
     {
-      "id": 128,
+      "id": 126,
       "data": "2026-06-10",
       "hora": "20:30",
       "campo": "TVCabo",
@@ -1458,27 +1438,37 @@
       "resultado": null
     },
     {
-      "id": 129,
+      "id": 127,
+      "data": "2026-06-10",
+      "hora": "21:30",
+      "campo": "TVCabo",
+      "grupo": "M1-C",
+      "eq1": "Tayab & Badru Rosa",
+      "eq2": "Fernando & Rui Rocha",
+      "resultado": null
+    },
+    {
+      "id": 128,
       "data": "2026-06-10",
       "hora": "17:30",
       "campo": "Stella Artois",
       "grupo": "M4-C",
       "eq1": "Paul & Xander",
-      "eq2": "Reihan Adamo & Nabil Manga",
+      "eq2": "Reihan Adomo & Nabil Manga",
+      "resultado": null
+    },
+    {
+      "id": 129,
+      "data": "2026-06-10",
+      "hora": "18:30",
+      "campo": "Stella Artois",
+      "grupo": "M4-A",
+      "eq1": "Joshua & Noah",
+      "eq2": "Pablo & Galo Rivera",
       "resultado": null
     },
     {
       "id": 130,
-      "data": "2026-06-10",
-      "hora": "18:30",
-      "campo": "Stella Artois",
-      "grupo": "M4-B",
-      "eq1": "Duncan & James",
-      "eq2": "Alão Almeida & Ayaan Mussa",
-      "resultado": null
-    },
-    {
-      "id": 131,
       "data": "2026-06-10",
       "hora": "19:30",
       "campo": "Stella Artois",
@@ -1488,13 +1478,23 @@
       "resultado": null
     },
     {
-      "id": 132,
+      "id": 131,
       "data": "2026-06-10",
       "hora": "20:30",
       "campo": "Stella Artois",
-      "grupo": "M4-D",
-      "eq1": "Muhammad Chona & Ibrahim Bilal",
-      "eq2": "Luis Trigo de Morais & Pedro Mandlate",
+      "grupo": "M2-C",
+      "eq1": "Felipe Moniz & José Cossa",
+      "eq2": "Ricardo Oliveira & Vasco Silva",
+      "resultado": null
+    },
+    {
+      "id": 132,
+      "data": "2026-06-10",
+      "hora": "21:30",
+      "campo": "Stella Artois",
+      "grupo": "M5-A",
+      "eq1": "Faizan Ravat & Ranim Ahmad",
+      "eq2": "Alcy Heim & Gabriel Heim",
       "resultado": null
     }
   ],
