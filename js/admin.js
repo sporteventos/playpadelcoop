@@ -75,6 +75,163 @@ window.notificarDia = function() {
   window.open('https://wa.me/?text=' + encodeURIComponent(waMsgBundle(jogos)), '_blank');
 };
 
+window.gerarPanfleto = function() {
+  const filtroData  = document.getElementById('filtroDataJogos').value;
+  const filtroCampo = document.getElementById('filtroCampoJogos').value;
+  let jogos = getData('jogos');
+  if (filtroData  !== 'todos') jogos = jogos.filter(j => j.data  === filtroData);
+  if (filtroCampo !== 'todos') jogos = jogos.filter(j => j.campo === filtroCampo);
+  if (!jogos.length) return toast('Sem jogos para o filtro actual.', 'error');
+  jogos = [...jogos].sort((a, b) => a.hora.localeCompare(b.hora) || a.campo.localeCompare(b.campo));
+
+  const W      = 1080;
+  const PAD    = 44;
+  const ROW_H  = 68;
+  const HEAD_H = 210;
+  const FOOT_H = 64;
+  const H      = HEAD_H + jogos.length * ROW_H + FOOT_H;
+
+  const canvas  = document.createElement('canvas');
+  canvas.width  = W;
+  canvas.height = H;
+  const ctx = canvas.getContext('2d');
+
+  // ── helpers ──────────────────────────────────────────────
+  function trunc(text, maxW) {
+    if (ctx.measureText(text).width <= maxW) return text;
+    while (text.length && ctx.measureText(text + '\u2026').width > maxW) text = text.slice(0, -1);
+    return text + '\u2026';
+  }
+  function badge(x, y, w, h, r, bg, fg, text, fs) {
+    ctx.fillStyle = bg;
+    ctx.beginPath(); ctx.roundRect(x, y, w, h, r); ctx.fill();
+    ctx.fillStyle = fg;
+    ctx.font = `bold ${fs}px Arial, sans-serif`;
+    ctx.textAlign = 'center';
+    ctx.fillText(text, x + w / 2, y + h * 0.69);
+    ctx.textAlign = 'left';
+  }
+
+  const COURT_CLR = { 'Play Padel':'#00C37B', 'TVCabo':'#4A9EFF', 'Stella Artois':'#F5C518' };
+  const CAT_CLR   = { M1:'#4A9EFF', M2:'#00C37B', M3:'#39FF8F', M4:'#F5C518', M5:'#FF9A3C', F1:'#FF6BB0', F2:'#C97BFF' };
+
+  // ── Background ───────────────────────────────────────────
+  ctx.fillStyle = '#0A0F0D';
+  ctx.fillRect(0, 0, W, H);
+
+  // ── Gradient top bar ─────────────────────────────────────
+  const grad = ctx.createLinearGradient(0, 0, W, 0);
+  grad.addColorStop(0, '#00C37B'); grad.addColorStop(1, '#007A4E');
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, W, 10);
+
+  // ── Header text ──────────────────────────────────────────
+  ctx.fillStyle = '#00C37B';
+  ctx.font = 'bold 52px Arial, sans-serif';
+  ctx.fillText('PLAY PADEL', PAD, 72);
+  ctx.fillStyle = '#F0F7F3';
+  ctx.font = '52px Arial, sans-serif';
+  ctx.fillText('TORNEIO 2026', PAD + ctx.measureText('PLAY PADEL ').width, 72);
+
+  const dayLabel = filtroData !== 'todos'
+    ? (typeof ppWeekday === 'function' ? ppWeekday(filtroData).toUpperCase() + '  \u00B7  ' : '')
+      + filtroData.split('-').reverse().join('/')
+    : 'TODOS OS JOGOS';
+  ctx.fillStyle = '#8AA396';
+  ctx.font = '26px Arial, sans-serif';
+  ctx.fillText(dayLabel, PAD, 112);
+
+  ctx.fillStyle = '#F0F7F3';
+  ctx.font = 'bold 20px Arial, sans-serif';
+  ctx.fillText(`${jogos.length} JOGO${jogos.length !== 1 ? 'S' : ''}`, PAD, 150);
+
+  // ── Divider ──────────────────────────────────────────────
+  ctx.fillStyle = '#1C2620';
+  ctx.fillRect(PAD, 168, W - PAD * 2, 2);
+
+  // ── Column headers ───────────────────────────────────────
+  ctx.fillStyle = '#4A6058';
+  ctx.font = 'bold 13px Arial, sans-serif';
+  const CX = { hora: PAD + 8, campo: PAD + 96, grupo: PAD + 288, eq1: PAD + 396, vs: PAD + 706, eq2: PAD + 732 };
+  ctx.fillText('HORA',    CX.hora,  190);
+  ctx.fillText('CAMPO',   CX.campo + 30, 190);
+  ctx.fillText('GRUPO',   CX.grupo + 12, 190);
+  ctx.fillText('EQUIPA 1', CX.eq1,  190);
+  ctx.fillText('EQUIPA 2', CX.eq2,  190);
+
+  // ── Rows ─────────────────────────────────────────────────
+  let lastHora = null;
+  jogos.forEach((j, i) => {
+    const y   = HEAD_H + i * ROW_H;
+    const cat = j.grupo.split('-')[0];
+    const cc  = COURT_CLR[j.campo] || '#8AA396';
+    const gc  = CAT_CLR[cat]       || '#8AA396';
+
+    ctx.fillStyle = i % 2 === 0 ? '#111815' : '#0D1410';
+    ctx.fillRect(0, y, W, ROW_H);
+
+    if (j.hora !== lastHora && i > 0) {
+      ctx.fillStyle = '#1C2620'; ctx.fillRect(0, y, W, 1);
+    }
+    lastHora = j.hora;
+
+    ctx.fillStyle = cc; ctx.fillRect(0, y + 1, 6, ROW_H - 2);
+
+    const cy = y + ROW_H / 2 + 9;
+
+    ctx.fillStyle = '#F0F7F3';
+    ctx.font = 'bold 24px "Courier New", monospace';
+    ctx.fillText(j.hora, CX.hora, cy);
+
+    badge(CX.campo, y + (ROW_H - 32) / 2, 176, 32, 6, cc + '28', cc, j.campo, 14);
+    badge(CX.grupo, y + (ROW_H - 32) / 2, 88,  32, 6, gc + '28', gc, j.grupo, 14);
+
+    ctx.fillStyle = '#F0F7F3';
+    ctx.font = '21px Arial, sans-serif';
+    ctx.fillText(trunc(j.eq1, 294), CX.eq1, cy);
+
+    ctx.fillStyle = '#4A6058';
+    ctx.font = 'bold 17px Arial, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('VS', CX.vs, cy);
+    ctx.textAlign = 'left';
+
+    ctx.fillStyle = '#F0F7F3';
+    ctx.font = '21px Arial, sans-serif';
+
+    if (j.resultado) {
+      const { w1, w2 } = matchSetsScore(j.resultado);
+      const r = j.resultado;
+      const sets = [[r.s1eq1,r.s1eq2],[r.s2eq1,r.s2eq2],[r.s3eq1,r.s3eq2]]
+        .filter(([a]) => a != null).map(([a, b]) => `${a}-${b}`).join(' ');
+      ctx.fillText(trunc(j.eq2, 240), CX.eq2, cy);
+      ctx.font = 'bold 18px Arial, sans-serif';
+      ctx.fillStyle = w1 > w2 ? '#FF4A4A' : '#39FF8F';
+      ctx.textAlign = 'right';
+      ctx.fillText(sets, W - PAD, cy);
+      ctx.textAlign = 'left';
+    } else {
+      ctx.fillText(trunc(j.eq2, 290), CX.eq2, cy);
+    }
+  });
+
+  // ── Footer ───────────────────────────────────────────────
+  const fy = H - FOOT_H;
+  ctx.fillStyle = '#111815'; ctx.fillRect(0, fy, W, FOOT_H);
+  ctx.fillStyle = '#1C2620'; ctx.fillRect(0, fy, W, 1);
+  ctx.fillStyle = '#4A6058';
+  ctx.font = '17px Arial, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('euamusse.github.io/playpadelcoop  \u00B7  Play Padel Torneio 2026', W / 2, fy + 38);
+  ctx.textAlign = 'left';
+
+  const a = document.createElement('a');
+  a.download = `jogos-${filtroData !== 'todos' ? filtroData : 'todos'}.png`;
+  a.href = canvas.toDataURL('image/png');
+  a.click();
+  toast('Panfleto gerado!', 'success');
+};
+
 // ============================================
 //  DADOS INICIAIS (mantidos em data.js)
 // ============================================
