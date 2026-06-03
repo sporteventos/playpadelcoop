@@ -19,6 +19,63 @@ const setData = (k, v) => { ppSave(k, v); if (typeof GHSync !== 'undefined') GHS
 const formatDate = ppFormatDate;
 
 // ============================================
+//  WHATSAPP HELPERS
+// ============================================
+function getTelefone(nome) { const t = getData('telefones') || {}; return t[nome] || ''; }
+function setTelefone(nome, tel) {
+  const t = getData('telefones') || {};
+  if (tel) t[nome] = tel; else delete t[nome];
+  setData('telefones', t);
+}
+function waLink(phone, text) {
+  const clean = phone.replace(/\D/g, '');
+  return 'https://wa.me/' + clean + '?text=' + encodeURIComponent(text);
+}
+function waMsgJogo(j) {
+  return '\u{1F3BE} *Play Padel \u00b7 Torneio 2.\u00ba Anivers\u00e1rio*\n\n' +
+    '\ud83d\udcc5 ' + ppWeekday(j.data) + ', ' + formatDate(j.data) + ' | \u23f0 ' + j.hora + '\n' +
+    '\ud83c\udfd9\ufe0f Campo: ' + j.campo + ' | \ud83c\udff7\ufe0f ' + j.grupo + '\n\n' +
+    '\ud83c\udfc6 *' + j.eq1 + '*\nvs\n*' + j.eq2 + '*\n\nBoa sorte! \ud83c\udfc6';
+}
+function waMsgFFJogo(j, catId) {
+  const fase = j.fase === 'F' ? 'Final' : j.fase === 'SF' ? 'Meia-Final ' + j.num : 'Quarto de Final ' + j.num;
+  return '\u{1F3BE} *Play Padel \u00b7 Torneio 2.\u00ba Anivers\u00e1rio*\n\ud83c\udfc6 *' + catId + ' \u2014 ' + fase + '*\n\n' +
+    '\ud83d\udcc5 ' + (j.data ? ppWeekday(j.data) + ', ' + formatDate(j.data) : 'A definir') + ' | \u23f0 ' + (j.hora || 'A definir') + '\n\n' +
+    '\ud83c\udfc6 *' + (j.eq1 || 'A definir') + '*\nvs\n*' + (j.eq2 || 'A definir') + '*\n\nBoa sorte! \ud83c\udfc6';
+}
+function waMsgBundle(jogos) {
+  const byData = {};
+  jogos.forEach(j => { byData[j.data] = byData[j.data] || []; byData[j.data].push(j); });
+  let msg = '\u{1F3BE} *Play Padel \u00b7 Torneio 2.\u00ba Anivers\u00e1rio*\n\ud83d\udccb *Programa de Jogos*\n';
+  Object.keys(byData).sort().forEach(d => {
+    msg += '\n\ud83d\udcc5 *' + ppWeekday(d) + ', ' + formatDate(d) + '*\n';
+    byData[d].sort((a, b) => a.hora.localeCompare(b.hora)).forEach(j => {
+      msg += '\u23f0 ' + j.hora + ' | ' + j.campo + ' | ' + j.grupo + '\n   ' + j.eq1 + ' vs ' + j.eq2 + '\n';
+    });
+  });
+  return msg;
+}
+function getTeamWaBtns(eq1, eq2, jogo) {
+  const msg = waMsgJogo(jogo);
+  return [eq1, eq2].flatMap(team =>
+    team.split('&').map(n => n.trim()).map(n => {
+      const tel = getTelefone(n);
+      if (!tel) return '';
+      return '<a class="btn-icon" style="color:#25D366" href="' + waLink(tel, msg) + '" target="_blank" title="Notificar ' + n + '"><i class="ph ph-whatsapp-logo"></i></a>';
+    })
+  ).filter(Boolean).join('');
+}
+window.notificarDia = function() {
+  const filtroData  = document.getElementById('filtroDataJogos').value;
+  const filtroCampo = document.getElementById('filtroCampoJogos').value;
+  let jogos = getData('jogos');
+  if (filtroData  !== 'todos') jogos = jogos.filter(j => j.data  === filtroData);
+  if (filtroCampo !== 'todos') jogos = jogos.filter(j => j.campo === filtroCampo);
+  if (!jogos.length) return toast('Sem jogos para o filtro actual.', 'error');
+  window.open('https://wa.me/?text=' + encodeURIComponent(waMsgBundle(jogos)), '_blank');
+};
+
+// ============================================
 //  DADOS INICIAIS (mantidos em data.js)
 // ============================================
 const _UNUSED_DEFAULTS = {
@@ -558,15 +615,22 @@ function renderJogadores(filter = '') {
     const grupos = [...new Set(jogosJogador.map(j => j.grupo))];
     const comRes  = jogosJogador.filter(j => j.resultado).length;
     const nomeEnc = encodeURIComponent(nome);
-    return `
-    <tr>
-      <td style="color:var(--cinza-texto);font-size:0.75rem">${i+1}</td>
-      <td><strong>${nome}</strong></td>
-      <td>${grupos.map(g=>`<span class="cat-pill cat-${g.split('-')[0]}">${g}</span>`).join(' ')}</td>
-      <td>${jogosJogador.length} <span class="td-muted">jogo${jogosJogador.length!==1?'s':''}</span></td>
-      <td>${comRes} <span class="td-muted">result.</span></td>
-      <td><button class="btn-icon" onclick="editarJogador(decodeURIComponent('${nomeEnc}'))" title="Editar nome"><i class="ph ph-pencil"></i></button></td>
-    </tr>`;
+    const tel = getTelefone(nome);
+    const confMsg = encodeURIComponent('\u{1F3BE} Ol\u00e1 ' + nome + '!\n\nA tua inscri\u00e7\u00e3o no torneio *Play Padel \u00b7 2.\u00ba Anivers\u00e1rio* est\u00e1 confirmada. Bom jogo! \ud83c\udfc6');
+    const waBtn = tel
+      ? '<a class="btn-icon" style="color:#25D366" href="https://wa.me/' + tel.replace(/\D/g,'') + '?text=' + confMsg + '" target="_blank" title="WhatsApp"><i class="ph ph-whatsapp-logo"></i></a>'
+      : '';
+    return '<tr>' +
+      '<td style="color:var(--cinza-texto);font-size:0.75rem">' + (i+1) + '</td>' +
+      '<td><strong>' + nome + '</strong></td>' +
+      '<td>' + grupos.map(g => '<span class="cat-pill cat-' + g.split('-')[0] + '">' + g + '</span>').join(' ') + '</td>' +
+      '<td>' + jogosJogador.length + ' <span class="td-muted">jogo' + (jogosJogador.length!==1?'s':'') + '</span></td>' +
+      '<td>' + comRes + ' <span class="td-muted">result.</span></td>' +
+      '<td style="font-size:.78rem;color:var(--cinza-texto)">' + (tel || '<span style="opacity:.35">\u2014</span>') + '</td>' +
+      '<td><div style="display:flex;gap:.15rem">' + waBtn +
+        '<button class="btn-icon" onclick="editarJogador(decodeURIComponent(\'' + nomeEnc + '\'))" title="Editar"><i class="ph ph-pencil"></i></button>' +
+      '</div></td>' +
+      '</tr>';
   }).join('');
 
   document.getElementById('jogadoresCount').textContent = lista.length;
@@ -575,6 +639,7 @@ function renderJogadores(filter = '') {
 function editarJogador(nome) {
   document.getElementById('jogadorNomeActual').textContent = nome;
   document.getElementById('jogadorNomeNovo').value = nome;
+  document.getElementById('jogadorTelefone').value = getTelefone(nome);
   APP.editingId = nome;
   openModal('modalJogador');
   setTimeout(() => {
@@ -587,23 +652,31 @@ function editarJogador(nome) {
 function saveJogador() {
   const nomeAntigo = APP.editingId;
   const nomeNovo   = document.getElementById('jogadorNomeNovo').value.trim();
+  const telNovo    = document.getElementById('jogadorTelefone').value.trim();
   if (!nomeNovo) { toast('Introduza o novo nome', 'error'); return; }
-  if (nomeNovo === nomeAntigo) { closeModal('modalJogador'); return; }
 
-  const jogos = getData('jogos');
-  let alterados = 0;
-  jogos.forEach(j => {
-    const eq1parts = j.eq1.split('&').map(n => n.trim());
-    const eq2parts = j.eq2.split('&').map(n => n.trim());
-    const idx1 = eq1parts.indexOf(nomeAntigo);
-    const idx2 = eq2parts.indexOf(nomeAntigo);
-    if (idx1 !== -1) { eq1parts[idx1] = nomeNovo; j.eq1 = eq1parts.join(' & '); alterados++; }
-    if (idx2 !== -1) { eq2parts[idx2] = nomeNovo; j.eq2 = eq2parts.join(' & '); alterados++; }
-  });
-  setData('jogos', jogos);
+  if (nomeNovo !== nomeAntigo) {
+    const oldTel = getTelefone(nomeAntigo);
+    setTelefone(nomeAntigo, '');
+    setTelefone(nomeNovo, telNovo || oldTel);
+    const jogos = getData('jogos');
+    let alterados = 0;
+    jogos.forEach(j => {
+      const eq1parts = j.eq1.split('&').map(n => n.trim());
+      const eq2parts = j.eq2.split('&').map(n => n.trim());
+      const idx1 = eq1parts.indexOf(nomeAntigo);
+      const idx2 = eq2parts.indexOf(nomeAntigo);
+      if (idx1 !== -1) { eq1parts[idx1] = nomeNovo; j.eq1 = eq1parts.join(' & '); alterados++; }
+      if (idx2 !== -1) { eq2parts[idx2] = nomeNovo; j.eq2 = eq2parts.join(' & '); alterados++; }
+    });
+    setData('jogos', jogos);
+    Auth.log('RENAME_JOGADOR', 'jogadores', `"${nomeAntigo}" → "${nomeNovo}"`);
+    toast(`"${nomeAntigo}" renomeado para "${nomeNovo}" em ${alterados} jogo${alterados!==1?'s':''}`, 'success');
+  } else {
+    setTelefone(nomeNovo, telNovo);
+    toast('Guardado.', 'success');
+  }
   closeModal('modalJogador');
-  Auth.log('RENAME_JOGADOR', 'jogadores', `"${nomeAntigo}" → "${nomeNovo}"`);
-  toast(`"${nomeAntigo}" renomeado para "${nomeNovo}" em ${alterados} jogo${alterados!==1?'s':''}`, 'success');
   renderJogadores();
   APP.editingId = null;
 }
@@ -660,6 +733,7 @@ function renderJogos(filtroData = 'todos', filtroCampo = 'todos', filtroGrupo = 
           <button class="btn-icon btn-del"  title="Eliminar jogo"    onclick="deleteJogo(${j.id})"><i class="ph ph-trash"></i></button>
         </div>
       </td>
+      <td style="text-align:center">${getTeamWaBtns(j.eq1, j.eq2, j)}</td>
     </tr>`;
   }).join('');
 
@@ -1464,6 +1538,21 @@ function ffCardHtml(j, catId) {
         </button>
       </div>`
     : '';
+
+  // WA notify buttons — one per player who has a phone registered
+  const ffWaLinks = [j.eq1, j.eq2].filter(Boolean).flatMap(team =>
+    team.split('&').map(n => n.trim()).map(n => {
+      const tel = getTelefone(n);
+      if (!tel) return '';
+      const clean = tel.replace(/\D/g, '');
+      const msg = encodeURIComponent(waMsgFFJogo(j, catId));
+      return `<a style="color:#25D366;font-size:.68rem;display:inline-flex;align-items:center;gap:.12rem;text-decoration:none" href="https://wa.me/${clean}?text=${msg}" target="_blank" title="Notificar ${n}"><i class="ph ph-whatsapp-logo"></i>${n.split(' ')[0]}</a>`;
+    })
+  ).filter(Boolean);
+  const ffWaHtml = ffWaLinks.length
+    ? `<div style="display:flex;flex-wrap:wrap;gap:.2rem;margin-top:.3rem;padding-top:.25rem;border-top:1px solid var(--preto-borda)">${ffWaLinks.join('')}</div>`
+    : '';
+
   return `
     <div class="bk-card${done ? ' done' : ''}${j.fase === 'F' ? ' is-final' : ''}">
       <div class="bk-card-lbl">${fLabel}</div>
@@ -1475,6 +1564,7 @@ function ffCardHtml(j, catId) {
       ${canEdit ? `<button class="btn btn-sm ${done ? 'btn-ghost' : 'btn-primary'}" style="width:100%;margin-top:.3rem;font-size:.72rem;padding:.28rem" onclick="ffAbrirResultado('${j.id}','${catId}')">
         <i class="ph ph-${done ? 'pencil-simple' : 'plus'}"></i> ${done ? 'Editar' : 'Lançar'}
       </button>` : ''}
+      ${ffWaHtml}
     </div>`;
 }
 

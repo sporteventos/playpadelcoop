@@ -349,7 +349,7 @@
           <div class="table-wrap">
             <table>
               <thead>
-                <tr><th>#</th><th>Nome</th><th>Grupo(s)</th><th>Jogos</th><th>Resultados</th><th></th></tr>
+                <tr><th>#</th><th>Nome</th><th>Grupo(s)</th><th>Jogos</th><th>Resultados</th><th>Telefone</th><th></th></tr>
               </thead>
               <tbody id="jogadoresBody"></tbody>
             </table>
@@ -385,16 +385,15 @@
           <div class="filter-group">
             <select class="form-select filter-data" id="filtroDataJogos" style="min-width:170px"></select>
             <select class="form-select filter-campo" id="filtroCampoJogos" style="min-width:150px"></select>
-          </div>
-        </div>
-
-        <div class="panel">
+            <button class="btn btn-ghost" onclick="notificarDia()" style="color:#25D366;border-color:rgba(37,211,102,.3);font-size:.75rem" title="Gerar mensagem WA com todos os jogos do dia/filtro seleccionado">
+              <i class="ph ph-whatsapp-logo"></i> Notificar Dia
+            </button>
           <div class="table-wrap">
             <table>
               <thead>
                 <tr>
                   <th>#</th><th>Data</th><th>Hora</th><th>Campo</th><th>Grupo</th>
-                  <th>Equipa 1</th><th></th><th>Equipa 2</th><th style="text-align:center">Resultado</th><th>Ações</th>
+                  <th>Equipa 1</th><th></th><th>Equipa 2</th><th style="text-align:center">Resultado</th><th>Ações</th><th style="text-align:center">WA</th>
                 </tr>
               </thead>
               <tbody id="jogosBody"></tbody>
@@ -706,6 +705,10 @@
       <div class="form-group-modal">
         <label class="form-label" for="jogadorNomeNovo">Novo nome</label>
         <input class="form-input" type="text" id="jogadorNomeNovo" placeholder="Nome corrigido"/>
+      </div>
+      <div class="form-group-modal">
+        <label class="form-label" for="jogadorTelefone">Telefone WhatsApp</label>
+        <input class="form-input" type="tel" id="jogadorTelefone" placeholder="+258 84 123 4567"/>
       </div>
       <p class="form-hint" style="color:var(--amarelo);font-size:.78rem;margin-top:.5rem">
         <i class="ph ph-warning"></i> O nome será actualizado em todos os jogos onde este jogador aparece.

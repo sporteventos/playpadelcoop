@@ -173,6 +173,7 @@ const DEFAULTS = {
     { id:131, data:'2026-06-10', hora:'19:30', campo:'Stella Artois', grupo:'M4-D', eq1:'Muhammad Chona & Ibrahim Bilal',   eq2:'Luis Vaz & Sérgio Gomes',                resultado:null },
     { id:132, data:'2026-06-10', hora:'20:30', campo:'Stella Artois', grupo:'M4-D', eq1:'Muhammad Chona & Ibrahim Bilal',   eq2:'Luis Trigo de Morais & Pedro Mandlate',  resultado:null },
   ],
+  telefones: {},
 };
 
 // ---- Storage helpers ----
@@ -203,7 +204,7 @@ function ppFormatDate(d) {
   window.ppDataReady = fetch('data.json?_=' + Date.now())
     .then(function (r) { return r.ok ? r.json() : Promise.reject('404'); })
     .then(function (d) {
-      var KEYS = ['campos', 'categorias', 'grupos', 'jogadores', 'jogos', 'fasefinal'];
+      var KEYS = ['campos', 'categorias', 'grupos', 'jogadores', 'jogos', 'fasefinal', 'telefones'];
       KEYS.forEach(function (k) {
         if (d[k] !== undefined) ppSave(k, d[k]);
       });
