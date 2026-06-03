@@ -68,9 +68,11 @@ function getTeamWaBtns(eq1, eq2, jogo) {
 window.notificarDia = function() {
   const filtroData  = document.getElementById('filtroDataJogos').value;
   const filtroCampo = document.getElementById('filtroCampoJogos').value;
+  const filtroGrupo = document.getElementById('filtroGrupoJogos')?.value || 'todos';
   let jogos = getData('jogos');
   if (filtroData  !== 'todos') jogos = jogos.filter(j => j.data  === filtroData);
   if (filtroCampo !== 'todos') jogos = jogos.filter(j => j.campo === filtroCampo);
+  if (filtroGrupo !== 'todos') jogos = jogos.filter(j => j.grupo === filtroGrupo);
   if (!jogos.length) return toast('Sem jogos para o filtro actual.', 'error');
   window.open('https://wa.me/?text=' + encodeURIComponent(waMsgBundle(jogos)), '_blank');
 };
@@ -78,9 +80,11 @@ window.notificarDia = function() {
 window.gerarPanfleto = function() {
   const filtroData  = document.getElementById('filtroDataJogos').value;
   const filtroCampo = document.getElementById('filtroCampoJogos').value;
+  const filtroGrupo = document.getElementById('filtroGrupoJogos')?.value || 'todos';
   let jogos = getData('jogos');
   if (filtroData  !== 'todos') jogos = jogos.filter(j => j.data  === filtroData);
   if (filtroCampo !== 'todos') jogos = jogos.filter(j => j.campo === filtroCampo);
+  if (filtroGrupo !== 'todos') jogos = jogos.filter(j => j.grupo === filtroGrupo);
   if (!jogos.length) return toast('Sem jogos para o filtro actual.', 'error');
   jogos = [...jogos].sort((a, b) => a.hora.localeCompare(b.hora) || a.campo.localeCompare(b.campo));
 
@@ -887,7 +891,7 @@ function renderJogos(filtroData = 'todos', filtroCampo = 'todos', filtroGrupo = 
       <td>${j.hora}</td>
       <td><span class="badge badge-cinza" style="font-size:0.65rem">${j.campo}</span></td>
       <td><span class="cat-pill cat-${cat}">${j.grupo}</span></td>
-      <td>${j.eq1.split(' & ').join('<br>')}</td>
+      <td style="text-align:right">${j.eq1.split(' & ').join('<br>')}</td>
       <td style="text-align:center;color:var(--cinza-texto);font-size:0.7rem">VS</td>
       <td>${j.eq2.split(' & ').join('<br>')}</td>
       <td style="text-align:center">${resHtml}</td>
@@ -1233,6 +1237,13 @@ function populateCampoSelects() {
   document.querySelectorAll('.filter-campo').forEach(s => { s.innerHTML = opts; });
 }
 
+function populateGrupoSelects() {
+  const grupos = [...new Set(getData('jogos').map(j => j.grupo))].sort();
+  const opts = `<option value="todos">Todos os grupos</option>` +
+    grupos.map(g => `<option value="${g}">${g}</option>`).join('');
+  document.querySelectorAll('.filter-grupo').forEach(s => { s.innerHTML = opts; });
+}
+
 function populateDataSelects() {
   const jogos = getData('jogos');
   const datas = [...new Set(jogos.map(j => j.data))].sort();
@@ -1386,6 +1397,7 @@ function initAdmin() {
   // Populate selects
   populateCampoSelects();
   populateDataSelects();
+  populateGrupoSelects();
 
   // Header search
   document.getElementById('headerSearch')?.addEventListener('input', e => {
@@ -1399,11 +1411,18 @@ function initAdmin() {
   document.getElementById('filtroDataJogos')?.addEventListener('change', e => {
     const d = e.target.value;
     const c = document.getElementById('filtroCampoJogos')?.value || 'todos';
-    renderJogos(d, c);
+    const g = document.getElementById('filtroGrupoJogos')?.value || 'todos';
+    renderJogos(d, c, g);
   });
   document.getElementById('filtroCampoJogos')?.addEventListener('change', e => {
     const d = document.getElementById('filtroDataJogos')?.value || 'todos';
-    renderJogos(d, e.target.value);
+    const g = document.getElementById('filtroGrupoJogos')?.value || 'todos';
+    renderJogos(d, e.target.value, g);
+  });
+  document.getElementById('filtroGrupoJogos')?.addEventListener('change', e => {
+    const d = document.getElementById('filtroDataJogos')?.value || 'todos';
+    const c = document.getElementById('filtroCampoJogos')?.value || 'todos';
+    renderJogos(d, c, e.target.value);
   });
 
   // Resultados filter

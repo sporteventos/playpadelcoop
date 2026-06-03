@@ -385,6 +385,7 @@
           <div class="filter-group">
             <select class="form-select filter-data" id="filtroDataJogos" style="min-width:170px"></select>
             <select class="form-select filter-campo" id="filtroCampoJogos" style="min-width:150px"></select>
+            <select class="form-select filter-grupo" id="filtroGrupoJogos" style="min-width:120px"></select>
             <button class="btn btn-ghost" onclick="notificarDia()" style="color:#25D366;border-color:rgba(37,211,102,.3);font-size:.75rem" title="Gerar mensagem WA com todos os jogos do dia/filtro seleccionado">
               <i class="ph ph-whatsapp-logo"></i> Notificar Dia
             </button>
@@ -396,7 +397,7 @@
               <thead>
                 <tr>
                   <th>#</th><th>Data</th><th>Hora</th><th>Campo</th><th>Grupo</th>
-                  <th>Equipa 1</th><th></th><th>Equipa 2</th><th style="text-align:center">Resultado</th><th>Ações</th><th style="text-align:center">WA</th>
+                  <th style="text-align:right">Equipa 1</th><th></th><th>Equipa 2</th><th style="text-align:center">Resultado</th><th>Ações</th><th style="text-align:center">WA</th>
                 </tr>
               </thead>
               <tbody id="jogosBody"></tbody>
