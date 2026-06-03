@@ -636,6 +636,14 @@ function doLogout() {
   location.reload();
 }
 
+function resetLocalCredentials(e) {
+  if (e) e.preventDefault();
+  if (!confirm('Repor credenciais? A conta admin será reposicionada com a palavra-passe padrão.')) return;
+  localStorage.removeItem('pp_users');
+  localStorage.removeItem('pp_sessions');
+  location.reload();
+}
+
 // ============================================
 //  TOAST
 // ============================================
@@ -1531,6 +1539,12 @@ document.addEventListener('DOMContentLoaded', async () => {
   // On a fresh browser (empty localStorage) ppDataReady bootstraps data from GitHub.
   // Await it so initAdmin always starts with the most up-to-date data.
   await (window.ppDataReady || Promise.resolve(false));
+
+  // Show local reset hint only when running via file:// protocol
+  if (window.location.protocol === 'file:') {
+    const hint = document.getElementById('localResetHint');
+    if (hint) hint.style.display = 'block';
+  }
 
   // Login
   const loginForm = document.getElementById('loginForm');
