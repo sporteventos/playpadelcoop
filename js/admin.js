@@ -1248,13 +1248,21 @@ function ffGetQualified(catId) {
   return q;
 }
 
-function ffMakeJogo(catId, fase, num, e1, e2, feedFrom = null) {
+const FF_QF_DATE = '2026-06-11'; // Quinta-feira — Quartos de Final
+const FF_SF_DATE = '2026-06-13'; // Sábado — Meias-Finais
+const FF_F_DATE  = '2026-06-14'; // Domingo — Finais
+const FF_QF_SLOTS = ['09:00', '10:30', '12:00', '13:30'];
+const FF_SF_SLOTS = ['09:00', '11:00'];
+const FF_F_SLOT   = '11:00';
+
+function ffMakeJogo(catId, fase, num, e1, e2, feedFrom = null, data = null, hora = null) {
   return {
     id: `${catId}-${fase === 'F' ? 'F' : fase + num}`,
     fase, num, feedFrom,
     eq1: e1?.par ?? null, eq1grupo: e1?.grupo ?? null, eq1seed: e1?.seed ?? null,
     eq2: e2?.par ?? null, eq2grupo: e2?.grupo ?? null, eq2seed: e2?.seed ?? null,
     resultado: null,
+    data, hora,
   };
 }
 
@@ -1266,22 +1274,22 @@ function ffGenerateBracket(catId) {
     const bg = {};
     q.forEach(t => { (bg[t.grupo] = bg[t.grupo] || []).push(t); });
     const [gA, gB] = Object.keys(bg).sort();
-    jogos.push(ffMakeJogo(catId, 'SF', 1, bg[gA][0], bg[gB][1]));
-    jogos.push(ffMakeJogo(catId, 'SF', 2, bg[gB][0], bg[gA][1]));
-    jogos.push(ffMakeJogo(catId, 'F',  1, null, null, [`${catId}-SF1`, `${catId}-SF2`]));
+    jogos.push(ffMakeJogo(catId, 'SF', 1, bg[gA][0], bg[gB][1], null, FF_SF_DATE, FF_SF_SLOTS[0]));
+    jogos.push(ffMakeJogo(catId, 'SF', 2, bg[gB][0], bg[gA][1], null, FF_SF_DATE, FF_SF_SLOTS[1]));
+    jogos.push(ffMakeJogo(catId, 'F',  1, null, null, [`${catId}-SF1`, `${catId}-SF2`], FF_F_DATE, FF_F_SLOT));
 
   } else if (FF_4G.includes(catId)) {
     const bg = {};
     q.forEach(t => { (bg[t.grupo] = bg[t.grupo] || []).push(t); });
     const gs = Object.keys(bg).sort().map(gId => ({ f: bg[gId][0], s: bg[gId][1] }));
     // QF1: 1A vs 2D, QF2: 1B vs 2C, QF3: 1C vs 2B, QF4: 1D vs 2A
-    jogos.push(ffMakeJogo(catId, 'QF', 1, gs[0].f, gs[3].s));
-    jogos.push(ffMakeJogo(catId, 'QF', 2, gs[1].f, gs[2].s));
-    jogos.push(ffMakeJogo(catId, 'QF', 3, gs[2].f, gs[1].s));
-    jogos.push(ffMakeJogo(catId, 'QF', 4, gs[3].f, gs[0].s));
-    jogos.push(ffMakeJogo(catId, 'SF', 1, null, null, [`${catId}-QF1`, `${catId}-QF2`]));
-    jogos.push(ffMakeJogo(catId, 'SF', 2, null, null, [`${catId}-QF3`, `${catId}-QF4`]));
-    jogos.push(ffMakeJogo(catId, 'F',  1, null, null, [`${catId}-SF1`, `${catId}-SF2`]));
+    jogos.push(ffMakeJogo(catId, 'QF', 1, gs[0].f, gs[3].s, null, FF_QF_DATE, FF_QF_SLOTS[0]));
+    jogos.push(ffMakeJogo(catId, 'QF', 2, gs[1].f, gs[2].s, null, FF_QF_DATE, FF_QF_SLOTS[1]));
+    jogos.push(ffMakeJogo(catId, 'QF', 3, gs[2].f, gs[1].s, null, FF_QF_DATE, FF_QF_SLOTS[2]));
+    jogos.push(ffMakeJogo(catId, 'QF', 4, gs[3].f, gs[0].s, null, FF_QF_DATE, FF_QF_SLOTS[3]));
+    jogos.push(ffMakeJogo(catId, 'SF', 1, null, null, [`${catId}-QF1`, `${catId}-QF2`], FF_SF_DATE, FF_SF_SLOTS[0]));
+    jogos.push(ffMakeJogo(catId, 'SF', 2, null, null, [`${catId}-QF3`, `${catId}-QF4`], FF_SF_DATE, FF_SF_SLOTS[1]));
+    jogos.push(ffMakeJogo(catId, 'F',  1, null, null, [`${catId}-SF1`, `${catId}-SF2`], FF_F_DATE, FF_F_SLOT));
 
   } else {
     // 3 groups + 2 best 3rds = 8 → QF1=S1vS8, QF2=S4vS5, QF3=S3vS6, QF4=S2vS7
@@ -1293,10 +1301,10 @@ function ffGenerateBracket(catId) {
     // Fix same-group collisions: swap 2nds (S5/S6) if needed
     if (pairs[2][0]?.grupo === pairs[2][1]?.grupo || pairs[1][0]?.grupo === pairs[1][1]?.grupo)
       { [pairs[1][1], pairs[2][1]] = [pairs[2][1], pairs[1][1]]; }
-    pairs.forEach(([e1, e2], i) => jogos.push(ffMakeJogo(catId, 'QF', i + 1, e1, e2)));
-    jogos.push(ffMakeJogo(catId, 'SF', 1, null, null, [`${catId}-QF1`, `${catId}-QF2`]));
-    jogos.push(ffMakeJogo(catId, 'SF', 2, null, null, [`${catId}-QF3`, `${catId}-QF4`]));
-    jogos.push(ffMakeJogo(catId, 'F',  1, null, null, [`${catId}-SF1`, `${catId}-SF2`]));
+    pairs.forEach(([e1, e2], i) => jogos.push(ffMakeJogo(catId, 'QF', i + 1, e1, e2, null, FF_QF_DATE, FF_QF_SLOTS[i])));
+    jogos.push(ffMakeJogo(catId, 'SF', 1, null, null, [`${catId}-QF1`, `${catId}-QF2`], FF_SF_DATE, FF_SF_SLOTS[0]));
+    jogos.push(ffMakeJogo(catId, 'SF', 2, null, null, [`${catId}-QF3`, `${catId}-QF4`], FF_SF_DATE, FF_SF_SLOTS[1]));
+    jogos.push(ffMakeJogo(catId, 'F',  1, null, null, [`${catId}-SF1`, `${catId}-SF2`], FF_F_DATE, FF_F_SLOT));
   }
   return { generated: true, jogos };
 }
@@ -1419,9 +1427,18 @@ function ffCardHtml(j, catId) {
   }
 
   const canEdit = !!(j.eq1 && j.eq2);
+  const schedHtml = (j.data || j.hora)
+    ? `<div style="display:flex;align-items:center;justify-content:space-between;gap:.25rem;margin-bottom:.25rem">
+        <span style="font-size:.65rem;color:var(--cinza-texto)">${j.data ? formatDate(j.data) : ''} ${j.hora ? '· ' + j.hora : ''}</span>
+        <button style="background:none;border:none;color:var(--cinza-texto);cursor:pointer;font-size:.7rem;padding:0" title="Editar horário" onclick="ffEditSchedule('${j.id}','${catId}')">
+          <i class="ph ph-pencil-simple"></i>
+        </button>
+      </div>`
+    : '';
   return `
     <div class="bk-card${done ? ' done' : ''}${j.fase === 'F' ? ' is-final' : ''}">
       <div class="bk-card-lbl">${fLabel}</div>
+      ${schedHtml}
       ${teamHtml(j.eq1, j.eq1grupo, j.eq1seed, done && w === 1)}
       <div class="bk-card-vs">VS</div>
       ${teamHtml(j.eq2, j.eq2grupo, j.eq2seed, done && w === 2)}
@@ -1433,6 +1450,18 @@ function ffCardHtml(j, catId) {
 }
 
 window.ffSetCat = function(cat) { ffCurrentCat = cat; renderFaseFinal(); };
+
+window.ffEditSchedule = function(jogoId, catId) {
+  const ff = ffLoad();
+  const j = ff[catId]?.jogos?.find(x => x.id === jogoId);
+  if (!j) return;
+  const novaHora = prompt(`Hora do jogo (${j.data ? formatDate(j.data) : ''}) — ex: 14:30:`, j.hora || '');
+  if (novaHora === null) return;
+  j.hora = novaHora.trim();
+  ffSave(ff);
+  renderFaseFinal();
+  toast('Horário actualizado.');
+};
 
 window.ffGenerate = function(catId) {
   const ff = ffLoad();
