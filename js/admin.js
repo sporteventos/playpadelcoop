@@ -1014,6 +1014,7 @@ function editarJogador(nome) {
   document.getElementById('jogadorNomeNovo').value = nome;
   document.getElementById('jogadorTelefone').value = getTelefone(nome);
   APP.editingId = nome;
+  _renderJogadorGrupos(nome);
   openModal('modalJogador');
   setTimeout(() => {
     const inp = document.getElementById('jogadorNomeNovo');
@@ -1021,6 +1022,68 @@ function editarJogador(nome) {
     inp.select();
   }, 120);
 }
+
+function _renderJogadorGrupos(nome) {
+  const wrap = document.getElementById('jogadorGruposWrap');
+  const list = document.getElementById('jogadorGruposList');
+  if (!wrap || !list) return;
+  const jogos = getData('jogos');
+
+  // Collect unique groups this player appears in, with their partner
+  const gruposMap = {};
+  jogos.forEach(j => {
+    const eq1parts = j.eq1.split('&').map(n => n.trim());
+    const eq2parts = j.eq2.split('&').map(n => n.trim());
+    let par = null;
+    if (eq1parts.includes(nome)) par = j.eq1;
+    else if (eq2parts.includes(nome)) par = j.eq2;
+    if (!par) return;
+    if (!gruposMap[j.grupo]) gruposMap[j.grupo] = { grupoId: j.grupo, par, count: 0 };
+    gruposMap[j.grupo].count++;
+  });
+
+  const grupos = Object.values(gruposMap);
+  if (!grupos.length) { wrap.style.display = 'none'; return; }
+  wrap.style.display = '';
+
+  list.innerHTML = grupos.map(g => {
+    const cat = g.grupoId.split('-')[0];
+    const partner = g.par.split(' & ').filter(p => p.trim() !== nome).join(' & ') || '—';
+    const nomeEnc = encodeURIComponent(nome);
+    return `<div style="display:flex;align-items:center;gap:.6rem;padding:.45rem 0;border-bottom:1px solid var(--preto-borda)">
+      <span class="cat-pill cat-${cat}" style="flex-shrink:0">${escHtml(g.grupoId)}</span>
+      <div style="flex:1;min-width:0">
+        <span style="font-size:.8rem;color:var(--cinza-texto);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block">Parceiro: ${escHtml(partner)}</span>
+        <span style="font-size:.72rem;color:var(--cinza-texto);opacity:.6">${g.count} jogo${g.count!==1?'s':''}</span>
+      </div>
+      <button class="btn btn-danger btn-sm" style="flex-shrink:0;padding:.2rem .55rem;font-size:.72rem"
+        onclick="removerJogadorDoGrupo(decodeURIComponent('${nomeEnc}'),'${g.grupoId}')"
+        title="Substituir por A Definir neste grupo">
+        <i class="ph ph-x"></i> Remover
+      </button>
+    </div>`;
+  }).join('');
+}
+
+window.removerJogadorDoGrupo = function(nome, grupoId) {
+  if (!confirm(`Remover "${nome}" do grupo ${grupoId}?\n\nO nome será substituído por "A Definir" nos ${grupoId} jogos.`)) return;
+  const jogos = getData('jogos');
+  let count = 0;
+  jogos.forEach(j => {
+    if (j.grupo !== grupoId) return;
+    const eq1parts = j.eq1.split('&').map(n => n.trim());
+    const eq2parts = j.eq2.split('&').map(n => n.trim());
+    const idx1 = eq1parts.indexOf(nome);
+    const idx2 = eq2parts.indexOf(nome);
+    if (idx1 !== -1) { eq1parts[idx1] = 'A Definir'; j.eq1 = eq1parts.join(' & '); count++; }
+    if (idx2 !== -1) { eq2parts[idx2] = 'A Definir'; j.eq2 = eq2parts.join(' & '); count++; }
+  });
+  setData('jogos', jogos);
+  Auth.log('REMOVE_JOGADOR_GRUPO', 'jogadores', `"${nome}" removido de ${grupoId} (${count} jogo(s))`);
+  toast(`"${nome}" removido de ${count} jogo(s) em ${grupoId}`, 'success');
+  _renderJogadorGrupos(nome);
+  renderJogadores();
+};
 
 function saveJogador() {
   const nomeAntigo = APP.editingId;
