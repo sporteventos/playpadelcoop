@@ -356,7 +356,7 @@ document.addEventListener('DOMContentLoaded', () => {
           }
           html += `<tr class="${rowClass}">
             <td class="st-pos">${posCell}</td>
-            <td class="st-par">${r.par}</td>
+            <td class="st-par">${r.par.split(' & ').join('<br>')}</td>
             <td>${r.j}</td>
             <td class="td-win">${r.v}</td>
             <td class="td-loss">${r.d}</td>
@@ -443,7 +443,7 @@ document.addEventListener('DOMContentLoaded', () => {
               : `<span class="qual-pos">${i + 1}</span>`}
             </td>
             <td><span class="cat-pill cat-${activeCat}">${t.fromGroup}</span></td>
-            <td class="st-par">${t.par}</td>
+            <td class="st-par">${t.par.split(' & ').join('<br>')}</td>
             <td class="td-win">${t.v}</td>
             <td>${ds >= 0 ? '+' : ''}${ds}</td>
             <td>${dg >= 0 ? '+' : ''}${dg}</td>
