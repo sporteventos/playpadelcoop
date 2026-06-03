@@ -190,6 +190,26 @@ function ppFormatDate(d) {
   return `${parseInt(day)} ${meses[parseInt(m)-1]}`;
 }
 
+// ── Remote data sync (Option A — GitHub Pages) ─────────────────────────────
+// Fetches data.json from the deployed site, populates localStorage,
+// then fires 'pp:datasynced' so public pages can re-render with live data.
+(function () {
+  if (typeof window === 'undefined') return;
+  if (window.location.protocol === 'file:') return; // skip when opened locally
+
+  window.ppDataReady = fetch('data.json?_=' + Date.now())
+    .then(function (r) { return r.ok ? r.json() : Promise.reject('404'); })
+    .then(function (d) {
+      var KEYS = ['campos', 'categorias', 'grupos', 'jogadores', 'jogos', 'fasefinal'];
+      KEYS.forEach(function (k) {
+        if (d[k] !== undefined) ppSave(k, d[k]);
+      });
+      window.dispatchEvent(new CustomEvent('pp:datasynced', { detail: d }));
+      return true;
+    })
+    .catch(function () { return false; });
+}());
+
 function ppWeekday(d) {
   if (!d) return '';
   const dias = ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'];

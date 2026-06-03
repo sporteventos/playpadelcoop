@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="pt-PT">
 <head>
   <meta charset="UTF-8"/>
@@ -307,6 +307,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
   render();
 });
+</script>
+<script>
+  /* Reload once when remote data.json is fetched — gives all visitors live results */
+  (function() {
+    var key = '_pp_synced';
+    if (!sessionStorage.getItem(key)) {
+      window.addEventListener('pp:datasynced', function() {
+        sessionStorage.setItem(key, '1');
+        location.reload();
+      }, { once: true });
+    }
+  }());
 </script>
 </body>
 </html>

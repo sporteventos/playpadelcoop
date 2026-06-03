@@ -15,7 +15,7 @@ const APP = {
 
 // Compatibilidade interna
 const getData = ppGet;
-const setData = (k, v) => ppSave(k, v);
+const setData = (k, v) => { ppSave(k, v); if (typeof GHSync !== 'undefined') GHSync.markDirty(); };
 const formatDate = ppFormatDate;
 
 // ============================================
@@ -2142,3 +2142,79 @@ function renderHorario() {
       `).join('')}
     </div>`;
 }
+
+// ============================================
+//  GITHUB SYNC — UI
+// ============================================
+
+/** Open GitHub config modal, pre-filling saved values */
+function ghShowConfig() {
+  const c = GHSync.getCfg();
+  document.getElementById('ghOwner').value  = c.owner  || '';
+  document.getElementById('ghRepo').value   = c.repo   || '';
+  document.getElementById('ghBranch').value = c.branch || 'main';
+  document.getElementById('ghToken').value  = c.token  ? '••••••••' : '';
+  openModal('modalGHSync');
+}
+
+/** Save config and run a test push */
+async function ghSaveConfig() {
+  const owner  = document.getElementById('ghOwner').value.trim();
+  const repo   = document.getElementById('ghRepo').value.trim();
+  const branch = document.getElementById('ghBranch').value.trim() || 'main';
+  const rawToken = document.getElementById('ghToken').value.trim();
+  if (!owner || !repo || !rawToken) { toast('Preencha todos os campos obrigatórios.', 'error'); return; }
+  // Keep existing token if user left the masked placeholder
+  const existing = GHSync.getCfg().token || '';
+  const token = (rawToken === '••••••••') ? existing : rawToken;
+  GHSync.setCfg({ owner, repo, branch, token });
+  closeModal('modalGHSync');
+  await ghSyncAll();
+}
+
+/** Push all data to GitHub and update button state */
+async function ghSyncAll() {
+  if (!GHSync.isConfigured()) { ghShowConfig(); return; }
+  const btn   = document.getElementById('ghSyncBtn');
+  const icon  = document.getElementById('ghSyncIcon');
+  const label = document.getElementById('ghSyncLabel');
+  const dot   = document.getElementById('ghDirtyDot');
+  if (!btn) return;
+
+  btn.disabled = true;
+  icon.className  = 'ph ph-circle-notch gh-spin';
+  label.textContent = 'A sincronizar…';
+  dot.style.display = 'none';
+
+  try {
+    await GHSync.push(GHSync.getAllData());
+    icon.className  = 'ph ph-check-circle';
+    label.textContent = 'Sincronizado';
+    btn.disabled = false;
+    toast('Dados sincronizados! O site público actualiza em ~30 segundos.', 'success');
+    setTimeout(() => {
+      icon.className  = 'ph ph-cloud-arrow-up';
+      label.textContent = 'Sync';
+    }, 4000);
+  } catch(err) {
+    icon.className  = 'ph ph-warning-circle';
+    label.textContent = 'Erro';
+    btn.disabled = false;
+    dot.style.display = 'block';
+    toast('Erro ao sincronizar: ' + err.message, 'error');
+    setTimeout(() => {
+      icon.className  = 'ph ph-cloud-arrow-up';
+      label.textContent = 'Sync';
+    }, 4000);
+  }
+}
+
+/** Wire dirty indicator to ghsync events */
+document.addEventListener('ghsync:dirty', () => {
+  const dot = document.getElementById('ghDirtyDot');
+  if (dot) dot.style.display = 'block';
+});
+document.addEventListener('ghsync:clean', () => {
+  const dot = document.getElementById('ghDirtyDot');
+  if (dot) dot.style.display = 'none';
+});

@@ -691,3 +691,20 @@ tbody tr:hover { background: var(--cinza-escuro); }
   font-size: .6rem; background: var(--vermelho); color: #fff;
   border-radius: 4px; padding: .1rem .3rem; font-weight: 700;
 }
+
+/* ============================================
+   GITHUB SYNC BUTTON
+   ============================================ */
+.gh-sync-btn {
+  display: flex; align-items: center; gap: .4rem;
+  font-size: .78rem; font-weight: 600; padding: .4rem .75rem;
+  position: relative;
+}
+.gh-sync-label { font-size: .78rem; }
+.gh-dirty-dot {
+  position: absolute; top: 4px; right: 4px;
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--amarelo); border: 1px solid var(--preto);
+}
+@keyframes gh-spin { to { transform: rotate(360deg); } }
+.gh-spin { display: inline-block; animation: gh-spin .7s linear infinite; }
