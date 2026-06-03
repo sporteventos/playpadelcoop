@@ -18,6 +18,10 @@ const getData = ppGet;
 const setData = (k, v) => { ppSave(k, v); if (typeof GHSync !== 'undefined') GHSync.markDirty(); };
 const formatDate = ppFormatDate;
 
+// Preload do logo para o panfleto (carregado em background, usado no canvas)
+const _panfletoLogo = new Image();
+_panfletoLogo.src = 'playpadellogo.jpg';
+
 // ============================================
 //  WHATSAPP HELPERS
 // ============================================
@@ -77,7 +81,7 @@ window.notificarDia = function() {
   window.open('https://wa.me/?text=' + encodeURIComponent(waMsgBundle(jogos)), '_blank');
 };
 
-window.gerarPanfleto = async function() {
+window.gerarPanfleto = function() {
   const filtroData  = document.getElementById('filtroDataJogos').value;
   const filtroCampo = document.getElementById('filtroCampoJogos').value;
   const filtroGrupo = document.getElementById('filtroGrupoJogos')?.value || 'todos';
@@ -88,12 +92,7 @@ window.gerarPanfleto = async function() {
   if (!jogos.length) return toast('Sem jogos para o filtro actual.', 'error');
   jogos = [...jogos].sort((a, b) => (a.data + a.hora).localeCompare(b.data + b.hora) || a.campo.localeCompare(b.campo));
 
-  const logo = await new Promise(res => {
-    const img = new Image();
-    img.onload = () => res(img);
-    img.onerror = () => res(null);
-    img.src = 'playpadellogo.jpg';
-  });
+  const logo = (_panfletoLogo.complete && _panfletoLogo.naturalWidth > 0) ? _panfletoLogo : null;
 
   const W      = 1080;
   const PAD    = 44;
