@@ -2044,11 +2044,9 @@ function _adminClassStandings(grupo, jogos) {
   grupo.pares.forEach(p => { pairs[p] = { par: p, pj:0, v:0, d:0, pts:0, sw:0, sl:0, gw:0, gl:0 }; });
   gJogos.forEach(j => {
     if (!j.resultado) return;
-    const [s1,s2] = j.resultado.split(' ').map(s => s.split('-').map(Number));
+    const r = j.resultado;
+    const allSets = [[r.s1eq1,r.s1eq2],[r.s2eq1,r.s2eq2],[r.s3eq1,r.s3eq2]].filter(([a]) => a != null);
     let vEq1=0, vEq2=0;
-    const sets = [s1, ...( s2 ? [s2] : [] )];
-    // parse all sets
-    const allSets = j.resultado.trim().split(' ').map(s => { const [a,b] = s.split('-').map(Number); return [a,b]; });
     allSets.forEach(([a,b]) => {
       if (a > b) vEq1++; else vEq2++;
       if (pairs[j.eq1]) { pairs[j.eq1].sw += a; pairs[j.eq1].sl += b; }
@@ -2111,7 +2109,8 @@ function renderEstatisticas() {
   }
 
   jogos.forEach(j => {
-    const allSets = j.resultado.trim().split(' ').map(s => { const [a,b] = s.split('-').map(Number); return [a,b]; });
+    const r = j.resultado;
+    const allSets = [[r.s1eq1,r.s1eq2],[r.s2eq1,r.s2eq2],[r.s3eq1,r.s3eq2]].filter(([a]) => a != null);
     let vEq1=0, vEq2=0, sw1=0, sl1=0, sw2=0, sl2=0;
     allSets.forEach(([a,b]) => {
       if (a>b) vEq1++; else vEq2++;

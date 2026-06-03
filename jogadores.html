@@ -153,15 +153,14 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function _parseResultado(resultado, isEq1) {
-    // resultado is string "6-4 6-3" or "6-4 3-6 7-5" 
-    if (!resultado || typeof resultado !== 'string') return { wins: 0, losses: 0, selfSets: 0, oppSets: 0 };
+    if (!resultado || typeof resultado !== 'object') return { wins: 0, losses: 0, selfSets: 0, oppSets: 0 };
     let selfSets = 0, oppSets = 0;
-    resultado.trim().split(' ').forEach(s => {
-      const [a, b] = s.split('-').map(Number);
-      if (isNaN(a) || isNaN(b)) return;
-      if (isEq1) { if (a > b) selfSets++; else oppSets++; }
-      else       { if (b > a) selfSets++; else oppSets++; }
-    });
+    [[resultado.s1eq1, resultado.s1eq2], [resultado.s2eq1, resultado.s2eq2], [resultado.s3eq1, resultado.s3eq2]]
+      .forEach(([a, b]) => {
+        if (a == null || b == null) return;
+        if (isEq1) { if (a > b) selfSets++; else oppSets++; }
+        else       { if (b > a) selfSets++; else oppSets++; }
+      });
     return { wins: selfSets > oppSets ? 1 : 0, losses: selfSets < oppSets ? 1 : 0, selfSets, oppSets };
   }
 
