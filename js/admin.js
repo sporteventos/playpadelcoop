@@ -2476,19 +2476,68 @@ function _renderAdminClassCat(catId, grupos, jogos, el) {
         </div>
         <table class="std-table">
           <thead><tr><th>#</th><th>Par</th><th>PJ</th><th>V</th><th>D</th><th>S</th><th>Pts</th></tr></thead>
-          <tbody>${rows.map((r, i) => `
+          <tbody>${rows.map((r, i) => {
+            const [p1, p2] = r.par.split(' & ');
+            return `
             <tr class="${i===0?'std-q1':i===1?'std-q2':''}">
               <td>${i+1}</td>
-              <td style="max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${escHtml(r.par)}">${escHtml(r.par)}</td>
+              <td>
+                <div style="display:flex;align-items:center;gap:.35rem;min-width:0">
+                  <div style="min-width:0;flex:1">
+                    <span style="display:block;font-size:.8rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:128px">${escHtml(p1||r.par)}</span>
+                    ${p2?`<span style="display:block;font-size:.8rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:128px;color:var(--cinza-texto)">${escHtml(p2)}</span>`:''}
+                  </div>
+                  <button class="btn-icon" style="flex-shrink:0;font-size:.6rem;padding:.1rem .2rem;opacity:.45" data-par="${escHtml(r.par)}" data-cat="${catId}" data-grupo="${g.id}" onclick="editarGrupoPar(this.dataset.par,this.dataset.cat,this.dataset.grupo)" title="Mudar grupo"><i class="ph ph-swap"></i></button>
+                </div>
+              </td>
               <td>${r.pj}</td><td style="color:var(--verde)">${r.v}</td><td style="color:var(--vermelho)">${r.d}</td>
               <td>${r.sw}-${r.sl}</td><td style="font-weight:700;color:var(--branco)">${r.pts}</td>
-            </tr>`).join('')}
+            </tr>`;
+          }).join('')}
           </tbody>
         </table>
       </div>`;
     }).join('')}
   </div>`;
 }
+
+// ============================================
+//  MUDAR GRUPO DO PAR
+// ============================================
+let _editGrupoState = null;
+
+window.editarGrupoPar = function(par, catId, currentGrupoId) {
+  _editGrupoState = { par, catId, currentGrupoId };
+  const grupos = getData('grupos').filter(g => g.cat === catId);
+  document.getElementById('editGrupoPar').innerHTML = par.split(' & ')
+    .map(p => `<span style="display:block">${escHtml(p)}</span>`).join('');
+  document.getElementById('editGrupoActual').textContent = currentGrupoId;
+  const sel = document.getElementById('editGrupoNovo');
+  sel.innerHTML = grupos
+    .filter(g => g.id !== currentGrupoId)
+    .map(g => `<option value="${g.id}">${g.id}</option>`)
+    .join('');
+  openModal('modalEditarGrupo');
+};
+
+window.saveEditarGrupo = function() {
+  if (!_editGrupoState) return;
+  const { par, currentGrupoId } = _editGrupoState;
+  const newGrupoId = document.getElementById('editGrupoNovo').value;
+  if (!newGrupoId || newGrupoId === currentGrupoId) { closeModal('modalEditarGrupo'); return; }
+  const jogos = getData('jogos');
+  let count = 0;
+  jogos.forEach(j => {
+    if (j.grupo === currentGrupoId && (j.eq1 === par || j.eq2 === par)) {
+      j.grupo = newGrupoId;
+      count++;
+    }
+  });
+  setData('jogos', jogos);
+  closeModal('modalEditarGrupo');
+  toast(`${count} jogo(s) movido(s) de ${currentGrupoId} → ${newGrupoId}`, 'success');
+  renderAdminClassificacoes();
+};
 
 // ============================================
 //  PANFLETO CLASSIFICAÇÕES
@@ -2708,7 +2757,7 @@ function renderEstatisticas() {
           const bar = `<div style="display:inline-block;width:${pct}%;max-width:80px;height:5px;background:var(--verde);border-radius:3px;vertical-align:middle;margin-left:.4rem"></div>`;
           return `<tr>
             <td>${i+1}</td>
-            <td style="font-weight:600;color:var(--branco);max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${escHtml(s.par)}</td>
+            <td style="font-weight:600;color:var(--branco)">${s.par.split(' & ').map((p,i) => `<span style="display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:200px${i?';color:var(--cinza-texto);font-weight:400':''}">${escHtml(p)}</span>`).join('')}</td>
             <td>${s.pj}</td>
             <td style="color:var(--verde);font-weight:700">${s.v}</td>
             <td style="color:var(--vermelho)">${s.d}</td>
