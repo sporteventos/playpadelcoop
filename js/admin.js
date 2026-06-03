@@ -77,7 +77,7 @@ window.notificarDia = function() {
   window.open('https://wa.me/?text=' + encodeURIComponent(waMsgBundle(jogos)), '_blank');
 };
 
-window.gerarPanfleto = function() {
+window.gerarPanfleto = async function() {
   const filtroData  = document.getElementById('filtroDataJogos').value;
   const filtroCampo = document.getElementById('filtroCampoJogos').value;
   const filtroGrupo = document.getElementById('filtroGrupoJogos')?.value || 'todos';
@@ -86,12 +86,19 @@ window.gerarPanfleto = function() {
   if (filtroCampo !== 'todos') jogos = jogos.filter(j => j.campo === filtroCampo);
   if (filtroGrupo !== 'todos') jogos = jogos.filter(j => j.grupo === filtroGrupo);
   if (!jogos.length) return toast('Sem jogos para o filtro actual.', 'error');
-  jogos = [...jogos].sort((a, b) => a.hora.localeCompare(b.hora) || a.campo.localeCompare(b.campo));
+  jogos = [...jogos].sort((a, b) => (a.data + a.hora).localeCompare(b.data + b.hora) || a.campo.localeCompare(b.campo));
+
+  const logo = await new Promise(res => {
+    const img = new Image();
+    img.onload = () => res(img);
+    img.onerror = () => res(null);
+    img.src = 'playpadellogo.jpg';
+  });
 
   const W      = 1080;
   const PAD    = 44;
   const ROW_H  = 82;
-  const HEAD_H = 210;
+  const HEAD_H = 218;
   const FOOT_H = 64;
   const H      = HEAD_H + jogos.length * ROW_H + FOOT_H;
 
@@ -106,15 +113,17 @@ window.gerarPanfleto = function() {
     while (text.length && ctx.measureText(text + '\u2026').width > maxW) text = text.slice(0, -1);
     return text + '\u2026';
   }
-  function drawTeamName(text, x, rowY, maxW) {
+  function drawTeamName(text, x, rowY, maxW, align) {
     const parts = text.split(' & ');
     ctx.font = '19px Arial, sans-serif';
+    ctx.textAlign = align || 'left';
     if (parts.length === 1) {
       ctx.fillText(trunc(parts[0], maxW), x, rowY + ROW_H * 0.57);
     } else {
       ctx.fillText(trunc(parts[0], maxW), x, rowY + ROW_H * 0.40);
       ctx.fillText(trunc(parts[1], maxW), x, rowY + ROW_H * 0.72);
     }
+    ctx.textAlign = 'left';
   }
   function badge(x, y, w, h, r, bg, fg, text, fs) {
     ctx.fillStyle = bg;
@@ -139,42 +148,53 @@ window.gerarPanfleto = function() {
   ctx.fillStyle = grad;
   ctx.fillRect(0, 0, W, 10);
 
+  // ── Logo ─────────────────────────────────────────────────
+  if (logo) {
+    const logoH = 82;
+    const logoW = Math.round(logo.naturalWidth * (logoH / logo.naturalHeight));
+    ctx.drawImage(logo, W - PAD - logoW, 18, logoW, logoH);
+  }
+
   // ── Header text ──────────────────────────────────────────
   ctx.fillStyle = '#00C37B';
   ctx.font = 'bold 52px Arial, sans-serif';
   ctx.fillText('PLAY PADEL', PAD, 72);
   ctx.fillStyle = '#F0F7F3';
-  ctx.font = '52px Arial, sans-serif';
-  ctx.fillText('TORNEIO 2026', PAD + ctx.measureText('PLAY PADEL ').width, 72);
+  ctx.font = '32px Arial, sans-serif';
+  ctx.fillText('TORNEIO ANIVERSÁRIO 2026', PAD, 112);
 
   const dayLabel = filtroData !== 'todos'
     ? (typeof ppWeekday === 'function' ? ppWeekday(filtroData).toUpperCase() + '  \u00B7  ' : '')
       + filtroData.split('-').reverse().join('/')
     : 'TODOS OS JOGOS';
   ctx.fillStyle = '#8AA396';
-  ctx.font = '26px Arial, sans-serif';
-  ctx.fillText(dayLabel, PAD, 112);
+  ctx.font = '22px Arial, sans-serif';
+  ctx.fillText(dayLabel, PAD, 146);
 
   ctx.fillStyle = '#F0F7F3';
-  ctx.font = 'bold 20px Arial, sans-serif';
-  ctx.fillText(`${jogos.length} JOGO${jogos.length !== 1 ? 'S' : ''}`, PAD, 150);
+  ctx.font = 'bold 18px Arial, sans-serif';
+  ctx.fillText(`${jogos.length} JOGO${jogos.length !== 1 ? 'S' : ''}`, PAD, 173);
 
   // ── Divider ──────────────────────────────────────────────
   ctx.fillStyle = '#1C2620';
-  ctx.fillRect(PAD, 168, W - PAD * 2, 2);
+  ctx.fillRect(PAD, 185, W - PAD * 2, 2);
 
   // ── Column headers ───────────────────────────────────────
+  const CX = { data: PAD, hora: PAD+66, campo: PAD+148, grupo: PAD+322, eq1r: PAD+634, vs: PAD+649, eq2: PAD+665 };
   ctx.fillStyle = '#4A6058';
   ctx.font = 'bold 13px Arial, sans-serif';
-  const CX = { hora: PAD + 8, campo: PAD + 96, grupo: PAD + 288, eq1: PAD + 396, vs: PAD + 706, eq2: PAD + 732 };
-  ctx.fillText('HORA',    CX.hora,  190);
-  ctx.fillText('CAMPO',   CX.campo + 30, 190);
-  ctx.fillText('GRUPO',   CX.grupo + 12, 190);
-  ctx.fillText('EQUIPA 1', CX.eq1,  190);
-  ctx.fillText('EQUIPA 2', CX.eq2,  190);
+  ctx.fillText('DATA',     CX.data,        205);
+  ctx.fillText('HORA',     CX.hora,        205);
+  ctx.textAlign = 'center';
+  ctx.fillText('CAMPO',    CX.campo + 78,  205);
+  ctx.fillText('GRUPO',    CX.grupo + 40,  205);
+  ctx.textAlign = 'right';
+  ctx.fillText('EQUIPA 1', CX.eq1r,        205);
+  ctx.textAlign = 'left';
+  ctx.fillText('EQUIPA 2', CX.eq2,         205);
 
   // ── Rows ─────────────────────────────────────────────────
-  let lastHora = null;
+  let lastData = null;
   jogos.forEach((j, i) => {
     const y   = HEAD_H + i * ROW_H;
     const cat = j.grupo.split('-')[0];
@@ -184,27 +204,33 @@ window.gerarPanfleto = function() {
     ctx.fillStyle = i % 2 === 0 ? '#111815' : '#0D1410';
     ctx.fillRect(0, y, W, ROW_H);
 
-    if (j.hora !== lastHora && i > 0) {
+    if (j.data !== lastData && i > 0) {
       ctx.fillStyle = '#1C2620'; ctx.fillRect(0, y, W, 1);
     }
-    lastHora = j.hora;
+    lastData = j.data;
 
     ctx.fillStyle = cc; ctx.fillRect(0, y + 1, 6, ROW_H - 2);
 
     const cy = y + ROW_H / 2 + 9;
 
+    // Date
+    ctx.fillStyle = '#8AA396';
+    ctx.font = 'bold 14px "Courier New", monospace';
+    ctx.fillText(j.data ? j.data.split('-').slice(1).reverse().join('/') : '', CX.data, cy);
+
+    // Hora
     ctx.fillStyle = '#F0F7F3';
-    ctx.font = 'bold 24px "Courier New", monospace';
+    ctx.font = 'bold 22px "Courier New", monospace';
     ctx.fillText(j.hora, CX.hora, cy);
 
-    badge(CX.campo, y + (ROW_H - 32) / 2, 176, 32, 6, cc + '28', cc, j.campo, 14);
-    badge(CX.grupo, y + (ROW_H - 32) / 2, 88,  32, 6, gc + '28', gc, j.grupo, 14);
+    badge(CX.campo, y + (ROW_H - 30) / 2, 156, 30, 6, cc + '28', cc, j.campo, 13);
+    badge(CX.grupo, y + (ROW_H - 30) / 2,  80, 30, 6, gc + '28', gc, j.grupo, 13);
 
     ctx.fillStyle = '#F0F7F3';
-    drawTeamName(j.eq1, CX.eq1, y, 294);
+    drawTeamName(j.eq1, CX.eq1r, y, 228, 'right');
 
     ctx.fillStyle = '#4A6058';
-    ctx.font = 'bold 17px Arial, sans-serif';
+    ctx.font = 'bold 15px Arial, sans-serif';
     ctx.textAlign = 'center';
     ctx.fillText('VS', CX.vs, cy);
     ctx.textAlign = 'left';
@@ -216,14 +242,14 @@ window.gerarPanfleto = function() {
       const r = j.resultado;
       const sets = [[r.s1eq1,r.s1eq2],[r.s2eq1,r.s2eq2],[r.s3eq1,r.s3eq2]]
         .filter(([a]) => a != null).map(([a, b]) => `${a}-${b}`).join(' ');
-      drawTeamName(j.eq2, CX.eq2, y, 240);
-      ctx.font = 'bold 18px Arial, sans-serif';
+      drawTeamName(j.eq2, CX.eq2, y, 220, 'left');
+      ctx.font = 'bold 16px Arial, sans-serif';
       ctx.fillStyle = w1 > w2 ? '#FF4A4A' : '#39FF8F';
       ctx.textAlign = 'right';
       ctx.fillText(sets, W - PAD, cy);
       ctx.textAlign = 'left';
     } else {
-      drawTeamName(j.eq2, CX.eq2, y, 290);
+      drawTeamName(j.eq2, CX.eq2, y, 250, 'left');
     }
   });
 
@@ -234,7 +260,7 @@ window.gerarPanfleto = function() {
   ctx.fillStyle = '#4A6058';
   ctx.font = '17px Arial, sans-serif';
   ctx.textAlign = 'center';
-  ctx.fillText('euamusse.github.io/playpadelcoop  \u00B7  Play Padel Torneio 2026', W / 2, fy + 38);
+  ctx.fillText('Play Padel  \u00B7  Torneio Aniversário 2026', W / 2, fy + 38);
   ctx.textAlign = 'left';
 
   const a = document.createElement('a');
