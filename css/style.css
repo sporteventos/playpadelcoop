@@ -984,32 +984,90 @@ body {
 }
 
 /* ============================================
-   RESPONSIVE
+   RESPONSIVE — MOBILE FIRST
    ============================================ */
+
+/* --- 768px: tablets & large phones --- */
 @media (max-width: 768px) {
+  /* Nav */
   .nav-links, .nav-admin-link { display: none; }
   .nav-hamburger { display: flex; }
   .nav-drawer { display: block; }
 
-  .hero-title { letter-spacing: -0.02em; }
-  .countdown { gap: 0.6rem; }
-  .countdown-value { font-size: 2.3rem; min-width: 56px; padding: 0.5rem 0.7rem; }
+  /* Hero */
+  .hero { padding: 5.5rem 1.25rem 3rem; }
+  .hero-subtitle { font-size: .9rem; margin: 1rem 0 1.75rem; }
+  .hero-dates { gap: .5rem; margin-bottom: 2rem; }
+  .hero-date-chip { padding: .45rem .9rem; font-size: .8rem; }
+  .hero-cta { gap: .75rem; }
 
+  /* Countdown */
+  .countdown { gap: .5rem; }
+  .countdown-value { font-size: 2rem; min-width: 52px; padding: .45rem .65rem; }
+  .countdown-label { font-size: .58rem; }
+  .countdown-sep { font-size: 1.5rem; }
+
+  /* Stats bar */
   .stats-bar-inner { grid-template-columns: repeat(2, 1fr); }
   .stat-item:nth-child(2) { border-right: none; }
 
-  .jogo-card { grid-template-columns: 1fr; gap: 0.5rem; }
+  /* Próximos jogos */
+  .jogo-card { grid-template-columns: 1fr; gap: .5rem; }
   .jogo-vs { text-align: left; }
+  .jogo-teams { gap: .3rem; }
 
+  /* Nav cards */
+  .nav-cards-grid { grid-template-columns: repeat(2, 1fr); }
+
+  /* Sponsors / partners strip */
+  .sponsors-strip, .partners-strip { gap: 1.25rem; }
+  .sponsor-logo img, .partner-logo img { height: 36px; max-width: 90px; }
+
+  /* Footer */
   .footer-inner { grid-template-columns: 1fr; gap: 1.5rem; }
+  .footer-links { flex-direction: column; gap: .5rem; }
+
+  /* Main */
+  .main-container { padding: 3rem 1.25rem; }
 }
 
+/* --- 480px: small phones --- */
 @media (max-width: 480px) {
+  /* Nav */
   .navbar { padding: 0 1rem; }
-  .main-container { padding: 3rem 1rem; }
+  .nav-logo img { height: 28px; }
+
+  /* Hero */
+  .hero { padding: 5rem 1rem 2.5rem; }
+  .hero-badge { font-size: .68rem; padding: .35rem .85rem; }
+  .hero-dates { flex-direction: column; align-items: center; gap: .4rem; }
+  .hero-cta { flex-direction: column; align-items: stretch; }
+  .hero-cta .btn { text-align: center; justify-content: center; }
+
+  /* Countdown */
+  .countdown { gap: .35rem; }
+  .countdown-value { font-size: 1.7rem; min-width: 44px; padding: .4rem .5rem; }
+  .countdown-sep { font-size: 1.2rem; margin-top: -6px; }
+
+  /* Stats bar */
+  .stats-bar-inner { grid-template-columns: repeat(2, 1fr); }
+  .stat-item { border-right: none !important; padding: .75rem .5rem; }
+  .stat-value { font-size: 1.5rem; }
+
+  /* Nav cards */
   .nav-cards-grid { grid-template-columns: 1fr; }
-  .hero-cta { flex-direction: column; align-items: center; }
+
+  /* Sponsors / partners */
+  .sponsors-strip, .partners-strip { overflow-x: auto; flex-wrap: nowrap; padding-bottom: .5rem; justify-content: flex-start; padding-left: 1rem; }
+  .sponsor-logo img, .partner-logo img { height: 30px; }
+
+  /* Main */
+  .main-container { padding: 2.5rem 1rem; }
+
+  /* Section headings */
+  .section-title { font-size: 1.4rem; }
 }
+
 
 /* ============================================
    UTILITÁRIOS

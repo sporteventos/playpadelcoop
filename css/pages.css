@@ -327,20 +327,80 @@ mark { background: rgba(245,197,24,.25); color: var(--amarelo); border-radius: 2
 .result-pending { background: rgba(255,255,255,.06); color: rgba(240,247,243,.3); }
 
 /* ---- Responsive ---- */
+
+/* 768px */
 @media (max-width: 768px) {
+  /* Page hero */
+  .page-hero { padding: 6rem 1.25rem 2.5rem; }
+  .page-hero-title { font-size: clamp(1.6rem, 7vw, 2.4rem); }
+
+  /* Filter bar — stack vertically */
+  .filters-bar { padding: .65rem 1rem; top: 58px; }
+  .filters-inner { gap: .5rem; }
   .filters-secondary { margin-left: 0; width: 100%; }
-  .filter-select { min-width: 100px; }
-  .search-input { width: 130px; }
-  .match-teams { grid-template-columns: 1fr; gap: .4rem; }
-  .match-team:last-child { padding-top: .1rem; }
-  .match-vs-wrap { flex-direction: row; }
-  .groups-grid { grid-template-columns: 1fr; }
+  .filter-select { min-width: 90px; font-size: .8rem; }
+  .day-tabs, .cat-tabs { flex-wrap: nowrap; overflow-x: auto; padding-bottom: .25rem; -webkit-overflow-scrolling: touch; gap: .35rem; }
+  .day-tab { font-size: .74rem; padding: .3rem .7rem; flex-shrink: 0; }
+
+  /* Search */
+  .search-wrap--large { max-width: 100%; width: 100%; }
+  .search-input { width: auto; flex: 1; min-width: 0; }
+
+  /* Page main */
+  .page-main { padding: 1.5rem 1rem 3rem; }
+
+  /* Match card teams — stack */
+  .match-teams { grid-template-columns: 1fr; gap: .35rem; }
+  .match-team { text-align: left !important; font-size: .83rem; }
+  .match-vs-wrap { flex-direction: row; justify-content: flex-start; gap: .5rem; }
+  .match-card { padding: .75rem .9rem; }
+
+  /* Standings */
+  .groups-grid { grid-template-columns: 1fr; gap: 1rem; }
+  .standings-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .standings-table { font-size: .76rem; }
+  .standings-table th, .standings-table td { padding: .38rem .3rem; }
+  .st-par { width: 32%; }
+
+  /* Player portal */
   .player-grid { grid-template-columns: 1fr; }
   .player-card-top { flex-wrap: wrap; }
-  .player-stats { flex-direction: row; gap: .75rem; }
-  .search-wrap--large { max-width: 100%; }
+  .player-stats { flex-direction: row; gap: .75rem; align-items: flex-start; }
+  .pstat { flex-direction: row; gap: .3rem; align-items: center; }
+  .pstat small { margin-top: 0; }
+  .player-match-row { font-size: .74rem; gap: .3rem .45rem; }
+  .pm-opp { min-width: 0; }
 }
+
+/* 480px */
 @media (max-width: 480px) {
-  .day-tab { font-size: .72rem; padding: .3rem .65rem; }
-  .page-hero { padding-top: 5.5rem; }
+  /* Page hero */
+  .page-hero { padding: 5.5rem 1rem 2rem; }
+  .page-hero-sub { font-size: .82rem; }
+
+  /* Filter bar */
+  .filters-bar { padding: .55rem .75rem; }
+  .filter-select-wrap { padding: .3rem .55rem; }
+  .search-wrap { padding: .3rem .55rem; }
+
+  /* Day tabs scrollable */
+  .day-tab { font-size: .7rem; padding: .28rem .6rem; }
+
+  /* Match card */
+  .match-meta { gap: .35rem; }
+  .match-hora { font-size: .78rem; }
+  .match-team { font-size: .8rem; }
+  .score-set { font-size: .85rem; }
+
+  /* Standings — hide less-important cols on tiny screens */
+  .standings-table .td-games-win,
+  .standings-table .td-games-loss { display: none; }
+  .standings-table th:nth-child(7),
+  .standings-table th:nth-child(8) { display: none; }
+
+  /* Player card */
+  .player-avatar { width: 40px; height: 40px; font-size: .95rem; }
+  .player-name { font-size: .88rem; }
+  .player-stats { gap: .5rem; }
+  .pstat { font-size: .85rem; }
 }

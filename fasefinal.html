@@ -61,6 +61,22 @@
     }
     .bk-card.is-final .bk-card-score { color: var(--amarelo); background: rgba(245,197,24,.08); }
 
+    /* ---- Mobile ---- */
+    @media (max-width: 600px) {
+      .bracket-page { padding: 1.5rem .75rem 3rem; }
+      .bk-bracket { gap: 20px; min-height: 360px; }
+      .bk-round { min-width: 160px; }
+      .bk-card { padding: .55rem .65rem; border-radius: 9px; }
+      .bk-cname { font-size: .75rem; }
+      .bk-rhead { font-size: .55rem; }
+      .champion-banner { flex-direction: column; text-align: center; padding: 1rem; gap: .5rem; }
+      .champion-trophy { font-size: 1.8rem; }
+      .champion-name { font-size: 1.1rem; }
+      .cat-tab { font-size: .72rem; padding: .35rem .85rem; }
+      /* connector lines shrink with gap */
+      .bk-slot-top::after, .bk-slot-bot::after { right: -20px; width: 20px; }
+    }
+
     /* empty / champion */
     .bracket-empty { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 4rem 2rem; text-align: center; gap: 1rem; }
     .bracket-empty-icon { font-size: 3.5rem; color: var(--cinza-texto); }

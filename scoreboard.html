@@ -82,6 +82,21 @@
 
     /* LAST UPDATE */
     .last-update { text-align: center; padding: .75rem; font-size: .72rem; color: var(--cinza-texto); }
+
+    /* ---- Mobile ---- */
+    @media (max-width: 600px) {
+      .top-bar { padding: .6rem 1rem; gap: .5rem; }
+      .top-bar-logo { font-size: 1.1rem; }
+      .top-bar-title { font-size: .72rem; }
+      .refresh-indicator { font-size: .72rem; }
+      .cat-tabs { gap: .3rem; padding: .55rem 1rem; flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+      .cat-tab { font-size: .72rem; padding: .3rem .7rem; flex-shrink: 0; }
+      .content { padding: .85rem .75rem; }
+      .groups-grid { grid-template-columns: 1fr; }
+      .legend { padding: .5rem 1rem; gap: .75rem; font-size: .68rem; flex-wrap: wrap; }
+      .std-table { font-size: .7rem; }
+      .pair-name { max-width: 110px; }
+    }
   </style>
 </head>
 <body>
