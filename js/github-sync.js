@@ -58,7 +58,8 @@ const GHSync = (() => {
     const branch = c.branch || 'main';
     const path   = 'data.json';
 
-    const payload = JSON.stringify(dataObj || getAllData(), null, 2);
+    const payloadData = dataObj || getAllData();
+    const payload = JSON.stringify(payloadData, null, 2);
     // UTF-8-safe base64 encode
     const b64 = btoa(unescape(encodeURIComponent(payload)));
     const sha  = await _getSha(owner, repo, path, token);
@@ -88,6 +89,8 @@ const GHSync = (() => {
       throw new Error(err.message || `Erro HTTP ${resp.status}`);
     }
     markClean();
+    // Record the pushed _updated so admin won't re-import its own push on next reload
+    if (payloadData._updated) localStorage.setItem('pp__updated', payloadData._updated);
     return true;
   }
 

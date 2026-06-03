@@ -197,17 +197,34 @@ function ppFormatDate(d) {
 (function () {
   if (typeof window === 'undefined') return;
   if (window.location.protocol === 'file:') return; // skip when opened locally
-  // On admin: only fetch remote data if localStorage is empty (fresh browser / new device).
-  // If the admin already has local data, skip — prevents session-expiry reload from overwriting unsaved work.
-  if (window.location.pathname.includes('admin') && localStorage.getItem('pp_jogos') !== null) return;
+  var KEYS = ['campos', 'categorias', 'grupos', 'jogadores', 'jogos', 'fasefinal', 'telefones'];
+
+  // On admin: always fetch, but only overwrite local data if remote _updated is newer.
+  // This ensures externally-updated data.json is picked up while protecting unsaved local work.
+  if (window.location.pathname.includes('admin') && localStorage.getItem('pp_jogos') !== null) {
+    window.ppDataReady = fetch('data.json?_=' + Date.now())
+      .then(function (r) { return r.ok ? r.json() : Promise.reject('404'); })
+      .then(function (d) {
+        var stored = localStorage.getItem('pp__updated') || '0';
+        var remote = d._updated || '0';
+        if (remote > stored) {
+          KEYS.forEach(function (k) { if (d[k] !== undefined) ppSave(k, d[k]); });
+          localStorage.setItem('pp__updated', remote);
+          window.dispatchEvent(new CustomEvent('pp:datasynced', { detail: d }));
+        }
+        return true;
+      })
+      .catch(function () { return false; });
+    return;
+  }
 
   window.ppDataReady = fetch('data.json?_=' + Date.now())
     .then(function (r) { return r.ok ? r.json() : Promise.reject('404'); })
     .then(function (d) {
-      var KEYS = ['campos', 'categorias', 'grupos', 'jogadores', 'jogos', 'fasefinal', 'telefones'];
       KEYS.forEach(function (k) {
         if (d[k] !== undefined) ppSave(k, d[k]);
       });
+      if (d._updated) localStorage.setItem('pp__updated', d._updated);
       window.dispatchEvent(new CustomEvent('pp:datasynced', { detail: d }));
       return true;
     })
