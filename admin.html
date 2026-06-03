@@ -787,6 +787,33 @@
 </div>
 
 <!-- Modal: Resultado -->
+<div class="modal-overlay" id="modalFFSchedule" role="dialog" aria-modal="true" aria-labelledby="modalFFSchedTitle">
+  <div class="modal" style="max-width:340px">
+    <div class="modal-header">
+      <h2 class="modal-title" id="modalFFSchedTitle">Editar Horário</h2>
+      <button class="modal-close" onclick="closeModal('modalFFSchedule')" aria-label="Fechar"><i class="ph ph-x"></i></button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="ffSchedJogoId"/>
+      <input type="hidden" id="ffSchedCatId"/>
+      <div class="form-row">
+        <div class="form-group-modal">
+          <label class="form-label" for="ffSchedData">Data</label>
+          <input class="form-input" type="date" id="ffSchedData" min="2026-06-11" max="2026-06-14"/>
+        </div>
+        <div class="form-group-modal">
+          <label class="form-label" for="ffSchedHora">Hora</label>
+          <input class="form-input" type="time" id="ffSchedHora" step="1800"/>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modalFFSchedule')">Cancelar</button>
+      <button class="btn btn-primary" onclick="ffSaveSchedule()"><i class="ph ph-floppy-disk"></i> Guardar</button>
+    </div>
+  </div>
+</div>
+
 <div class="modal-overlay" id="modalResultado" role="dialog" aria-modal="true" aria-labelledby="modalResTitle">
   <div class="modal">
     <div class="modal-header">

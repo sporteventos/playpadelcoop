@@ -139,6 +139,30 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // ---- Construir tabs de dias ----
   const jogos = ppGet('jogos');
+
+  // Build calendar-compatible objects from fase final bracket
+  function buildFFJogos() {
+    const ffData = ppLoad('fasefinal') || {};
+    const out = [];
+    const faseMap = { QF: 'QF', SF: 'SF', F: 'Final' };
+    Object.entries(ffData).forEach(([catId, catData]) => {
+      if (!catData?.jogos) return;
+      catData.jogos.forEach(j => {
+        if (!j.data || !j.hora) return;
+        out.push({
+          id: 'ff-' + j.id,
+          data: j.data,
+          hora: j.hora,
+          campo: 'Fase Final',
+          grupo: catId + '-' + (j.fase === 'F' ? 'Final' : j.fase + j.num),
+          eq1: j.eq1 || 'A definir',
+          eq2: j.eq2 || 'A definir',
+          resultado: j.resultado,
+        });
+      });
+    });
+    return out;
+  }
   // Show all tournament dates Jun 5-14, regardless of games existing yet
   const tournamentDates = [];
   for (let d = new Date('2026-06-05'); d <= new Date('2026-06-14'); d.setDate(d.getDate() + 1)) {
@@ -173,7 +197,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // ---- Grupos para o select ----
   const grupoSelect = document.getElementById('filtroGrupo');
-  const grupos = [...new Set(jogos.map(j => j.grupo))].sort();
+  const grupos = [...new Set([...jogos, ...buildFFJogos()].map(j => j.grupo))].sort();
   grupos.forEach(g => {
     const o = document.createElement('option');
     o.value = o.textContent = g;
@@ -187,7 +211,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // ---- Render principal ----
   function render() {
-    let list = ppGet('jogos');
+    let list = [...ppGet('jogos'), ...buildFFJogos()];
 
     if (activeDia   !== 'todos') list = list.filter(j => j.data === activeDia);
     if (activeCampo !== 'todos') list = list.filter(j => j.campo === activeCampo);

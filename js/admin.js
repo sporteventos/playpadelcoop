@@ -655,6 +655,7 @@ function renderJogos(filtroData = 'todos', filtroCampo = 'todos', filtroGrupo = 
       <td style="text-align:center">${resHtml}</td>
       <td>
         <div style="display:flex;gap:0.3rem">
+          <button class="btn-icon" style="color:var(--cinza-texto)" title="Editar data/hora" onclick="editarJogo(${j.id})"><i class="ph ph-clock"></i></button>
           <button class="btn-icon btn-edit" title="Lançar resultado" onclick="abrirResultado(${j.id})"><i class="ph ph-pencil-simple"></i></button>
           <button class="btn-icon btn-del"  title="Eliminar jogo"    onclick="deleteJogo(${j.id})"><i class="ph ph-trash"></i></button>
         </div>
@@ -1010,23 +1011,40 @@ function formatDateFull(d) {
 // ============================================
 //  NOVO JOGO (modal)
 // ============================================
-function abrirNovoJogo() {
-  APP.editingId = null;
-  document.getElementById('jogoData').value = '';
-  document.getElementById('jogoHora').value = '';
-  document.getElementById('jogoGrupo').value = '';
-  document.getElementById('jogoEq1').value   = '';
-  document.getElementById('jogoEq2').value   = '';
-  // popular campo select
+function populateJogoModal() {
   const campos = getData('campos');
   document.getElementById('jogoCampo').innerHTML =
     campos.map(c => `<option value="${c.nome}">${c.nome}</option>`).join('');
-  // popular grupo select
   const grupos = getData('grupos');
   document.getElementById('jogoGrupo').innerHTML =
     grupos.map(g => `<option value="${g.id}">${g.id}</option>`).join('');
+}
+
+function abrirNovoJogo() {
+  APP.editingId = null;
+  document.getElementById('modalJogoTitle').textContent = 'Novo Jogo';
+  document.getElementById('jogoData').value  = '';
+  document.getElementById('jogoHora').value  = '';
+  document.getElementById('jogoEq1').value   = '';
+  document.getElementById('jogoEq2').value   = '';
+  populateJogoModal();
   openModal('modalJogo');
 }
+
+window.editarJogo = function(id) {
+  const j = getData('jogos').find(x => x.id === id);
+  if (!j) return;
+  APP.editingId = id;
+  document.getElementById('modalJogoTitle').textContent = 'Editar Jogo';
+  populateJogoModal();
+  document.getElementById('jogoData').value  = j.data || '';
+  document.getElementById('jogoHora').value  = j.hora || '';
+  document.getElementById('jogoCampo').value = j.campo || '';
+  document.getElementById('jogoGrupo').value = j.grupo || '';
+  document.getElementById('jogoEq1').value   = j.eq1 || '';
+  document.getElementById('jogoEq2').value   = j.eq2 || '';
+  openModal('modalJogo');
+};
 
 function salvarJogo() {
   const data  = document.getElementById('jogoData').value;
@@ -1040,13 +1058,24 @@ function salvarJogo() {
     return toast('Preencha todos os campos do jogo.', 'error');
 
   const jogos = getData('jogos');
-  const newId = Math.max(0, ...jogos.map(j => j.id)) + 1;
-  jogos.push({ id: newId, data, hora, campo, grupo, eq1, eq2, resultado: null });
-  setData('jogos', jogos);
-  closeModal('modalJogo');
-  renderView(APP.currentView);
-  populateDataSelects();
-  toast(`Jogo #${newId} adicionado.`);
+  if (APP.editingId !== null) {
+    const idx = jogos.findIndex(j => j.id === APP.editingId);
+    if (idx !== -1) jogos[idx] = { ...jogos[idx], data, hora, campo, grupo, eq1, eq2 };
+    APP.editingId = null;
+    setData('jogos', jogos);
+    closeModal('modalJogo');
+    renderView(APP.currentView);
+    populateDataSelects();
+    toast('Jogo actualizado.');
+  } else {
+    const newId = Math.max(0, ...jogos.map(j => j.id)) + 1;
+    jogos.push({ id: newId, data, hora, campo, grupo, eq1, eq2, resultado: null });
+    setData('jogos', jogos);
+    closeModal('modalJogo');
+    renderView(APP.currentView);
+    populateDataSelects();
+    toast(`Jogo #${newId} adicionado.`);
+  }
 }
 
 // ============================================
@@ -1455,10 +1484,26 @@ window.ffEditSchedule = function(jogoId, catId) {
   const ff = ffLoad();
   const j = ff[catId]?.jogos?.find(x => x.id === jogoId);
   if (!j) return;
-  const novaHora = prompt(`Hora do jogo (${j.data ? formatDate(j.data) : ''}) — ex: 14:30:`, j.hora || '');
-  if (novaHora === null) return;
-  j.hora = novaHora.trim();
+  document.getElementById('ffSchedJogoId').value = jogoId;
+  document.getElementById('ffSchedCatId').value  = catId;
+  document.getElementById('ffSchedData').value   = j.data || '';
+  document.getElementById('ffSchedHora').value   = j.hora || '';
+  openModal('modalFFSchedule');
+};
+
+window.ffSaveSchedule = function() {
+  const jogoId  = document.getElementById('ffSchedJogoId').value;
+  const catId   = document.getElementById('ffSchedCatId').value;
+  const novaData = document.getElementById('ffSchedData').value;
+  const novaHora = document.getElementById('ffSchedHora').value;
+  if (!novaData || !novaHora) return toast('Seleccione data e hora.', 'error');
+  const ff = ffLoad();
+  const j  = ff[catId]?.jogos?.find(x => x.id === jogoId);
+  if (!j) return;
+  j.data = novaData;
+  j.hora = novaHora;
   ffSave(ff);
+  closeModal('modalFFSchedule');
   renderFaseFinal();
   toast('Horário actualizado.');
 };
