@@ -2211,6 +2211,21 @@ document.addEventListener('DOMContentLoaded', async () => {
       e.preventDefault();
       const u = document.getElementById('loginUser').value.trim();
       const p = document.getElementById('loginPass').value;
+      // On file:// protocol the auto-sync is skipped; fetch users from GitHub Pages directly
+      if (window.location.protocol === 'file:') {
+        try {
+          const cfg = GHSync.getCfg();
+          if (cfg.owner && cfg.repo) {
+            const r = await fetch(
+              `https://${cfg.owner}.github.io/${cfg.repo}/data.json?_=${Date.now()}`
+            );
+            if (r.ok) {
+              const d = await r.json();
+              if (d.users && d.users.length) ppSave('users', d.users);
+            }
+          }
+        } catch (_) { /* ignore — will fall back to local localStorage */ }
+      }
       // Wait for remote data.json fetch to complete so synced users are available
       if (window.ppDataReady) await window.ppDataReady;
       const result = doLogin(u, p);
