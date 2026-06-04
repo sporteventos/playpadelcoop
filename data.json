@@ -5810,7 +5810,19 @@
       ],
       "createdAt": "2026-06-04T06:28:46.042Z",
       "createdBy": "admin"
+    },
+    {
+      "id": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "name": "Edson Uamusse",
+      "role": "admin",
+      "salt": "mpz8aq9sd5v9b8umpz8aq9stm8iwfe",
+      "passwordHash": "b44efaa9",
+      "active": true,
+      "categories": [],
+      "createdAt": "2026-06-04T08:23:42.216Z",
+      "createdBy": "admin"
     }
   ],
-  "_updated": "2026-06-04T08:20:34.649Z"
+  "_updated": "2026-06-04T08:23:49.814Z"
 }
