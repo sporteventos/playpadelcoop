@@ -4378,11 +4378,13 @@ function renderHorario() {
         <div class="schedule-time" style="display:flex;align-items:center;padding:.4rem .6rem;font-weight:700;color:var(--cinza-texto)">${t}</div>
         ${activeCampos.map(campo => {
           const j = dayJogos.find(x => x.hora === t && x.campo === campo);
-          if (!j) return `<div class="schedule-slot"></div>`;
+          const slotAttr = `ondragover="horarioDragOver(event)" ondragleave="horarioDragLeave(event)" ondrop="horarioDrop(event,'${t}','${escHtml(campo)}')"`;
+          if (!j) return `<div class="schedule-slot" ${slotAttr}></div>`;
           const conflict = hasConflict(j);
           const e1 = j.eq1 || 'A definir';
           const e2 = j.eq2 || 'A definir';
-          return `<div class="schedule-slot has-game${conflict?' has-conflict':''}">
+          const dragAttr = j._isFaseFinal ? '' : `draggable="true" ondragstart="horarioStartDrag(event,'${j.id}')" ondragend="horarioDragEnd(event)"`;
+          return `<div class="schedule-slot has-game${conflict?' has-conflict':''}" ${dragAttr} ${slotAttr}>
             ${conflict ? '<span class="conflict-badge">CONFLITO</span>' : ''}
             <div style="font-size:.7rem;color:var(--cinza-texto);margin-bottom:.2rem">${j.grupo}</div>
             <div style="display:flex;align-items:center;gap:.3rem;font-size:.75rem;font-weight:600;color:var(--branco);line-height:1.4">
@@ -4396,6 +4398,76 @@ function renderHorario() {
       `).join('')}
     </div>`;
 }
+
+// ── Horário drag-and-drop handlers ───────────────────────────
+window.horarioStartDrag = function(ev, jogoId) {
+  APP._dragJogoId = String(jogoId);
+  ev.dataTransfer.effectAllowed = 'move';
+  ev.dataTransfer.setData('text/plain', String(jogoId));
+  // Mark source slot as dragging after a tick so it renders first
+  requestAnimationFrame(() => ev.target.closest('.schedule-slot')?.classList.add('is-dragging'));
+};
+
+window.horarioDragEnd = function(ev) {
+  ev.target.closest('.schedule-slot')?.classList.remove('is-dragging');
+  APP._dragJogoId = null;
+};
+
+window.horarioDragOver = function(ev) {
+  if (!APP._dragJogoId) return;
+  ev.preventDefault();
+  ev.dataTransfer.dropEffect = 'move';
+  const slot = ev.currentTarget;
+  // Show swap highlight if occupied by a different game, green if empty
+  if (slot.classList.contains('has-game')) {
+    slot.classList.add('drag-over-swap');
+  } else {
+    slot.classList.add('drag-over');
+  }
+};
+
+window.horarioDragLeave = function(ev) {
+  ev.currentTarget.classList.remove('drag-over', 'drag-over-swap');
+};
+
+window.horarioDrop = function(ev, hora, campo) {
+  ev.preventDefault();
+  const slot = ev.currentTarget;
+  slot.classList.remove('drag-over', 'drag-over-swap');
+
+  const jogoId = APP._dragJogoId;
+  APP._dragJogoId = null;
+  if (!jogoId) return;
+
+  const selDate = document.getElementById('horarioDataFilter')?.value;
+  const jogos = getData('jogos');
+  const idx = jogos.findIndex(j => String(j.id) === jogoId);
+  if (idx < 0) return;
+
+  const oldHora  = jogos[idx].hora;
+  const oldCampo = jogos[idx].campo;
+
+  // If dropping onto itself, do nothing
+  if (oldHora === hora && oldCampo === campo) return;
+
+  // Check if target slot has a game — if so, swap
+  const targetIdx = jogos.findIndex(j =>
+    j.data === selDate && j.hora === hora && j.campo === campo && String(j.id) !== jogoId
+  );
+  if (targetIdx >= 0) {
+    jogos[targetIdx].hora  = oldHora;
+    jogos[targetIdx].campo = oldCampo;
+    toast(`Jogos trocados: ${hora} · ${campo} ↔ ${oldHora} · ${oldCampo}`);
+  } else {
+    toast(`Jogo movido para ${hora} · ${campo}`);
+  }
+
+  jogos[idx].hora  = hora;
+  jogos[idx].campo = campo;
+  setData('jogos', jogos);
+  Auth.log('HORARIO_DRAG', 'jogos', `Jogo #${jogoId} movido para ${hora} @ ${campo}`);
+  renderHorario();
+};
 
 // ============================================
 //  GITHUB SYNC — UI

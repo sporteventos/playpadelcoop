@@ -686,6 +686,11 @@ tbody tr:hover { background: var(--cinza-escuro); }
 .schedule-slot.has-game { background: var(--verde-bg); border-color: rgba(0,195,123,.3); }
 .schedule-slot.has-conflict { background: rgba(255,74,74,.08); border-color: rgba(255,74,74,.35); }
 .schedule-time { font-size: .68rem; color: var(--cinza-texto); font-weight: 600; }
+.schedule-slot.has-game[draggable] { cursor: grab; }
+.schedule-slot.has-game[draggable]:active { cursor: grabbing; }
+.schedule-slot.is-dragging { opacity: .35; }
+.schedule-slot.drag-over { border-color: var(--verde) !important; background: rgba(0,195,123,.18) !important; box-shadow: 0 0 0 2px var(--verde); }
+.schedule-slot.drag-over-swap { border-color: var(--amarelo) !important; background: rgba(245,197,24,.12) !important; box-shadow: 0 0 0 2px var(--amarelo); }
 .conflict-badge {
   position: absolute; top: 4px; right: 6px;
   font-size: .6rem; background: var(--vermelho); color: #fff;
