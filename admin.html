@@ -776,7 +776,7 @@
 
 <!-- Modal: Mover jogo para outro dia -->
 <div class="modal-overlay" id="modalMoverDia" role="dialog" aria-modal="true" aria-labelledby="modalMoverDiaTitle">
-  <div class="modal" style="max-width:380px">
+  <div class="modal" style="max-width:560px">
     <div class="modal-header">
       <h2 class="modal-title" id="modalMoverDiaTitle"><i class="ph ph-calendar-check"></i> Mover para outro dia</h2>
       <button class="modal-close" onclick="closeModal('modalMoverDia')" aria-label="Fechar"><i class="ph ph-x"></i></button>
@@ -785,8 +785,10 @@
       <p id="moverDiaInfo" style="color:var(--cinza-texto);font-size:.85rem;margin-bottom:.75rem"></p>
       <div class="form-group-modal">
         <label class="form-label">Nova data *</label>
-        <input class="form-input" id="moverDiaData" type="date"/>
+        <input class="form-input" id="moverDiaData" type="date" oninput="APP._moverDiaSlot=null;horarioMoverDiaRefreshSlots()"/>
       </div>
+      <div id="moverDiaSlots" style="max-height:300px;overflow-y:auto;margin-top:.25rem"></div>
+      <p id="moverDiaError" style="display:none;color:var(--vermelho);font-size:.8rem;margin-top:.5rem"></p>
     </div>
     <div class="modal-footer">
       <button class="btn btn-ghost" onclick="closeModal('modalMoverDia')">Cancelar</button>

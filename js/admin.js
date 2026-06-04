@@ -4492,28 +4492,122 @@ window.horarioMoverDia = function(jogoId) {
   const j = jogos.find(x => String(x.id) === String(jogoId));
   if (!j) return;
   APP._moverDiaJogoId = String(jogoId);
+  APP._moverDiaSlot   = null;
   const info = document.getElementById('moverDiaInfo');
-  if (info) info.textContent = `Jogo: ${j.grupo || '#' + jogoId} — ${j.eq1 || '?'} vs ${j.eq2 || '?'} (${j.data || 'sem data'})`;
+  if (info) info.textContent = `${j.grupo || '#' + jogoId} — ${j.eq1 || '?'} vs ${j.eq2 || '?'}`;
   const inp = document.getElementById('moverDiaData');
   if (inp) inp.value = j.data || '';
+  const err = document.getElementById('moverDiaError');
+  if (err) err.style.display = 'none';
+  horarioMoverDiaRefreshSlots();
   openModal('modalMoverDia');
 };
 
-window.horarioConfirmarMoverDia = function() {
-  const jogoId = APP._moverDiaJogoId;
+window.horarioMoverDiaRefreshSlots = function() {
+  const jogoId  = APP._moverDiaJogoId;
   const novaData = document.getElementById('moverDiaData')?.value;
+  const container = document.getElementById('moverDiaSlots');
+  if (!container) return;
+  if (!novaData) { container.innerHTML = ''; return; }
+
+  const jogos   = getData('jogos');
+  const campos  = getData('campos').map(c => c.nome);
+  const jogoAtual = jogos.find(x => String(x.id) === String(jogoId));
+
+  // Games on target date, excluding the game being moved
+  const dayJogos = jogos.filter(j => j.data === novaData && String(j.id) !== String(jogoId));
+
+  // Dominant minute offset for target day; fallback to current game's minute
+  const minuteCounts = {};
+  dayJogos.forEach(j => {
+    if (!j.hora) return;
+    const min = j.hora.split(':')[1];
+    minuteCounts[min] = (minuteCounts[min] || 0) + 1;
+  });
+  const fallbackMin = jogoAtual?.hora?.split(':')[1] || '00';
+  const dominantMin = Object.entries(minuteCounts).sort((a, b) => b[1] - a[1])[0]?.[0] || fallbackMin;
+
+  const CLUB_SLOTS = [];
+  for (let h = 6; h <= 23; h++) {
+    const slot = `${String(h).padStart(2,'0')}:${dominantMin}`;
+    if (slot <= '23:30') CLUB_SLOTS.push(slot);
+  }
+  const times = [...new Set([...CLUB_SLOTS, ...dayJogos.map(j => j.hora).filter(Boolean)])].sort();
+
+  if (!times.length) {
+    container.innerHTML = `<p style="color:var(--cinza-texto);font-size:.8rem;margin-top:.5rem">Nenhum jogo neste dia — slots de referência indisponíveis.</p>`;
+    return;
+  }
+
+  // Occupation map {hora|campo : jogo}
+  const occupied = {};
+  dayJogos.forEach(j => { if (j.hora && j.campo) occupied[`${j.hora}|${j.campo}`] = j; });
+
+  const sel = APP._moverDiaSlot;
+  let html = `<p style="color:var(--cinza-texto);font-size:.75rem;margin:.4rem 0 .5rem">Clique num slot <span style="color:var(--verde)">livre</span> para seleccionar:</p>`;
+  html += `<div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:.72rem">`;
+  html += `<thead><tr><th style="padding:.3rem .5rem;color:var(--cinza-texto);text-align:left;border-bottom:1px solid var(--preto-borda)">Hora</th>`;
+  campos.forEach(c => { html += `<th style="padding:.3rem .5rem;color:var(--cinza-texto);text-align:center;border-bottom:1px solid var(--preto-borda)">${escHtml(c)}</th>`; });
+  html += `</tr></thead><tbody>`;
+
+  times.forEach(t => {
+    html += `<tr><td style="padding:.25rem .5rem;color:var(--branco);font-weight:700;white-space:nowrap">${t}</td>`;
+    campos.forEach(campo => {
+      const key = `${t}|${campo}`;
+      const occ = occupied[key];
+      if (occ) {
+        const short = [occ.eq1, occ.eq2].filter(Boolean)
+          .map(e => e.split(' & ').map(n => n.split(' ')[0]).join('/'))
+          .join(' vs ');
+        html += `<td style="padding:.25rem .4rem;text-align:center"><span style="display:inline-block;background:var(--preto-borda);color:var(--cinza-texto);border-radius:4px;padding:.15rem .35rem;font-size:.65rem" title="${escHtml(occ.eq1||'')} vs ${escHtml(occ.eq2||'')}">🔒 ${escHtml(short)}</span></td>`;
+      } else {
+        const isSel = sel?.hora === t && sel?.campo === campo;
+        const safeId = `moverSlot_${t.replace(':','')}_${campo.replace(/[^a-z0-9]/gi,'_')}`;
+        html += `<td style="padding:.25rem .4rem;text-align:center">`;
+        html += `<span id="${safeId}" onclick="horarioMoverDiaSelSlot('${t}','${escHtml(campo)}')" `;
+        html += `style="display:inline-block;border-radius:4px;padding:.2rem .5rem;font-size:.65rem;cursor:pointer;`;
+        html += `border:1px solid ${isSel ? 'var(--verde)' : 'var(--preto-borda)'};`;
+        html += `background:${isSel ? 'rgba(0,195,123,.22)' : 'transparent'};`;
+        html += `color:${isSel ? 'var(--verde)' : 'var(--cinza-texto)'};">✓ livre</span></td>`;
+      }
+    });
+    html += `</tr>`;
+  });
+
+  html += `</tbody></table></div>`;
+  container.innerHTML = html;
+};
+
+window.horarioMoverDiaSelSlot = function(hora, campo) {
+  APP._moverDiaSlot = { hora, campo };
+  const err = document.getElementById('moverDiaError');
+  if (err) err.style.display = 'none';
+  horarioMoverDiaRefreshSlots();
+};
+
+window.horarioConfirmarMoverDia = function() {
+  const jogoId  = APP._moverDiaJogoId;
+  const novaData = document.getElementById('moverDiaData')?.value;
+  const slot     = APP._moverDiaSlot;
+  const err      = document.getElementById('moverDiaError');
   if (!jogoId || !novaData) return;
+  if (!slot) {
+    if (err) { err.textContent = 'Seleccione um slot disponível na tabela.'; err.style.display = 'block'; }
+    return;
+  }
   const jogos = getData('jogos');
   const idx = jogos.findIndex(x => String(x.id) === jogoId);
   if (idx < 0) return;
-  const antigaData = jogos[idx].data;
-  if (antigaData === novaData) { closeModal('modalMoverDia'); return; }
-  jogos[idx].data = novaData;
+  const antigaData  = jogos[idx].data;
+  const antigaHora  = jogos[idx].hora;
+  const antigoCampo = jogos[idx].campo;
+  jogos[idx].data  = novaData;
+  jogos[idx].hora  = slot.hora;
+  jogos[idx].campo = slot.campo;
   setData('jogos', jogos);
-  Auth.log('HORARIO_MOVER_DIA', 'jogos', `Jogo #${jogoId} movido de ${antigaData} para ${novaData}`);
+  Auth.log('HORARIO_MOVER_DIA', 'jogos', `Jogo #${jogoId} de ${antigaData} ${antigaHora} ${antigoCampo} → ${novaData} ${slot.hora} ${slot.campo}`);
   closeModal('modalMoverDia');
-  toast(`Jogo movido para ${formatDate(novaData)}`);
-  // Switch date filter to new date so the user sees the result
+  toast(`Jogo movido para ${formatDate(novaData)} — ${slot.hora} · ${slot.campo}`);
   const df = document.getElementById('horarioDataFilter');
   if (df) df.value = novaData;
   renderHorario();
