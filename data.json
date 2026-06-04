@@ -2970,9 +2970,99 @@
       "categories": [],
       "createdAt": "2026-06-04T12:23:28.112Z",
       "createdBy": "euamusse"
+    },
+    {
+      "id": "mpzmu31kd48pyns",
+      "username": "smonjane",
+      "name": "Silvio Monjane",
+      "role": "operator",
+      "salt": "mpzmu31kxgzyb8gmpzmu31kuff7xuw",
+      "passwordHash": "78f94041",
+      "active": true,
+      "categories": [
+        "M1",
+        "M2",
+        "M3",
+        "M4",
+        "M5",
+        "F1",
+        "F2"
+      ],
+      "createdAt": "2026-06-04T15:10:39.860Z",
+      "createdBy": "euamusse"
+    },
+    {
+      "id": "mpzmupnfzrmk0hb",
+      "username": "djanasse",
+      "name": "Denise Janasse",
+      "role": "operator",
+      "salt": "mpzmupnf7hlpl4ampzmupnfix42v8u",
+      "passwordHash": "eed41684",
+      "active": true,
+      "categories": [
+        "M1",
+        "M2",
+        "M3",
+        "M4",
+        "M5",
+        "F1",
+        "F2"
+      ],
+      "createdAt": "2026-06-04T15:11:09.151Z",
+      "createdBy": "euamusse"
     }
   ],
   "auditlog": [
+    {
+      "id": "mpzmupnky5tprs0",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "CREATE_USER",
+      "target": "utilizadores",
+      "detail": "Criado \"djanasse\" (operator)",
+      "ts": "2026-06-04T15:11:09.152Z"
+    },
+    {
+      "id": "mpzmu31w2k3s4pa",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "CREATE_USER",
+      "target": "utilizadores",
+      "detail": "Criado \"smonjane\" (operator)",
+      "ts": "2026-06-04T15:10:39.860Z"
+    },
+    {
+      "id": "mpzmpl43hnftkw4",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "SAVE_SCHEDULE",
+      "target": "jogos",
+      "detail": "Horário/equipas actualizados: jogo #1",
+      "ts": "2026-06-04T15:07:09.987Z"
+    },
+    {
+      "id": "mpzmpi4grpzei2b",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "SAVE_SCHEDULE",
+      "target": "jogos",
+      "detail": "Horário/equipas actualizados: jogo #1",
+      "ts": "2026-06-04T15:07:06.112Z"
+    },
+    {
+      "id": "mpzmpaq3lne3rbx",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "SAVE_SCHEDULE",
+      "target": "jogos",
+      "detail": "Horário/equipas actualizados: jogo #1",
+      "ts": "2026-06-04T15:06:56.523Z"
+    },
     {
       "id": "mpzm2hpeh39yit4",
       "userId": "mpz8aq9sg983ubo",
@@ -5004,5 +5094,5 @@
       "ts": "2026-06-03T06:06:37.211Z"
     }
   ],
-  "_updated": "2026-06-04T15:01:37.318Z"
+  "_updated": "2026-06-04T15:11:10.991Z"
 }
