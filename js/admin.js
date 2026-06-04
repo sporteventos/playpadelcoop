@@ -3810,8 +3810,7 @@ function renderEstatisticas() {
 
   const sorted = Object.values(stats)
     .filter(s => s.pj > 0)
-    .sort((a,b) => (b.v/b.pj||0)-(a.v/a.pj||0) || b.v-a.v)
-    .slice(0, 30);
+    .sort((a,b) => (b.v/b.pj||0)-(a.v/a.pj||0) || b.v-a.v);
 
   if (!sorted.length) { el.innerHTML = `<p style="color:var(--cinza-texto);padding:1.5rem">Nenhum jogo com resultado ainda.</p>`; return; }
 
