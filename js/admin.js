@@ -941,6 +941,7 @@ function closeModal(id) {
 // ============================================
 function navigate(view) {
   APP.currentView = view;
+  location.hash = view;
   document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
   document.getElementById('view-' + view)?.classList.add('active');
 
@@ -2345,8 +2346,9 @@ function initAdmin() {
   // User role modal — show/hide categories on role change
   document.getElementById('userRole')?.addEventListener('change', updateUserCategoriesVisibility);
 
-  // Ir para view inicial
-  navigate('dashboard');
+  // Ir para view inicial — restaurar da hash se disponível
+  const _hashView = location.hash.slice(1);
+  navigate(_hashView && document.getElementById('view-' + _hashView) ? _hashView : 'dashboard');
 }
 
 // ============================================
@@ -2811,7 +2813,7 @@ function setupRoleUI() {
   // Update sidebar footer
   document.getElementById('sidebarAvatar').textContent = me.name.charAt(0).toUpperCase();
   document.getElementById('sidebarName').textContent   = me.name;
-  document.getElementById('sidebarRole').textContent   = me.role === 'admin' ? 'Administrador � Play Padel' : 'Operador � Play Padel';
+  document.getElementById('sidebarRole').textContent   = me.role === 'admin' ? 'Administrador · Play Padel' : 'Operador · Play Padel';
 
   // Show/hide SISTEMA group (admin only)
   const sistemaGroup = document.getElementById('sidebarSistema');
@@ -2836,7 +2838,7 @@ function renderUtilizadores() {
             <th style="padding:.6rem .8rem;color:var(--cinza-texto);font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.05em">Role</th>
             <th style="padding:.6rem .8rem;color:var(--cinza-texto);font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.05em">Estado</th>
             <th style="padding:.6rem .8rem;color:var(--cinza-texto);font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.05em">Criado em</th>
-            <th style="padding:.6rem .8rem;color:var(--cinza-texto);font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.05em">Ac��es</th>
+            <th style="padding:.6rem .8rem;color:var(--cinza-texto);font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.05em">Ações</th>
           </tr>
         </thead>
         <tbody>
@@ -2929,10 +2931,10 @@ function uiSaveUser() {
   const pass     = document.getElementById('userPass').value;
   const pass2    = document.getElementById('userPass2').value;
 
-  if (!username || !name) return _showUserError('Username e nome s�o obrigat�rios.');
-  if (_editUserId === null && !pass) return _showUserError('Palavra-passe obrigat�ria para novo utilizador.');
+  if (!username || !name) return _showUserError('Username e nome são obrigatórios.');
+  if (_editUserId === null && !pass) return _showUserError('Palavra-passe obrigatória para novo utilizador.');
   if (pass && pass.length < 6) return _showUserError('Palavra-passe deve ter pelo menos 6 caracteres.');
-  if (pass && pass !== pass2)  return _showUserError('As palavras-passe n�o coincidem.');
+  if (pass && pass !== pass2)  return _showUserError('As palavras-passe não coincidem.');
 
   let result;
   if (_editUserId === null) {
@@ -2964,7 +2966,7 @@ function uiToggleUser(id) {
 }
 
 function uiDeleteUser(id, username) {
-  if (!confirm(`Eliminar o utilizador "${username}"? Esta ac��o n�o pode ser desfeita.`)) return;
+  if (!confirm(`Eliminar o utilizador "${username}"? Esta ação não pode ser desfeita.`)) return;
   const result = Auth.deleteUser(id);
   if (!result.ok) return toast(result.error, 'error');
   toast(`Utilizador "${username}" eliminado.`);
@@ -3016,7 +3018,7 @@ function renderLogs() {
               <th style="padding:.55rem .7rem;color:var(--cinza-texto);font-size:.7rem;font-weight:600;text-transform:uppercase;white-space:nowrap">Data/Hora</th>
               <th style="padding:.55rem .7rem;color:var(--cinza-texto);font-size:.7rem;font-weight:600;text-transform:uppercase">Utilizador</th>
               <th style="padding:.55rem .7rem;color:var(--cinza-texto);font-size:.7rem;font-weight:600;text-transform:uppercase">Role</th>
-              <th style="padding:.55rem .7rem;color:var(--cinza-texto);font-size:.7rem;font-weight:600;text-transform:uppercase">Ac��o</th>
+              <th style="padding:.55rem .7rem;color:var(--cinza-texto);font-size:.7rem;font-weight:600;text-transform:uppercase">Ação</th>
               <th style="padding:.55rem .7rem;color:var(--cinza-texto);font-size:.7rem;font-weight:600;text-transform:uppercase">Alvo</th>
               <th style="padding:.55rem .7rem;color:var(--cinza-texto);font-size:.7rem;font-weight:600;text-transform:uppercase">Detalhe</th>
             </tr>
@@ -3044,7 +3046,7 @@ function renderLogs() {
 }
 
 // ============================================
-//  SESS�ES VIEW
+//  SESSÕES VIEW
 // ============================================
 function renderSessoes() {
   if (!Auth.isAdmin()) { navigate('dashboard'); return; }
@@ -3053,7 +3055,7 @@ function renderSessoes() {
 
   const container = document.getElementById('listSessoes');
   if (sessions.length === 0) {
-    container.innerHTML = `<div style="text-align:center;padding:3rem;color:var(--cinza-texto)"><i class="ph ph-monitor" style="font-size:2.5rem;display:block;margin-bottom:.6rem"></i>Nenhuma sess�o activa.</div>`;
+    container.innerHTML = `<div style="text-align:center;padding:3rem;color:var(--cinza-texto)"><i class="ph ph-monitor" style="font-size:2.5rem;display:block;margin-bottom:.6rem"></i>Nenhuma sessão activa.</div>`;
     return;
   }
 
@@ -3065,14 +3067,14 @@ function renderSessoes() {
       <div style="flex:1;min-width:0">
         <div style="font-weight:700;color:var(--branco);font-size:.92rem">${escHtml(s.name)} <span style="font-size:.72rem;color:var(--cinza-texto);font-weight:400">(${escHtml(s.username)})</span></div>
         <div style="font-size:.7rem;color:var(--cinza-texto);margin-top:.15rem">
-          Login: ${new Date(s.loginAt).toLocaleString('pt-PT')} &nbsp;�&nbsp; �ltima actividade: ${new Date(s.lastActivity).toLocaleString('pt-PT')}
+          Login: ${new Date(s.loginAt).toLocaleString('pt-PT')} &nbsp;·&nbsp; Última actividade: ${new Date(s.lastActivity).toLocaleString('pt-PT')}
         </div>
       </div>
       <span style="font-size:.65rem;font-weight:700;text-transform:uppercase;padding:.2rem .55rem;border-radius:4px;flex-shrink:0;background:${s.role === 'admin' ? 'rgba(245,197,24,.15)' : 'rgba(0,195,123,.12)'};color:${s.role === 'admin' ? 'var(--amarelo)' : 'var(--verde)'}">
         ${s.role === 'admin' ? 'Admin' : 'Operador'}
       </span>
       ${s.sessionId === me?.sessionId
-        ? `<span style="font-size:.68rem;color:var(--verde);font-weight:700;flex-shrink:0">? Esta sess�o</span>`
+        ? `<span style="font-size:.68rem;color:var(--verde);font-weight:700;flex-shrink:0">→ Esta sessão</span>`
         : `<button class="btn btn-ghost btn-sm" style="color:var(--vermelho);flex-shrink:0" onclick="uiForceLogout('${escHtml(s.sessionId)}','${escHtml(s.username)}')">
              <i class="ph ph-sign-out"></i> Encerrar
            </button>`}
@@ -3081,9 +3083,9 @@ function renderSessoes() {
 }
 
 function uiForceLogout(sessionId, username) {
-  if (!confirm(`Encerrar a sess�o de "${username}"?`)) return;
+  if (!confirm(`Encerrar a sessão de "${username}"?`)) return;
   Auth.forceLogout(sessionId);
-  toast(`Sess�o de "${username}" encerrada.`);
+  toast(`Sessão de "${username}" encerrada.`);
   renderSessoes();
 }
 
@@ -3110,7 +3112,7 @@ function updateUserCategoriesVisibility() {
 }
 
 // ============================================
-//  ADMIN STANDINGS (Classifica��es view)
+//  ADMIN STANDINGS (Classificações view)
 // ============================================
 let _classActiveCat = null;
 window.renderClassificacoes = function() { renderAdminClassificacoes(); };
@@ -3610,7 +3612,7 @@ function renderImportar() {
   if (!el) return;
   el.innerHTML = `
     <div class="section-card" style="max-width:800px">
-      <h3 style="margin-bottom:.25rem">Importa��o em Lote</h3>
+      <h3 style="margin-bottom:.25rem">Importação em Lote</h3>
       <p style="color:var(--cinza-texto);font-size:.82rem;margin-bottom:1rem">
         Cole resultados no formato CSV: <code style="background:var(--cinza-escuro);padding:.1rem .4rem;border-radius:4px;font-size:.78rem">jogoId,set1eq1-set1eq2,set2eq1-set2eq2[,set3eq1-set3eq2]</code>
       </p>
@@ -3618,7 +3620,7 @@ function renderImportar() {
         <textarea id="importCSV" placeholder="Exemplo:&#10;1,6-4,6-3&#10;2,3-6,4-6&#10;5,6-2,6-1&#10;12,7-5,4-6,6-4"></textarea>
       </div>
       <div style="display:flex;gap:.75rem;margin-bottom:1rem">
-        <button class="btn btn-primary btn-sm" onclick="_importPreview()"><i class="ph ph-eye"></i> Pr�-visualizar</button>
+        <button class="btn btn-primary btn-sm" onclick="_importPreview()"><i class="ph ph-eye"></i> Pré-visualizar</button>
         <button class="btn btn-ghost btn-sm" onclick="document.getElementById('importCSV').value=''">Limpar</button>
       </div>
       <div id="importPreviewWrap"></div>
@@ -3646,11 +3648,11 @@ function _importPreview() {
         <thead><tr><th>ID</th><th>Par 1</th><th>Par 2</th><th>Resultado</th><th>Estado</th></tr></thead>
         <tbody>${rows.map(r => `<tr>
           <td>${r.id}</td>
-          <td>${r.jogo ? escHtml(r.jogo.eq1) : '�'}</td>
-          <td>${r.jogo ? escHtml(r.jogo.eq2) : '�'}</td>
+          <td>${r.jogo ? escHtml(r.jogo.eq1) : '-'}</td>
+          <td>${r.jogo ? escHtml(r.jogo.eq2) : '-'}</td>
           <td><code>${escHtml(r.sets)}</code></td>
-          <td>${!r.jogo ? '<span class="badge badge-vermelho">N�o encontrado</span>' :
-               !r.ok    ? '<span class="badge badge-vermelho">Formato inv�lido</span>' :
+          <td>${!r.jogo ? '<span class="badge badge-vermelho">Não encontrado</span>' :
+               !r.ok    ? '<span class="badge badge-vermelho">Formato inválido</span>' :
                r.dup    ? '<span class="badge badge-amarelo">Substituir</span>' :
                           '<span class="badge badge-verde">OK</span>'}</td>
         </tr>`).join('')}
@@ -3659,9 +3661,9 @@ function _importPreview() {
     </div>
     <div style="display:flex;gap:.75rem;align-items:center">
       <button class="btn btn-primary btn-sm" onclick="_importConfirm()">
-        <i class="ph ph-check"></i> Confirmar Importa��o (${rows.filter(r=>r.ok).length} v�lidos)
+        <i class="ph ph-check"></i> Confirmar Importação (${rows.filter(r=>r.ok).length} válidos)
       </button>
-      <span style="font-size:.78rem;color:var(--cinza-texto)">${rows.filter(r=>!r.ok).length} inv�lidos ser�o ignorados</span>
+      <span style="font-size:.78rem;color:var(--cinza-texto)">${rows.filter(r=>!r.ok).length} inválidos serão ignorados</span>
     </div>`;
 
   // Store parsed for confirm
@@ -3686,7 +3688,7 @@ function _importConfirm() {
 }
 
 // ============================================
-//  HOR�RIO BUILDER
+//  HORÁRIO BUILDER
 // ============================================
 function renderHorario() {
   const el = document.getElementById('horarioContent');
@@ -3708,7 +3710,7 @@ function renderHorario() {
 
   const selDate  = dataFilter?.value;
   const selCampo = campoFilter?.value;
-  if (!selDate) return el.innerHTML = `<p style="color:var(--cinza-texto);padding:1rem">Seleccione uma data para ver o hor�rio.</p>`;
+  if (!selDate) return el.innerHTML = `<p style="color:var(--cinza-texto);padding:1rem">Seleccione uma data para ver o horário.</p>`;
 
   const dayJogos = jogos.filter(j => j.data === selDate && (!selCampo || j.campo === selCampo));
   if (!dayJogos.length) return el.innerHTML = `<p style="color:var(--cinza-texto);padding:1rem">Sem jogos para os filtros seleccionados.</p>`;
