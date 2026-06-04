@@ -69,9 +69,10 @@
       .bk-card { padding: .55rem .65rem; border-radius: 9px; }
       .bk-cname { font-size: .75rem; }
       .bk-rhead { font-size: .55rem; }
-      .champion-banner { flex-direction: column; text-align: center; padding: 1rem; gap: .5rem; }
-      .champion-trophy { font-size: 1.8rem; }
-      .champion-name { font-size: 1.1rem; }
+      .bk-round-champion { min-width: 180px; }
+      .champion-col-name { font-size: 1.3rem; }
+      .champion-col-trophy { font-size: 2.8rem; }
+      .champion-col-body { padding: 1.25rem 1rem; gap: .75rem; }
       .cat-tab { font-size: .72rem; padding: .35rem .85rem; }
       /* connector lines shrink with gap */
       .bk-slot-top::after, .bk-slot-bot::after { right: -20px; width: 20px; }
@@ -81,16 +82,29 @@
     .bracket-empty { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 4rem 2rem; text-align: center; gap: 1rem; }
     .bracket-empty-icon { font-size: 3.5rem; color: var(--cinza-texto); }
     .bracket-empty-text { color: var(--cinza-texto); max-width: 320px; line-height: 1.5; }
-    .champion-banner {
-      display: flex; align-items: center; gap: 1rem;
-      background: linear-gradient(135deg, rgba(245,197,24,.12), rgba(0,195,123,.08));
-      border: 1px solid rgba(245,197,24,.3); border-radius: 14px;
-      padding: 1.25rem 1.5rem; margin-bottom: 2rem;
+    /* Champion column — inside the bracket flex row */
+    .bk-round-champion { min-width: 240px; max-width: 300px; }
+    .champion-rhead { color: var(--amarelo) !important; border-bottom-color: rgba(245,197,24,.3) !important; text-align: center; }
+    .champion-col-body {
+      flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 1.1rem; padding: 2rem 1.5rem;
+      background: linear-gradient(160deg, rgba(245,197,24,.13), rgba(0,195,123,.07));
+      border: 1px solid rgba(245,197,24,.35); border-radius: 14px;
+      box-shadow: 0 0 48px rgba(245,197,24,.1); text-align: center;
     }
-    .champion-trophy { font-size: 2.4rem; }
-    .champion-label { font-size: .65rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--amarelo); }
-    .champion-name { font-size: 1.3rem; font-weight: 800; color: var(--branco); }
-    .champion-grup { font-size: .75rem; color: var(--cinza-texto); }
+    .champion-col-trophy { font-size: 4rem; line-height: 1; }
+    .champion-col-name {
+      font-size: 1.85rem; font-weight: 900; color: var(--branco); line-height: 1.15;
+      text-shadow: 0 0 20px rgba(245,197,24,.25);
+    }
+    .champion-col-grup { font-size: .82rem; color: var(--cinza-texto); margin-top: -.2rem; }
+    /* connector from Final column to Champion */
+    .bk-round-final-connector { position: relative; }
+    .bk-round-final-connector::before {
+      content: '';
+      position: absolute; top: 50%; left: -36px; width: 36px; height: 2px;
+      background: rgba(245,197,24,.35); pointer-events: none;
+    }
   </style>
 </head>
 <body>
@@ -230,12 +244,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const name = w === 1 ? final.eq1 : final.eq2;
     const grupo = w === 1 ? final.eq1grupo : final.eq2grupo;
     if (!name) return '';
-    return `<div class="champion-banner">
-      <span class="champion-trophy">🏆</span>
-      <div>
-        <div class="champion-label">Campeão · ${currentCat}</div>
-        <div class="champion-name">${name}</div>
-        ${grupo ? `<div class="champion-grup">${grupo}</div>` : ''}
+    const nameFmt = name.split(' & ').join('<br>');
+    return `<div class="bk-round bk-round-champion bk-round-final-connector">
+      <div class="bk-rhead champion-rhead">Campeão · ${currentCat}</div>
+      <div class="champion-col-body">
+        <div class="champion-col-trophy">🏆</div>
+        <div class="champion-col-name">${nameFmt}</div>
+        ${grupo ? `<div class="champion-col-grup">${grupo}</div>` : ''}
       </div>
     </div>`;
   }
@@ -270,13 +285,14 @@ document.addEventListener('DOMContentLoaded', () => {
       }).join('');
     });
 
-    content.innerHTML = championBanner(catData) + `
+    content.innerHTML = `
       <div class="bk-bracket">
         ${phases.map((fase, i) => `
           <div class="bk-round">
             <div class="bk-rhead">${phaseLabel[fase]}</div>
             ${bracketCols[i]}
           </div>`).join('')}
+        ${championBanner(catData)}
       </div>`;
 
   }

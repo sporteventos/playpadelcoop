@@ -31,7 +31,16 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // ---------- Countdown ao torneio ----------
-  const TARGET_DATE = new Date('2026-06-05T07:00:00');   // 5 de Junho, 07:00
+  // Use the earliest game date from the schedule; fall back to a hardcoded date
+  let TARGET_DATE = new Date('2026-06-05T07:00:00');
+  (function() {
+    const jogos = ppGet('jogos');
+    if (!jogos || !jogos.length) return;
+    const first = jogos
+      .filter(j => j.data && j.hora)
+      .sort((a, b) => (a.data + a.hora).localeCompare(b.data + b.hora))[0];
+    if (first) TARGET_DATE = new Date(first.data + 'T' + first.hora + ':00');
+  }());
 
   function pad(n) { return String(n).padStart(2, '0'); }
 
