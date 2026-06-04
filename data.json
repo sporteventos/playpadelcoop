@@ -2970,9 +2970,69 @@
       "categories": [],
       "createdAt": "2026-06-04T12:23:28.112Z",
       "createdBy": "euamusse"
+    },
+    {
+      "id": "mpzxoo1v8l1za3r",
+      "username": "djanasse",
+      "name": "Denisa Janasse",
+      "role": "operator",
+      "salt": "mpzxoo1v3zgt3zxmpzxoo1vzc8qkbt",
+      "passwordHash": "9935cbf0",
+      "active": true,
+      "categories": [
+        "M1",
+        "M2",
+        "M3",
+        "M4",
+        "M5",
+        "F1",
+        "F2"
+      ],
+      "createdAt": "2026-06-04T20:14:22.930Z",
+      "createdBy": "euamusse"
+    },
+    {
+      "id": "mpzxp3c19ypz2xd",
+      "username": "smonjane",
+      "name": "Silvio Monjane",
+      "role": "operator",
+      "salt": "mpzxp3c1tn4ozcampzxp3c1gjuwskc",
+      "passwordHash": "25023f54",
+      "active": true,
+      "categories": [
+        "M1",
+        "M2",
+        "M3",
+        "M4",
+        "M5",
+        "F1",
+        "F2"
+      ],
+      "createdAt": "2026-06-04T20:14:42.728Z",
+      "createdBy": "euamusse"
     }
   ],
   "auditlog": [
+    {
+      "id": "mpzxp3c8f4fs3qx",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "CREATE_USER",
+      "target": "utilizadores",
+      "detail": "Criado \"smonjane\" (operator)",
+      "ts": "2026-06-04T20:14:42.728Z"
+    },
+    {
+      "id": "mpzxoo2afzxyxom",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "CREATE_USER",
+      "target": "utilizadores",
+      "detail": "Criado \"djanasse\" (operator)",
+      "ts": "2026-06-04T20:14:22.930Z"
+    },
     {
       "id": "mpzxdeycq1qgaao",
       "userId": "mpz8aq9sg983ubo",
@@ -5584,5 +5644,5 @@
       "ts": "2026-06-03T06:06:37.211Z"
     }
   ],
-  "_updated": "2026-06-04T20:12:37.616Z"
+  "_updated": "2026-06-04T20:14:48.002Z"
 }
