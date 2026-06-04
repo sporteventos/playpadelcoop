@@ -3817,7 +3817,7 @@ function renderEstatisticas() {
   el.innerHTML = `
     <div class="table-wrap">
       <table class="data-table">
-        <thead><tr><th>#</th><th>Par</th><th>PJ</th><th>V</th><th>D</th><th>Taxa V%</th><th>Sets</th></tr></thead>
+        <thead><tr><th>#</th><th>Par</th><th>PJ</th><th>V</th><th>D</th><th>Taxa V%</th><th>Jogos</th></tr></thead>
         <tbody>${sorted.map((s, i) => {
           const pct = s.pj ? Math.round(s.v/s.pj*100) : 0;
           const bar = `<div style="display:inline-block;width:${pct}%;max-width:80px;height:5px;background:var(--verde);border-radius:3px;vertical-align:middle;margin-left:.4rem"></div>`;
