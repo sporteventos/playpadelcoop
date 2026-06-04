@@ -192,7 +192,7 @@ window.waImageJogo = function(jogoId, isFF, catId) {
     const faseLabel = j.fase === 'F' ? 'Final' : j.fase === 'SF' ? 'Meia-Final' + (j.num > 1 ? ' ' + j.num : '') : 'Quarto de Final' + (j.num ? ' ' + j.num : '');
     j = { ...j, grupo: catId + ' — ' + faseLabel, campo: j.campo || '—', _cat: catId };
   } else {
-    j = (getData('jogos') || []).find(g => g.id === jogoId);
+    j = (getData('jogos') || []).find(g => String(g.id) === String(jogoId));
     if (!j) return toast('Jogo não encontrado.', 'error');
   }
 
@@ -1966,7 +1966,7 @@ function renderJogos(filtroData = 'todos', filtroCampo = 'todos', filtroGrupo = 
         })()
       : `<span class="badge badge-amarelo">Pendente</span>`;
 
-    const waBtns = `<button class="btn-icon" style="color:#25D366" title="Partilhar imagem do jogo" onclick="waImageJogo(${JSON.stringify(j.id)},${!!j._isFF},${JSON.stringify(j._cat||'')})"><i class="ph ph-share-network"></i></button>`;
+    const waBtns = `<button class="btn-icon" style="color:#25D366" title="Partilhar imagem do jogo" onclick="waImageJogo('${j.id}',${!!j._isFF},'${j._cat||''}')"><i class="ph ph-share-network"></i></button>`;
 
     const fotoBtn = j.resultado
       ? `<button class="btn-icon" style="color:var(--amarelo)" title="Panfleto com foto" onclick="abrirPanfletoFoto('${j.id}',${j._isFF ? 'true' : 'false'},'${j._cat || ''}')"><i class="ph ph-camera"></i></button>`
