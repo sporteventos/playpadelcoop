@@ -323,6 +323,168 @@ window.gerarPanfleto = function() {
 };
 
 // ============================================
+//  PANFLETO COM FOTO
+// ============================================
+window.abrirPanfletoFoto = function(jogoId, isFF, catId) {
+  let jogo;
+  if (isFF === true || isFF === 'true') {
+    const ff = ffLoad();
+    jogo = ff[catId]?.jogos.find(j => j.id === jogoId);
+    if (jogo) jogo = { ...jogo, _isFF: true, _cat: catId,
+      grupo: catId + '-' + (jogo.fase === 'F' ? 'Final' : jogo.fase),
+      campo: jogo.campo || '—' };
+  } else {
+    jogo = getData('jogos').find(j => String(j.id) === String(jogoId));
+  }
+  if (!jogo) return toast('Jogo não encontrado.', 'error');
+  if (!jogo.resultado) return toast('Este jogo ainda não tem resultado.', 'error');
+
+  APP._fotoFlyer = { jogo };
+
+  const { w1, w2 } = matchSetsScore(jogo.resultado);
+  const r = jogo.resultado;
+  const sets = [[r.s1eq1,r.s1eq2],[r.s2eq1,r.s2eq2],[r.s3eq1,r.s3eq2]]
+    .filter(([a]) => a !== null).map(([a, b]) => `${a}-${b}`).join('  /  ');
+  const eq1Won = w1 > w2;
+
+  document.getElementById('fotoFlyerInfo').innerHTML =
+    `<strong style="color:var(--branco)">${escHtml(jogo.grupo)}</strong>` +
+    (jogo.data ? `  ·  ${formatDate(jogo.data)}` : '') +
+    (jogo.hora ? `  ${jogo.hora}` : '') +
+    `<br><span style="color:${eq1Won ? 'var(--verde-neon)' : 'var(--cinza-texto)'}">${escHtml(jogo.eq1)}</span>` +
+    `<span style="color:var(--branco);font-weight:700;margin:0 .6rem">${w1} – ${w2}</span>` +
+    `<span style="color:${eq1Won ? 'var(--cinza-texto)' : 'var(--verde-neon)'}">${escHtml(jogo.eq2)}</span>` +
+    `<br><span style="font-size:.72rem">${sets}</span>`;
+
+  document.getElementById('fotoFlyerInput').value = '';
+  document.getElementById('fotoFlyerPreview').style.display = 'none';
+  openModal('modalFotoFlyer');
+};
+
+function _buildFotoFlyer(img) {
+  const jogo = APP._fotoFlyer?.jogo;
+  if (!jogo || !jogo.resultado) return;
+
+  const W = 1080, H = 1350, BAND_H = 340, PAD = 52;
+  const CAT_CLR = { M1:'#4A9EFF', M2:'#00C37B', M3:'#39FF8F', M4:'#F5C518', M5:'#FF9A3C', F1:'#FF6BB0', F2:'#C97BFF' };
+
+  const canvas = document.getElementById('fotoFlyerCanvas');
+  canvas.width = W; canvas.height = H;
+  const ctx = canvas.getContext('2d');
+
+  // Photo (cover-fill)
+  const scl = Math.max(W / img.naturalWidth, H / img.naturalHeight);
+  const iw = img.naturalWidth * scl, ih = img.naturalHeight * scl;
+  ctx.drawImage(img, (W - iw) / 2, (H - ih) / 2, iw, ih);
+
+  // Gradient overlay photo → dark band
+  const grad = ctx.createLinearGradient(0, H - BAND_H - 260, 0, H);
+  grad.addColorStop(0, 'rgba(10,15,13,0)');
+  grad.addColorStop(0.45, 'rgba(10,15,13,0.72)');
+  grad.addColorStop(1, 'rgba(10,15,13,0.98)');
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, H - BAND_H - 260, W, BAND_H + 260);
+
+  // Green top stripe
+  const bandY = H - BAND_H;
+  const grd = ctx.createLinearGradient(0, 0, W, 0);
+  grd.addColorStop(0, '#00C37B'); grd.addColorStop(1, '#007A4E');
+  ctx.fillStyle = grd; ctx.fillRect(0, bandY, W, 7);
+
+  // Band background
+  ctx.fillStyle = 'rgba(10,15,13,0.95)';
+  ctx.fillRect(0, bandY + 7, W, BAND_H - 7);
+
+  const { w1, w2 } = matchSetsScore(jogo.resultado);
+  const r = jogo.resultado;
+  const sets = [[r.s1eq1,r.s1eq2],[r.s2eq1,r.s2eq2],[r.s3eq1,r.s3eq2]]
+    .filter(([a]) => a !== null).map(([a, b]) => `${a}-${b}`).join('  /  ');
+  const eq1Won = w1 > w2;
+
+  // Branding line
+  ctx.textAlign = 'left';
+  ctx.fillStyle = '#00C37B';
+  ctx.font = 'bold 27px Arial, sans-serif';
+  ctx.fillText('PLAY PADEL COOP', PAD, bandY + 50);
+  ctx.fillStyle = '#8AA396';
+  ctx.font = '20px Arial, sans-serif';
+  ctx.fillText('· TORNEIO ANIVERSÁRIO 2026', PAD + 294, bandY + 50);
+
+  // Category badge
+  const cat = (jogo.grupo || 'M1').split('-')[0];
+  const catClr = CAT_CLR[cat] || '#8AA396';
+  const bw = ctx.measureText(jogo.grupo.toUpperCase()).width + 36;
+  ctx.fillStyle = catClr + '28';
+  ctx.beginPath(); ctx.roundRect(PAD, bandY + 66, bw, 36, 6); ctx.fill();
+  ctx.fillStyle = catClr;
+  ctx.font = 'bold 17px Arial, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText(jogo.grupo.toUpperCase(), PAD + bw / 2, bandY + 89);
+  ctx.textAlign = 'left';
+
+  // Date / campo
+  ctx.fillStyle = '#8AA396';
+  ctx.font = '18px Arial, sans-serif';
+  const dateStr = (jogo.data ? ppFormatDate(jogo.data) : '') +
+    (jogo.hora ? '  ·  ' + jogo.hora : '') +
+    (jogo.campo && jogo.campo !== '—' ? '  ·  ' + jogo.campo : '');
+  ctx.fillText(dateStr, PAD + bw + 18, bandY + 89);
+
+  // Teams + score
+  const scoreY = bandY + 200;
+
+  function drawTeam(name, x, align, won) {
+    const parts = name.split(' & ');
+    ctx.fillStyle = won ? '#39FF8F' : '#8AA396';
+    ctx.textAlign = align;
+    if (parts.length === 2) {
+      ctx.font = 'bold 30px Arial, sans-serif';
+      ctx.fillText(parts[0], x, scoreY - 20);
+      ctx.fillText(parts[1], x, scoreY + 18);
+    } else {
+      ctx.font = 'bold 33px Arial, sans-serif';
+      ctx.fillText(name, x, scoreY);
+    }
+    ctx.textAlign = 'left';
+  }
+
+  drawTeam(jogo.eq1, PAD, 'left', eq1Won);
+  drawTeam(jogo.eq2, W - PAD, 'right', !eq1Won);
+
+  // Score
+  ctx.fillStyle = '#F0F7F3';
+  ctx.font = 'bold 80px Arial, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText(`${w1} – ${w2}`, W / 2, scoreY + 10);
+
+  // Sets detail
+  ctx.fillStyle = '#8AA396';
+  ctx.font = '19px Arial, sans-serif';
+  ctx.fillText(sets, W / 2, scoreY + 50);
+
+  // Winner row
+  const winner = eq1Won ? jogo.eq1 : jogo.eq2;
+  ctx.fillStyle = '#F5C518';
+  ctx.font = 'bold 20px Arial, sans-serif';
+  ctx.fillText('🏆  VENCEDOR', W / 2, bandY + BAND_H - 48);
+  ctx.fillStyle = '#F0F7F3';
+  ctx.font = 'bold 26px Arial, sans-serif';
+  ctx.fillText(winner, W / 2, bandY + BAND_H - 16);
+  ctx.textAlign = 'left';
+
+  document.getElementById('fotoFlyerPreview').style.display = 'block';
+}
+
+window._downloadFotoFlyer = function() {
+  const canvas = document.getElementById('fotoFlyerCanvas');
+  const jogo = APP._fotoFlyer?.jogo;
+  const a = document.createElement('a');
+  a.download = `resultado-${jogo ? String(jogo.id).replace(/[^a-z0-9]/gi, '-') : 'jogo'}.png`;
+  a.href = canvas.toDataURL('image/png');
+  a.click();
+};
+
+// ============================================
 //  PANFLETO RESULTADOS
 // ============================================
 window.gerarPanfletoResultados = function() {
@@ -839,9 +1001,9 @@ function renderDashboard() {
   const catProgress = document.getElementById('dashCatProgress');
   if (catProgress) {
     catProgress.innerHTML = CATS.map(cat => {
-      const catJogos = jogos.filter(j => j.grupo.startsWith(cat + '-'));
-      const done = catJogos.filter(j => j.resultado).length;
-      const total = catJogos.length;
+      const allCatJogos = getAllJogosNormalized().filter(j => j.grupo.startsWith(cat + '-'));
+      const done  = allCatJogos.filter(j => j.resultado).length;
+      const total = allCatJogos.length;
       const pct = total ? Math.round(done / total * 100) : 0;
       return `<div class="progress-bar-wrap">
         <span class="progress-bar-label">${cat}</span>
@@ -1491,14 +1653,20 @@ function renderJogos(filtroData = 'todos', filtroCampo = 'todos', filtroGrupo = 
       })
     ).filter(Boolean).join('');
 
+    const fotoBtn = j.resultado
+      ? `<button class="btn-icon" style="color:var(--amarelo)" title="Panfleto com foto" onclick="abrirPanfletoFoto('${j.id}',${j._isFF ? 'true' : 'false'},'${j._cat || ''}')"><i class="ph ph-camera"></i></button>`
+      : '';
+
     const acoes = j._isFF
       ? `<div style="display:flex;gap:0.3rem">
           <button class="btn-icon btn-edit" title="Lançar resultado" onclick="ffAbrirResultado('${j.id}','${j._cat}')"><i class="ph ph-pencil-simple"></i></button>
+          ${fotoBtn}
         </div>`
       : `<div style="display:flex;gap:0.3rem">
           <button class="btn-icon" style="color:var(--cinza-texto)" title="Editar data/hora" onclick="editarJogo(${j.id})"><i class="ph ph-clock"></i></button>
           <button class="btn-icon btn-edit" title="Lançar resultado" onclick="abrirResultado(${j.id})"><i class="ph ph-pencil-simple"></i></button>
           <button class="btn-icon btn-del"  title="Eliminar jogo"    onclick="deleteJogo(${j.id})"><i class="ph ph-trash"></i></button>
+          ${fotoBtn}
         </div>`;
 
     return `
@@ -2068,6 +2236,15 @@ function initAdmin() {
   // Horário filters
   document.getElementById('horarioDataFilter')?.addEventListener('change', () => renderHorario());
   document.getElementById('horarioCampoFilter')?.addEventListener('change', () => renderHorario());
+
+  // Panfleto com Foto — file input
+  document.getElementById('fotoFlyerInput')?.addEventListener('change', function() {
+    const file = this.files[0];
+    if (!file) return;
+    const img = new Image();
+    img.onload = () => _buildFotoFlyer(img);
+    img.src = URL.createObjectURL(file);
+  });
 
   // Session timeout watch
   Auth.startTimeoutWatch(
@@ -3296,7 +3473,7 @@ window.gerarPanfletoCampeoes = function() {
 function renderEstatisticas() {
   const el = document.getElementById('statsContent');
   if (!el) return;
-  const jogos = getData('jogos').filter(j => j.resultado);
+  const jogos = getAllJogosNormalized().filter(j => j.resultado);
 
   // Aggregate per pair
   const stats = {};

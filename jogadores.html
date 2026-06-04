@@ -99,6 +99,17 @@ document.addEventListener('DOMContentLoaded', () => {
   // ---- Extrair jogadores individuais ----
   const jogos = ppGet('jogos');
 
+  // Also collect fase final games
+  const ff = ppGet('fasefinal') || {};
+  const ffJogos = Object.entries(ff).flatMap(([catId, catData]) =>
+    (catData?.jogos || []).filter(j => j.eq1 && j.eq2).map(j => ({
+      ...j,
+      grupo: catId + '-' + (j.fase === 'F' ? 'Final' : j.fase),
+      campo: j.campo || '—',
+      _isFF: true
+    }))
+  );
+
   // Mapa: nomeJogador → { par, grupos[], jogos[] }
   const playerMap = {};
 
@@ -112,6 +123,13 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   jogos.forEach(j => {
+    const eq1players = j.eq1.split('&').map(s => s.trim());
+    const eq2players = j.eq2.split('&').map(s => s.trim());
+    eq1players.forEach(p => addPlayer(p, j.eq1, j));
+    eq2players.forEach(p => addPlayer(p, j.eq2, j));
+  });
+
+  ffJogos.forEach(j => {
     const eq1players = j.eq1.split('&').map(s => s.trim());
     const eq2players = j.eq2.split('&').map(s => s.trim());
     eq1players.forEach(p => addPlayer(p, j.eq1, j));

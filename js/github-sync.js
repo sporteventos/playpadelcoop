@@ -30,8 +30,11 @@ const GHSync = (() => {
       categorias: getData('categorias'),
       grupos:     getData('grupos'),
       jogadores:  getData('jogadores'),
+      duplas:     getData('duplas'),
       jogos:      getData('jogos'),
       fasefinal:  getData('fasefinal'),
+      telefones:  getData('telefones'),
+      users:      Auth.getUsers(),
       _updated:   new Date().toISOString()
     };
   }
