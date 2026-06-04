@@ -207,6 +207,16 @@ function ppFormatDate(d) {
       .then(function (d) {
         // Always update users from remote so operator accounts created on another device are available
         if (d['users'] !== undefined) ppSave('users', d['users']);
+        // Always merge remote audit logs (deduplicate by id) so all devices see all actions
+        if (Array.isArray(d.auditlog) && d.auditlog.length) {
+          try {
+            var localLogs = JSON.parse(localStorage.getItem('pp_auditlog') || '[]');
+            var localIds  = new Set(localLogs.map(function(l) { return l.id; }));
+            var merged    = localLogs.concat(d.auditlog.filter(function(r) { return !localIds.has(r.id); }));
+            merged.sort(function(a, b) { return a.ts < b.ts ? 1 : -1; });
+            localStorage.setItem('pp_auditlog', JSON.stringify(merged.slice(0, 1000)));
+          } catch(e) {}
+        }
         var stored = localStorage.getItem('pp__updated') || '0';
         var remote = d._updated || '0';
         if (remote > stored) {
