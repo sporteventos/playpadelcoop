@@ -1509,12 +1509,12 @@ function renderDuplas(filter = '') {
 
   // Populate group filter once
   const grupoFilter = document.getElementById('duplasFilterGrupo');
+  const grupoSel = grupoFilter?.value || '';   // read BEFORE overwriting innerHTML
   if (grupoFilter) {
     const uniqueGrupos = [...new Set(duplas.map(d => d.grupo))].sort();
     grupoFilter.innerHTML = '<option value="">Todos os grupos</option>' +
-      uniqueGrupos.map(g => `<option value="${g}">${g}</option>`).join('');
+      uniqueGrupos.map(g => `<option value="${g}"${g === grupoSel ? ' selected' : ''}>${g}</option>`).join('');
   }
-  const grupoSel = grupoFilter?.value || '';
 
   let lista = [...duplas];
   if (grupoSel) lista = lista.filter(d => d.grupo === grupoSel);
