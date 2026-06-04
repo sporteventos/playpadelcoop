@@ -185,7 +185,20 @@
       "grupo": "M3-B",
       "eq1": "Edson Uamusse & Salomão",
       "eq2": "Ivandro Remane & João Peixoto",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 6,
+        "s1eq2": 4,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 6,
+        "s2eq2": 0,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": null,
+        "s3eq2": null,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 2,
@@ -195,7 +208,20 @@
       "grupo": "F1-A",
       "eq1": "Helen Khumalo & Narcisa Nhamitambo",
       "eq2": "Cynthia Cavalcanti & Kátia Sousa",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 1,
+        "s1eq2": 6,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 4,
+        "s2eq2": 6,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": null,
+        "s3eq2": null,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 3,
@@ -205,7 +231,20 @@
       "grupo": "M1-B",
       "eq1": "Gonçalo Nascimento & João Catela",
       "eq2": "Naim Hassan & Sidik",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 2,
+        "s1eq2": 6,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 1,
+        "s2eq2": 6,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": null,
+        "s3eq2": null,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 4,
@@ -215,7 +254,20 @@
       "grupo": "M1-C",
       "eq1": "Tayab & Badru Rosa",
       "eq2": "Ahmad & Uzeir",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 3,
+        "s1eq2": 6,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 4,
+        "s2eq2": 6,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": null,
+        "s3eq2": null,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 5,
@@ -225,7 +277,20 @@
       "grupo": "M2-C",
       "eq1": "Feizan Omar & Filipe Lobo",
       "eq2": "Ricardo Oliveira & Vasco Silva",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 6,
+        "s1eq2": 0,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 6,
+        "s2eq2": 4,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": null,
+        "s3eq2": null,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 6,
@@ -235,7 +300,20 @@
       "grupo": "F2-A",
       "eq1": "Cris Vasconcelos & Beatriz Madeira",
       "eq2": "Florence & Jinane",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 6,
+        "s1eq2": 2,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 6,
+        "s2eq2": 4,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": null,
+        "s3eq2": null,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 7,
@@ -245,7 +323,20 @@
       "grupo": "F2-A",
       "eq1": "Donatella Detto & Julianna",
       "eq2": "Ilária & Monica",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 6,
+        "s1eq2": 1,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 5,
+        "s2eq2": 7,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": 4,
+        "s3eq2": 6,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 8,
@@ -255,7 +346,20 @@
       "grupo": "M4-D",
       "eq1": "Jason & Bosch",
       "eq2": "Luis Vaz & Sérgio Gomes",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 6,
+        "s1eq2": 4,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 3,
+        "s2eq2": 6,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": 6,
+        "s3eq2": 4,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 9,
@@ -265,7 +369,20 @@
       "grupo": "M2-A",
       "eq1": "Luis Trigo de Morais & Ricky Kamissa",
       "eq2": "Frederico Jonet & Francisco Ferreira",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 6,
+        "s1eq2": 3,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 6,
+        "s2eq2": 3,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": null,
+        "s3eq2": null,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 10,
@@ -275,7 +392,20 @@
       "grupo": "M2-C",
       "eq1": "Felipe Moniz & José Cossa",
       "eq2": "Faheem Adamo & Yann Trivellin",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 1,
+        "s1eq2": 6,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 3,
+        "s2eq2": 6,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": null,
+        "s3eq2": null,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 11,
@@ -285,7 +415,20 @@
       "grupo": "F2-C",
       "eq1": "Nilda & Lize",
       "eq2": "Dalila & Tatiana",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 6,
+        "s1eq2": 7,
+        "tb1eq1": 5,
+        "tb1eq2": 7,
+        "s2eq1": 1,
+        "s2eq2": 6,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": null,
+        "s3eq2": null,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 12,
@@ -295,7 +438,20 @@
       "grupo": "M4-A",
       "eq1": "João Pignatelli & Joel Almeida",
       "eq2": "André Reves & Francisco Morais",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 6,
+        "s1eq2": 0,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 3,
+        "s2eq2": 6,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": 2,
+        "s3eq2": 6,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 13,
@@ -305,7 +461,20 @@
       "grupo": "F2-C",
       "eq1": "Saira Sale & Sónia Caravela",
       "eq2": "Steph & Ronell",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 6,
+        "s1eq2": 0,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 6,
+        "s2eq2": 7,
+        "tb2eq1": 4,
+        "tb2eq2": 7,
+        "s3eq1": 5,
+        "s3eq2": 7,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 14,
@@ -315,7 +484,20 @@
       "grupo": "M3-C",
       "eq1": "Rui Veríssimo & Pedro Martins",
       "eq2": "Sharik Omar & Muhamad Mussagy",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 6,
+        "s1eq2": 7,
+        "tb1eq1": 4,
+        "tb1eq2": 7,
+        "s2eq1": 7,
+        "s2eq2": 5,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": 7,
+        "s3eq2": 5,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 15,
@@ -325,7 +507,20 @@
       "grupo": "M3-B",
       "eq1": "Shueb & Sahad",
       "eq2": "Ugo Gião & Nuno Henriques",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 5,
+        "s1eq2": 7,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 6,
+        "s2eq2": 4,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": 2,
+        "s3eq2": 6,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 16,
@@ -335,7 +530,20 @@
       "grupo": "F2-B",
       "eq1": "Glória Baltazar & Luciana Lauriano",
       "eq2": "Paty & Mila",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 6,
+        "s1eq2": 1,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 4,
+        "s2eq2": 6,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": 6,
+        "s3eq2": 4,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 17,
@@ -345,7 +553,20 @@
       "grupo": "M2-B",
       "eq1": "Jameel & Tahir",
       "eq2": "Dej Cruz & Fabio Damato",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 1,
+        "s1eq2": 6,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 6,
+        "s2eq2": 3,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": 6,
+        "s3eq2": 0,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 18,
@@ -355,7 +576,20 @@
       "grupo": "F1-C",
       "eq1": "Marta Botelho & Ana Oliveira",
       "eq2": "Omar Fernandes & Claudia",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 6,
+        "s1eq2": 0,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 6,
+        "s2eq2": 3,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": null,
+        "s3eq2": null,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 19,
@@ -365,7 +599,20 @@
       "grupo": "F1-B",
       "eq1": "Inês Pires & Daniela Duarte",
       "eq2": "Celine Sieu & Ana Pezarat",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 6,
+        "s1eq2": 0,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 7,
+        "s2eq2": 6,
+        "tb2eq1": 8,
+        "tb2eq2": 6,
+        "s3eq1": null,
+        "s3eq2": null,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 20,
@@ -375,7 +622,20 @@
       "grupo": "M1-A",
       "eq1": "Bruno Gaspar & Manuel Pinto Abreu",
       "eq2": "João Alberty & Manel Alberty",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 1,
+        "s1eq2": 6,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 6,
+        "s2eq2": 7,
+        "tb2eq1": 2,
+        "tb2eq2": 7,
+        "s3eq1": null,
+        "s3eq2": null,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 21,
@@ -385,7 +645,20 @@
       "grupo": "F1-C",
       "eq1": "Anouk Fumane & Letícia",
       "eq2": "Omar Fernandes & Claudia",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 6,
+        "s1eq2": 7,
+        "tb1eq1": 5,
+        "tb1eq2": 7,
+        "s2eq1": 1,
+        "s2eq2": 6,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": null,
+        "s3eq2": null,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 22,
@@ -395,7 +668,20 @@
       "grupo": "M3-D",
       "eq1": "Sueil & Ahmed Riaze",
       "eq2": "Elves & Uweizy",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 6,
+        "s1eq2": 2,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 6,
+        "s2eq2": 0,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": null,
+        "s3eq2": null,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 23,
@@ -405,7 +691,20 @@
       "grupo": "M1-B",
       "eq1": "Rehan Fayaz & Reehan M.",
       "eq2": "Naim Hassan & Sidik",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 1,
+        "s1eq2": 6,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 6,
+        "s2eq2": 1,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": 6,
+        "s3eq2": 2,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 24,
@@ -415,7 +714,20 @@
       "grupo": "M2-A",
       "eq1": "Rui Lourenço & Francisco Pegado",
       "eq2": "Shezane Arif & Razeen",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 6,
+        "s1eq2": 3,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 1,
+        "s2eq2": 6,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": 7,
+        "s3eq2": 5,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 25,
@@ -425,7 +737,20 @@
       "grupo": "M1-B",
       "eq1": "Karim Kanifani & Octávio Barros",
       "eq2": "Gonçalo Nascimento & João Catela",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 6,
+        "s1eq2": 1,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 6,
+        "s2eq2": 7,
+        "tb2eq1": 4,
+        "tb2eq2": 7,
+        "s3eq1": 3,
+        "s3eq2": 6,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 26,
@@ -435,7 +760,20 @@
       "grupo": "F1-B",
       "eq1": "Maria Tomaz & Isabel Ribeiro",
       "eq2": "Érica Capela & Sarah Taillon",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 6,
+        "s1eq2": 4,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 6,
+        "s2eq2": 0,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": null,
+        "s3eq2": null,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 27,
@@ -445,7 +783,20 @@
       "grupo": "M3-C",
       "eq1": "Keiss Chiraze & Saif Issa",
       "eq2": "Akil & Kalil",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 0,
+        "s1eq2": 6,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 1,
+        "s2eq2": 6,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": null,
+        "s3eq2": null,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 28,
@@ -455,7 +806,20 @@
       "grupo": "M4-D",
       "eq1": "Luis Vaz & Sérgio Gomes",
       "eq2": "Luis Trigo Morais & Pedro Mandlate",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 6,
+        "s1eq2": 7,
+        "tb1eq1": 7,
+        "tb1eq2": 9,
+        "s2eq1": 6,
+        "s2eq2": 3,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": 6,
+        "s3eq2": 0,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 29,
@@ -465,7 +829,20 @@
       "grupo": "F2-B",
       "eq1": "Shanel & Kaitlynn",
       "eq2": "Karina Darsan & Bethany",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 5,
+        "s1eq2": 7,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 6,
+        "s2eq2": 4,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": 6,
+        "s3eq2": 4,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 30,
@@ -475,7 +852,20 @@
       "grupo": "M5-A",
       "eq1": "Tito Ferrinho & Valdir Jetha",
       "eq2": "Alcy Heim & Gabriel Heim",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 6,
+        "s1eq2": 3,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 4,
+        "s2eq2": 6,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": 6,
+        "s3eq2": 4,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 31,
@@ -485,7 +875,20 @@
       "grupo": "M2-B",
       "eq1": "José Moreira & Nuno L. Pereira",
       "eq2": "João Henriques & Bruno Morais",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 5,
+        "s1eq2": 7,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 1,
+        "s2eq2": 6,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": null,
+        "s3eq2": null,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 32,
@@ -495,17 +898,20 @@
       "grupo": "F1-A",
       "eq1": "Caironice & Carmen",
       "eq2": "Cynthia Cavalcanti & Kátia Sousa",
-      "resultado": null
-    },
-    {
-      "id": 33,
-      "data": "2026-06-06",
-      "hora": "14:00",
-      "campo": "TVCabo",
-      "grupo": "M2-C",
-      "eq1": "Feizan Omar & Filipe Lobo",
-      "eq2": "Faheem Adomo & Yann Trivellin",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 6,
+        "s1eq2": 3,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 5,
+        "s2eq2": 7,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": 6,
+        "s3eq2": 0,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 34,
@@ -515,7 +921,20 @@
       "grupo": "F2-A",
       "eq1": "Florence & Jinane",
       "eq2": "Ilária & Monica",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 6,
+        "s1eq2": 2,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 3,
+        "s2eq2": 6,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": 2,
+        "s3eq2": 6,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 35,
@@ -525,7 +944,20 @@
       "grupo": "M5-B",
       "eq1": "Mizzy & Zayan Imitiaz",
       "eq2": "Filipe Ferreira & Paulo Baldaia",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 6,
+        "s1eq2": 0,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 1,
+        "s2eq2": 6,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": 5,
+        "s3eq2": 7,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 36,
@@ -535,7 +967,20 @@
       "grupo": "F2-A",
       "eq1": "Cris Vasconcelos & Beatriz Madeira",
       "eq2": "Donatella Detto & Julianna",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 0,
+        "s1eq2": 6,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 0,
+        "s2eq2": 6,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": null,
+        "s3eq2": null,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 37,
@@ -545,7 +990,20 @@
       "grupo": "F1-A",
       "eq1": "Stacey & Marlou",
       "eq2": "Helen Khumalo & Narcisa Nhamitambo",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 0,
+        "s1eq2": 6,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 6,
+        "s2eq2": 1,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": 7,
+        "s3eq2": 6,
+        "tb3eq1": 7,
+        "tb3eq2": 2
+      }
     },
     {
       "id": 38,
@@ -555,7 +1013,20 @@
       "grupo": "M3-B",
       "eq1": "Shueb & Sahad",
       "eq2": "Edson Uamusse & Salomão",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 3,
+        "s1eq2": 6,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 6,
+        "s2eq2": 7,
+        "tb2eq1": 7,
+        "tb2eq2": 9,
+        "s3eq1": null,
+        "s3eq2": null,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 39,
@@ -565,7 +1036,20 @@
       "grupo": "M1-C",
       "eq1": "Ahmad & Uzeir",
       "eq2": "Carlos Cardeano & José Santos",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 6,
+        "s1eq2": 2,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 0,
+        "s2eq2": 6,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": 0,
+        "s3eq2": 6,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 40,
@@ -575,7 +1059,20 @@
       "grupo": "M3-D",
       "eq1": "Alexandre Salazar & Pedro Gonzalez",
       "eq2": "Gonçalo Marques & Pedro Gonçalves",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 0,
+        "s1eq2": 6,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 6,
+        "s2eq2": 7,
+        "tb2eq1": 1,
+        "tb2eq2": 7,
+        "s3eq1": null,
+        "s3eq2": null,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 41,
@@ -585,7 +1082,20 @@
       "grupo": "M4-A",
       "eq1": "João Pignatelli & Joel Almeida",
       "eq2": "Pablo & Galo Rivera",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 3,
+        "s1eq2": 6,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 6,
+        "s2eq2": 2,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": 6,
+        "s3eq2": 1,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 42,
@@ -595,7 +1105,20 @@
       "grupo": "M3-A",
       "eq1": "Abdul Ibraimo & Guilherme Godinho",
       "eq2": "Dejan Petrovic & Isidro Simões",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 7,
+        "s1eq2": 6,
+        "tb1eq1": 7,
+        "tb1eq2": 0,
+        "s2eq1": 6,
+        "s2eq2": 3,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": null,
+        "s3eq2": null,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 43,
@@ -605,7 +1128,20 @@
       "grupo": "F2-C",
       "eq1": "Saira Sale & Sónia Caravela",
       "eq2": "Nilda & Lize",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 6,
+        "s1eq2": 2,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 1,
+        "s2eq2": 6,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": 1,
+        "s3eq2": 6,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 44,
@@ -615,7 +1151,20 @@
       "grupo": "F2-C",
       "eq1": "Dalila & Tatiana",
       "eq2": "Steph & Ronell",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 2,
+        "s1eq2": 6,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 1,
+        "s2eq2": 6,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": null,
+        "s3eq2": null,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 45,
@@ -625,7 +1174,20 @@
       "grupo": "M5-B",
       "eq1": "Rayhan & Arsheel",
       "eq2": "Faheem Aboobakar & Mikaeel Taibo",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 1,
+        "s1eq2": 6,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 4,
+        "s2eq2": 6,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": null,
+        "s3eq2": null,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 46,
@@ -635,7 +1197,20 @@
       "grupo": "M3-A",
       "eq1": "José Mestre & Koenraad",
       "eq2": "Burhan Hassan & Sarfaraz",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 2,
+        "s1eq2": 6,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 1,
+        "s2eq2": 6,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": null,
+        "s3eq2": null,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 47,
@@ -645,7 +1220,20 @@
       "grupo": "M4-C",
       "eq1": "Paul & Xander",
       "eq2": "Shiraz & Kheizar",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 6,
+        "s1eq2": 0,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 7,
+        "s2eq2": 6,
+        "tb2eq1": 7,
+        "tb2eq2": 0,
+        "s3eq1": null,
+        "s3eq2": null,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 48,
@@ -655,7 +1243,20 @@
       "grupo": "M4-C",
       "eq1": "Fádhil Khan & Kelyo",
       "eq2": "Reihan Adomo & Nabil Manga",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 6,
+        "s1eq2": 1,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 5,
+        "s2eq2": 7,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": 6,
+        "s3eq2": 2,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 49,
@@ -665,7 +1266,20 @@
       "grupo": "M4-B",
       "eq1": "Andrea & Mikel Álvarez",
       "eq2": "Alao Almeida & Ayaan Mussa",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 6,
+        "s1eq2": 4,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 6,
+        "s2eq2": 4,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": null,
+        "s3eq2": null,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 50,
@@ -675,7 +1289,20 @@
       "grupo": "F1-B",
       "eq1": "Érica Capela & Sarah Taillon",
       "eq2": "Inês Pires & Daniela Duarte",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 5,
+        "s1eq2": 7,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 6,
+        "s2eq2": 7,
+        "tb2eq1": 0,
+        "tb2eq2": 7,
+        "s3eq1": null,
+        "s3eq2": null,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 51,
@@ -685,7 +1312,20 @@
       "grupo": "F1-B",
       "eq1": "Maria Tomaz & Isabel Ribeiro",
       "eq2": "Celine Sieu & Ana Pezarat",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 6,
+        "s1eq2": 7,
+        "tb1eq1": 5,
+        "tb1eq2": 7,
+        "s2eq1": 6,
+        "s2eq2": 1,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": 2,
+        "s3eq2": 6,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 52,
@@ -695,7 +1335,20 @@
       "grupo": "M3-C",
       "eq1": "Sharik Omar & Muhamad Mussagy",
       "eq2": "Akil & Kalil",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 3,
+        "s1eq2": 6,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 6,
+        "s2eq2": 3,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": 6,
+        "s3eq2": 7,
+        "tb3eq1": 1,
+        "tb3eq2": 7
+      }
     },
     {
       "id": 53,
@@ -705,7 +1358,20 @@
       "grupo": "M5-A",
       "eq1": "Alcy Heim & Gabriel Heim",
       "eq2": "Hamdan & Huzeifah",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 7,
+        "s1eq2": 6,
+        "tb1eq1": 10,
+        "tb1eq2": 8,
+        "s2eq1": 4,
+        "s2eq2": 6,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": 4,
+        "s3eq2": 6,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 54,
@@ -715,7 +1381,20 @@
       "grupo": "F1-C",
       "eq1": "Omar Fernandes & Claudia",
       "eq2": "Diana Carvalho & Ilga João",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 6,
+        "s1eq2": 2,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 6,
+        "s2eq2": 1,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": null,
+        "s3eq2": null,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 55,
@@ -725,7 +1404,20 @@
       "grupo": "M1-A",
       "eq1": "Bruno Gaspar & Manuel Pinto Abreu",
       "eq2": "Faizal & Sherial",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 6,
+        "s1eq2": 1,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 3,
+        "s2eq2": 6,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": 3,
+        "s3eq2": 6,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 56,
@@ -735,7 +1427,20 @@
       "grupo": "M1-B",
       "eq1": "Rehan Fayaz & Reehan M.",
       "eq2": "Gonçalo Nascimento & João Catela",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 7,
+        "s1eq2": 5,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 4,
+        "s2eq2": 6,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": 6,
+        "s3eq2": 3,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 57,
@@ -745,7 +1450,20 @@
       "grupo": "M2-A",
       "eq1": "Frederico Jonet & Francisco Ferreira",
       "eq2": "Shezane Arif & Razeen",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 3,
+        "s1eq2": 6,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 0,
+        "s2eq2": 6,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": null,
+        "s3eq2": null,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 58,
@@ -755,7 +1473,20 @@
       "grupo": "M1-C",
       "eq1": "Carlos Cardeano & José Santos",
       "eq2": "Fernando & Rui Rocha",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 7,
+        "s1eq2": 6,
+        "tb1eq1": 7,
+        "tb1eq2": 3,
+        "s2eq1": 1,
+        "s2eq2": 6,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": 7,
+        "s3eq2": 6,
+        "tb3eq1": 7,
+        "tb3eq2": 5
+      }
     },
     {
       "id": 59,
@@ -765,7 +1496,20 @@
       "grupo": "M1-B",
       "eq1": "Karim Kanifani & Octávio Barros",
       "eq2": "Naim Hassan & Sidik",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 5,
+        "s1eq2": 7,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 7,
+        "s2eq2": 5,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": 1,
+        "s3eq2": 6,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 60,
@@ -775,7 +1519,20 @@
       "grupo": "M3-C",
       "eq1": "Rui Veríssimo & Pedro Martins",
       "eq2": "Keiss Chiraze & Saif Issa",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 6,
+        "s1eq2": 0,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 2,
+        "s2eq2": 6,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": 2,
+        "s3eq2": 6,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 61,
@@ -785,7 +1542,20 @@
       "grupo": "M2-A",
       "eq1": "Luis Trigo de Morais & Ricky Kamissa",
       "eq2": "Rui Lourenço & Francisco Pegado",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 6,
+        "s1eq2": 1,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 6,
+        "s2eq2": 2,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": null,
+        "s3eq2": null,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 62,
@@ -795,7 +1565,20 @@
       "grupo": "F2-A",
       "eq1": "Cris Vasconcelos & Beatriz Madeira",
       "eq2": "Ilária & Monica",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 3,
+        "s1eq2": 6,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 6,
+        "s2eq2": 3,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": 4,
+        "s3eq2": 6,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 63,
@@ -805,7 +1588,20 @@
       "grupo": "F2-A",
       "eq1": "Florence & Jinane",
       "eq2": "Donatella Detto & Julianna",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 6,
+        "s1eq2": 0,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 3,
+        "s2eq2": 6,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": 6,
+        "s3eq2": 1,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 64,
@@ -815,7 +1611,20 @@
       "grupo": "M3-B",
       "eq1": "Ugo Gião & Nuno Henriques",
       "eq2": "Edson Uamusse & Salomão",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 7,
+        "s1eq2": 5,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 0,
+        "s2eq2": 6,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": 6,
+        "s3eq2": 2,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 65,
@@ -825,7 +1634,20 @@
       "grupo": "F1-A",
       "eq1": "Helen Khumalo & Narcisa Nhamitambo",
       "eq2": "Caironice & Carmen",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 6,
+        "s1eq2": 0,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 6,
+        "s2eq2": 7,
+        "tb2eq1": 0,
+        "tb2eq2": 7,
+        "s3eq1": 3,
+        "s3eq2": 6,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 66,
@@ -835,7 +1657,20 @@
       "grupo": "M3-D",
       "eq1": "Sueil & Ahmed Riaze",
       "eq2": "Alexandre Salazar & Pedro Gonzalez",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 4,
+        "s1eq2": 6,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 1,
+        "s2eq2": 6,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": null,
+        "s3eq2": null,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 67,
@@ -845,7 +1680,20 @@
       "grupo": "M3-D",
       "eq1": "Gonçalo Marques & Pedro Gonçalves",
       "eq2": "Elves & Uweizy",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 7,
+        "s1eq2": 5,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 6,
+        "s2eq2": 4,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": null,
+        "s3eq2": null,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 68,
@@ -855,7 +1703,20 @@
       "grupo": "F1-C",
       "eq1": "Anouk Fumane & Letícia",
       "eq2": "Marta Botelho & Ana Oliveira",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 1,
+        "s1eq2": 6,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 7,
+        "s2eq2": 5,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": 5,
+        "s3eq2": 7,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 69,
@@ -865,7 +1726,20 @@
       "grupo": "M4-B",
       "eq1": "Nuno Resende & Gonçalo Bettencourt",
       "eq2": "Alao Almeida & Ayaan Mussa",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 6,
+        "s1eq2": 1,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 7,
+        "s2eq2": 6,
+        "tb2eq1": 7,
+        "tb2eq2": 4,
+        "s3eq1": null,
+        "s3eq2": null,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 70,
@@ -875,7 +1749,20 @@
       "grupo": "M3-A",
       "eq1": "Burhan Hassan & Sarfaraz",
       "eq2": "Dejan Petrovic & Isidro Simões",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 4,
+        "s1eq2": 6,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 2,
+        "s2eq2": 6,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": null,
+        "s3eq2": null,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 71,
@@ -885,7 +1772,20 @@
       "grupo": "M2-C",
       "eq1": "Feizan Omar & Filipe Lobo",
       "eq2": "Felipe Moniz & José Cossa",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 6,
+        "s1eq2": 3,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 5,
+        "s2eq2": 7,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": 5,
+        "s3eq2": 7,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 72,
@@ -895,7 +1795,20 @@
       "grupo": "M2-C",
       "eq1": "Faheem Adamo & Yann Trivellin",
       "eq2": "Ricardo Oliveira & Vasco Silva",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 6,
+        "s1eq2": 3,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 7,
+        "s2eq2": 5,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": null,
+        "s3eq2": null,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 73,
@@ -905,7 +1818,20 @@
       "grupo": "M4-D",
       "eq1": "Jason & Bosch",
       "eq2": "Luis Trigo Morais & Pedro Mandlate",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 1,
+        "s1eq2": 6,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 7,
+        "s2eq2": 5,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": 4,
+        "s3eq2": 6,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 74,
@@ -915,7 +1841,20 @@
       "grupo": "F2-B",
       "eq1": "Shanel & Kaitlynn",
       "eq2": "Paty & Mila",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 2,
+        "s1eq2": 6,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 1,
+        "s2eq2": 6,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": null,
+        "s3eq2": null,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 75,
@@ -925,7 +1864,20 @@
       "grupo": "M2-B",
       "eq1": "José Moreira & Nuno L. Pereira",
       "eq2": "Jameel & Tahir",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 6,
+        "s1eq2": 1,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 6,
+        "s2eq2": 1,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": null,
+        "s3eq2": null,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 76,
@@ -935,7 +1887,20 @@
       "grupo": "M2-B",
       "eq1": "João Henriques & Bruno Morais",
       "eq2": "Dej Cruz & Fabio Damato",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 2,
+        "s1eq2": 6,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 7,
+        "s2eq2": 5,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": 6,
+        "s3eq2": 7,
+        "tb3eq1": 4,
+        "tb3eq2": 7
+      }
     },
     {
       "id": 77,
@@ -945,7 +1910,20 @@
       "grupo": "M4-C",
       "eq1": "Paul & Xander",
       "eq2": "Fádhil Khan & Kelyo",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 3,
+        "s1eq2": 6,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 5,
+        "s2eq2": 7,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": null,
+        "s3eq2": null,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 78,
@@ -955,7 +1933,20 @@
       "grupo": "F2-B",
       "eq1": "Glória Baltazar & Luciana Lauriano",
       "eq2": "Karina Darsan & Bethany",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 2,
+        "s1eq2": 6,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 6,
+        "s2eq2": 3,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": 1,
+        "s3eq2": 6,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 79,
@@ -965,7 +1956,20 @@
       "grupo": "M4-C",
       "eq1": "Shiraz & Kheizar",
       "eq2": "Reihan Adomo & Nabil Manga",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 6,
+        "s1eq2": 3,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 6,
+        "s2eq2": 2,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": null,
+        "s3eq2": null,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 80,
@@ -975,7 +1979,20 @@
       "grupo": "M4-D",
       "eq1": "Jason & Bosch",
       "eq2": "Muhammad Chona & Ibrahim Bilal",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 6,
+        "s1eq2": 1,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 2,
+        "s2eq2": 6,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": 1,
+        "s3eq2": 6,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 81,
@@ -985,7 +2002,20 @@
       "grupo": "F2-C",
       "eq1": "Nilda & Lize",
       "eq2": "Steph & Ronell",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 7,
+        "s1eq2": 5,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 0,
+        "s2eq2": 6,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": 7,
+        "s3eq2": 5,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 82,
@@ -995,7 +2025,20 @@
       "grupo": "M4-A",
       "eq1": "Pablo & Galo Rivera",
       "eq2": "André Reves & Francisco Morais",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 6,
+        "s1eq2": 4,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 0,
+        "s2eq2": 6,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": 4,
+        "s3eq2": 6,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 83,
@@ -1005,7 +2048,20 @@
       "grupo": "M5-A",
       "eq1": "Tito Ferrinho & Valdir Jetha",
       "eq2": "Faizaan Ravat & Ranim Ahmad",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 0,
+        "s1eq2": 6,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 5,
+        "s2eq2": 7,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": null,
+        "s3eq2": null,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 84,
@@ -1015,7 +2071,20 @@
       "grupo": "M1-A",
       "eq1": "Luis Antunes & Manuel Neto",
       "eq2": "João Alberty & Manel Alberty",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 5,
+        "s1eq2": 7,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 6,
+        "s2eq2": 1,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": 6,
+        "s3eq2": 3,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 85,
@@ -1025,7 +2094,20 @@
       "grupo": "M5-B",
       "eq1": "Filipe Ferreira & Paulo Baldaia",
       "eq2": "Faheem Aboobakar & Mikaeel Taibo",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 0,
+        "s1eq2": 6,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 6,
+        "s2eq2": 4,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": 7,
+        "s3eq2": 6,
+        "tb3eq1": 7,
+        "tb3eq2": 3
+      }
     },
     {
       "id": 86,
@@ -1035,7 +2117,20 @@
       "grupo": "M5-B",
       "eq1": "Mizzy & Zayan Imitiaz",
       "eq2": "Rayhan & Arsheel",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 7,
+        "s1eq2": 6,
+        "tb1eq1": 7,
+        "tb1eq2": 1,
+        "s2eq1": 1,
+        "s2eq2": 6,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": 0,
+        "s3eq2": 6,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 87,
@@ -1045,7 +2140,20 @@
       "grupo": "M4-A",
       "eq1": "Joshua & Noah",
       "eq2": "João Pignatelli & Joel Almeida",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 6,
+        "s1eq2": 2,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 5,
+        "s2eq2": 7,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": 4,
+        "s3eq2": 6,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 88,
@@ -1055,7 +2163,20 @@
       "grupo": "F1-A",
       "eq1": "Stacey & Marlou",
       "eq2": "Caironice & Carmen",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 0,
+        "s1eq2": 6,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 6,
+        "s2eq2": 3,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": 6,
+        "s3eq2": 3,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 89,
@@ -1065,7 +2186,20 @@
       "grupo": "M1-C",
       "eq1": "Ahmad & Uzeir",
       "eq2": "Fernando & Rui Rocha",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 5,
+        "s1eq2": 7,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 1,
+        "s2eq2": 6,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": null,
+        "s3eq2": null,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 90,
@@ -1075,7 +2209,20 @@
       "grupo": "F1-C",
       "eq1": "Marta Botelho & Ana Oliveira",
       "eq2": "Diana Carvalho & Ilga João",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 6,
+        "s1eq2": 1,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 6,
+        "s2eq2": 7,
+        "tb2eq1": 2,
+        "tb2eq2": 7,
+        "s3eq1": 0,
+        "s3eq2": 6,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 91,
@@ -1085,7 +2232,20 @@
       "grupo": "M3-B",
       "eq1": "Ugo Gião & Nuno Henriques",
       "eq2": "Ivandro Remane & João Peixoto",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 6,
+        "s1eq2": 1,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 0,
+        "s2eq2": 6,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": 1,
+        "s3eq2": 6,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 92,
@@ -1095,7 +2255,20 @@
       "grupo": "F2-B",
       "eq1": "Glória Baltazar & Luciana Lauriano",
       "eq2": "Shanel & Kaitlynn",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 6,
+        "s1eq2": 1,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 7,
+        "s2eq2": 5,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": null,
+        "s3eq2": null,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 93,
@@ -1105,7 +2278,20 @@
       "grupo": "M1-A",
       "eq1": "Bruno Gaspar & Manuel Pinto Abreu",
       "eq2": "Luis Antunes & Manuel Neto",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 2,
+        "s1eq2": 6,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 7,
+        "s2eq2": 5,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": 4,
+        "s3eq2": 6,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 94,
@@ -1115,7 +2301,20 @@
       "grupo": "F1-B",
       "eq1": "Maria Tomaz & Isabel Ribeiro",
       "eq2": "Inês Pires & Daniela Duarte",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 6,
+        "s1eq2": 1,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 6,
+        "s2eq2": 3,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": null,
+        "s3eq2": null,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 95,
@@ -1125,7 +2324,20 @@
       "grupo": "M1-A",
       "eq1": "Faizal & Sherial",
       "eq2": "João Alberty & Manel Alberty",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 6,
+        "s1eq2": 0,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 3,
+        "s2eq2": 6,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": 7,
+        "s3eq2": 6,
+        "tb3eq1": 7,
+        "tb3eq2": 1
+      }
     },
     {
       "id": 96,
@@ -1135,7 +2347,20 @@
       "grupo": "M3-A",
       "eq1": "José Mestre & Koenraad",
       "eq2": "Abdul Ibraimo & Guilherme Godinho",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 0,
+        "s1eq2": 6,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 1,
+        "s2eq2": 6,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": null,
+        "s3eq2": null,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 97,
@@ -1145,7 +2370,20 @@
       "grupo": "M1-C",
       "eq1": "Tayab & Badru Rosa",
       "eq2": "Carlos Cardeano & José Santos",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 7,
+        "s1eq2": 5,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 3,
+        "s2eq2": 6,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": 6,
+        "s3eq2": 4,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 98,
@@ -1155,7 +2393,20 @@
       "grupo": "F2-B",
       "eq1": "Paty & Mila",
       "eq2": "Karina Darsan & Bethany",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 7,
+        "s1eq2": 5,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 6,
+        "s2eq2": 7,
+        "tb2eq1": 7,
+        "tb2eq2": 9,
+        "s3eq1": 5,
+        "s3eq2": 7,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 99,
@@ -1165,7 +2416,20 @@
       "grupo": "M4-B",
       "eq1": "Duncan & James",
       "eq2": "Nuno Resende & Gonçalo Bettencourt",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 2,
+        "s1eq2": 6,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 7,
+        "s2eq2": 6,
+        "tb2eq1": 7,
+        "tb2eq2": 0,
+        "s3eq1": 6,
+        "s3eq2": 3,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 100,
@@ -1175,7 +2439,20 @@
       "grupo": "M2-B",
       "eq1": "José Moreira & Nuno L. Pereira",
       "eq2": "Dej Cruz & Fabio Damato",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 7,
+        "s1eq2": 5,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 7,
+        "s2eq2": 6,
+        "tb2eq1": 7,
+        "tb2eq2": 1,
+        "s3eq1": null,
+        "s3eq2": null,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 101,
@@ -1185,7 +2462,20 @@
       "grupo": "M4-D",
       "eq1": "Muhammad Chona & Ibrahim Bilal",
       "eq2": "Luis Trigo Morais & Pedro Mandlate",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 3,
+        "s1eq2": 6,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 6,
+        "s2eq2": 3,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": 7,
+        "s3eq2": 5,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 102,
@@ -1195,7 +2485,20 @@
       "grupo": "M5-A",
       "eq1": "Tito Ferrinho & Valdir Jetha",
       "eq2": "Hamdan & Huzeifah",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 4,
+        "s1eq2": 6,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 6,
+        "s2eq2": 7,
+        "tb2eq1": 4,
+        "tb2eq2": 7,
+        "s3eq1": null,
+        "s3eq2": null,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 103,
@@ -1205,7 +2508,20 @@
       "grupo": "M3-C",
       "eq1": "Rui Veríssimo & Pedro Martins",
       "eq2": "Akil & Kalil",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 2,
+        "s1eq2": 6,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 6,
+        "s2eq2": 7,
+        "tb2eq1": 5,
+        "tb2eq2": 7,
+        "s3eq1": null,
+        "s3eq2": null,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 104,
@@ -1215,7 +2531,20 @@
       "grupo": "M4-A",
       "eq1": "Joshua & Noah",
       "eq2": "André Reves & Francisco Morais",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 6,
+        "s1eq2": 4,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 6,
+        "s2eq2": 4,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": null,
+        "s3eq2": null,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 105,
@@ -1225,7 +2554,20 @@
       "grupo": "M4-B",
       "eq1": "Duncan & James",
       "eq2": "Alao Almeida & Ayaan Mussa",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 3,
+        "s1eq2": 6,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 6,
+        "s2eq2": 1,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": 4,
+        "s3eq2": 6,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 106,
@@ -1235,7 +2577,20 @@
       "grupo": "M3-B",
       "eq1": "Shueb & Sahad",
       "eq2": "Ivandro Remane & João Peixoto",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 4,
+        "s1eq2": 6,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 6,
+        "s2eq2": 7,
+        "tb2eq1": 1,
+        "tb2eq2": 7,
+        "s3eq1": null,
+        "s3eq2": null,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 107,
@@ -1245,7 +2600,20 @@
       "grupo": "M3-A",
       "eq1": "Burhan Hassan & Sarfaraz",
       "eq2": "Abdul Ibraimo & Guilherme Godinho",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 2,
+        "s1eq2": 6,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 6,
+        "s2eq2": 7,
+        "tb2eq1": 6,
+        "tb2eq2": 8,
+        "s3eq1": null,
+        "s3eq2": null,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 108,
@@ -1255,7 +2623,20 @@
       "grupo": "M2-B",
       "eq1": "João Henriques & Bruno Morais",
       "eq2": "Jameel & Tahir",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 1,
+        "s1eq2": 6,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 0,
+        "s2eq2": 6,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": null,
+        "s3eq2": null,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 109,
@@ -1265,7 +2646,20 @@
       "grupo": "F1-B",
       "eq1": "Érica Capela & Sarah Taillon",
       "eq2": "Celine Sieu & Ana Pezarat",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 6,
+        "s1eq2": 1,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 7,
+        "s2eq2": 5,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": null,
+        "s3eq2": null,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 110,
@@ -1275,7 +2669,20 @@
       "grupo": "M4-B",
       "eq1": "Andrea & Mikel Álvarez",
       "eq2": "Nuno Resende & Gonçalo Bettencourt",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 6,
+        "s1eq2": 4,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 5,
+        "s2eq2": 7,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": 4,
+        "s3eq2": 6,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 111,
@@ -1285,7 +2692,20 @@
       "grupo": "M5-A",
       "eq1": "Faizan Ravat & Ranim Ahmad",
       "eq2": "Hamdan & Huzeifah",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 6,
+        "s1eq2": 0,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 2,
+        "s2eq2": 6,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": 3,
+        "s3eq2": 6,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 112,
@@ -1295,7 +2715,20 @@
       "grupo": "M2-A",
       "eq1": "Luis Trigo de Morais & Ricky Kamissa",
       "eq2": "Shezane Arif & Razeen",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 4,
+        "s1eq2": 6,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 6,
+        "s2eq2": 1,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": 6,
+        "s3eq2": 4,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 113,
@@ -1305,7 +2738,20 @@
       "grupo": "M2-A",
       "eq1": "Frederico Jonet & Francisco Ferreira",
       "eq2": "Rui Lourenço & Francisco Pegado",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 6,
+        "s1eq2": 0,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 6,
+        "s2eq2": 0,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": null,
+        "s3eq2": null,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 114,
@@ -1315,7 +2761,20 @@
       "grupo": "F1-A",
       "eq1": "Stacey & Marlou",
       "eq2": "Cynthia Cavalcanti & Kátia Sousa",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 3,
+        "s1eq2": 6,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 5,
+        "s2eq2": 7,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": null,
+        "s3eq2": null,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 115,
@@ -1325,7 +2784,20 @@
       "grupo": "M3-C",
       "eq1": "Sharik Omar & Muhamad Mussagy",
       "eq2": "Keiss Chiraze & Saif Issa",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 6,
+        "s1eq2": 1,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 0,
+        "s2eq2": 6,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": 0,
+        "s3eq2": 6,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 116,
@@ -1335,7 +2807,20 @@
       "grupo": "F1-C",
       "eq1": "Anouk Fumane & Letícia",
       "eq2": "Diana Carvalho & Ilga João",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 0,
+        "s1eq2": 6,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 5,
+        "s2eq2": 7,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": null,
+        "s3eq2": null,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 117,
@@ -1345,7 +2830,20 @@
       "grupo": "M3-A",
       "eq1": "José Mestre & Koenraad",
       "eq2": "Dejan Petrovic & Isidro Simões",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 0,
+        "s1eq2": 6,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 6,
+        "s2eq2": 0,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": 6,
+        "s3eq2": 4,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 118,
@@ -1355,7 +2853,20 @@
       "grupo": "M4-B",
       "eq1": "Duncan & James",
       "eq2": "Andrea & Mikel Álvarez",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 6,
+        "s1eq2": 7,
+        "tb1eq1": 4,
+        "tb1eq2": 7,
+        "s2eq1": 4,
+        "s2eq2": 6,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": null,
+        "s3eq2": null,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 119,
@@ -1365,7 +2876,20 @@
       "grupo": "M3-D",
       "eq1": "Sueil & Ahmed Riaze",
       "eq2": "Gonçalo Marques & Pedro Gonçalves",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 7,
+        "s1eq2": 5,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 6,
+        "s2eq2": 2,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": null,
+        "s3eq2": null,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 120,
@@ -1375,7 +2899,20 @@
       "grupo": "M3-D",
       "eq1": "Alexandre Salazar & Pedro Gonzalez",
       "eq2": "Elves & Uweizy",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 2,
+        "s1eq2": 6,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 7,
+        "s2eq2": 5,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": 6,
+        "s3eq2": 4,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 121,
@@ -1385,7 +2922,20 @@
       "grupo": "M4-C",
       "eq1": "Shiraz & Kheizar",
       "eq2": "Fádhil Khan & Kelyo",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 6,
+        "s1eq2": 7,
+        "tb1eq1": 6,
+        "tb1eq2": 8,
+        "s2eq1": 1,
+        "s2eq2": 6,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": null,
+        "s3eq2": null,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 122,
@@ -1395,7 +2945,20 @@
       "grupo": "M1-A",
       "eq1": "Luis Antunes & Manuel Neto",
       "eq2": "Faizal & Sherial",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 1,
+        "s1eq2": 6,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 6,
+        "s2eq2": 2,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": 6,
+        "s3eq2": 4,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 123,
@@ -1405,7 +2968,20 @@
       "grupo": "F2-C",
       "eq1": "Saira Sale & Sónia Caravela",
       "eq2": "Dalila & Tatiana",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 6,
+        "s1eq2": 4,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 6,
+        "s2eq2": 1,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": null,
+        "s3eq2": null,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 124,
@@ -1415,7 +2991,20 @@
       "grupo": "M1-B",
       "eq1": "Karim Kanifani & Octávio Barros",
       "eq2": "Rehan Fayaz & Reehan M.",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 7,
+        "s1eq2": 5,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 4,
+        "s2eq2": 6,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": 7,
+        "s3eq2": 6,
+        "tb3eq1": 7,
+        "tb3eq2": 0
+      }
     },
     {
       "id": 125,
@@ -1425,7 +3014,20 @@
       "grupo": "M5-B",
       "eq1": "Filipe Ferreira & Paulo Baldaia",
       "eq2": "Rayhan & Arsheel",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 2,
+        "s1eq2": 6,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 0,
+        "s2eq2": 6,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": null,
+        "s3eq2": null,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 126,
@@ -1435,7 +3037,20 @@
       "grupo": "M5-B",
       "eq1": "Mizzy & Zayan Imitiaz",
       "eq2": "Faheem Aboobakar & Mikaeel Taibo",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 6,
+        "s1eq2": 2,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 7,
+        "s2eq2": 5,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": null,
+        "s3eq2": null,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 127,
@@ -1445,7 +3060,20 @@
       "grupo": "M1-C",
       "eq1": "Tayab & Badru Rosa",
       "eq2": "Fernando & Rui Rocha",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 6,
+        "s1eq2": 2,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 6,
+        "s2eq2": 7,
+        "tb2eq1": 8,
+        "tb2eq2": 10,
+        "s3eq1": 6,
+        "s3eq2": 1,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 128,
@@ -1455,7 +3083,20 @@
       "grupo": "M4-C",
       "eq1": "Paul & Xander",
       "eq2": "Reihan Adomo & Nabil Manga",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 6,
+        "s1eq2": 7,
+        "tb1eq1": 8,
+        "tb1eq2": 10,
+        "s2eq1": 4,
+        "s2eq2": 6,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": null,
+        "s3eq2": null,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 129,
@@ -1465,7 +3106,20 @@
       "grupo": "M4-A",
       "eq1": "Joshua & Noah",
       "eq2": "Pablo & Galo Rivera",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 1,
+        "s1eq2": 6,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 6,
+        "s2eq2": 7,
+        "tb2eq1": 3,
+        "tb2eq2": 7,
+        "s3eq1": null,
+        "s3eq2": null,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 130,
@@ -1475,7 +3129,20 @@
       "grupo": "M4-D",
       "eq1": "Muhammad Chona & Ibrahim Bilal",
       "eq2": "Luis Vaz & Sérgio Gomes",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 6,
+        "s1eq2": 0,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 1,
+        "s2eq2": 6,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": 7,
+        "s3eq2": 6,
+        "tb3eq1": 10,
+        "tb3eq2": 8
+      }
     },
     {
       "id": 131,
@@ -1485,7 +3152,20 @@
       "grupo": "M2-C",
       "eq1": "Felipe Moniz & José Cossa",
       "eq2": "Ricardo Oliveira & Vasco Silva",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 2,
+        "s1eq2": 6,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 6,
+        "s2eq2": 4,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": 2,
+        "s3eq2": 6,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 132,
@@ -1495,9 +3175,22 @@
       "grupo": "M5-A",
       "eq1": "Faizan Ravat & Ranim Ahmad",
       "eq2": "Alcy Heim & Gabriel Heim",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 4,
+        "s1eq2": 6,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 6,
+        "s2eq2": 1,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": 6,
+        "s3eq2": 4,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     }
   ],
   "fasefinal": {},
-  "_updated": "2026-06-03T19:43:30.994Z"
+  "_updated": "2026-06-04T04:19:49.582Z"
 }
