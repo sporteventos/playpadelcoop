@@ -3994,7 +3994,7 @@ function renderHorario() {
               <span style="color:var(--cinza-texto);margin:0 .2rem">vs</span>
               <span title="${escHtml(j.eq2)}">${escHtml(j.eq2.split('/')[0] || j.eq2)}</span>
             </div>
-            ${j.resultado ? `<div style="font-size:.68rem;color:var(--verde);margin-top:.2rem">${j.resultado}</div>` : ''}
+            ${j.resultado ? (() => { const {w1,w2} = matchSetsScore(j.resultado); return `<div style="font-size:.68rem;color:var(--verde);margin-top:.2rem">${w1}–${w2} sets</div>`; })() : ''}
           </div>`;
         }).join('')}
       `).join('')}
