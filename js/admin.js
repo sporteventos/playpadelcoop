@@ -1439,8 +1439,26 @@ function matchSetsScore(r) {
   return { w1, w2 };
 }
 
+// Returns all jogos (group stage + fase final) normalised to a common shape.
+function getAllJogosNormalized() {
+  const grupoJogos = getData('jogos');
+  const ff = getData('fasefinal') || {};
+  const ffJogos = Object.entries(ff).flatMap(([catId, catData]) =>
+    (catData?.jogos || []).map(j => ({
+      ...j,
+      grupo: catId + '-' + (j.fase === 'F' ? 'Final' : j.fase),
+      campo: j.campo || '—',
+      _isFF: true,
+      _cat: catId
+    }))
+  );
+  return [...grupoJogos, ...ffJogos]
+    .filter(j => j.data && j.hora)
+    .sort((a, b) => (a.data + a.hora).localeCompare(b.data + b.hora) || String(a.id).localeCompare(String(b.id)));
+}
+
 function renderJogos(filtroData = 'todos', filtroCampo = 'todos', filtroGrupo = 'todos') {
-  let jogos = getData('jogos');
+  let jogos = getAllJogosNormalized();
 
   if (filtroData !== 'todos')   jogos = jogos.filter(j => j.data === filtroData);
   if (filtroCampo !== 'todos')  jogos = jogos.filter(j => j.campo === filtroCampo);
@@ -1464,6 +1482,25 @@ function renderJogos(filtroData = 'todos', filtroCampo = 'todos', filtroGrupo = 
         })()
       : `<span class="badge badge-amarelo">Pendente</span>`;
 
+    const waMsg = j._isFF ? waMsgFFJogo(j, j._cat) : waMsgJogo(j);
+    const waBtns = [j.eq1, j.eq2].flatMap(team =>
+      team.split('&').map(n => n.trim()).map(n => {
+        const tel = getTelefone(n);
+        if (!tel) return '';
+        return `<a class="btn-icon" style="color:#25D366" href="${waLink(tel, waMsg)}" target="_blank" title="Notificar ${n}"><i class="ph ph-whatsapp-logo"></i></a>`;
+      })
+    ).filter(Boolean).join('');
+
+    const acoes = j._isFF
+      ? `<div style="display:flex;gap:0.3rem">
+          <button class="btn-icon btn-edit" title="Lançar resultado" onclick="ffAbrirResultado('${j.id}','${j._cat}')"><i class="ph ph-pencil-simple"></i></button>
+        </div>`
+      : `<div style="display:flex;gap:0.3rem">
+          <button class="btn-icon" style="color:var(--cinza-texto)" title="Editar data/hora" onclick="editarJogo(${j.id})"><i class="ph ph-clock"></i></button>
+          <button class="btn-icon btn-edit" title="Lançar resultado" onclick="abrirResultado(${j.id})"><i class="ph ph-pencil-simple"></i></button>
+          <button class="btn-icon btn-del"  title="Eliminar jogo"    onclick="deleteJogo(${j.id})"><i class="ph ph-trash"></i></button>
+        </div>`;
+
     return `
     <tr>
       <td class="td-mono" style="color:var(--cinza-texto)">${j.id}</td>
@@ -1471,18 +1508,12 @@ function renderJogos(filtroData = 'todos', filtroCampo = 'todos', filtroGrupo = 
       <td>${j.hora}</td>
       <td><span class="badge badge-cinza" style="font-size:0.65rem">${j.campo}</span></td>
       <td><span class="cat-pill cat-${cat}">${j.grupo}</span></td>
-      <td style="text-align:right">${j.eq1.split(' & ').join('<br>')}</td>
+      <td style="text-align:right">${(j.eq1||'').split(' & ').join('<br>')}</td>
       <td style="text-align:center;color:var(--cinza-texto);font-size:0.7rem">VS</td>
-      <td>${j.eq2.split(' & ').join('<br>')}</td>
+      <td>${(j.eq2||'').split(' & ').join('<br>')}</td>
       <td style="text-align:center">${resHtml}</td>
-      <td>
-        <div style="display:flex;gap:0.3rem">
-          <button class="btn-icon" style="color:var(--cinza-texto)" title="Editar data/hora" onclick="editarJogo(${j.id})"><i class="ph ph-clock"></i></button>
-          <button class="btn-icon btn-edit" title="Lançar resultado" onclick="abrirResultado(${j.id})"><i class="ph ph-pencil-simple"></i></button>
-          <button class="btn-icon btn-del"  title="Eliminar jogo"    onclick="deleteJogo(${j.id})"><i class="ph ph-trash"></i></button>
-        </div>
-      </td>
-      <td style="text-align:center">${getTeamWaBtns(j.eq1, j.eq2, j)}</td>
+      <td>${acoes}</td>
+      <td style="text-align:center">${waBtns}</td>
     </tr>`;
   }).join('');
 
@@ -1820,15 +1851,14 @@ function populateCampoSelects() {
 }
 
 function populateGrupoSelects() {
-  const grupos = [...new Set(getData('jogos').map(j => j.grupo))].sort();
+  const grupos = [...new Set(getAllJogosNormalized().map(j => j.grupo))].sort();
   const opts = `<option value="todos">Todos os grupos</option>` +
     grupos.map(g => `<option value="${g}">${g}</option>`).join('');
   document.querySelectorAll('.filter-grupo').forEach(s => { s.innerHTML = opts; });
 }
 
 function populateDataSelects() {
-  const jogos = getData('jogos');
-  const datas = [...new Set(jogos.map(j => j.data))].sort();
+  const datas = [...new Set(getAllJogosNormalized().map(j => j.data).filter(Boolean))].sort();
   const opts = `<option value="todos">Todas as datas</option>` +
     datas.map(d => `<option value="${d}">${formatDateFull(d)}</option>`).join('');
   document.querySelectorAll('.filter-data').forEach(s => { s.innerHTML = opts; });
