@@ -3990,9 +3990,9 @@ function renderHorario() {
             ${conflict ? '<span class="conflict-badge">CONFLITO</span>' : ''}
             <div style="font-size:.7rem;color:var(--cinza-texto);margin-bottom:.2rem">${j.grupo}</div>
             <div style="font-size:.75rem;font-weight:600;color:var(--branco);line-height:1.3">
-              <span title="${escHtml(j.eq1)}">${escHtml(j.eq1.split('/')[0] || j.eq1)}</span>
+              <span title="${escHtml(j.eq1)}">${j.eq1.split(' & ').map(escHtml).join('<br>')}</span>
               <span style="color:var(--cinza-texto);margin:0 .2rem">vs</span>
-              <span title="${escHtml(j.eq2)}">${escHtml(j.eq2.split('/')[0] || j.eq2)}</span>
+              <span title="${escHtml(j.eq2)}">${j.eq2.split(' & ').map(escHtml).join('<br>')}</span>
             </div>
             ${j.resultado ? (() => { const {w1,w2} = matchSetsScore(j.resultado); return `<div style="font-size:.68rem;color:var(--verde);margin-top:.2rem">${w1}–${w2} sets</div>`; })() : ''}
           </div>`;
