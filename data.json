@@ -6027,9 +6027,61 @@
       "categories": [],
       "createdAt": "2026-06-04T08:23:42.216Z",
       "createdBy": "admin"
+    },
+    {
+      "id": "mpzgv2i1eed46hx",
+      "username": "hzandamela",
+      "name": "Helio Zandamela",
+      "role": "admin",
+      "salt": "mpzgv2i1wqdr16zmpzgv2i17d3o9j9",
+      "passwordHash": "d5fe89ca",
+      "active": true,
+      "categories": [],
+      "createdAt": "2026-06-04T12:23:28.112Z",
+      "createdBy": "euamusse"
     }
   ],
   "auditlog": [
+    {
+      "id": "mpzgv2i95xjlqk7",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "CREATE_USER",
+      "target": "utilizadores",
+      "detail": "Criado \"hzandamela\" (admin)",
+      "ts": "2026-06-04T12:23:28.113Z"
+    },
+    {
+      "id": "mpzguh37zq68d74",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "LOGIN",
+      "target": "auth",
+      "detail": "Login: euamusse (admin)",
+      "ts": "2026-06-04T12:23:00.355Z"
+    },
+    {
+      "id": "mpzg1sgmqvs5wu5",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "LOGIN",
+      "target": "auth",
+      "detail": "Login: euamusse (admin)",
+      "ts": "2026-06-04T12:00:42.070Z"
+    },
+    {
+      "id": "mpzg1ev91vfbzjn",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "LOGOUT",
+      "target": "auth",
+      "detail": "Logout: euamusse",
+      "ts": "2026-06-04T12:00:24.453Z"
+    },
     {
       "id": "mpzf2c5mkygba82",
       "userId": "mpz8aq9sg983ubo",
@@ -7541,5 +7593,5 @@
       "ts": "2026-06-03T06:06:37.211Z"
     }
   ],
-  "_updated": "2026-06-04T11:39:23.479Z"
+  "_updated": "2026-06-04T12:23:47.263Z"
 }
