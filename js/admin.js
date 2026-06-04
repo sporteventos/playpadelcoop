@@ -2207,10 +2207,12 @@ document.addEventListener('DOMContentLoaded', async () => {
   Auth.ensureDefaults();
 
   if (loginForm) {
-    loginForm.addEventListener('submit', e => {
+    loginForm.addEventListener('submit', async e => {
       e.preventDefault();
       const u = document.getElementById('loginUser').value.trim();
       const p = document.getElementById('loginPass').value;
+      // Wait for remote data.json fetch to complete so synced users are available
+      if (window.ppDataReady) await window.ppDataReady;
       const result = doLogin(u, p);
       if (result.ok) {
         document.getElementById('loginOverlay').style.display = 'none';

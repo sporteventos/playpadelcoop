@@ -200,15 +200,17 @@ function ppFormatDate(d) {
   var KEYS = ['campos', 'categorias', 'grupos', 'jogadores', 'duplas', 'jogos', 'fasefinal', 'telefones', 'users'];
 
   // On admin: always fetch, but only overwrite local data if remote _updated is newer.
-  // This ensures externally-updated data.json is picked up while protecting unsaved local work.
+  // Exception: 'users' is always updated from remote to ensure synced users are available on login.
   if (window.location.pathname.includes('admin') && localStorage.getItem('pp_jogos') !== null) {
     window.ppDataReady = fetch('data.json?_=' + Date.now())
       .then(function (r) { return r.ok ? r.json() : Promise.reject('404'); })
       .then(function (d) {
+        // Always update users from remote so operator accounts created on another device are available
+        if (d['users'] !== undefined) ppSave('users', d['users']);
         var stored = localStorage.getItem('pp__updated') || '0';
         var remote = d._updated || '0';
         if (remote > stored) {
-          KEYS.forEach(function (k) { if (d[k] !== undefined) ppSave(k, d[k]); });
+          KEYS.forEach(function (k) { if (k !== 'users' && d[k] !== undefined) ppSave(k, d[k]); });
           localStorage.setItem('pp__updated', remote);
           window.dispatchEvent(new CustomEvent('pp:datasynced', { detail: d }));
         }
