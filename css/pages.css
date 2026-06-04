@@ -239,7 +239,7 @@ mark { background: rgba(245,197,24,.25); color: var(--amarelo); border-radius: 2
   display: flex; align-items: center; justify-content: center; gap: .5rem;
 }
 
-.standings-table-wrap { overflow-x: hidden; }
+.standings-table-wrap { overflow-x: auto; }
 .standings-table {
   width: 100%; border-collapse: collapse; font-size: .82rem; table-layout: fixed;
 }

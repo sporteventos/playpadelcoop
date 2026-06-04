@@ -332,10 +332,8 @@ document.addEventListener('DOMContentLoaded', () => {
               <th title="Jogos disputados">J</th>
               <th title="Vitórias">V</th>
               <th title="Derrotas">D</th>
-              <th title="Sets ganhos">S+</th>
-              <th title="Sets perdidos">S-</th>
-              <th title="Jogos ganhos">G+</th>
-              <th title="Jogos perdidos">G-</th>
+              <th title="Sets (ganhos-perdidos)">S</th>
+              <th title="Jogos/games (ganhos-perdidos)">G</th>
               <th title="Pontos">Pts</th>
             </tr></thead>
             <tbody>`;
@@ -360,10 +358,8 @@ document.addEventListener('DOMContentLoaded', () => {
             <td>${r.j}</td>
             <td class="td-win">${r.v}</td>
             <td class="td-loss">${r.d}</td>
-            <td>${r.sv}</td>
-            <td>${r.sd}</td>
-            <td class="td-games-win">${r.gv}</td>
-            <td class="td-games-loss">${r.gd}</td>
+            <td>${r.sv}-${r.sd}</td>
+            <td class="td-games-win">${r.gv}-${r.gd}</td>
             <td class="td-pts">${pts}</td>
           </tr>`;
         });
