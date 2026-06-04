@@ -3989,10 +3989,10 @@ function renderHorario() {
           return `<div class="schedule-slot has-game${conflict?' has-conflict':''}">
             ${conflict ? '<span class="conflict-badge">CONFLITO</span>' : ''}
             <div style="font-size:.7rem;color:var(--cinza-texto);margin-bottom:.2rem">${j.grupo}</div>
-            <div style="font-size:.75rem;font-weight:600;color:var(--branco);line-height:1.3">
-              <span title="${escHtml(j.eq1)}">${j.eq1.split(' & ').map(escHtml).join('<br>')}</span>
-              <span style="color:var(--cinza-texto);margin:0 .2rem">vs</span>
-              <span title="${escHtml(j.eq2)}">${j.eq2.split(' & ').map(escHtml).join('<br>')}</span>
+            <div style="display:flex;align-items:center;gap:.3rem;font-size:.75rem;font-weight:600;color:var(--branco);line-height:1.4">
+              <div style="flex:1;text-align:right">${j.eq1.split(' & ').map(escHtml).join('<br>')}</div>
+              <div style="color:var(--cinza-texto);font-size:.65rem;flex-shrink:0">vs</div>
+              <div style="flex:1">${j.eq2.split(' & ').map(escHtml).join('<br>')}</div>
             </div>
             ${j.resultado ? (() => { const {w1,w2} = matchSetsScore(j.resultado); return `<div style="font-size:.68rem;color:var(--verde);margin-top:.2rem">${w1}–${w2} sets</div>`; })() : ''}
           </div>`;
