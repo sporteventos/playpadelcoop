@@ -259,7 +259,7 @@ mark { background: rgba(245,197,24,.25); color: var(--amarelo); border-radius: 2
 .td-loss { color: var(--vermelho); font-weight: 700; }
 .td-games-win  { color: rgba(0,195,123,.6); font-size: .72rem; }
 .td-games-loss { color: rgba(255,74,74,.5); font-size: .72rem; }
-.td-pts  { color: var(--amarelo); font-weight: 800; font-size: .84rem; }
+.td-pts  { color: var(--amarelo); font-weight: 800; font-size: .84rem; text-align: center; padding-left: .55rem; border-left: 1px solid rgba(255,255,255,.06); }
 
 /* ---- Jogadores ---- */
 .player-grid {
