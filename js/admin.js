@@ -4347,20 +4347,21 @@ function renderHorario() {
   const dayJogos = allJogos.filter(j => j.data === selDate && (!selCampo || j.campo === selCampo));
   if (!dayJogos.length) return el.innerHTML = `<p style="color:var(--cinza-texto);padding:1rem">Sem jogos para os filtros seleccionados.</p>`;
 
-  // Build slot list: 1-hour intervals, one series per minute-offset used by games.
-  // e.g. if games are at :30 → 06:30,07:30,...23:30 (no :00 gaps in between).
-  // If games use both :00 and :30, both series are shown (mixed-offset day).
-  const gameMinutes = [...new Set(dayJogos.map(j => j.hora).filter(Boolean).map(h => h.split(':')[1]))];
-  if (!gameMinutes.length) gameMinutes.push('00');
-  const CLUB_SLOTS = [];
-  gameMinutes.forEach(min => {
-    for (let h = 6; h <= 23; h++) {
-      const slot = `${String(h).padStart(2,'0')}:${min}`;
-      if (slot <= '23:30') CLUB_SLOTS.push(slot);
-    }
+  // Determine dominant minute offset (majority vote) — prevents 1 outlier game from
+  // adding a whole second series of slots (e.g. one :00 game on a :30 day).
+  const minuteCounts = {};
+  dayJogos.forEach(j => {
+    if (!j.hora) return;
+    const min = j.hora.split(':')[1];
+    minuteCounts[min] = (minuteCounts[min] || 0) + 1;
   });
-  CLUB_SLOTS.sort();
-  // Merge with any game times outside normal hours (edge cases)
+  const dominantMin = Object.entries(minuteCounts).sort((a, b) => b[1] - a[1])[0]?.[0] || '00';
+  const CLUB_SLOTS = [];
+  for (let h = 6; h <= 23; h++) {
+    const slot = `${String(h).padStart(2,'0')}:${dominantMin}`;
+    if (slot <= '23:30') CLUB_SLOTS.push(slot);
+  }
+  // Always include actual game times (even if they don't match dominant minute)
   const times = [...new Set([...CLUB_SLOTS, ...dayJogos.map(j => j.hora).filter(Boolean)])].sort();
   const activeCampos = selCampo ? [selCampo] : [...new Set(dayJogos.map(j => j.campo))].sort();
 
