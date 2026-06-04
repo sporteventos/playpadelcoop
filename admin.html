@@ -963,8 +963,36 @@
     </div>
     <div class="modal-body">
 
-      <!-- Info do jogo -->
+      <!-- Info read-only (FF games) -->
       <div style="font-size:0.75rem;color:var(--cinza-texto);margin-bottom:0.75rem;letter-spacing:0.04em" id="resMatchInfo"></div>
+
+      <!-- Edição horário + duplas (só jogos de grupo) -->
+      <div id="resEditFields" style="display:none;margin-bottom:.6rem">
+        <div class="form-row" style="margin-bottom:.45rem">
+          <div class="form-group-modal" style="flex:1">
+            <label class="form-label" for="resData">Data</label>
+            <input class="form-input" type="date" id="resData" min="2026-06-05" max="2026-06-14"/>
+          </div>
+          <div class="form-group-modal" style="flex:1">
+            <label class="form-label" for="resHora">Hora</label>
+            <input class="form-input" type="time" id="resHora" step="1800"/>
+          </div>
+          <div class="form-group-modal" style="flex:2">
+            <label class="form-label" for="resCampo">Campo</label>
+            <select class="form-select" id="resCampo"></select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group-modal" style="flex:1">
+            <label class="form-label" for="resEq1Sel">Equipa 1</label>
+            <select class="form-select" id="resEq1Sel" onchange="resUpdateTeamName(1)"></select>
+          </div>
+          <div class="form-group-modal" style="flex:1">
+            <label class="form-label" for="resEq2Sel">Equipa 2</label>
+            <select class="form-select" id="resEq2Sel" onchange="resUpdateTeamName(2)"></select>
+          </div>
+        </div>
+      </div>
 
       <!-- Preview das equipas -->
       <div class="result-match-preview">

@@ -1728,8 +1728,7 @@ function renderJogos(filtroData = 'todos', filtroCampo = 'todos', filtroGrupo = 
           ${fotoBtn}
         </div>`
       : `<div style="display:flex;gap:0.3rem">
-          <button class="btn-icon" style="color:var(--cinza-texto)" title="Editar data/hora" onclick="editarJogo(${j.id})"><i class="ph ph-clock"></i></button>
-          <button class="btn-icon btn-edit" title="Lançar resultado" onclick="abrirResultado(${j.id})"><i class="ph ph-pencil-simple"></i></button>
+          <button class="btn-icon btn-edit" title="Editar jogo / lançar resultado" onclick="abrirResultado(${j.id})"><i class="ph ph-pencil-simple"></i></button>
           <button class="btn-icon btn-del"  title="Eliminar jogo"    onclick="deleteJogo(${j.id})"><i class="ph ph-trash"></i></button>
           ${fotoBtn}
         </div>`;
@@ -1842,7 +1841,33 @@ function renderResultados(filtroData = 'todos') {
 
 // ---------- LANÇAR RESULTADO ----------
 
-// Returns 1 or 2 if set n has a valid winner, else 0
+function _populateResEqSelects(grupoId) {
+  const duplas = getDuplasByGrupo(grupoId);
+  const jogs   = getData('jogadores') || [];
+  const opts = '<option value="">— Seleccionar dupla —</option>' + duplas.map(d => {
+    const j1 = jogs.find(j => j.id === d.j1);
+    const j2 = jogs.find(j => j.id === d.j2);
+    return `<option value="${d.id}">${escHtml((j1?.nome||'?') + ' & ' + (j2?.nome||'?'))}</option>`;
+  }).join('');
+  document.getElementById('resEq1Sel').innerHTML = opts;
+  document.getElementById('resEq2Sel').innerHTML = opts;
+}
+
+window.resUpdateTeamName = function(n) {
+  const sel = document.getElementById(`resEq${n}Sel`);
+  const el  = document.getElementById(`resTeam${n}`);
+  if (!sel || !el) return;
+  const duplaId = sel.value;
+  let label = '';
+  if (duplaId) {
+    const d = getDupla(duplaId);
+    if (d) label = getDuplaLabel(d);
+  }
+  el.innerHTML = (label || 'A Definir').split(' & ').map(escHtml).join('<br>');
+  el.dataset.equipa = label || 'A Definir & A Definir';
+};
+
+
 function getSetWinner(n) {
   const e1v = document.getElementById(`resS${n}E1`)?.value ?? '';
   const e2v = document.getElementById(`resS${n}E2`)?.value ?? '';
@@ -1948,11 +1973,30 @@ window.abrirResultado = function(jogoId) {
   if (!j) return;
 
   APP.editingId = jogoId;
-  document.getElementById('resMatchInfo').textContent = `${formatDate(j.data)} · ${j.hora} · ${j.campo} · ${j.grupo}`;
-  const _t1 = document.getElementById('resTeam1');
-  const _t2 = document.getElementById('resTeam2');
-  _t1.innerHTML = j.eq1.split(' & ').map(escHtml).join('<br>'); _t1.dataset.equipa = j.eq1;
-  _t2.innerHTML = j.eq2.split(' & ').map(escHtml).join('<br>'); _t2.dataset.equipa = j.eq2;
+
+  // Show editable schedule + duplas fields (group stage only)
+  document.getElementById('resMatchInfo').style.display = 'none';
+  const editFields = document.getElementById('resEditFields');
+  editFields.style.display = '';
+
+  // Populate campo select
+  const campos = getData('campos') || [];
+  document.getElementById('resCampo').innerHTML =
+    campos.map(c => `<option value="${c.nome}">${c.nome}</option>`).join('');
+
+  // Populate eq selects for this grupo
+  _populateResEqSelects(j.grupo || '');
+
+  // Fill current values
+  document.getElementById('resData').value  = j.data  || '';
+  document.getElementById('resHora').value  = j.hora  || '';
+  document.getElementById('resCampo').value = j.campo || '';
+  document.getElementById('resEq1Sel').value = _eqStrToDuplaId(j.eq1 || '', j.grupo || '');
+  document.getElementById('resEq2Sel').value = _eqStrToDuplaId(j.eq2 || '', j.grupo || '');
+
+  // Update team name preview
+  resUpdateTeamName(1);
+  resUpdateTeamName(2);
 
   // Reset all inputs and visibility
   [1, 2, 3].forEach(n => clearSetInputs(n));
@@ -2045,11 +2089,25 @@ function salvarResultado() {
     return;
   }
 
-  // Fase de grupos
+  // Fase de grupos — also save schedule + team changes if edit fields are visible
   const jogos = getData('jogos');
   const idx = jogos.findIndex(j => j.id === APP.editingId);
   if (idx < 0) return;
   jogos[idx].resultado = resultado;
+  // Save schedule + duplas edits (edit fields are shown for group games)
+  const resEditFields = document.getElementById('resEditFields');
+  if (resEditFields && resEditFields.style.display !== 'none') {
+    const newData  = document.getElementById('resData')?.value;
+    const newHora  = document.getElementById('resHora')?.value;
+    const newCampo = document.getElementById('resCampo')?.value;
+    const eq1Id    = document.getElementById('resEq1Sel')?.value;
+    const eq2Id    = document.getElementById('resEq2Sel')?.value;
+    if (newData)  jogos[idx].data  = newData;
+    if (newHora)  jogos[idx].hora  = newHora;
+    if (newCampo) jogos[idx].campo = newCampo;
+    if (eq1Id)    jogos[idx].eq1   = getDuplaLabel(eq1Id);
+    if (eq2Id)    jogos[idx].eq2   = getDuplaLabel(eq2Id);
+  }
   setData('jogos', jogos);
   closeModal('modalResultado');
   renderView(APP.currentView);
@@ -2946,7 +3004,11 @@ window.ffAbrirResultado = function(jogoId, catId) {
   APP.ffEditing = { catId, jogoId };
   APP.editingId = null;
   const fLabel = j.fase === 'F' ? 'Final' : j.fase === 'SF' ? `Meia-Final ${j.num}` : `Quarto de Final ${j.num}`;
-  document.getElementById('resMatchInfo').textContent = `${catId} · ${fLabel}`;
+  // FF games: show read-only info, hide editable fields
+  const miEl = document.getElementById('resMatchInfo');
+  miEl.textContent = `${catId} · ${fLabel}`;
+  miEl.style.display = '';
+  document.getElementById('resEditFields').style.display = 'none';
   const _ff1 = document.getElementById('resTeam1');
   const _ff2 = document.getElementById('resTeam2');
   _ff1.innerHTML = (j.eq1||'?').split(' & ').map(escHtml).join('<br>'); _ff1.dataset.equipa = j.eq1||'';
