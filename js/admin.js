@@ -4252,19 +4252,32 @@ function renderHorario() {
   const jogos  = getData('jogos');
   const campos = getData('campos').map(c => c.nome);
 
+  // Merge fase-final games so their dates appear in the filter
+  const ffData = ffLoad();
+  const ffJogos = Object.entries(ffData).flatMap(([catId, catData]) =>
+    (catData?.jogos || []).filter(j => j.data).map(j => ({
+      ...j,
+      grupo: `${catId} ${j.fase}${j.num}`,
+      campo: j.campo || 'Fase Final',
+      _isFaseFinal: true,
+    }))
+  );
+  const allJogos = [...jogos, ...ffJogos];
+
   // Repopulate filters on every render, preserving current selection
   const dataFilter  = document.getElementById('horarioDataFilter');
   const campoFilter = document.getElementById('horarioCampoFilter');
   if (dataFilter) {
     const saved = dataFilter.value;
-    const dates = [...new Set(jogos.map(j => j.data).filter(Boolean))].sort();
+    const dates = [...new Set(allJogos.map(j => j.data).filter(Boolean))].sort();
     dataFilter.innerHTML = dates.map(d => `<option value="${d}">${formatDate(d)}</option>`).join('');
     if (saved) dataFilter.value = saved;
   }
   if (campoFilter) {
     const saved = campoFilter.value;
+    const ffCampo = ffJogos.length ? ['Fase Final'] : [];
     campoFilter.innerHTML = '<option value="">Todos os campos</option>' +
-      campos.map(c => `<option value="${c}">${c}</option>`).join('');
+      [...campos, ...ffCampo].map(c => `<option value="${c}">${c}</option>`).join('');
     if (saved) campoFilter.value = saved;
   }
 
@@ -4272,13 +4285,13 @@ function renderHorario() {
   const selCampo = campoFilter?.value || '';
   if (!selDate) return el.innerHTML = `<p style="color:var(--cinza-texto);padding:1rem">Sem jogos com data atribuída.</p>`;
 
-  const dayJogos = jogos.filter(j => j.data === selDate && (!selCampo || j.campo === selCampo));
+  const dayJogos = allJogos.filter(j => j.data === selDate && (!selCampo || j.campo === selCampo));
   if (!dayJogos.length) return el.innerHTML = `<p style="color:var(--cinza-texto);padding:1rem">Sem jogos para os filtros seleccionados.</p>`;
 
   const times  = [...new Set(dayJogos.map(j => j.hora))].sort();
   const activeCampos = selCampo ? [selCampo] : [...new Set(dayJogos.map(j => j.campo))].sort();
 
-  // Build player ? slots map to detect conflicts
+  // Build player slots map to detect conflicts (skip TBD slots)
   const playerSlots = {};
   dayJogos.forEach(j => {
     [j.eq1, j.eq2].forEach(pair => {
@@ -4308,13 +4321,15 @@ function renderHorario() {
           const j = dayJogos.find(x => x.hora === t && x.campo === campo);
           if (!j) return `<div class="schedule-slot"></div>`;
           const conflict = hasConflict(j);
+          const e1 = j.eq1 || 'A definir';
+          const e2 = j.eq2 || 'A definir';
           return `<div class="schedule-slot has-game${conflict?' has-conflict':''}">
             ${conflict ? '<span class="conflict-badge">CONFLITO</span>' : ''}
             <div style="font-size:.7rem;color:var(--cinza-texto);margin-bottom:.2rem">${j.grupo}</div>
             <div style="display:flex;align-items:center;gap:.3rem;font-size:.75rem;font-weight:600;color:var(--branco);line-height:1.4">
-              <div style="flex:1;text-align:right">${j.eq1.split(' & ').map(escHtml).join('<br>')}</div>
+              <div style="flex:1;text-align:right">${e1.split(' & ').map(escHtml).join('<br>')}</div>
               <div style="color:var(--cinza-texto);font-size:.65rem;flex-shrink:0">vs</div>
-              <div style="flex:1">${j.eq2.split(' & ').map(escHtml).join('<br>')}</div>
+              <div style="flex:1">${e2.split(' & ').map(escHtml).join('<br>')}</div>
             </div>
             ${j.resultado ? (() => { const {w1,w2} = matchSetsScore(j.resultado); return `<div style="font-size:.68rem;color:var(--verde);margin-top:.2rem">${w1}–${w2} sets</div>`; })() : ''}
           </div>`;
