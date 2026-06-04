@@ -357,7 +357,15 @@
           <div class="table-wrap">
             <table>
               <thead>
-                <tr><th>#</th><th>Nome</th><th>Grupo(s)</th><th>Jogos</th><th>Resultados</th><th>Telefone</th><th></th></tr>
+                <tr>
+                  <th>#</th>
+                  <th id="thJogNome" onclick="sortJogadores('nome')" style="cursor:pointer;user-select:none">Nome</th>
+                  <th id="thJogGrupos" onclick="sortJogadores('grupos')" style="cursor:pointer;user-select:none">Grupo(s)</th>
+                  <th id="thJogJogos" onclick="sortJogadores('jogos')" style="cursor:pointer;user-select:none">Jogos</th>
+                  <th id="thJogRes" onclick="sortJogadores('resultados')" style="cursor:pointer;user-select:none">Resultados</th>
+                  <th>Telefone</th>
+                  <th></th>
+                </tr>
               </thead>
               <tbody id="jogadoresBody"></tbody>
             </table>
@@ -393,7 +401,14 @@
           <div class="table-wrap">
             <table>
               <thead>
-                <tr><th>#</th><th>Jogador 1</th><th>Jogador 2</th><th>Grupo</th><th>Jogos</th><th></th></tr>
+                <tr>
+                  <th>#</th>
+                  <th id="thDupJ1" onclick="sortDuplas('j1')" style="cursor:pointer;user-select:none">Jogador 1</th>
+                  <th id="thDupJ2" onclick="sortDuplas('j2')" style="cursor:pointer;user-select:none">Jogador 2</th>
+                  <th id="thDupGrupo" onclick="sortDuplas('grupo')" style="cursor:pointer;user-select:none">Grupo</th>
+                  <th id="thDupJogos" onclick="sortDuplas('jogos')" style="cursor:pointer;user-select:none">Jogos</th>
+                  <th></th>
+                </tr>
               </thead>
               <tbody id="duplasBody"></tbody>
             </table>

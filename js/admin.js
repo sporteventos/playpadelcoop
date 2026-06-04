@@ -7,7 +7,9 @@
 const APP = {
   currentView: 'dashboard',
   editingId: null,
-  ffEditing: null,   // { catId, jogoId } when editing a knockout game
+  ffEditing: null,            // { catId, jogoId } when editing a knockout game
+  jogadoresSort: { col: 'nome', dir: 'asc' },
+  duplasSort:    { col: null,   dir: 'asc' },
 };
 
 // DEFAULTS, ppGet, ppSave, ppLoad, ppFormatDate, ppWeekday
@@ -1243,6 +1245,26 @@ window.deleteGruposAll = function(catId) {
 };
 
 // ---------- JOGADORES ----------
+window.sortJogadores = function(col) {
+  if (APP.jogadoresSort.col === col) {
+    APP.jogadoresSort.dir = APP.jogadoresSort.dir === 'asc' ? 'desc' : 'asc';
+  } else {
+    APP.jogadoresSort.col = col;
+    APP.jogadoresSort.dir = 'asc';
+  }
+  renderJogadores(document.getElementById('jogadoresSearch')?.value || '');
+};
+
+window.sortDuplas = function(col) {
+  if (APP.duplasSort.col === col) {
+    APP.duplasSort.dir = APP.duplasSort.dir === 'asc' ? 'desc' : 'asc';
+  } else {
+    APP.duplasSort.col = col;
+    APP.duplasSort.dir = 'asc';
+  }
+  renderDuplas(document.getElementById('duplasSearch')?.value || '');
+};
+
 function renderJogadores(filter = '') {
   const jogadores = getData('jogadores') || [];
   const duplas    = getData('duplas') || [];
@@ -1250,7 +1272,7 @@ function renderJogadores(filter = '') {
 
   let lista;
   if (jogadores.length > 0) {
-    lista = [...jogadores].sort((a, b) => a.nome.localeCompare(b.nome));
+    lista = [...jogadores];
   } else {
     // Fallback: extract from games
     const set = new Set();
@@ -1261,10 +1283,8 @@ function renderJogadores(filter = '') {
     lista = [...set].sort().map(nome => ({ id: null, nome, tel: getTelefone(nome) }));
   }
 
-  if (filter) lista = lista.filter(j => j.nome.toLowerCase().includes(filter.toLowerCase()));
-
-  const tbody = document.getElementById('jogadoresBody');
-  tbody.innerHTML = lista.map((jog, i) => {
+  // Enrich for sorting/display
+  lista = lista.map(jog => {
     const nome = jog.nome;
     let grupos;
     if (jog.id && duplas.length > 0) {
@@ -1281,7 +1301,41 @@ function renderJogadores(filter = '') {
       const p2 = j.eq2.split('&').map(n => n.trim());
       return p1.includes(nome) || p2.includes(nome);
     });
-    const comRes  = jogosJogador.filter(j => j.resultado).length;
+    const comRes = jogosJogador.filter(j => j.resultado).length;
+    return { ...jog, _grupos: grupos, _jogos: jogosJogador, _res: comRes };
+  });
+
+  if (filter) lista = lista.filter(j => j.nome.toLowerCase().includes(filter.toLowerCase()));
+
+  // Sort
+  const s = APP.jogadoresSort;
+  lista.sort((a, b) => {
+    const dir = s.dir === 'asc' ? 1 : -1;
+    switch (s.col) {
+      case 'nome':       return dir * a.nome.localeCompare(b.nome);
+      case 'grupos':     return dir * ((a._grupos[0] || '').localeCompare(b._grupos[0] || ''));
+      case 'jogos':      return dir * (a._jogos.length - b._jogos.length);
+      case 'resultados': return dir * (a._res - b._res);
+      default:           return a.nome.localeCompare(b.nome);
+    }
+  });
+
+  // Update sort header indicators
+  const _si = col => APP.jogadoresSort.col === col
+    ? (APP.jogadoresSort.dir === 'asc' ? ' <span style="color:var(--verde)">↑</span>' : ' <span style="color:var(--verde)">↓</span>')
+    : ' <span style="opacity:.2;font-size:.65em">⇅</span>';
+  const _th = (id, label, col) => { const el = document.getElementById(id); if (el) el.innerHTML = label + _si(col); };
+  _th('thJogNome',   'Nome',       'nome');
+  _th('thJogGrupos', 'Grupo(s)',   'grupos');
+  _th('thJogJogos',  'Jogos',      'jogos');
+  _th('thJogRes',    'Resultados', 'resultados');
+
+  const tbody = document.getElementById('jogadoresBody');
+  tbody.innerHTML = lista.map((jog, i) => {
+    const nome         = jog.nome;
+    const grupos       = jog._grupos;
+    const jogosJogador = jog._jogos;
+    const comRes       = jog._res;
     const nomeEnc = encodeURIComponent(nome);
     const tel = jog.tel || getTelefone(nome);
     const confMsg = encodeURIComponent('\u{1F3BE} Ol\u00e1 ' + nome + '!\n\nA tua inscri\u00e7\u00e3o no torneio *Play Padel \u00b7 2.\u00ba Anivers\u00e1rio* est\u00e1 confirmada. Bom jogo! \ud83c\udfc6');
@@ -1516,29 +1570,59 @@ function renderDuplas(filter = '') {
       uniqueGrupos.map(g => `<option value="${g}"${g === grupoSel ? ' selected' : ''}>${g}</option>`).join('');
   }
 
-  let lista = [...duplas];
-  if (grupoSel) lista = lista.filter(d => d.grupo === grupoSel);
-  if (filter) {
-    const q = filter.toLowerCase();
-    lista = lista.filter(d => {
-      const j1 = jogs.find(j => j.id === d.j1);
-      const j2 = jogs.find(j => j.id === d.j2);
-      return (j1?.nome || '').toLowerCase().includes(q) ||
-             (j2?.nome || '').toLowerCase().includes(q) ||
-             d.grupo.toLowerCase().includes(q);
-    });
-  }
-
-  const tbody = document.getElementById('duplasBody');
-  if (!tbody) return;
-  tbody.innerHTML = lista.map((d, i) => {
+  // Enrich with resolved names and jogos count
+  let lista = duplas.map(d => {
     const j1 = jogs.find(j => j.id === d.j1);
     const j2 = jogs.find(j => j.id === d.j2);
     const n1 = j1?.nome || d.j1 || '?';
     const n2 = j2?.nome || d.j2 || '?';
-    const cat = d.grupo.split('-')[0];
     const eqStr = `${n1} & ${n2}`;
     const nJogos = jogos.filter(j => j.eq1 === eqStr || j.eq2 === eqStr).length;
+    return { ...d, _n1: n1, _n2: n2, _nJogos: nJogos };
+  });
+
+  if (grupoSel) lista = lista.filter(d => d.grupo === grupoSel);
+  if (filter) {
+    const q = filter.toLowerCase();
+    lista = lista.filter(d =>
+      d._n1.toLowerCase().includes(q) ||
+      d._n2.toLowerCase().includes(q) ||
+      d.grupo.toLowerCase().includes(q)
+    );
+  }
+
+  // Sort
+  const s = APP.duplasSort;
+  if (s.col) {
+    lista.sort((a, b) => {
+      const dir = s.dir === 'asc' ? 1 : -1;
+      switch (s.col) {
+        case 'j1':    return dir * a._n1.localeCompare(b._n1);
+        case 'j2':    return dir * a._n2.localeCompare(b._n2);
+        case 'grupo': return dir * a.grupo.localeCompare(b.grupo);
+        case 'jogos': return dir * (a._nJogos - b._nJogos);
+      }
+      return 0;
+    });
+  }
+
+  // Update sort header indicators
+  const _si = col => APP.duplasSort.col === col
+    ? (APP.duplasSort.dir === 'asc' ? ' <span style="color:var(--verde)">↑</span>' : ' <span style="color:var(--verde)">↓</span>')
+    : ' <span style="opacity:.2;font-size:.65em">⇅</span>';
+  const _th = (id, label, col) => { const el = document.getElementById(id); if (el) el.innerHTML = label + _si(col); };
+  _th('thDupJ1',    'Jogador 1', 'j1');
+  _th('thDupJ2',    'Jogador 2', 'j2');
+  _th('thDupGrupo', 'Grupo',     'grupo');
+  _th('thDupJogos', 'Jogos',     'jogos');
+
+  const tbody = document.getElementById('duplasBody');
+  if (!tbody) return;
+  tbody.innerHTML = lista.map((d, i) => {
+    const n1     = d._n1;
+    const n2     = d._n2;
+    const nJogos = d._nJogos;
+    const cat = d.grupo.split('-')[0];
     return '<tr>' +
       `<td style="color:var(--cinza-texto);font-size:.75rem">${i+1}</td>` +
       `<td><strong>${escHtml(n1)}</strong></td>` +
