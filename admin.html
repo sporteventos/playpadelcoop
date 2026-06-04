@@ -470,9 +470,6 @@
 
         <div class="toolbar">
           <select class="form-select filter-data" id="filtroDataRes" style="min-width:170px"></select>
-          <button class="btn btn-ghost" onclick="gerarPanfletoResultados()" style="color:var(--amarelo);border-color:rgba(245,197,24,.3);font-size:.75rem" title="Gerar imagem PNG dos resultados">
-            <i class="ph ph-image"></i> Gerar Panfleto
-          </button>
         </div>
 
         <div class="panel">
@@ -517,6 +514,15 @@
           .bk-card-vs{font-size:.54rem;color:var(--cinza-texto);text-align:center;opacity:.38;font-weight:700}
           .bk-card-score{font-size:.7rem;color:var(--verde);font-weight:600;text-align:center;padding:.12rem .4rem;background:rgba(0,195,123,.08);border-radius:4px;margin-top:.05rem}
           .bk-card.is-final .bk-card-score{color:var(--amarelo);background:rgba(245,197,24,.08)}
+          /* Champion column */
+          .bk-round-champion{min-width:220px;max-width:280px}
+          .champion-rhead{color:var(--amarelo)!important;border-bottom-color:rgba(245,197,24,.3)!important;text-align:center}
+          .champion-col-body{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.9rem;padding:1.5rem 1rem;background:linear-gradient(160deg,rgba(245,197,24,.12),rgba(0,195,123,.07));border:1px solid rgba(245,197,24,.32);border-radius:12px;box-shadow:0 0 40px rgba(245,197,24,.09);text-align:center}
+          .champion-col-trophy{font-size:3.2rem;line-height:1}
+          .champion-col-name{font-size:1.55rem;font-weight:900;color:var(--branco);line-height:1.15}
+          .champion-col-grup{font-size:.78rem;color:var(--cinza-texto)}
+          .bk-round-final-connector{position:relative}
+          .bk-round-final-connector::before{content:'';position:absolute;top:50%;left:-32px;width:32px;height:2px;background:rgba(245,197,24,.3);pointer-events:none}
         </style>
         <div class="page-header">
           <div class="page-title-wrap">
@@ -524,6 +530,9 @@
             <h1 class="page-title">Fase Final</h1>
             <p class="page-desc">Quartos de final, meias-finais e finais por categoria</p>
           </div>
+          <button class="btn btn-ghost" onclick="gerarPanfletoCampeoes()" style="color:var(--amarelo);border-color:rgba(245,197,24,.3)" title="Gerar panfleto PNG com todos os campeões">
+            <i class="ph ph-trophy"></i> Panfleto Campeões
+          </button>
         </div>
         <div id="ffCatTabs" class="toolbar" style="gap:.4rem;flex-wrap:wrap"></div>
         <div id="ffBracket" style="margin-top:1rem"></div>

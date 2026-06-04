@@ -271,7 +271,7 @@ window.gerarPanfleto = function() {
     badge(CX.campo, y + (ROW_H - 30) / 2, 156, 30, 6, cc + '28', cc, j.campo, 13);
     badge(CX.grupo, y + (ROW_H - 30) / 2,  80, 30, 6, gc + '28', gc, j.grupo, 13);
 
-    ctx.fillStyle = '#F0F7F3';
+    ctx.fillStyle = '#F0F7F3';    // will be overridden below if result exists
     drawTeamName(j.eq1, CX.eq1r, y, 228, 'right');
 
     ctx.fillStyle = '#4A6058';
@@ -280,18 +280,25 @@ window.gerarPanfleto = function() {
     ctx.fillText('VS', CX.vs, cy);
     ctx.textAlign = 'left';
 
-    ctx.fillStyle = '#F0F7F3';
-
     if (j.resultado) {
       const { w1, w2 } = matchSetsScore(j.resultado);
+      const winner = w1 > w2 ? 1 : 2;
       const r = j.resultado;
-      const sets = [[r.s1eq1,r.s1eq2],[r.s2eq1,r.s2eq2],[r.s3eq1,r.s3eq2]]
+      const setsStr = [[r.s1eq1,r.s1eq2],[r.s2eq1,r.s2eq2],[r.s3eq1,r.s3eq2]]
         .filter(([a]) => a != null).map(([a, b]) => `${a}-${b}`).join(' ');
+      // Re-draw eq1 with winner colour
+      ctx.fillStyle = winner === 1 ? '#39FF8F' : '#8AA396';
+      drawTeamName(j.eq1, CX.eq1r, y, 228, 'right');
+      ctx.fillStyle = winner === 2 ? '#39FF8F' : '#8AA396';
       drawTeamName(j.eq2, CX.eq2, y, 220, 'left');
-      ctx.font = 'bold 16px Arial, sans-serif';
-      ctx.fillStyle = w1 > w2 ? '#FF4A4A' : '#39FF8F';
+      // Match score (big) + sets (small) at right edge
       ctx.textAlign = 'right';
-      ctx.fillText(sets, W - PAD, cy);
+      ctx.font = 'bold 18px "Courier New", monospace';
+      ctx.fillStyle = '#39FF8F';
+      ctx.fillText(`${w1}-${w2}`, W - PAD, cy - 8);
+      ctx.font = '13px Arial, sans-serif';
+      ctx.fillStyle = '#4A6058';
+      ctx.fillText(setsStr, W - PAD, cy + 10);
       ctx.textAlign = 'left';
     } else {
       drawTeamName(j.eq2, CX.eq2, y, 250, 'left');
@@ -2228,6 +2235,26 @@ function allGroupGamesDone(catId) {
 // ---- Admin View ----
 let ffCurrentCat = 'M1';
 
+function ffChampionColHtml(catId) {
+  const catData = ffLoad()[catId];
+  if (!catData?.generated) return '';
+  const final = catData.jogos.find(j => j.fase === 'F');
+  if (!final || !final.resultado) return '';
+  const w = ffGetWinner(final.resultado);
+  const name  = w === 1 ? final.eq1      : final.eq2;
+  const grupo = w === 1 ? final.eq1grupo : final.eq2grupo;
+  if (!name) return '';
+  const nameFmt = name.split(' & ').map(n => escHtml(n)).join('<br>');
+  return `<div class="bk-round bk-round-champion bk-round-final-connector">
+    <div class="bk-rhead champion-rhead">Campeão · ${escHtml(catId)}</div>
+    <div class="champion-col-body">
+      <div class="champion-col-trophy">🏆</div>
+      <div class="champion-col-name">${nameFmt}</div>
+      ${grupo ? `<div class="champion-col-grup">${escHtml(grupo)}</div>` : ''}
+    </div>
+  </div>`;
+}
+
 function renderFaseFinal() {
   const ff   = ffLoad();
   const cats = ['M1', 'M2', 'F1', 'F2', 'M3', 'M4', 'M5'];
@@ -2277,6 +2304,7 @@ function renderFaseFinal() {
           <div class="bk-rhead">${phaseLabel[fase]}</div>
           ${bracketCols[i]}
         </div>`).join('')}
+      ${ffChampionColHtml(ffCurrentCat)}
     </div>
     <div style="margin-top:1.25rem;display:flex;gap:.5rem;flex-wrap:wrap">
       <button class="btn btn-ghost btn-sm" style="color:var(--amarelo);border-color:rgba(245,197,24,.3)" onclick="ffGerarAleatorios('${ffCurrentCat}')">
@@ -3111,6 +3139,122 @@ window.gerarPanfletoClassificacoes = function() {
 
   const a = document.createElement('a');
   a.download = `classificacoes-${catId}.png`;
+  a.href = canvas.toDataURL('image/png');
+  a.click();
+  toast('Panfleto gerado!', 'success');
+};
+
+// ============================================
+//  PANFLETO CAMPEÕES
+// ============================================
+window.gerarPanfletoCampeoes = function() {
+  const ff   = ppLoad('fasefinal') || {};
+  const CATS = ['M1', 'M2', 'F1', 'F2', 'M3', 'M4', 'M5'];
+  const CAT_CLR = { M1:'#4A9EFF', M2:'#00C37B', M3:'#39FF8F', M4:'#F5C518', M5:'#FF9A3C', F1:'#FF6BB0', F2:'#C97BFF' };
+
+  const champions = [];
+  CATS.forEach(cat => {
+    const catData = ff[cat];
+    if (!catData?.generated) return;
+    const final = catData.jogos.find(j => j.fase === 'F');
+    if (!final || !final.resultado) return;
+    const w = ffGetWinner(final.resultado);
+    const name  = w === 1 ? final.eq1      : final.eq2;
+    const grupo = w === 1 ? final.eq1grupo : final.eq2grupo;
+    if (name) champions.push({ cat, name, grupo });
+  });
+
+  if (!champions.length) return toast('Sem campeões definidos ainda.', 'error');
+
+  const W = 1080, PAD = 50;
+  const HEAD_H = 210, ROW_H = 140, FOOT_H = 64;
+  const H = HEAD_H + champions.length * ROW_H + FOOT_H;
+
+  const canvas = document.createElement('canvas');
+  canvas.width = W; canvas.height = H;
+  const ctx = canvas.getContext('2d');
+
+  // Background
+  ctx.fillStyle = '#0A0F0D'; ctx.fillRect(0, 0, W, H);
+
+  // Top bar (gold gradient)
+  const grad = ctx.createLinearGradient(0, 0, W, 0);
+  grad.addColorStop(0, '#F5C518'); grad.addColorStop(0.5, '#00C37B'); grad.addColorStop(1, '#F5C518');
+  ctx.fillStyle = grad; ctx.fillRect(0, 0, W, 10);
+
+  // Header
+  ctx.fillStyle = '#00C37B';
+  ctx.font = 'bold 52px Arial, sans-serif';
+  ctx.fillText('PLAY PADEL', PAD, 72);
+  ctx.fillStyle = '#F0F7F3';
+  ctx.font = '30px Arial, sans-serif';
+  ctx.fillText('TORNEIO ANIVERSÁRIO 2026', PAD, 112);
+  ctx.fillStyle = '#F5C518';
+  ctx.font = 'bold 28px Arial, sans-serif';
+  ctx.fillText('🏆  CAMPEÕES', PAD, 155);
+  ctx.fillStyle = 'rgba(245,197,24,.3)'; ctx.fillRect(PAD, 172, W - PAD * 2, 1);
+
+  // Champion rows
+  champions.forEach((c, i) => {
+    const y = HEAD_H + i * ROW_H;
+    const cc = CAT_CLR[c.cat] || '#8AA396';
+
+    ctx.fillStyle = i % 2 === 0 ? '#111815' : '#0D1410';
+    ctx.fillRect(0, y, W, ROW_H);
+    // Left accent
+    ctx.fillStyle = cc; ctx.fillRect(0, y + 1, 8, ROW_H - 2);
+
+    // Category pill
+    const pillW = 90, pillH = 42, pillX = PAD + 10, pillY = y + (ROW_H - pillH) / 2;
+    ctx.fillStyle = cc + '28';
+    ctx.beginPath(); ctx.roundRect(pillX, pillY, pillW, pillH, 8); ctx.fill();
+    ctx.fillStyle = cc;
+    ctx.font = 'bold 24px Arial, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(c.cat, pillX + pillW / 2, pillY + pillH * 0.70);
+    ctx.textAlign = 'left';
+
+    // Trophy
+    ctx.font = '42px Arial, sans-serif';
+    ctx.fillText('🏆', PAD + 120, y + ROW_H / 2 + 16);
+
+    // Champion name (two lines if pair)
+    const parts = c.name.split(' & ');
+    ctx.font = 'bold 28px Arial, sans-serif';
+    if (parts.length === 2) {
+      ctx.fillStyle = '#F5C518';
+      ctx.fillText(parts[0], PAD + 192, y + ROW_H * 0.38);
+      ctx.fillStyle = '#F0F7F3';
+      ctx.fillText(parts[1], PAD + 192, y + ROW_H * 0.72);
+    } else {
+      ctx.fillStyle = '#F5C518';
+      ctx.fillText(c.name, PAD + 192, y + ROW_H / 2 + 10);
+    }
+
+    // Group badge (right side)
+    if (c.grupo) {
+      const gW = 82, gH = 30, gX = W - PAD - gW, gY = y + (ROW_H - gH) / 2;
+      ctx.fillStyle = cc + '28';
+      ctx.beginPath(); ctx.roundRect(gX, gY, gW, gH, 6); ctx.fill();
+      ctx.fillStyle = cc;
+      ctx.font = 'bold 14px Arial, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText(c.grupo, gX + gW / 2, gY + gH * 0.72);
+      ctx.textAlign = 'left';
+    }
+  });
+
+  // Footer
+  const fy = H - FOOT_H;
+  ctx.fillStyle = '#111815'; ctx.fillRect(0, fy, W, FOOT_H);
+  ctx.fillStyle = 'rgba(245,197,24,.2)'; ctx.fillRect(0, fy, W, 1);
+  ctx.fillStyle = '#4A6058'; ctx.font = '17px Arial, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('Play Padel  ·  Torneio Aniversário 2026', W / 2, fy + 38);
+  ctx.textAlign = 'left';
+
+  const a = document.createElement('a');
+  a.download = 'campeoes.png';
   a.href = canvas.toDataURL('image/png');
   a.click();
   toast('Panfleto gerado!', 'success');
