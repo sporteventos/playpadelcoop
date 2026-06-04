@@ -659,11 +659,11 @@ function _buildFotoFlyer(img) {
     const catClr = CAT_CLR[cat] || '#8AA396';
     const bw = ctx.measureText(jogo.grupo.toUpperCase()).width + 36;
     ctx.fillStyle = catClr + '28';
-    ctx.beginPath(); ctx.roundRect(PAD, bandY + 66, bw, 36, 6); ctx.fill();
+    ctx.beginPath(); ctx.roundRect(textX, bandY + 66, bw, 36, 6); ctx.fill();
     ctx.fillStyle = catClr;
     ctx.font = 'bold 17px Arial, sans-serif';
     ctx.textAlign = 'center';
-    ctx.fillText(jogo.grupo.toUpperCase(), PAD + bw / 2, bandY + 89);
+    ctx.fillText(jogo.grupo.toUpperCase(), textX + bw / 2, bandY + 89);
     ctx.textAlign = 'left';
 
     // Date / campo
@@ -672,7 +672,7 @@ function _buildFotoFlyer(img) {
     const dateStr = (jogo.data ? ppFormatDate(jogo.data) : '') +
       (jogo.hora ? '  ·  ' + jogo.hora : '') +
       (jogo.campo && jogo.campo !== '—' ? '  ·  ' + jogo.campo : '');
-    ctx.fillText(dateStr, PAD + bw + 18, bandY + 89);
+    ctx.fillText(dateStr, textX + bw + 18, bandY + 89);
 
     // Teams + score
     const scoreY = bandY + 200;
