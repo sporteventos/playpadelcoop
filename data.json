@@ -4327,6 +4327,86 @@
   ],
   "auditlog": [
     {
+      "id": "mpzisim50ye8y1i",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "RESET_BRACKET",
+      "target": "fasefinal",
+      "detail": "Bracket resetado: M5",
+      "ts": "2026-06-04T13:17:28.253Z"
+    },
+    {
+      "id": "mpzisim4pdfcglk",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "RESET_BRACKET",
+      "target": "fasefinal",
+      "detail": "Bracket resetado: M3",
+      "ts": "2026-06-04T13:17:28.252Z"
+    },
+    {
+      "id": "mpzisim409j175g",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "RESET_BRACKET",
+      "target": "fasefinal",
+      "detail": "Bracket resetado: M4",
+      "ts": "2026-06-04T13:17:28.252Z"
+    },
+    {
+      "id": "mpzisim216tug9y",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "RESET_BRACKET",
+      "target": "fasefinal",
+      "detail": "Bracket resetado: F2",
+      "ts": "2026-06-04T13:17:28.250Z"
+    },
+    {
+      "id": "mpzisilxnsvqn4k",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "RESET_BRACKET",
+      "target": "fasefinal",
+      "detail": "Bracket resetado: M2",
+      "ts": "2026-06-04T13:17:28.245Z"
+    },
+    {
+      "id": "mpzisilxxai90bg",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "RESET_BRACKET",
+      "target": "fasefinal",
+      "detail": "Bracket resetado: F1",
+      "ts": "2026-06-04T13:17:28.245Z"
+    },
+    {
+      "id": "mpzisilwduh7koe",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "RESET_BRACKET",
+      "target": "fasefinal",
+      "detail": "Bracket resetado: M1",
+      "ts": "2026-06-04T13:17:28.244Z"
+    },
+    {
+      "id": "mpzisdhgskhtm2d",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "LOGIN",
+      "target": "auth",
+      "detail": "Login: euamusse (admin)",
+      "ts": "2026-06-04T13:17:21.604Z"
+    },
+    {
       "id": "mpzimsbjb2nh4pk",
       "userId": "mpz46x5c2zupza0",
       "username": "bgaspar",
@@ -4335,6 +4415,16 @@
       "target": "auth",
       "detail": "Login: bgaspar (operator)",
       "ts": "2026-06-04T13:13:00.895Z"
+    },
+    {
+      "id": "mpzigch7vi3gig7",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "LOGOUT",
+      "target": "auth",
+      "detail": "Logout: euamusse",
+      "ts": "2026-06-04T13:08:00.428Z"
     },
     {
       "id": "mpzgv2i95xjlqk7",
@@ -5887,5 +5977,5 @@
       "ts": "2026-06-03T06:06:37.211Z"
     }
   ],
-  "_updated": "2026-06-04T13:31:28.289Z"
+  "_updated": "2026-06-04T13:33:08.422Z"
 }
