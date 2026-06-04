@@ -377,11 +377,6 @@
       "tel": ""
     },
     {
-      "id": "j41",
-      "nome": "Faizaan Ravat",
-      "tel": ""
-    },
-    {
       "id": "j42",
       "nome": "Faizal",
       "tel": ""
@@ -6034,5 +6029,1157 @@
       "createdBy": "admin"
     }
   ],
-  "_updated": "2026-06-04T09:39:50.027Z"
+  "auditlog": [
+    {
+      "id": "mpzb5z8ik54ingc",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "DELETE_JOGADOR",
+      "target": "jogadores",
+      "detail": "\"Faizaan Ravat\" eliminado de 0 jogo(s)",
+      "ts": "2026-06-04T09:43:59.394Z"
+    },
+    {
+      "id": "mpzaew9d3q6fcir",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "GENERATE_BRACKET",
+      "target": "fasefinal",
+      "detail": "Bracket gerado: M5",
+      "ts": "2026-06-04T09:22:55.825Z"
+    },
+    {
+      "id": "mpzaew9bgwikx9d",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "GENERATE_BRACKET",
+      "target": "fasefinal",
+      "detail": "Bracket gerado: M4",
+      "ts": "2026-06-04T09:22:55.823Z"
+    },
+    {
+      "id": "mpzaew9aaasepus",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "GENERATE_BRACKET",
+      "target": "fasefinal",
+      "detail": "Bracket gerado: M3",
+      "ts": "2026-06-04T09:22:55.822Z"
+    },
+    {
+      "id": "mpzaew980ayuome",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "GENERATE_BRACKET",
+      "target": "fasefinal",
+      "detail": "Bracket gerado: F2",
+      "ts": "2026-06-04T09:22:55.820Z"
+    },
+    {
+      "id": "mpzaew973jch1jc",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "GENERATE_BRACKET",
+      "target": "fasefinal",
+      "detail": "Bracket gerado: F1",
+      "ts": "2026-06-04T09:22:55.819Z"
+    },
+    {
+      "id": "mpzaew96tds75jq",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "GENERATE_BRACKET",
+      "target": "fasefinal",
+      "detail": "Bracket gerado: M2",
+      "ts": "2026-06-04T09:22:55.818Z"
+    },
+    {
+      "id": "mpzaew9585mwvls",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "GENERATE_BRACKET",
+      "target": "fasefinal",
+      "detail": "Bracket gerado: M1",
+      "ts": "2026-06-04T09:22:55.817Z"
+    },
+    {
+      "id": "mpzab0vs2z5cbee",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "RESET_BRACKET",
+      "target": "fasefinal",
+      "detail": "Bracket resetado: M2",
+      "ts": "2026-06-04T09:19:55.192Z"
+    },
+    {
+      "id": "mpzaarkvjcxih3o",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "RESET_BRACKET",
+      "target": "fasefinal",
+      "detail": "Bracket resetado: M1",
+      "ts": "2026-06-04T09:19:43.135Z"
+    },
+    {
+      "id": "mpzaaoxdxkh48qo",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "GENERATE_BRACKET",
+      "target": "fasefinal",
+      "detail": "Bracket gerado: M1",
+      "ts": "2026-06-04T09:19:39.697Z"
+    },
+    {
+      "id": "mpzaakl1mzw3747",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "GENERATE_BRACKET",
+      "target": "fasefinal",
+      "detail": "Bracket gerado: M2",
+      "ts": "2026-06-04T09:19:34.069Z"
+    },
+    {
+      "id": "mpz9zadjwb6eucy",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "LOGIN",
+      "target": "auth",
+      "detail": "Login: admin (admin)",
+      "ts": "2026-06-04T09:10:47.623Z"
+    },
+    {
+      "id": "mpz9z4potnrzbgy",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "LOGOUT",
+      "target": "auth",
+      "detail": "Logout: euamusse",
+      "ts": "2026-06-04T09:10:40.284Z"
+    },
+    {
+      "id": "mpz8d9dnqe5t3b7",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "LOGIN",
+      "target": "auth",
+      "detail": "Login: euamusse (admin)",
+      "ts": "2026-06-04T08:25:40.283Z"
+    },
+    {
+      "id": "mpz8d23h03jp8v7",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "LOGOUT",
+      "target": "auth",
+      "detail": "Logout: admin",
+      "ts": "2026-06-04T08:25:30.845Z"
+    },
+    {
+      "id": "mpz8cq600yeg6rr",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "RESET_BRACKET",
+      "target": "fasefinal",
+      "detail": "Bracket resetado: M5",
+      "ts": "2026-06-04T08:25:15.384Z"
+    },
+    {
+      "id": "mpz8cq5wczsv85o",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "RESET_BRACKET",
+      "target": "fasefinal",
+      "detail": "Bracket resetado: M4",
+      "ts": "2026-06-04T08:25:15.380Z"
+    },
+    {
+      "id": "mpz8cq5wqczxaae",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "RESET_BRACKET",
+      "target": "fasefinal",
+      "detail": "Bracket resetado: M3",
+      "ts": "2026-06-04T08:25:15.380Z"
+    },
+    {
+      "id": "mpz8cq5v5wedkam",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "RESET_BRACKET",
+      "target": "fasefinal",
+      "detail": "Bracket resetado: F2",
+      "ts": "2026-06-04T08:25:15.379Z"
+    },
+    {
+      "id": "mpz8cq5u0hj7zxk",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "RESET_BRACKET",
+      "target": "fasefinal",
+      "detail": "Bracket resetado: F1",
+      "ts": "2026-06-04T08:25:15.378Z"
+    },
+    {
+      "id": "mpz8cq5tdqn13aj",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "RESET_BRACKET",
+      "target": "fasefinal",
+      "detail": "Bracket resetado: M2",
+      "ts": "2026-06-04T08:25:15.377Z"
+    },
+    {
+      "id": "mpz8aqa10r6afii",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "CREATE_USER",
+      "target": "utilizadores",
+      "detail": "Criado \"euamusse\" (admin)",
+      "ts": "2026-06-04T08:23:42.217Z"
+    },
+    {
+      "id": "mpz89ujwsnga1ap",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "LOGIN",
+      "target": "auth",
+      "detail": "Login: admin (admin)",
+      "ts": "2026-06-04T08:23:01.101Z"
+    },
+    {
+      "id": "mpz879xrnulqat0",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "LOGOUT",
+      "target": "auth",
+      "detail": "Logout: admin",
+      "ts": "2026-06-04T08:21:01.071Z"
+    },
+    {
+      "id": "mpz854k9my78i43",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "SAVE_RESULT",
+      "target": "resultados",
+      "detail": "Resultado guardado: jogo #83",
+      "ts": "2026-06-04T08:19:20.793Z"
+    },
+    {
+      "id": "mpz7xh95cuawxgu",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "LOGIN",
+      "target": "auth",
+      "detail": "Login: admin (admin)",
+      "ts": "2026-06-04T08:13:23.993Z"
+    },
+    {
+      "id": "mpz7w8grpdjrk1h",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "LOGOUT",
+      "target": "auth",
+      "detail": "Logout: admin",
+      "ts": "2026-06-04T08:12:25.947Z"
+    },
+    {
+      "id": "mpz7rzm01vqpbaz",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "RESET_BRACKET",
+      "target": "fasefinal",
+      "detail": "Bracket resetado: M1",
+      "ts": "2026-06-04T08:09:07.848Z"
+    },
+    {
+      "id": "mpz7goebfqorh3s",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "DELETE_DUPLA",
+      "target": "duplas",
+      "detail": "\"Faizaan Ravat & Ranim Ahmad\" eliminada de M5-A",
+      "ts": "2026-06-04T08:00:20.099Z"
+    },
+    {
+      "id": "mpz6ad4olvzy448",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "LOGIN",
+      "target": "auth",
+      "detail": "Login: admin (admin)",
+      "ts": "2026-06-04T07:27:25.944Z"
+    },
+    {
+      "id": "mpz63mg2nfx797o",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "LOGOUT",
+      "target": "auth",
+      "detail": "Logout: admin",
+      "ts": "2026-06-04T07:22:11.426Z"
+    },
+    {
+      "id": "mpz5mtf5x88gvz0",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "GENERATE_BRACKET",
+      "target": "fasefinal",
+      "detail": "Bracket gerado: M5",
+      "ts": "2026-06-04T07:09:07.313Z"
+    },
+    {
+      "id": "mpz5mtf4rd0q33u",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "GENERATE_BRACKET",
+      "target": "fasefinal",
+      "detail": "Bracket gerado: M4",
+      "ts": "2026-06-04T07:09:07.312Z"
+    },
+    {
+      "id": "mpz5mtf3ot0v4tz",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "GENERATE_BRACKET",
+      "target": "fasefinal",
+      "detail": "Bracket gerado: M3",
+      "ts": "2026-06-04T07:09:07.311Z"
+    },
+    {
+      "id": "mpz5mtf1a23vb9r",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "GENERATE_BRACKET",
+      "target": "fasefinal",
+      "detail": "Bracket gerado: F2",
+      "ts": "2026-06-04T07:09:07.309Z"
+    },
+    {
+      "id": "mpz5mtf05nsg945",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "GENERATE_BRACKET",
+      "target": "fasefinal",
+      "detail": "Bracket gerado: F1",
+      "ts": "2026-06-04T07:09:07.308Z"
+    },
+    {
+      "id": "mpz5mtezttiu2fi",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "GENERATE_BRACKET",
+      "target": "fasefinal",
+      "detail": "Bracket gerado: M2",
+      "ts": "2026-06-04T07:09:07.307Z"
+    },
+    {
+      "id": "mpz5mtex0sitlws",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "GENERATE_BRACKET",
+      "target": "fasefinal",
+      "detail": "Bracket gerado: M1",
+      "ts": "2026-06-04T07:09:07.305Z"
+    },
+    {
+      "id": "mpz5moh4wgsxl2i",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "RESET_BRACKET",
+      "target": "fasefinal",
+      "detail": "Bracket resetado: M5",
+      "ts": "2026-06-04T07:09:00.904Z"
+    },
+    {
+      "id": "mpz5moh3atzzely",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "RESET_BRACKET",
+      "target": "fasefinal",
+      "detail": "Bracket resetado: M4",
+      "ts": "2026-06-04T07:09:00.903Z"
+    },
+    {
+      "id": "mpz5moh3yh1u7e0",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "RESET_BRACKET",
+      "target": "fasefinal",
+      "detail": "Bracket resetado: M3",
+      "ts": "2026-06-04T07:09:00.903Z"
+    },
+    {
+      "id": "mpz5moh3z8uepzg",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "RESET_BRACKET",
+      "target": "fasefinal",
+      "detail": "Bracket resetado: F2",
+      "ts": "2026-06-04T07:09:00.903Z"
+    },
+    {
+      "id": "mpz5moh2e5p54sm",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "RESET_BRACKET",
+      "target": "fasefinal",
+      "detail": "Bracket resetado: F1",
+      "ts": "2026-06-04T07:09:00.902Z"
+    },
+    {
+      "id": "mpz5moh2m79xab7",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "RESET_BRACKET",
+      "target": "fasefinal",
+      "detail": "Bracket resetado: M2",
+      "ts": "2026-06-04T07:09:00.902Z"
+    },
+    {
+      "id": "mpz5mogzp4r8hzl",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "RESET_BRACKET",
+      "target": "fasefinal",
+      "detail": "Bracket resetado: M1",
+      "ts": "2026-06-04T07:09:00.900Z"
+    },
+    {
+      "id": "mpz5bucf7sirhk1",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "GENERATE_BRACKET",
+      "target": "fasefinal",
+      "detail": "Bracket gerado: M5",
+      "ts": "2026-06-04T07:00:35.295Z"
+    },
+    {
+      "id": "mpz5buceee991lx",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "GENERATE_BRACKET",
+      "target": "fasefinal",
+      "detail": "Bracket gerado: M4",
+      "ts": "2026-06-04T07:00:35.294Z"
+    },
+    {
+      "id": "mpz5bucd83olmup",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "GENERATE_BRACKET",
+      "target": "fasefinal",
+      "detail": "Bracket gerado: M3",
+      "ts": "2026-06-04T07:00:35.293Z"
+    },
+    {
+      "id": "mpz5bucactuwual",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "GENERATE_BRACKET",
+      "target": "fasefinal",
+      "detail": "Bracket gerado: F2",
+      "ts": "2026-06-04T07:00:35.290Z"
+    },
+    {
+      "id": "mpz5buc9hbplhzo",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "GENERATE_BRACKET",
+      "target": "fasefinal",
+      "detail": "Bracket gerado: F1",
+      "ts": "2026-06-04T07:00:35.289Z"
+    },
+    {
+      "id": "mpz5buc8g1jvelt",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "GENERATE_BRACKET",
+      "target": "fasefinal",
+      "detail": "Bracket gerado: M2",
+      "ts": "2026-06-04T07:00:35.288Z"
+    },
+    {
+      "id": "mpz5buc8z6bzq1p",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "GENERATE_BRACKET",
+      "target": "fasefinal",
+      "detail": "Bracket gerado: M1",
+      "ts": "2026-06-04T07:00:35.288Z"
+    },
+    {
+      "id": "mpz5b922zhm0m5l",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "RESET_BRACKET",
+      "target": "fasefinal",
+      "detail": "Bracket resetado: M1",
+      "ts": "2026-06-04T07:00:07.707Z"
+    },
+    {
+      "id": "mpz52owwd7cyzrr",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "GENERATE_BRACKET",
+      "target": "fasefinal",
+      "detail": "Bracket gerado: M1",
+      "ts": "2026-06-04T06:53:28.352Z"
+    },
+    {
+      "id": "mpz4ry57zvg0vb8",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "RESET_BRACKET",
+      "target": "fasefinal",
+      "detail": "Bracket resetado: M5",
+      "ts": "2026-06-04T06:45:07.099Z"
+    },
+    {
+      "id": "mpz4rvxm081kza4",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "RESET_BRACKET",
+      "target": "fasefinal",
+      "detail": "Bracket resetado: M4",
+      "ts": "2026-06-04T06:45:04.234Z"
+    },
+    {
+      "id": "mpz4rtx7cxdpj2y",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "RESET_BRACKET",
+      "target": "fasefinal",
+      "detail": "Bracket resetado: M3",
+      "ts": "2026-06-04T06:45:01.627Z"
+    },
+    {
+      "id": "mpz4rroriwcmoiw",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "RESET_BRACKET",
+      "target": "fasefinal",
+      "detail": "Bracket resetado: F2",
+      "ts": "2026-06-04T06:44:58.731Z"
+    },
+    {
+      "id": "mpz4rpkcrqbbbu8",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "RESET_BRACKET",
+      "target": "fasefinal",
+      "detail": "Bracket resetado: F1",
+      "ts": "2026-06-04T06:44:55.980Z"
+    },
+    {
+      "id": "mpz4rn3c9uuth5q",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "RESET_BRACKET",
+      "target": "fasefinal",
+      "detail": "Bracket resetado: M2",
+      "ts": "2026-06-04T06:44:52.776Z"
+    },
+    {
+      "id": "mpz4rjjupmtiffu",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "RESET_BRACKET",
+      "target": "fasefinal",
+      "detail": "Bracket resetado: M1",
+      "ts": "2026-06-04T06:44:48.186Z"
+    },
+    {
+      "id": "mpz4hqwwuizqz0u",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "LOGIN",
+      "target": "auth",
+      "detail": "Login: admin (admin)",
+      "ts": "2026-06-04T06:37:11.168Z"
+    },
+    {
+      "id": "mpz4fs47ktsjz2m",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "LOGOUT",
+      "target": "auth",
+      "detail": "Logout: admin",
+      "ts": "2026-06-04T06:35:39.415Z"
+    },
+    {
+      "id": "mpz46x5morujjrh",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "CREATE_USER",
+      "target": "utilizadores",
+      "detail": "Criado \"bgaspar\" (operator)",
+      "ts": "2026-06-04T06:28:46.042Z"
+    },
+    {
+      "id": "mpz46l4baxh1wnx",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "DELETE_USER",
+      "target": "utilizadores",
+      "detail": "Eliminado \"bgaspar\"",
+      "ts": "2026-06-04T06:28:30.443Z"
+    },
+    {
+      "id": "mpz45qp1vzek33e",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "UPDATE_USER",
+      "target": "utilizadores",
+      "detail": "Actualizado \"bgaspar\"",
+      "ts": "2026-06-04T06:27:51.013Z"
+    },
+    {
+      "id": "mpz2twrq42qbpol",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "LOGIN",
+      "target": "auth",
+      "detail": "Login: admin (admin)",
+      "ts": "2026-06-04T05:50:39.398Z"
+    },
+    {
+      "id": "mpz2tr2f1ewpdt9",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "LOGOUT",
+      "target": "auth",
+      "detail": "Logout: admin",
+      "ts": "2026-06-04T05:50:32.007Z"
+    },
+    {
+      "id": "mpz2pe0bo4d1288",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "UPDATE_USER",
+      "target": "utilizadores",
+      "detail": "Actualizado \"Bruno Gaspar\"",
+      "ts": "2026-06-04T05:47:08.459Z"
+    },
+    {
+      "id": "mpz18pga0pvygzm",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "GENERATE_BRACKET",
+      "target": "fasefinal",
+      "detail": "Bracket gerado: M5",
+      "ts": "2026-06-04T05:06:10.522Z"
+    },
+    {
+      "id": "mpz18n5lmxow1mt",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "GENERATE_BRACKET",
+      "target": "fasefinal",
+      "detail": "Bracket gerado: M4",
+      "ts": "2026-06-04T05:06:07.545Z"
+    },
+    {
+      "id": "mpz18kb3oxfiz5t",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "GENERATE_BRACKET",
+      "target": "fasefinal",
+      "detail": "Bracket gerado: M3",
+      "ts": "2026-06-04T05:06:03.855Z"
+    },
+    {
+      "id": "mpz18gxvg5udf0q",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "GENERATE_BRACKET",
+      "target": "fasefinal",
+      "detail": "Bracket gerado: F2",
+      "ts": "2026-06-04T05:05:59.491Z"
+    },
+    {
+      "id": "mpz18e47w0zcl47",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "GENERATE_BRACKET",
+      "target": "fasefinal",
+      "detail": "Bracket gerado: F1",
+      "ts": "2026-06-04T05:05:55.832Z"
+    },
+    {
+      "id": "mpz188gome8uy5t",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "GENERATE_BRACKET",
+      "target": "fasefinal",
+      "detail": "Bracket gerado: M2",
+      "ts": "2026-06-04T05:05:48.504Z"
+    },
+    {
+      "id": "mpz1803b5utagjb",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "GENERATE_BRACKET",
+      "target": "fasefinal",
+      "detail": "Bracket gerado: M1",
+      "ts": "2026-06-04T05:05:37.655Z"
+    },
+    {
+      "id": "mpz17vqc3b7y6xd",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "LOGIN",
+      "target": "auth",
+      "detail": "Login: admin (admin)",
+      "ts": "2026-06-04T05:05:32.004Z"
+    },
+    {
+      "id": "mpz16vy61ukkb1k",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "LOGOUT",
+      "target": "auth",
+      "detail": "Logout: admin",
+      "ts": "2026-06-04T05:04:45.631Z"
+    },
+    {
+      "id": "mpyzl0lym3r3n09",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "LOGIN",
+      "target": "auth",
+      "detail": "Login: admin (admin)",
+      "ts": "2026-06-04T04:19:45.622Z"
+    },
+    {
+      "id": "mpyhpep4ty85kjc",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "LOGOUT",
+      "target": "auth",
+      "detail": "Logout: admin",
+      "ts": "2026-06-03T19:59:17.416Z"
+    },
+    {
+      "id": "mpyhakdvoq11j59",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "DELETE_JOGADOR",
+      "target": "jogadores",
+      "detail": "\"Faheem Adomo\" eliminado de 1 jogo(s)",
+      "ts": "2026-06-03T19:47:44.947Z"
+    },
+    {
+      "id": "mpyg3ivaes5kufm",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "LOGIN",
+      "target": "auth",
+      "detail": "Login: admin (admin)",
+      "ts": "2026-06-03T19:14:16.774Z"
+    },
+    {
+      "id": "mpyf2fpriehaqwu",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "LOGOUT",
+      "target": "auth",
+      "detail": "Logout: admin",
+      "ts": "2026-06-03T18:45:26.415Z"
+    },
+    {
+      "id": "mpyez03dgvt61ta",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "RESET_BRACKET",
+      "target": "fasefinal",
+      "detail": "Bracket resetado: M1",
+      "ts": "2026-06-03T18:42:46.201Z"
+    },
+    {
+      "id": "mpyey1obbqr0hi3",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "GENERATE_BRACKET",
+      "target": "fasefinal",
+      "detail": "Bracket gerado: M1",
+      "ts": "2026-06-03T18:42:01.595Z"
+    },
+    {
+      "id": "mpyenww2rkz3vo2",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "RENAME_JOGADOR",
+      "target": "jogadores",
+      "detail": "\"Glória\" → \"Glória Baltazar\"",
+      "ts": "2026-06-03T18:34:08.834Z"
+    },
+    {
+      "id": "mpydgjv3ja206nc",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "LOGIN",
+      "target": "auth",
+      "detail": "Login: admin (admin)",
+      "ts": "2026-06-03T18:00:25.743Z"
+    },
+    {
+      "id": "mpydez27nac4t0m",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "LOGOUT",
+      "target": "auth",
+      "detail": "Logout: admin",
+      "ts": "2026-06-03T17:59:12.127Z"
+    },
+    {
+      "id": "mpyc6jxstlclxuf",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "RESET_BRACKET",
+      "target": "fasefinal",
+      "detail": "Bracket resetado: M2",
+      "ts": "2026-06-03T17:24:39.664Z"
+    },
+    {
+      "id": "mpyc6h45m6lsyvr",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "RESET_BRACKET",
+      "target": "fasefinal",
+      "detail": "Bracket resetado: M1",
+      "ts": "2026-06-03T17:24:36.005Z"
+    },
+    {
+      "id": "mpybt3q6fiztfhq",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "LOGIN",
+      "target": "auth",
+      "detail": "Login: admin (admin)",
+      "ts": "2026-06-03T17:14:12.126Z"
+    },
+    {
+      "id": "mpybazxlaaz41kb",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "LOGOUT",
+      "target": "auth",
+      "detail": "Logout: admin",
+      "ts": "2026-06-03T17:00:07.401Z"
+    },
+    {
+      "id": "mpy9xm5wzrqg9b8",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "LOGOUT",
+      "target": "auth",
+      "detail": "Logout: admin",
+      "ts": "2026-06-03T16:21:43.412Z"
+    },
+    {
+      "id": "mpy9p3x36bmlab8",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "LOGIN",
+      "target": "auth",
+      "detail": "Login: admin (admin)",
+      "ts": "2026-06-03T16:15:06.519Z"
+    },
+    {
+      "id": "mpy9d08pn5cjcif",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "GENERATE_BRACKET",
+      "target": "fasefinal",
+      "detail": "Bracket gerado: M2",
+      "ts": "2026-06-03T16:05:41.881Z"
+    },
+    {
+      "id": "mpy9aqopegda98a",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "GENERATE_BRACKET",
+      "target": "fasefinal",
+      "detail": "Bracket gerado: M1",
+      "ts": "2026-06-03T16:03:56.185Z"
+    },
+    {
+      "id": "mpy9aplccoqkt6t",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "RESET_BRACKET",
+      "target": "fasefinal",
+      "detail": "Bracket resetado: M1",
+      "ts": "2026-06-03T16:03:54.768Z"
+    },
+    {
+      "id": "mpy944f0d11dxdq",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "UPDATE_USER",
+      "target": "utilizadores",
+      "detail": "Actualizado \"Bruno Gaspar\"",
+      "ts": "2026-06-03T15:58:47.388Z"
+    },
+    {
+      "id": "mpy8uqdr4wvkrac",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "GENERATE_BRACKET",
+      "target": "fasefinal",
+      "detail": "Bracket gerado: M1",
+      "ts": "2026-06-03T15:51:29.295Z"
+    },
+    {
+      "id": "mpy8up9x4munh1d",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "RESET_BRACKET",
+      "target": "fasefinal",
+      "detail": "Bracket resetado: M1",
+      "ts": "2026-06-03T15:51:27.861Z"
+    },
+    {
+      "id": "mpy8bqnyyexr7ih",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "LOGIN",
+      "target": "auth",
+      "detail": "Login: admin (admin)",
+      "ts": "2026-06-03T15:36:43.198Z"
+    },
+    {
+      "id": "mpy70vavlozxjaj",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "LOGOUT",
+      "target": "auth",
+      "detail": "Logout: admin",
+      "ts": "2026-06-03T15:00:16.375Z"
+    },
+    {
+      "id": "mpy5hk123v0ee69",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "GENERATE_BRACKET",
+      "target": "fasefinal",
+      "detail": "Bracket gerado: M1",
+      "ts": "2026-06-03T14:17:15.686Z"
+    },
+    {
+      "id": "mpy5g6hc1ybiw40",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "CREATE_USER",
+      "target": "utilizadores",
+      "detail": "Criado \"Bruno Gaspar\" (operator)",
+      "ts": "2026-06-03T14:16:11.472Z"
+    },
+    {
+      "id": "mpy5flbj6ii8i7d",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "UPDATE_USER",
+      "target": "utilizadores",
+      "detail": "Actualizado \"admin\"",
+      "ts": "2026-06-03T14:15:44.047Z"
+    },
+    {
+      "id": "mpy5ezoqfyobvfj",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "LOGIN",
+      "target": "auth",
+      "detail": "Login: admin (admin)",
+      "ts": "2026-06-03T14:15:16.010Z"
+    },
+    {
+      "id": "mpxtnw8if3p9ha4",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "LOGOUT",
+      "target": "auth",
+      "detail": "Logout: admin",
+      "ts": "2026-06-03T08:46:16.050Z"
+    },
+    {
+      "id": "mpxszfcl1g8azfq",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "LOGOUT",
+      "target": "auth",
+      "detail": "Logout: admin",
+      "ts": "2026-06-03T08:27:14.421Z"
+    },
+    {
+      "id": "mpxs8mqu8wgwatn",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "RESET_BRACKET",
+      "target": "fasefinal",
+      "detail": "Bracket resetado: M1",
+      "ts": "2026-06-03T08:06:24.295Z"
+    },
+    {
+      "id": "mpxs4ljp5v25y0e",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "GENERATE_BRACKET",
+      "target": "fasefinal",
+      "detail": "Bracket gerado: M1",
+      "ts": "2026-06-03T08:03:16.117Z"
+    },
+    {
+      "id": "mpxs204j2jey13i",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "LOGIN",
+      "target": "auth",
+      "detail": "Login: admin (admin)",
+      "ts": "2026-06-03T08:01:15.043Z"
+    },
+    {
+      "id": "mpxr141aiztx5zi",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "UPDATE_USER",
+      "target": "utilizadores",
+      "detail": "Actualizado \"admin\"",
+      "ts": "2026-06-03T07:32:33.838Z"
+    },
+    {
+      "id": "mpxr0ta79aolj7a",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "LOGIN",
+      "target": "auth",
+      "detail": "Login: admin (admin)",
+      "ts": "2026-06-03T07:32:19.903Z"
+    },
+    {
+      "id": "mpxnyl5n3r2qr0n",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "LOGIN",
+      "target": "auth",
+      "detail": "Login: admin (admin)",
+      "ts": "2026-06-03T06:06:37.211Z"
+    }
+  ],
+  "_updated": "2026-06-04T09:44:49.365Z"
 }
