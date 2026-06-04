@@ -1222,6 +1222,52 @@ window.eliminarJogador = function(nome) {
 // ============================================
 //  DUPLAS
 // ============================================
+
+// Builds jogadores + duplas stores from jogos strings when stores are empty
+// (needed when admin is opened via file:// and sync was skipped)
+function _bootstrapEntityStores() {
+  const jogos = getData('jogos') || [];
+  if (!jogos.length) return;
+
+  // --- Jogadores ---
+  if ((getData('jogadores') || []).length === 0) {
+    const namesSet = new Set();
+    jogos.forEach(j => {
+      [j.eq1, j.eq2].forEach(eq => {
+        if (!eq) return;
+        eq.split(' & ').forEach(n => { const t = n.trim(); if (t && t !== 'A Definir') namesSet.add(t); });
+      });
+    });
+    const jogadores = [...namesSet].sort().map((nome, i) => ({ id: `j${i+1}`, nome, tel: '' }));
+    setData('jogadores', jogadores);
+  }
+
+  // --- Duplas ---
+  if ((getData('duplas') || []).length === 0) {
+    const jogs = getData('jogadores') || [];
+    const jogadoresMap = {};
+    jogs.forEach(j => { jogadoresMap[j.nome] = j.id; });
+    const seen = new Set();
+    let dIdx = 1;
+    const duplas = [];
+    jogos.forEach(j => {
+      [j.eq1, j.eq2].forEach(eq => {
+        if (!eq || !j.grupo) return;
+        const key = `${eq}|${j.grupo}`;
+        if (seen.has(key)) return;
+        seen.add(key);
+        const parts = eq.split(' & ');
+        if (parts.length !== 2) return;
+        const j1id = jogadoresMap[parts[0].trim()];
+        const j2id = jogadoresMap[parts[1].trim()];
+        if (!j1id || !j2id) return;
+        duplas.push({ id: `d${dIdx++}`, j1: j1id, j2: j2id, grupo: j.grupo });
+      });
+    });
+    if (duplas.length) setData('duplas', duplas);
+  }
+}
+
 function renderDuplas(filter = '') {
   const duplas   = getData('duplas') || [];
   const jogs     = getData('jogadores') || [];
@@ -1917,6 +1963,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 function initAdmin() {
+  // Populate entity stores if they're empty (e.g. first load on file:// protocol)
+  _bootstrapEntityStores();
+
   // Sidebar nav links
   document.querySelectorAll('.sidebar-link[data-view]').forEach(btn => {
     btn.addEventListener('click', () => navigate(btn.dataset.view));
