@@ -2739,6 +2739,12 @@ function ffRenderGlobal() {
       <button class="btn btn-ghost btn-sm" style="color:var(--amarelo);border-color:rgba(245,197,24,.3)" onclick="ffGerarAleatoriosTodos()">
         <i class="ph ph-shuffle"></i> Resultados Aleatórios — Todos
       </button>
+      <button class="btn btn-ghost btn-sm" style="color:var(--cinza-texto)" onclick="ffLimparResultadosTodos()">
+        <i class="ph ph-eraser"></i> Limpar Resultados — Todos
+      </button>
+      <button class="btn btn-ghost btn-sm" style="color:var(--vermelho);border-color:rgba(255,74,74,.3)" onclick="ffResetarTodos()">
+        <i class="ph ph-arrow-counter-clockwise"></i> Resetar Brackets — Todos
+      </button>
     </div>`;
 
   const catBlocks = cats.map(catId => {
@@ -2847,6 +2853,38 @@ window.ffGerarAleatoriosTodos = function() {
   });
   if (ffCurrentCat === 'ALL') ffRenderGlobal(); else renderFaseFinal();
   toast(`${totalCount} resultado${totalCount !== 1 ? 's' : ''} aleatório${totalCount !== 1 ? 's' : ''} gerados para ${generated.length} grupo${generated.length !== 1 ? 's' : ''}.`);
+};
+
+window.ffLimparResultadosTodos = function() {
+  const cats = ['M1', 'M2', 'F1', 'F2', 'M3', 'M4', 'M5'];
+  const ff = ffLoad();
+  const generated = cats.filter(c => ff[c]?.generated);
+  if (generated.length === 0) return toast('Nenhum bracket gerado.', 'error');
+  if (!confirm(`Limpar todos os resultados da Fase Final para: ${generated.join(', ')}?`)) return;
+  generated.forEach(catId => {
+    ff[catId].jogos.forEach(j => {
+      j.resultado = null;
+      if (j.feedFrom) { j.eq1 = null; j.eq1grupo = null; j.eq2 = null; j.eq2grupo = null; }
+    });
+  });
+  ffSave(ff);
+  if (ffCurrentCat === 'ALL') ffRenderGlobal(); else renderFaseFinal();
+  toast(`Resultados limpos em ${generated.length} grupo${generated.length !== 1 ? 's' : ''}.`);
+};
+
+window.ffResetarTodos = function() {
+  const cats = ['M1', 'M2', 'F1', 'F2', 'M3', 'M4', 'M5'];
+  const ff = ffLoad();
+  const generated = cats.filter(c => ff[c]?.generated);
+  if (generated.length === 0) return toast('Nenhum bracket gerado.', 'error');
+  if (!confirm(`Resetar TODOS os brackets (${generated.join(', ')})? Todos os resultados da Fase Final serão apagados.`)) return;
+  generated.forEach(catId => {
+    delete ff[catId];
+    Auth.log('RESET_BRACKET', 'fasefinal', `Bracket resetado: ${catId}`);
+  });
+  ffSave(ff);
+  if (ffCurrentCat === 'ALL') ffRenderGlobal(); else renderFaseFinal();
+  toast(`${generated.length} bracket${generated.length !== 1 ? 's' : ''} removido${generated.length !== 1 ? 's' : ''}.`);
 };
 
 window.ffGerarAleatorios = function(catId) {
