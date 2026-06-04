@@ -19,6 +19,42 @@ const setData = (k, v) => { ppSave(k, v); if (typeof GHSync !== 'undefined') GHS
 const formatDate = ppFormatDate;
 
 // ============================================
+//  ENTITY HELPERS (jogadores / duplas)
+// ============================================
+function _nextEntityId(store, prefix) {
+  const items = getData(store) || [];
+  const maxN = items.reduce((m, x) => {
+    const n = parseInt((x.id || '').replace(/\D/g, ''));
+    return Math.max(m, isNaN(n) ? 0 : n);
+  }, 0);
+  return prefix + (maxN + 1);
+}
+function getJogador(id)  { return (getData('jogadores') || []).find(j => j.id === id); }
+function getDupla(id)    { return (getData('duplas') || []).find(d => d.id === id); }
+function getDuplaNomes(d) {
+  const j1 = getJogador(d.j1), j2 = getJogador(d.j2);
+  return { p1: j1?.nome || d.j1 || '?', p2: j2?.nome || d.j2 || '?' };
+}
+function getDuplaLabel(idOrObj) {
+  const d = typeof idOrObj === 'string' ? getDupla(idOrObj) : idOrObj;
+  if (!d) return (typeof idOrObj === 'string' ? idOrObj : '') || '?';
+  const { p1, p2 } = getDuplaNomes(d);
+  return `${p1} & ${p2}`;
+}
+function getDuplasByGrupo(grupoId) {
+  return (getData('duplas') || []).filter(d => d.grupo === grupoId);
+}
+function _eqStrToDuplaId(eqStr, grupoId) {
+  const jogs = getData('jogadores') || [];
+  for (const d of getDuplasByGrupo(grupoId)) {
+    const j1 = jogs.find(j => j.id === d.j1);
+    const j2 = jogs.find(j => j.id === d.j2);
+    if (`${j1?.nome || ''} & ${j2?.nome || ''}` === eqStr) return d.id;
+  }
+  return '';
+}
+
+// ============================================
 //  IMPORT LOCAL JSON (for file:// protocol)
 // ============================================
 window.importLocalJson = function(event) {
@@ -28,7 +64,7 @@ window.importLocalJson = function(event) {
   reader.onload = function(e) {
     try {
       const d = JSON.parse(e.target.result);
-      const KEYS = ['campos','categorias','grupos','jogadores','jogos','fasefinal','telefones'];
+      const KEYS = ['campos','categorias','grupos','jogadores','duplas','jogos','fasefinal','telefones'];
       KEYS.forEach(function(k) { if (d[k] !== undefined) ppSave(k, d[k]); });
       if (d._updated) localStorage.setItem('pp__updated', d._updated);
       toast('data.json importado com sucesso! A recarregar…', 'success');
@@ -686,6 +722,7 @@ function navigate(view) {
     campos:        ['Campos', 'Gestão de Campos'],
     categorias:    ['Categorias & Grupos', 'Estrutura do Torneio'],
     jogadores:     ['Jogadores', 'Participantes'],
+    duplas:        ['Duplas', 'Pares'],
     jogos:         ['Jogos', 'Calendário Completo'],
     resultados:    ['Resultados', 'Lançamento de Resultados'],
     fasefinal:     ['Fase Final', 'Eliminatórias'],
@@ -716,6 +753,7 @@ function renderView(view) {
     case 'campos':       renderCampos();       break;
     case 'categorias':   renderCategorias();   break;
     case 'jogadores':    renderJogadores();    break;
+    case 'duplas':       renderDuplas();       break;
     case 'jogos':        renderJogos();        break;
     case 'resultados':   renderResultados();   break;
     case 'fasefinal':    renderFaseFinal();    break;
@@ -972,34 +1010,53 @@ window.deleteGruposAll = function(catId) {
 
 // ---------- JOGADORES ----------
 function renderJogadores(filter = '') {
-  const jogos = getData('jogos');
-  // Extrair todos os nomes únicos dos pares
-  const setJogadores = new Set();
-  jogos.forEach(j => {
-    j.eq1.split('&').forEach(n => setJogadores.add(n.trim()));
-    j.eq2.split('&').forEach(n => setJogadores.add(n.trim()));
-  });
-  let lista = [...setJogadores].sort();
-  if (filter) lista = lista.filter(n => n.toLowerCase().includes(filter.toLowerCase()));
+  const jogadores = getData('jogadores') || [];
+  const duplas    = getData('duplas') || [];
+  const jogos     = getData('jogos');
+
+  let lista;
+  if (jogadores.length > 0) {
+    lista = [...jogadores].sort((a, b) => a.nome.localeCompare(b.nome));
+  } else {
+    // Fallback: extract from games
+    const set = new Set();
+    jogos.forEach(j => {
+      j.eq1.split('&').forEach(n => set.add(n.trim()));
+      j.eq2.split('&').forEach(n => set.add(n.trim()));
+    });
+    lista = [...set].sort().map(nome => ({ id: null, nome, tel: getTelefone(nome) }));
+  }
+
+  if (filter) lista = lista.filter(j => j.nome.toLowerCase().includes(filter.toLowerCase()));
 
   const tbody = document.getElementById('jogadoresBody');
-  tbody.innerHTML = lista.map((nome, i) => {
+  tbody.innerHTML = lista.map((jog, i) => {
+    const nome = jog.nome;
+    let grupos;
+    if (jog.id && duplas.length > 0) {
+      grupos = [...new Set(duplas.filter(d => d.j1 === jog.id || d.j2 === jog.id).map(d => d.grupo))];
+    } else {
+      grupos = [...new Set(jogos.filter(j => {
+        const p1 = j.eq1.split('&').map(n => n.trim());
+        const p2 = j.eq2.split('&').map(n => n.trim());
+        return p1.includes(nome) || p2.includes(nome);
+      }).map(j => j.grupo))];
+    }
     const jogosJogador = jogos.filter(j => {
       const p1 = j.eq1.split('&').map(n => n.trim());
       const p2 = j.eq2.split('&').map(n => n.trim());
       return p1.includes(nome) || p2.includes(nome);
     });
-    const grupos = [...new Set(jogosJogador.map(j => j.grupo))];
     const comRes  = jogosJogador.filter(j => j.resultado).length;
     const nomeEnc = encodeURIComponent(nome);
-    const tel = getTelefone(nome);
+    const tel = jog.tel || getTelefone(nome);
     const confMsg = encodeURIComponent('\u{1F3BE} Ol\u00e1 ' + nome + '!\n\nA tua inscri\u00e7\u00e3o no torneio *Play Padel \u00b7 2.\u00ba Anivers\u00e1rio* est\u00e1 confirmada. Bom jogo! \ud83c\udfc6');
     const waBtn = tel
       ? '<a class="btn-icon" style="color:#25D366" href="https://wa.me/' + tel.replace(/\D/g,'') + '?text=' + confMsg + '" target="_blank" title="WhatsApp"><i class="ph ph-whatsapp-logo"></i></a>'
       : '';
     return '<tr>' +
       '<td style="color:var(--cinza-texto);font-size:0.75rem">' + (i+1) + '</td>' +
-      '<td><strong>' + nome + '</strong></td>' +
+      '<td><strong>' + escHtml(nome) + '</strong></td>' +
       '<td>' + grupos.map(g => '<span class="cat-pill cat-' + g.split('-')[0] + '">' + g + '</span>').join(' ') + '</td>' +
       '<td>' + jogosJogador.length + ' <span class="td-muted">jogo' + (jogosJogador.length!==1?'s':'') + '</span></td>' +
       '<td>' + comRes + ' <span class="td-muted">result.</span></td>' +
@@ -1111,10 +1168,18 @@ function saveJogador() {
       if (idx2 !== -1) { eq2parts[idx2] = nomeNovo; j.eq2 = eq2parts.join(' & '); alterados++; }
     });
     setData('jogos', jogos);
+    // Update entity store
+    const jogadoresStore = getData('jogadores') || [];
+    const jIdx = jogadoresStore.findIndex(j => j.nome === nomeAntigo);
+    if (jIdx !== -1) { jogadoresStore[jIdx].nome = nomeNovo; jogadoresStore[jIdx].tel = telNovo || jogadoresStore[jIdx].tel; setData('jogadores', jogadoresStore); }
     Auth.log('RENAME_JOGADOR', 'jogadores', `"${nomeAntigo}" → "${nomeNovo}"`);
     toast(`"${nomeAntigo}" renomeado para "${nomeNovo}" em ${alterados} jogo${alterados!==1?'s':''}`, 'success');
   } else {
     setTelefone(nomeNovo, telNovo);
+    // Update tel in entity store
+    const jogadoresStore = getData('jogadores') || [];
+    const jIdx = jogadoresStore.findIndex(j => j.nome === nomeNovo);
+    if (jIdx !== -1) { jogadoresStore[jIdx].tel = telNovo; setData('jogadores', jogadoresStore); }
     toast('Guardado.', 'success');
   }
   closeModal('modalJogador');
@@ -1137,11 +1202,179 @@ window.eliminarJogador = function(nome) {
   });
   setData('jogos', jogos);
   setTelefone(nome, '');
+  // Remove from entity store
+  const jogadoresStore = getData('jogadores') || [];
+  const jIdx = jogadoresStore.findIndex(j => j.nome === nome);
+  const jogadorId = jIdx !== -1 ? jogadoresStore[jIdx].id : null;
+  if (jIdx !== -1) { jogadoresStore.splice(jIdx, 1); setData('jogadores', jogadoresStore); }
+  // Remove from duplas store
+  if (jogadorId) {
+    const duplasStore = getData('duplas') || [];
+    setData('duplas', duplasStore.filter(d => d.j1 !== jogadorId && d.j2 !== jogadorId));
+  }
   Auth.log('DELETE_JOGADOR', 'jogadores', `"${nome}" eliminado de ${count} jogo(s)`);
   closeModal('modalJogador');
   toast(`"${nome}" eliminado de ${count} jogo(s)`, 'success');
   renderJogadores();
   APP.editingId = null;
+};
+
+// ============================================
+//  DUPLAS
+// ============================================
+function renderDuplas(filter = '') {
+  const duplas   = getData('duplas') || [];
+  const jogs     = getData('jogadores') || [];
+  const jogos    = getData('jogos');
+
+  // Populate group filter once
+  const grupoFilter = document.getElementById('duplasFilterGrupo');
+  if (grupoFilter) {
+    const uniqueGrupos = [...new Set(duplas.map(d => d.grupo))].sort();
+    grupoFilter.innerHTML = '<option value="">Todos os grupos</option>' +
+      uniqueGrupos.map(g => `<option value="${g}">${g}</option>`).join('');
+  }
+  const grupoSel = grupoFilter?.value || '';
+
+  let lista = [...duplas];
+  if (grupoSel) lista = lista.filter(d => d.grupo === grupoSel);
+  if (filter) {
+    const q = filter.toLowerCase();
+    lista = lista.filter(d => {
+      const j1 = jogs.find(j => j.id === d.j1);
+      const j2 = jogs.find(j => j.id === d.j2);
+      return (j1?.nome || '').toLowerCase().includes(q) ||
+             (j2?.nome || '').toLowerCase().includes(q) ||
+             d.grupo.toLowerCase().includes(q);
+    });
+  }
+
+  const tbody = document.getElementById('duplasBody');
+  if (!tbody) return;
+  tbody.innerHTML = lista.map((d, i) => {
+    const j1 = jogs.find(j => j.id === d.j1);
+    const j2 = jogs.find(j => j.id === d.j2);
+    const n1 = j1?.nome || d.j1 || '?';
+    const n2 = j2?.nome || d.j2 || '?';
+    const cat = d.grupo.split('-')[0];
+    const eqStr = `${n1} & ${n2}`;
+    const nJogos = jogos.filter(j => j.eq1 === eqStr || j.eq2 === eqStr).length;
+    return '<tr>' +
+      `<td style="color:var(--cinza-texto);font-size:.75rem">${i+1}</td>` +
+      `<td><strong>${escHtml(n1)}</strong></td>` +
+      `<td><strong>${escHtml(n2)}</strong></td>` +
+      `<td><span class="cat-pill cat-${cat}">${escHtml(d.grupo)}</span></td>` +
+      `<td>${nJogos} <span class="td-muted">jogo${nJogos!==1?'s':''}</span></td>` +
+      `<td><div style="display:flex;gap:.15rem">` +
+        `<button class="btn-icon" onclick="editarDupla('${d.id}')" title="Editar"><i class="ph ph-pencil"></i></button>` +
+        `<button class="btn-icon" style="color:var(--vermelho);opacity:.7" onclick="eliminarDupla('${d.id}')" title="Eliminar"><i class="ph ph-trash"></i></button>` +
+      `</div></td>` +
+      '</tr>';
+  }).join('');
+  const countEl = document.getElementById('duplasCount');
+  if (countEl) countEl.textContent = lista.length;
+}
+
+function _populateDuplaModal() {
+  const jogadores = (getData('jogadores') || []).slice().sort((a, b) => a.nome.localeCompare(b.nome));
+  const opts = '<option value="">— Seleccionar —</option>' +
+    jogadores.map(j => `<option value="${j.id}">${escHtml(j.nome)}</option>`).join('');
+  document.getElementById('duplaJ1').innerHTML = opts;
+  document.getElementById('duplaJ2').innerHTML = opts;
+  const grupos = getData('grupos') || [];
+  document.getElementById('duplaGrupo').innerHTML = '<option value="">— Seleccionar —</option>' +
+    grupos.map(g => `<option value="${g.id}">${g.id}</option>`).join('');
+}
+
+function abrirNovaDupla() {
+  APP.editingId = null;
+  document.getElementById('modalDuplaTitle').textContent = 'Nova Dupla';
+  _populateDuplaModal();
+  openModal('modalDupla');
+}
+
+window.editarDupla = function(id) {
+  const dupla = getDupla(id);
+  if (!dupla) return;
+  APP.editingId = id;
+  document.getElementById('modalDuplaTitle').textContent = 'Editar Dupla';
+  _populateDuplaModal();
+  document.getElementById('duplaJ1').value    = dupla.j1 || '';
+  document.getElementById('duplaJ2').value    = dupla.j2 || '';
+  document.getElementById('duplaGrupo').value = dupla.grupo || '';
+  openModal('modalDupla');
+};
+
+function salvarDupla() {
+  const j1    = document.getElementById('duplaJ1').value;
+  const j2    = document.getElementById('duplaJ2').value;
+  const grupo = document.getElementById('duplaGrupo').value;
+  if (!j1 || !j2 || !grupo) return toast('Preencha todos os campos.', 'error');
+  if (j1 === j2) return toast('Os dois jogadores têm de ser diferentes.', 'error');
+
+  const duplas   = getData('duplas') || [];
+  const jogs     = getData('jogadores') || [];
+  const j1nome   = jogs.find(j => j.id === j1)?.nome || j1;
+  const j2nome   = jogs.find(j => j.id === j2)?.nome || j2;
+  const newEqStr = `${j1nome} & ${j2nome}`;
+
+  if (APP.editingId) {
+    const idx = duplas.findIndex(d => d.id === APP.editingId);
+    if (idx !== -1) {
+      const old    = duplas[idx];
+      const oldJ1n = jogs.find(j => j.id === old.j1)?.nome || old.j1 || '';
+      const oldJ2n = jogs.find(j => j.id === old.j2)?.nome || old.j2 || '';
+      const oldEq  = `${oldJ1n} & ${oldJ2n}`;
+      duplas[idx] = { ...old, j1, j2, grupo };
+      if (oldEq !== newEqStr || old.grupo !== grupo) {
+        const jogos = getData('jogos');
+        jogos.forEach(j => {
+          if (j.grupo === old.grupo) {
+            if (j.eq1 === oldEq) { j.eq1 = newEqStr; j.grupo = grupo; }
+            if (j.eq2 === oldEq) { j.eq2 = newEqStr; j.grupo = grupo; }
+          }
+        });
+        setData('jogos', jogos);
+      }
+    }
+    setData('duplas', duplas);
+    Auth.log('EDIT_DUPLA', 'duplas', `${newEqStr} → ${grupo}`);
+    toast('Dupla actualizada.', 'success');
+  } else {
+    const exists = duplas.find(d => (d.j1===j1&&d.j2===j2&&d.grupo===grupo) || (d.j1===j2&&d.j2===j1&&d.grupo===grupo));
+    if (exists) return toast('Esta dupla já existe neste grupo.', 'error');
+    const newId = _nextEntityId('duplas', 'd');
+    duplas.push({ id: newId, j1, j2, grupo });
+    setData('duplas', duplas);
+    Auth.log('CREATE_DUPLA', 'duplas', `${newEqStr} no grupo ${grupo}`);
+    toast('Dupla criada.', 'success');
+  }
+  closeModal('modalDupla');
+  renderDuplas();
+  APP.editingId = null;
+}
+
+window.eliminarDupla = function(id) {
+  const d = getDupla(id);
+  if (!d) return;
+  const jogs  = getData('jogadores') || [];
+  const j1n   = jogs.find(j => j.id === d.j1)?.nome || d.j1 || '';
+  const j2n   = jogs.find(j => j.id === d.j2)?.nome || d.j2 || '';
+  const eqStr = `${j1n} & ${j2n}`;
+  if (!confirm(`Eliminar a dupla "${eqStr}" do grupo ${d.grupo}?\n\nOs jogos desta dupla serão marcados como "A Definir".`)) return;
+  const jogos = getData('jogos');
+  let count = 0;
+  jogos.forEach(j => {
+    if (j.grupo === d.grupo) {
+      if (j.eq1 === eqStr) { j.eq1 = 'A Definir & A Definir'; count++; }
+      if (j.eq2 === eqStr) { j.eq2 = 'A Definir & A Definir'; count++; }
+    }
+  });
+  setData('jogos', jogos);
+  setData('duplas', (getData('duplas') || []).filter(x => x.id !== id));
+  Auth.log('DELETE_DUPLA', 'duplas', `"${eqStr}" eliminada de ${d.grupo}`);
+  toast(`Dupla eliminada. ${count} jogo${count!==1?'s':''} actualizados.`, 'success');
+  renderDuplas();
 };
 
 // ---------- JOGOS ----------
@@ -1329,8 +1562,8 @@ function updateMatchResultBar() {
   const wins2 = [s1w, s2w, s3w].filter(w => w === 2).length;
   if (wins1 >= 2 || wins2 >= 2) {
     const name = wins1 >= 2
-      ? document.getElementById('resTeam1').textContent
-      : document.getElementById('resTeam2').textContent;
+      ? (document.getElementById('resTeam1').dataset.equipa || document.getElementById('resTeam1').textContent)
+      : (document.getElementById('resTeam2').dataset.equipa || document.getElementById('resTeam2').textContent);
     bar.className = 'match-result-bar match-result-bar--win';
     bar.textContent = '🏆 Vence: ' + name;
     bar.style.display = '';
@@ -1399,8 +1632,10 @@ window.abrirResultado = function(jogoId) {
 
   APP.editingId = jogoId;
   document.getElementById('resMatchInfo').textContent = `${formatDate(j.data)} · ${j.hora} · ${j.campo} · ${j.grupo}`;
-  document.getElementById('resTeam1').textContent = j.eq1;
-  document.getElementById('resTeam2').textContent = j.eq2;
+  const _t1 = document.getElementById('resTeam1');
+  const _t2 = document.getElementById('resTeam2');
+  _t1.innerHTML = j.eq1.split(' & ').map(escHtml).join('<br>'); _t1.dataset.equipa = j.eq1;
+  _t2.innerHTML = j.eq2.split(' & ').map(escHtml).join('<br>'); _t2.dataset.equipa = j.eq2;
 
   // Reset all inputs and visibility
   [1, 2, 3].forEach(n => clearSetInputs(n));
@@ -1552,25 +1787,34 @@ function formatDateFull(d) {
   return dt.toLocaleDateString('pt-PT', { weekday:'short', day:'numeric', month:'short' });
 }
 
-// ============================================
-//  NOVO JOGO (modal)
-// ============================================
 function populateJogoModal() {
   const campos = getData('campos');
   document.getElementById('jogoCampo').innerHTML =
     campos.map(c => `<option value="${c.nome}">${c.nome}</option>`).join('');
   const grupos = getData('grupos');
-  document.getElementById('jogoGrupo').innerHTML =
-    grupos.map(g => `<option value="${g.id}">${g.id}</option>`).join('');
+  const grupoSel = document.getElementById('jogoGrupo');
+  grupoSel.innerHTML = grupos.map(g => `<option value="${g.id}">${g.id}</option>`).join('');
+  _populateJogoEqSelects(grupoSel.value);
+  grupoSel.onchange = () => _populateJogoEqSelects(grupoSel.value);
+}
+
+function _populateJogoEqSelects(grupoId) {
+  const duplas = getDuplasByGrupo(grupoId);
+  const jogs   = getData('jogadores') || [];
+  const opts = '<option value="">— Seleccionar dupla —</option>' + duplas.map(d => {
+    const j1 = jogs.find(j => j.id === d.j1);
+    const j2 = jogs.find(j => j.id === d.j2);
+    return `<option value="${d.id}">${escHtml((j1?.nome||'?') + ' & ' + (j2?.nome||'?'))}</option>`;
+  }).join('');
+  document.getElementById('jogoEq1').innerHTML = opts;
+  document.getElementById('jogoEq2').innerHTML = opts;
 }
 
 function abrirNovoJogo() {
   APP.editingId = null;
   document.getElementById('modalJogoTitle').textContent = 'Novo Jogo';
-  document.getElementById('jogoData').value  = '';
-  document.getElementById('jogoHora').value  = '';
-  document.getElementById('jogoEq1').value   = '';
-  document.getElementById('jogoEq2').value   = '';
+  document.getElementById('jogoData').value = '';
+  document.getElementById('jogoHora').value = '';
   populateJogoModal();
   openModal('modalJogo');
 }
@@ -1581,25 +1825,32 @@ window.editarJogo = function(id) {
   APP.editingId = id;
   document.getElementById('modalJogoTitle').textContent = 'Editar Jogo';
   populateJogoModal();
-  document.getElementById('jogoData').value  = j.data || '';
-  document.getElementById('jogoHora').value  = j.hora || '';
+  document.getElementById('jogoData').value  = j.data  || '';
+  document.getElementById('jogoHora').value  = j.hora  || '';
   document.getElementById('jogoCampo').value = j.campo || '';
   document.getElementById('jogoGrupo').value = j.grupo || '';
-  document.getElementById('jogoEq1').value   = j.eq1 || '';
-  document.getElementById('jogoEq2').value   = j.eq2 || '';
+  _populateJogoEqSelects(j.grupo || '');
+  // Resolve eq1/eq2 strings to dupla IDs for the selects
+  document.getElementById('jogoEq1').value = _eqStrToDuplaId(j.eq1 || '', j.grupo || '');
+  document.getElementById('jogoEq2').value = _eqStrToDuplaId(j.eq2 || '', j.grupo || '');
   openModal('modalJogo');
 };
 
 function salvarJogo() {
-  const data  = document.getElementById('jogoData').value;
-  const hora  = document.getElementById('jogoHora').value;
-  const campo = document.getElementById('jogoCampo').value;
-  const grupo = document.getElementById('jogoGrupo').value;
-  const eq1   = document.getElementById('jogoEq1').value.trim();
-  const eq2   = document.getElementById('jogoEq2').value.trim();
+  const data       = document.getElementById('jogoData').value;
+  const hora       = document.getElementById('jogoHora').value;
+  const campo      = document.getElementById('jogoCampo').value;
+  const grupo      = document.getElementById('jogoGrupo').value;
+  const duplaId1   = document.getElementById('jogoEq1').value;
+  const duplaId2   = document.getElementById('jogoEq2').value;
 
-  if (!data || !hora || !campo || !grupo || !eq1 || !eq2)
+  if (!data || !hora || !campo || !grupo || !duplaId1 || !duplaId2)
     return toast('Preencha todos os campos do jogo.', 'error');
+  if (duplaId1 === duplaId2)
+    return toast('As duas duplas devem ser diferentes.', 'error');
+
+  const eq1 = getDuplaLabel(duplaId1);
+  const eq2 = getDuplaLabel(duplaId2);
 
   const jogos = getData('jogos');
   if (APP.editingId !== null) {
@@ -2159,8 +2410,10 @@ window.ffAbrirResultado = function(jogoId, catId) {
   APP.editingId = null;
   const fLabel = j.fase === 'F' ? 'Final' : j.fase === 'SF' ? `Meia-Final ${j.num}` : `Quarto de Final ${j.num}`;
   document.getElementById('resMatchInfo').textContent = `${catId} · ${fLabel}`;
-  document.getElementById('resTeam1').textContent = j.eq1;
-  document.getElementById('resTeam2').textContent = j.eq2;
+  const _ff1 = document.getElementById('resTeam1');
+  const _ff2 = document.getElementById('resTeam2');
+  _ff1.innerHTML = (j.eq1||'?').split(' & ').map(escHtml).join('<br>'); _ff1.dataset.equipa = j.eq1||'';
+  _ff2.innerHTML = (j.eq2||'?').split(' & ').map(escHtml).join('<br>'); _ff2.dataset.equipa = j.eq2||'';
   [1, 2, 3].forEach(n => clearSetInputs(n));
   [2, 3].forEach(n => { document.getElementById(`setBlock${n}`).style.display = 'none'; });
   document.getElementById('matchResultBar').style.display = 'none';

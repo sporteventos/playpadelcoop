@@ -197,7 +197,7 @@ function ppFormatDate(d) {
 (function () {
   if (typeof window === 'undefined') return;
   if (window.location.protocol === 'file:') return; // skip when opened locally
-  var KEYS = ['campos', 'categorias', 'grupos', 'jogadores', 'jogos', 'fasefinal', 'telefones'];
+  var KEYS = ['campos', 'categorias', 'grupos', 'jogadores', 'duplas', 'jogos', 'fasefinal', 'telefones'];
 
   // On admin: always fetch, but only overwrite local data if remote _updated is newer.
   // This ensures externally-updated data.json is picked up while protecting unsaved local work.

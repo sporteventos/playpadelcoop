@@ -92,6 +92,10 @@
           <i class="ph ph-users sl-icon"></i>
           Jogadores
         </button>
+        <button class="sidebar-link" data-view="duplas">
+          <i class="ph ph-handshake sl-icon"></i>
+          Duplas
+        </button>
       </div>
 
       <div class="sidebar-group">
@@ -359,6 +363,42 @@
                 <tr><th>#</th><th>Nome</th><th>Grupo(s)</th><th>Jogos</th><th>Resultados</th><th>Telefone</th><th></th></tr>
               </thead>
               <tbody id="jogadoresBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ==========================================
+           VIEW: DUPLAS
+           ========================================== -->
+      <section class="view" id="view-duplas">
+        <div class="page-header">
+          <div class="page-title-wrap">
+            <p class="page-tag">Pares</p>
+            <h1 class="page-title">Duplas <span style="font-size:1.2rem;color:var(--cinza-texto)" id="duplasCount"></span></h1>
+            <p class="page-desc">Pares de jogadores inscritos nos grupos</p>
+          </div>
+          <div class="page-actions">
+            <button class="btn btn-primary" onclick="abrirNovaDupla()"><i class="ph ph-plus"></i> Nova Dupla</button>
+          </div>
+        </div>
+        <div class="toolbar">
+          <div class="page-search-wrap">
+            <i class="ph ph-magnifying-glass ph-icon"></i>
+            <input class="page-search" id="duplasSearch" type="search" placeholder="Pesquisar dupla…" oninput="renderDuplas(this.value)"/>
+          </div>
+          <select class="filter-select" id="duplasFilterGrupo" onchange="renderDuplas(document.getElementById('duplasSearch').value)">
+            <option value="">Todos os grupos</option>
+          </select>
+        </div>
+        <div class="panel">
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr><th>#</th><th>Jogador 1</th><th>Jogador 2</th><th>Grupo</th><th>Jogos</th><th></th></tr>
+              </thead>
+              <tbody id="duplasBody"></tbody>
             </table>
           </div>
         </div>
@@ -795,16 +835,44 @@
       </div>
       <div class="form-group-modal">
         <label class="form-label" for="jogoEq1">Equipa 1 (par)</label>
-        <input class="form-input" type="text" id="jogoEq1" placeholder="Jogador A & Jogador B"/>
+        <select class="form-select" id="jogoEq1"></select>
       </div>
       <div class="form-group-modal">
         <label class="form-label" for="jogoEq2">Equipa 2 (par)</label>
-        <input class="form-input" type="text" id="jogoEq2" placeholder="Jogador C & Jogador D"/>
+        <select class="form-select" id="jogoEq2"></select>
       </div>
     </div>
     <div class="modal-footer">
       <button class="btn btn-ghost" onclick="closeModal('modalJogo')">Cancelar</button>
       <button class="btn btn-primary" onclick="salvarJogo()"><i class="ph ph-floppy-disk"></i> Guardar Jogo</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Nova / Editar Dupla -->
+<div class="modal-overlay" id="modalDupla" role="dialog" aria-modal="true" aria-labelledby="modalDuplaTitle">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 class="modal-title" id="modalDuplaTitle">Nova Dupla</h2>
+      <button class="modal-close" onclick="closeModal('modalDupla')" aria-label="Fechar"><i class="ph ph-x"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group-modal">
+        <label class="form-label" for="duplaJ1">Jogador 1</label>
+        <select class="form-select" id="duplaJ1"></select>
+      </div>
+      <div class="form-group-modal">
+        <label class="form-label" for="duplaJ2">Jogador 2</label>
+        <select class="form-select" id="duplaJ2"></select>
+      </div>
+      <div class="form-group-modal">
+        <label class="form-label" for="duplaGrupo">Grupo</label>
+        <select class="form-select" id="duplaGrupo"></select>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modalDupla')">Cancelar</button>
+      <button class="btn btn-primary" onclick="salvarDupla()"><i class="ph ph-floppy-disk"></i> Guardar</button>
     </div>
   </div>
 </div>
