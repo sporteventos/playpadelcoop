@@ -6008,12 +6008,12 @@
       "categories": []
     },
     {
-      "id": "mpy5g6h76wslwdr",
-      "username": "Bruno Gaspar",
-      "name": "bgaspar",
+      "id": "mpz46x5c2zupza0",
+      "username": "bgaspar",
+      "name": "Bruno Gaspar",
       "role": "operator",
-      "salt": "mpz2pdzqjwp2hfompz2pdzqeu8g61a",
-      "passwordHash": "6ef6951a",
+      "salt": "mpz46x5c7vaqjzjmpz46x5cxo6oa52",
+      "passwordHash": "40dabe31",
       "active": true,
       "categories": [
         "M1",
@@ -6024,9 +6024,9 @@
         "F1",
         "F2"
       ],
-      "createdAt": "2026-06-03T14:16:11.472Z",
+      "createdAt": "2026-06-04T06:28:46.042Z",
       "createdBy": "admin"
     }
   ],
-  "_updated": "2026-06-04T06:25:44.210Z"
+  "_updated": "2026-06-04T06:33:07.386Z"
 }
