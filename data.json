@@ -6034,17 +6034,5 @@
       "createdBy": "admin"
     }
   ],
-  "auditlog": [
-    {
-      "id": "mpzaria5q9qu5xm",
-      "userId": "mpz8aq9sg983ubo",
-      "username": "euamusse",
-      "role": "admin",
-      "action": "LOGIN",
-      "target": "auth",
-      "detail": "Login: euamusse (admin)",
-      "ts": "2026-06-04T09:32:44.237Z"
-    }
-  ],
-  "_updated": "2026-06-04T09:38:55.113Z"
+  "_updated": "2026-06-04T09:39:50.027Z"
 }
