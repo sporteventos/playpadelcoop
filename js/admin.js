@@ -4347,7 +4347,15 @@ function renderHorario() {
   const dayJogos = allJogos.filter(j => j.data === selDate && (!selCampo || j.campo === selCampo));
   if (!dayJogos.length) return el.innerHTML = `<p style="color:var(--cinza-texto);padding:1rem">Sem jogos para os filtros seleccionados.</p>`;
 
-  const times  = [...new Set(dayJogos.map(j => j.hora))].sort();
+  // Full club operating hours: 06:00–23:30 in 30-min increments
+  const CLUB_SLOTS = [];
+  for (let h = 6; h <= 23; h++) {
+    CLUB_SLOTS.push(`${String(h).padStart(2,'0')}:00`);
+    if (h < 23) CLUB_SLOTS.push(`${String(h).padStart(2,'0')}:30`);
+  }
+  CLUB_SLOTS.push('23:30');
+  // Merge with any game times outside normal hours (edge cases)
+  const times = [...new Set([...CLUB_SLOTS, ...dayJogos.map(j => j.hora).filter(Boolean)])].sort();
   const activeCampos = selCampo ? [selCampo] : [...new Set(dayJogos.map(j => j.campo))].sort();
 
   // Build player slots map to detect conflicts (skip TBD slots)
