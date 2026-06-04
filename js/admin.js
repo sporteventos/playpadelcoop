@@ -2548,9 +2548,14 @@ function ffChampionColHtml(catId) {
 function renderFaseFinal() {
   const ff   = ffLoad();
   const cats = ['M1', 'M2', 'F1', 'F2', 'M3', 'M4', 'M5'];
-  document.getElementById('ffCatTabs').innerHTML = cats.map(c =>
-    `<button class="btn btn-sm ${c === ffCurrentCat ? 'btn-primary' : 'btn-ghost'}" onclick="ffSetCat('${c}')" style="min-width:3rem">${c}</button>`
-  ).join('');
+  document.getElementById('ffCatTabs').innerHTML = [
+    ...cats.map(c =>
+      `<button class="btn btn-sm ${c === ffCurrentCat ? 'btn-primary' : 'btn-ghost'}" onclick="ffSetCat('${c}')" style="min-width:3rem">${c}</button>`
+    ),
+    `<button class="btn btn-sm ${ffCurrentCat === 'ALL' ? 'btn-primary' : 'btn-ghost'}" onclick="ffSetCat('ALL')" style="gap:.3rem"><i class="ph ph-squares-four"></i> Todos</button>`
+  ].join('');
+
+  if (ffCurrentCat === 'ALL') { ffRenderGlobal(); return; }
 
   const container = document.getElementById('ffBracket');
   const catData   = ff[ffCurrentCat];
@@ -2599,6 +2604,9 @@ function renderFaseFinal() {
     <div style="margin-top:1.25rem;display:flex;gap:.5rem;flex-wrap:wrap">
       <button class="btn btn-ghost btn-sm" style="color:var(--amarelo);border-color:rgba(245,197,24,.3)" onclick="ffGerarAleatorios('${ffCurrentCat}')">
         <i class="ph ph-shuffle"></i> Resultados Aleatórios
+      </button>
+      <button class="btn btn-ghost btn-sm" style="color:var(--amarelo);border-color:rgba(245,197,24,.3)" onclick="ffGerarAleatoriosTodos()">
+        <i class="ph ph-shuffle"></i> Aleatórios — Todos
       </button>
       <button class="btn btn-ghost btn-sm" style="color:var(--cinza-texto)" onclick="ffLimparResultados('${ffCurrentCat}')">
         <i class="ph ph-eraser"></i> Limpar Resultados
@@ -2715,6 +2723,130 @@ window.ffReset = function(catId) {
   renderFaseFinal();
   Auth.log('RESET_BRACKET', 'fasefinal', `Bracket resetado: ${catId}`);
   toast(`Bracket de ${catId} removido.`);
+};
+
+// ---- Global view (all categories) ----
+function ffRenderGlobal() {
+  const cats = ['M1', 'M2', 'F1', 'F2', 'M3', 'M4', 'M5'];
+  const container = document.getElementById('ffBracket');
+  const phaseLabel = { QF: 'Quartos', SF: 'Meias', F: 'Final' };
+
+  const actionBar = `
+    <div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1.25rem;padding-bottom:1rem;border-bottom:1px solid var(--preto-borda)">
+      <button class="btn btn-primary btn-sm" onclick="ffGerarTodosBrackets()">
+        <i class="ph ph-magic-wand"></i> Gerar Brackets em Falta
+      </button>
+      <button class="btn btn-ghost btn-sm" style="color:var(--amarelo);border-color:rgba(245,197,24,.3)" onclick="ffGerarAleatoriosTodos()">
+        <i class="ph ph-shuffle"></i> Resultados Aleatórios — Todos
+      </button>
+    </div>`;
+
+  const catBlocks = cats.map(catId => {
+    const ff = ffLoad();
+    const catData = ff[catId];
+    if (!catData?.generated) {
+      const done = allGroupGamesDone(catId);
+      return `<div style="margin-bottom:1.75rem">
+        <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:.5rem;padding-bottom:.4rem;border-bottom:1px solid var(--preto-borda)">
+          <span style="font-size:1rem;font-weight:700;color:var(--cinza-texto)">${catId}</span>
+          <span style="font-size:.78rem;color:var(--cinza-texto)">Bracket não gerado</span>
+          <button class="btn btn-sm ${done ? 'btn-primary' : 'btn-ghost'}" ${!done ? 'disabled title="Fase de grupos incompleta"' : ''} onclick="ffSetCat('${catId}');ffGenerate('${catId}')" style="margin-left:auto;font-size:.72rem">
+            <i class="ph ph-magic-wand"></i> Gerar
+          </button>
+        </div>
+      </div>`;
+    }
+    const { jogos } = catData;
+    const allPhases = ['QF', 'SF', 'F'];
+    const phases = allPhases.filter(p => jogos.some(j => j.fase === p));
+    let championBanner = '';
+    const final = jogos.find(j => j.fase === 'F');
+    if (final?.resultado) {
+      const w = ffGetWinner(final.resultado);
+      const name = w === 1 ? final.eq1 : final.eq2;
+      if (name) championBanner = `<span style="font-size:.75rem;background:var(--amarelo);color:#000;padding:.15rem .5rem;border-radius:.25rem;font-weight:700">\u{1F3C6} ${escHtml(name)}</span>`;
+    }
+    const bracketCols = phases.map((fase, colIdx) => {
+      const games = [...jogos.filter(j => j.fase === fase)].sort((a, b) => a.num - b.num);
+      const isLast = colIdx === phases.length - 1;
+      return games.map((g, i) => {
+        const isTop = !isLast && i % 2 === 0;
+        const isBot = !isLast && i % 2 === 1;
+        const cls = ['bk-slot', isTop ? 'bk-slot-top' : isBot ? 'bk-slot-bot' : ''].filter(Boolean).join(' ');
+        return `<div class="${cls}">${ffCardHtml(g, catId)}</div>`;
+      }).join('');
+    });
+    return `<div style="margin-bottom:2.5rem">
+      <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:.75rem;padding-bottom:.4rem;border-bottom:1px solid var(--preto-borda)">
+        <span style="font-size:1rem;font-weight:700;color:var(--verde)">${catId}</span>
+        ${championBanner}
+        <div style="margin-left:auto;display:flex;gap:.4rem">
+          <button class="btn btn-ghost btn-sm" style="font-size:.72rem;color:var(--amarelo)" onclick="ffGerarAleatorios('${catId}')" title="Resultados aleatórios ${catId}"><i class="ph ph-shuffle"></i></button>
+          <button class="btn btn-ghost btn-sm" style="font-size:.72rem;color:var(--cinza-texto)" onclick="ffSetCat('${catId}')"><i class="ph ph-arrow-right"></i> Ver</button>
+        </div>
+      </div>
+      <div class="bk-bracket" style="font-size:.82em">
+        ${phases.map((fase, i) => `
+          <div class="bk-round">
+            <div class="bk-rhead">${phaseLabel[fase]}</div>
+            ${bracketCols[i]}
+          </div>`).join('')}
+        ${ffChampionColHtml(catId)}
+      </div>
+    </div>`;
+  }).join('');
+
+  container.innerHTML = actionBar + catBlocks;
+}
+
+window.ffGerarTodosBrackets = function() {
+  const cats = ['M1', 'M2', 'F1', 'F2', 'M3', 'M4', 'M5'];
+  const ff = ffLoad();
+  const ready = cats.filter(c => !ff[c]?.generated && allGroupGamesDone(c));
+  if (ready.length === 0) return toast('Nenhum bracket disponível para gerar (fase de grupos incompleta ou já gerados).', 'error');
+  if (!confirm(`Gerar brackets para: ${ready.join(', ')}?`)) return;
+  ready.forEach(catId => {
+    ff[catId] = ffGenerateBracket(catId);
+    Auth.log('GENERATE_BRACKET', 'fasefinal', `Bracket gerado: ${catId}`);
+  });
+  ffSave(ff);
+  if (ffCurrentCat === 'ALL') ffRenderGlobal(); else renderFaseFinal();
+  toast(`${ready.length} bracket${ready.length > 1 ? 's' : ''} gerado${ready.length > 1 ? 's' : ''}.`);
+};
+
+window.ffGerarAleatoriosTodos = function() {
+  const cats = ['M1', 'M2', 'F1', 'F2', 'M3', 'M4', 'M5'];
+  const generated = cats.filter(c => ffLoad()[c]?.generated);
+  if (generated.length === 0) return toast('Nenhum bracket gerado. Gera os brackets primeiro.', 'error');
+  if (!confirm(`Preencher resultados aleatórios em todos os brackets gerados (${generated.join(', ')})? (Apenas para testes)`)) return;
+  const phaseOrder = ['QF', 'SF', 'F'];
+  let totalCount = 0;
+  generated.forEach(catId => {
+    phaseOrder.forEach(fase => {
+      const ff = ffLoad();
+      if (!ff[catId]?.generated) return;
+      ff[catId].jogos.filter(j => j.fase === fase && !j.resultado && j.eq1 && j.eq2).forEach(j => {
+        const s1 = randomSet(), s2 = randomSet();
+        const w1 = s1.eq1 > s1.eq2 ? 1 : 2;
+        const w2 = s2.eq1 > s2.eq2 ? 1 : 2;
+        const r = {
+          s1eq1: s1.eq1, s1eq2: s1.eq2, tb1eq1: s1.tbEq1, tb1eq2: s1.tbEq2,
+          s2eq1: s2.eq1, s2eq2: s2.eq2, tb2eq1: s2.tbEq1, tb2eq2: s2.tbEq2,
+          s3eq1: null,   s3eq2: null,   tb3eq1: null,      tb3eq2: null,
+        };
+        if (w1 !== w2) {
+          const s3 = randomSet();
+          r.s3eq1 = s3.eq1; r.s3eq2 = s3.eq2; r.tb3eq1 = s3.tbEq1; r.tb3eq2 = s3.tbEq2;
+        }
+        j.resultado = r;
+        totalCount++;
+      });
+      ffSave(ff);
+      ffPropagate(catId);
+    });
+  });
+  if (ffCurrentCat === 'ALL') ffRenderGlobal(); else renderFaseFinal();
+  toast(`${totalCount} resultado${totalCount !== 1 ? 's' : ''} aleatório${totalCount !== 1 ? 's' : ''} gerados para ${generated.length} grupo${generated.length !== 1 ? 's' : ''}.`);
 };
 
 window.ffGerarAleatorios = function(catId) {
