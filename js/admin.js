@@ -387,6 +387,7 @@ window.gerarPanfleto = function() {
   const FOOT_H = 64;
   const H      = HEAD_H + jogos.length * ROW_H + FOOT_H;
 
+  function draw(logoImg) {
   const canvas  = document.createElement('canvas');
   canvas.width  = W;
   canvas.height = H;
@@ -456,6 +457,17 @@ window.gerarPanfleto = function() {
   // ── Divider ──────────────────────────────────────────────
   ctx.fillStyle = '#1C2620';
   ctx.fillRect(PAD, 185, W - PAD * 2, 2);
+
+  // ── Logo (top-right of header) ────────────────────────────
+  if (logoImg) {
+    const LOGO_SZ = 80, LOGO_X = W - PAD - 80, LOGO_Y = 18;
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(LOGO_X + LOGO_SZ / 2, LOGO_Y + LOGO_SZ / 2, LOGO_SZ / 2, 0, Math.PI * 2);
+    ctx.clip();
+    ctx.drawImage(logoImg, LOGO_X, LOGO_Y, LOGO_SZ, LOGO_SZ);
+    ctx.restore();
+  }
 
   // ── Column headers ───────────────────────────────────────
   const CX = { data: PAD, hora: PAD+66, campo: PAD+148, grupo: PAD+322, eq1r: PAD+634, vs: PAD+649, eq2: PAD+665 };
@@ -549,6 +561,12 @@ window.gerarPanfleto = function() {
   ctx.textAlign = 'left';
 
   _panfletoShare(canvas, `jogos-${filtroData !== 'todos' ? filtroData : 'todos'}.png`);
+  } // end draw()
+
+  const logo = new Image();
+  logo.onload  = () => draw(logo);
+  logo.onerror = () => draw(null);
+  logo.src = 'playpadellogo.jpg';
 };
 
 // ============================================
