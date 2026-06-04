@@ -289,13 +289,20 @@ const Auth = (() => {
   }
 
   // ── Public API ────────────────────────────────────────────────
+  function verifyPassword(userId, password) {
+    const users = getUsers();
+    const u = users.find(x => x.id === userId);
+    if (!u) return false;
+    return hashPwd(password, u.salt) === u.passwordHash;
+  }
+
   return {
     me, isAuth, isAdmin, hasRole, canAccessCategory,
     login, logout, updateActivity, resetTimeout, startTimeoutWatch,
     getUsers, createUser, updateUser, toggleUser, deleteUser,
     getSessions, forceLogout,
     getLogs, log,
-    ensureDefaults,
+    ensureDefaults, verifyPassword,
     TIMEOUT_MS, WARN_MS,
   };
 

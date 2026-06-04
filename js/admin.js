@@ -1119,6 +1119,38 @@ function doLogout() {
   location.reload();
 }
 
+window.abrirAlterarPasse = function() {
+  document.getElementById('passeActual').value = '';
+  document.getElementById('passeNova').value = '';
+  document.getElementById('passeNovaConf').value = '';
+  document.getElementById('passeModalError').style.display = 'none';
+  openModal('modalAlterarPasse');
+};
+
+window.guardarNovaPasse = function() {
+  const actual = document.getElementById('passeActual').value.trim();
+  const nova   = document.getElementById('passeNova').value;
+  const conf   = document.getElementById('passeNovaConf').value;
+  const errEl  = document.getElementById('passeModalError');
+  const errMsg = document.getElementById('passeModalErrorMsg');
+  function showErr(msg) { errMsg.textContent = msg; errEl.style.display = ''; }
+
+  if (!actual) return showErr('Introduza a palavra-passe actual.');
+  if (!nova || nova.length < 6) return showErr('A nova palavra-passe deve ter pelo menos 6 caracteres.');
+  if (nova !== conf) return showErr('As palavras-passe não coincidem.');
+
+  const me = Auth.me();
+  if (!me) return showErr('Sessão inválida. Faça login novamente.');
+
+  // Verify current password
+  if (!Auth.verifyPassword(me.id, actual)) return showErr('Palavra-passe actual incorrecta.');
+
+  Auth.updateUser(me.id, { password: nova });
+  closeModal('modalAlterarPasse');
+  toast('Palavra-passe alterada com sucesso.');
+  Auth.log('CHANGE_PASSWORD', 'auth', `Palavra-passe alterada: ${me.username}`);
+};
+
 function resetLocalCredentials(e) {
   if (e) e.preventDefault();
   if (!confirm('Repor credenciais? A conta admin será reposicionada com a palavra-passe padrão.')) return;
