@@ -2540,9 +2540,9 @@
     },
     {
       "id": 97,
-      "data": "2026-06-08",
-      "hora": "22:30",
-      "campo": "TVCabo",
+      "data": "2026-06-06",
+      "hora": "21:00",
+      "campo": "Play Padel",
       "grupo": "M1-C",
       "eq1": "Tayab & Badru Rosa",
       "eq2": "Carlos Cardeano & José Santos",
@@ -2790,8 +2790,8 @@
     },
     {
       "id": 122,
-      "data": "2026-06-10",
-      "hora": "21:30",
+      "data": "2026-06-09",
+      "hora": "22:30",
       "campo": "Play Padel",
       "grupo": "M1-A",
       "eq1": "Luis Antunes & Manuel Neto",
@@ -2973,6 +2973,36 @@
     }
   ],
   "auditlog": [
+    {
+      "id": "mpzw74oebm7etyy",
+      "userId": "mpz46x5c2zupza0",
+      "username": "bgaspar",
+      "role": "operator",
+      "action": "HORARIO_MOVER_DIA",
+      "target": "jogos",
+      "detail": "Jogo #97 de 2026-06-10 21:30 Play Padel → 2026-06-06 21:00 Play Padel",
+      "ts": "2026-06-04T19:32:45.038Z"
+    },
+    {
+      "id": "mpzvftbbzizzdqy",
+      "userId": "mpz46x5c2zupza0",
+      "username": "bgaspar",
+      "role": "operator",
+      "action": "HORARIO_MOVER_DIA",
+      "target": "jogos",
+      "detail": "Jogo #97 de 2026-06-08 22:30 TVCabo → 2026-06-10 21:30 Play Padel",
+      "ts": "2026-06-04T19:11:30.599Z"
+    },
+    {
+      "id": "mpzvepyepxpfeuu",
+      "userId": "mpz46x5c2zupza0",
+      "username": "bgaspar",
+      "role": "operator",
+      "action": "HORARIO_MOVER_DIA",
+      "target": "jogos",
+      "detail": "Jogo #122 de 2026-06-10 21:30 Play Padel → 2026-06-09 22:30 Play Padel",
+      "ts": "2026-06-04T19:10:39.590Z"
+    },
     {
       "id": "mpzuqo17kep098h",
       "userId": "mpz46x5c2zupza0",
@@ -5004,5 +5034,5 @@
       "ts": "2026-06-03T06:06:37.211Z"
     }
   ],
-  "_updated": "2026-06-04T18:52:58.855Z"
+  "_updated": "2026-06-04T19:32:50.622Z"
 }
