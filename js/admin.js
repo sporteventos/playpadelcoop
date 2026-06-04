@@ -3930,20 +3930,25 @@ function renderHorario() {
   const jogos  = getData('jogos');
   const campos = getData('campos').map(c => c.nome);
 
-  // Populate filters if empty
+  // Repopulate filters on every render, preserving current selection
   const dataFilter  = document.getElementById('horarioDataFilter');
   const campoFilter = document.getElementById('horarioCampoFilter');
-  if (dataFilter && !dataFilter.options.length) {
-    const dates = [...new Set(jogos.map(j => j.data))].sort();
-    dates.forEach(d => { const o = new Option(formatDate(d), d); dataFilter.appendChild(o); });
+  if (dataFilter) {
+    const saved = dataFilter.value;
+    const dates = [...new Set(jogos.map(j => j.data).filter(Boolean))].sort();
+    dataFilter.innerHTML = dates.map(d => `<option value="${d}">${formatDate(d)}</option>`).join('');
+    if (saved) dataFilter.value = saved;
   }
-  if (campoFilter && !campoFilter.options.length) {
-    campos.forEach(c => { const o = new Option(c, c); campoFilter.appendChild(o); });
+  if (campoFilter) {
+    const saved = campoFilter.value;
+    campoFilter.innerHTML = '<option value="">Todos os campos</option>' +
+      campos.map(c => `<option value="${c}">${c}</option>`).join('');
+    if (saved) campoFilter.value = saved;
   }
 
   const selDate  = dataFilter?.value;
-  const selCampo = campoFilter?.value;
-  if (!selDate) return el.innerHTML = `<p style="color:var(--cinza-texto);padding:1rem">Seleccione uma data para ver o horário.</p>`;
+  const selCampo = campoFilter?.value || '';
+  if (!selDate) return el.innerHTML = `<p style="color:var(--cinza-texto);padding:1rem">Sem jogos com data atribuída.</p>`;
 
   const dayJogos = jogos.filter(j => j.data === selDate && (!selCampo || j.campo === selCampo));
   if (!dayJogos.length) return el.innerHTML = `<p style="color:var(--cinza-texto);padding:1rem">Sem jogos para os filtros seleccionados.</p>`;
