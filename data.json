@@ -2974,6 +2974,76 @@
   ],
   "auditlog": [
     {
+      "id": "mpzjo7go9gxlts2",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "RESET_BRACKET",
+      "target": "fasefinal",
+      "detail": "Bracket resetado: M5",
+      "ts": "2026-06-04T13:42:06.792Z"
+    },
+    {
+      "id": "mpzjo7gmpggytxt",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "RESET_BRACKET",
+      "target": "fasefinal",
+      "detail": "Bracket resetado: M4",
+      "ts": "2026-06-04T13:42:06.790Z"
+    },
+    {
+      "id": "mpzjo7gl2hphkkf",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "RESET_BRACKET",
+      "target": "fasefinal",
+      "detail": "Bracket resetado: M3",
+      "ts": "2026-06-04T13:42:06.789Z"
+    },
+    {
+      "id": "mpzjo7gjcxtybta",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "RESET_BRACKET",
+      "target": "fasefinal",
+      "detail": "Bracket resetado: F2",
+      "ts": "2026-06-04T13:42:06.787Z"
+    },
+    {
+      "id": "mpzjo7gbijaz5dz",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "RESET_BRACKET",
+      "target": "fasefinal",
+      "detail": "Bracket resetado: F1",
+      "ts": "2026-06-04T13:42:06.780Z"
+    },
+    {
+      "id": "mpzjo7ga5987d8y",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "RESET_BRACKET",
+      "target": "fasefinal",
+      "detail": "Bracket resetado: M2",
+      "ts": "2026-06-04T13:42:06.778Z"
+    },
+    {
+      "id": "mpzjo7g8z2mgzzi",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "RESET_BRACKET",
+      "target": "fasefinal",
+      "detail": "Bracket resetado: M1",
+      "ts": "2026-06-04T13:42:06.776Z"
+    },
+    {
       "id": "mpzjmqysoxj8rxm",
       "userId": "mpz8aq9sg983ubo",
       "username": "euamusse",
@@ -4884,5 +4954,5 @@
       "ts": "2026-06-03T06:06:37.211Z"
     }
   ],
-  "_updated": "2026-06-04T13:41:04.085Z"
+  "_updated": "2026-06-04T13:42:11.318Z"
 }
