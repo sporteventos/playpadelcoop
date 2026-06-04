@@ -1960,9 +1960,9 @@
     },
     {
       "id": 39,
-      "data": "2026-06-06",
-      "hora": "20:00",
-      "campo": "TVCabo",
+      "data": "2026-06-07",
+      "hora": "18:00",
+      "campo": "Play Padel",
       "grupo": "M1-C",
       "eq1": "Ahmad & Uzeir",
       "eq2": "Carlos Cardeano & José Santos",
@@ -2181,7 +2181,7 @@
     {
       "id": 61,
       "data": "2026-06-07",
-      "hora": "20:00",
+      "hora": "19:00",
       "campo": "Play Padel",
       "grupo": "M2-A",
       "eq1": "Luis Trigo de Morais & Ricky Kamissa",
@@ -2431,8 +2431,8 @@
     {
       "id": 86,
       "data": "2026-06-07",
-      "hora": "21:00",
-      "campo": "Stella Artois",
+      "hora": "20:00",
+      "campo": "Play Padel",
       "grupo": "M5-B",
       "eq1": "Mizzy & Zayan Imitiaz",
       "eq2": "Rayhan & Arsheel",
@@ -2973,6 +2973,46 @@
     }
   ],
   "auditlog": [
+    {
+      "id": "mpzx7dameh4q91j",
+      "userId": "mpz46x5c2zupza0",
+      "username": "bgaspar",
+      "role": "operator",
+      "action": "HORARIO_DRAG",
+      "target": "jogos",
+      "detail": "Jogo #86 movido para 20:00 @ Play Padel",
+      "ts": "2026-06-04T20:00:55.822Z"
+    },
+    {
+      "id": "mpzx7apjy3kv85l",
+      "userId": "mpz46x5c2zupza0",
+      "username": "bgaspar",
+      "role": "operator",
+      "action": "HORARIO_DRAG",
+      "target": "jogos",
+      "detail": "Jogo #61 movido para 19:00 @ Play Padel",
+      "ts": "2026-06-04T20:00:52.471Z"
+    },
+    {
+      "id": "mpzx6vf7g9330xo",
+      "userId": "mpz46x5c2zupza0",
+      "username": "bgaspar",
+      "role": "operator",
+      "action": "HORARIO_MOVER_DIA",
+      "target": "jogos",
+      "detail": "Jogo #39 de 2026-06-10 21:30 TVCabo → 2026-06-07 18:00 Play Padel",
+      "ts": "2026-06-04T20:00:32.659Z"
+    },
+    {
+      "id": "mpzx696rrsbejmw",
+      "userId": "mpz46x5c2zupza0",
+      "username": "bgaspar",
+      "role": "operator",
+      "action": "HORARIO_MOVER_DIA",
+      "target": "jogos",
+      "detail": "Jogo #39 de 2026-06-06 20:00 TVCabo → 2026-06-10 21:30 TVCabo",
+      "ts": "2026-06-04T20:00:03.843Z"
+    },
     {
       "id": "mpzx20w1jaziybd",
       "userId": "mpz46x5c2zupza0",
@@ -5104,5 +5144,5 @@
       "ts": "2026-06-03T06:06:37.211Z"
     }
   ],
-  "_updated": "2026-06-04T19:58:48.252Z"
+  "_updated": "2026-06-04T20:00:57.791Z"
 }
