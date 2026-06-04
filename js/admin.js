@@ -4347,13 +4347,15 @@ function renderHorario() {
   const dayJogos = allJogos.filter(j => j.data === selDate && (!selCampo || j.campo === selCampo));
   if (!dayJogos.length) return el.innerHTML = `<p style="color:var(--cinza-texto);padding:1rem">Sem jogos para os filtros seleccionados.</p>`;
 
-  // Full club operating hours: 06:00–23:30 in 30-min increments
+  // Club operating hours 06:00–23:00 in 1-hour increments (game duration = 1h)
+  // Also include :30 slots only if any game actually uses them
+  const gameHours = new Set(dayJogos.map(j => j.hora).filter(Boolean));
+  const hasHalfHour = [...gameHours].some(h => h.endsWith(':30'));
   const CLUB_SLOTS = [];
   for (let h = 6; h <= 23; h++) {
     CLUB_SLOTS.push(`${String(h).padStart(2,'0')}:00`);
-    if (h < 23) CLUB_SLOTS.push(`${String(h).padStart(2,'0')}:30`);
+    if (hasHalfHour) CLUB_SLOTS.push(`${String(h).padStart(2,'0')}:30`);
   }
-  CLUB_SLOTS.push('23:30');
   // Merge with any game times outside normal hours (edge cases)
   const times = [...new Set([...CLUB_SLOTS, ...dayJogos.map(j => j.hora).filter(Boolean)])].sort();
   const activeCampos = selCampo ? [selCampo] : [...new Set(dayJogos.map(j => j.campo))].sort();
@@ -4394,7 +4396,7 @@ function renderHorario() {
           const dragAttr = j._isFaseFinal ? '' : `draggable="true" ondragstart="horarioStartDrag(event,'${j.id}')" ondragend="horarioDragEnd(event)"`;
           return `<div class="schedule-slot has-game${conflict?' has-conflict':''}" ${dragAttr} ${slotAttr}>
             ${conflict ? '<span class="conflict-badge">CONFLITO</span>' : ''}
-            <div style="font-size:.7rem;color:var(--cinza-texto);margin-bottom:.2rem">${j.grupo}</div>
+            <div style="font-size:.7rem;color:var(--cinza-texto);margin-bottom:.2rem">${j.grupo} <span style="color:var(--verde);font-weight:700">${t}</span></div>
             <div style="display:flex;align-items:center;gap:.3rem;font-size:.75rem;font-weight:600;color:var(--branco);line-height:1.4">
               <div style="flex:1;text-align:right">${e1.split(' & ').map(escHtml).join('<br>')}</div>
               <div style="color:var(--cinza-texto);font-size:.65rem;flex-shrink:0">vs</div>
