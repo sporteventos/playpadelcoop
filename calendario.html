@@ -305,12 +305,12 @@ document.addEventListener('DOMContentLoaded', () => {
         ${statusHtml}
       </div>
       <div class="match-teams">
-        <div class="match-team ${temRes && winnerIs(j)===1 ? 'match-team--winner' : ''}">${eq1Html}</div>
+        <a class="match-team ${temRes && winnerIs(j)===1 ? 'match-team--winner' : ''}" href="jogadores.html?jogador=${encodeURIComponent(j.eq1)}">${eq1Html}</a>
         <div class="match-vs-wrap">
           <span class="match-vs">VS</span>
           ${scoreHtml}
         </div>
-        <div class="match-team ${temRes && winnerIs(j)===2 ? 'match-team--winner' : ''}">${eq2Html}</div>
+        <a class="match-team ${temRes && winnerIs(j)===2 ? 'match-team--winner' : ''}" href="jogadores.html?jogador=${encodeURIComponent(j.eq2)}">${eq2Html}</a>
       </div>
     </div>`;
   }

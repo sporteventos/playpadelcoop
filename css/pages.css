@@ -182,6 +182,8 @@
 .match-team:first-child { text-align: right; }
 .match-team:last-child  { text-align: left; }
 .match-team--winner { color: var(--branco); font-weight: 700; }
+a.match-team { text-decoration: none; }
+a.match-team:hover { color: var(--verde); transition: color .18s; }
 .match-vs-wrap { display: flex; flex-direction: column; align-items: center; gap: .3rem; }
 .match-vs { font-family: 'Barlow Condensed', sans-serif; font-size: .85rem; font-weight: 700; color: rgba(240,247,243,.3); }
 .match-score { display: flex; flex-direction: column; gap: .18rem; align-items: flex-start; }
