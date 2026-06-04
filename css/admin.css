@@ -644,7 +644,7 @@ tbody tr:hover { background: var(--cinza-escuro); }
 }
 .std-table th:first-child,
 .std-table th:nth-child(2) { text-align: left; }
-.std-table td { padding: .38rem .5rem; text-align: right; border-bottom: 1px solid rgba(255,255,255,.04); }
+.std-table td { padding: .38rem .5rem; text-align: right; border-bottom: 1px solid rgba(255,255,255,.04); white-space: nowrap; }
 .std-table td:first-child,
 .std-table td:nth-child(2) { text-align: left; }
 .std-table tr:last-child td { border-bottom: none; }
