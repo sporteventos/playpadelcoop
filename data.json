@@ -1961,7 +1961,7 @@
     {
       "id": 39,
       "data": "2026-06-07",
-      "hora": "18:00",
+      "hora": "17:00",
       "campo": "Play Padel",
       "grupo": "M1-C",
       "eq1": "Ahmad & Uzeir",
@@ -2841,7 +2841,7 @@
     {
       "id": 127,
       "data": "2026-06-07",
-      "hora": "17:00",
+      "hora": "18:00",
       "campo": "Play Padel",
       "grupo": "M1-C",
       "eq1": "Tayab & Badru Rosa",
@@ -2973,6 +2973,16 @@
     }
   ],
   "auditlog": [
+    {
+      "id": "mpzxlxrs4ltuwsb",
+      "userId": "mpz46x5c2zupza0",
+      "username": "bgaspar",
+      "role": "operator",
+      "action": "HORARIO_DRAG",
+      "target": "jogos",
+      "detail": "Jogo #127 movido para 18:00 @ Play Padel",
+      "ts": "2026-06-04T20:12:15.544Z"
+    },
     {
       "id": "mpzx7dameh4q91j",
       "userId": "mpz46x5c2zupza0",
@@ -5144,5 +5154,5 @@
       "ts": "2026-06-03T06:06:37.211Z"
     }
   ],
-  "_updated": "2026-06-04T20:00:57.791Z"
+  "_updated": "2026-06-04T20:12:19.295Z"
 }
