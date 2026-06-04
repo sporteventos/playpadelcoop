@@ -647,6 +647,23 @@
      MODAIS
      ========================================== -->
 
+<!-- Modal: Partilhar Panfleto -->
+<div class="modal-overlay" id="modalPanfletoShare" role="dialog" aria-modal="true">
+  <div class="modal" style="max-width:360px;width:100%;text-align:center">
+    <div class="modal-header" style="justify-content:center">
+      <h3 class="modal-title"><i class="ph ph-share-network"></i> Partilhar Panfleto</h3>
+    </div>
+    <div class="modal-body" style="padding:1.25rem 1.5rem 1.5rem">
+      <p id="panfletoShareFilename" style="color:var(--cinza-texto);font-size:.85rem;margin:0 0 1.25rem"></p>
+      <div style="display:flex;gap:.75rem;justify-content:center;flex-wrap:wrap">
+        <button class="btn btn-primary btn-sm" onclick="_panfletoDownload()"><i class="ph ph-download-simple"></i> Guardar PNG</button>
+        <button class="btn btn-sm" style="background:#25D366;color:#fff;border:none" onclick="_panfletoWhatsapp()"><i class="ph ph-whatsapp-logo"></i> Partilhar WhatsApp</button>
+        <button class="btn btn-ghost btn-sm" onclick="closeModal('modalPanfletoShare')">Fechar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- Modal: Panfleto com Foto -->
 <div class="modal-overlay" id="modalFotoFlyer" role="dialog" aria-modal="true">
   <div class="modal" style="max-width:560px;width:100%">

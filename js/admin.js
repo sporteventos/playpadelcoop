@@ -136,6 +136,47 @@ window.notificarDia = function() {
   window.open('https://wa.me/?text=' + encodeURIComponent(waMsgBundle(jogos)), '_blank');
 };
 
+// ============================================
+//  PARTILHAR PANFLETO (utilitário partilhado)
+// ============================================
+window._panfletoShare = function(canvas, filename) {
+  canvas.toBlob(function(blob) {
+    APP._panfletoBlob     = blob;
+    APP._panfletoFilename = filename;
+    document.getElementById('panfletoShareFilename').textContent = filename;
+    openModal('modalPanfletoShare');
+    toast('Panfleto gerado!', 'success');
+  }, 'image/png');
+};
+
+window._panfletoDownload = function() {
+  const blob     = APP._panfletoBlob;
+  const filename = APP._panfletoFilename;
+  if (!blob) return;
+  const url = URL.createObjectURL(blob);
+  const a   = document.createElement('a');
+  a.download = filename;
+  a.href     = url;
+  a.click();
+  URL.revokeObjectURL(url);
+};
+
+window._panfletoWhatsapp = async function() {
+  const blob     = APP._panfletoBlob;
+  const filename = APP._panfletoFilename;
+  if (!blob) return;
+  const file = new File([blob], filename, { type: 'image/png' });
+  if (navigator.canShare && navigator.canShare({ files: [file] })) {
+    try {
+      await navigator.share({ files: [file], title: 'Play Padel Coop \u00B7 Torneio Anivers\u00E1rio 2026' });
+    } catch (err) {
+      if (err.name !== 'AbortError') _panfletoDownload();
+    }
+  } else {
+    window.open('https://wa.me/?text=' + encodeURIComponent('Play Padel Coop \u00B7 Torneio Anivers\u00E1rio 2026'), '_blank');
+  }
+};
+
 window.gerarPanfleto = function() {
   const filtroData  = document.getElementById('filtroDataJogos').value;
   const filtroCampo = document.getElementById('filtroCampoJogos').value;
@@ -315,11 +356,7 @@ window.gerarPanfleto = function() {
   ctx.fillText('Play Padel  \u00B7  Torneio Aniversário 2026', W / 2, fy + 38);
   ctx.textAlign = 'left';
 
-  const a = document.createElement('a');
-  a.download = `jogos-${filtroData !== 'todos' ? filtroData : 'todos'}.png`;
-  a.href = canvas.toDataURL('image/png');
-  a.click();
-  toast('Panfleto gerado!', 'success');
+  _panfletoShare(canvas, `jogos-${filtroData !== 'todos' ? filtroData : 'todos'}.png`);
 };
 
 // ============================================
@@ -669,11 +706,7 @@ window.gerarPanfletoResultados = function() {
   ctx.fillText('Play Padel  \u00B7  Torneio Aniversário 2026', W / 2, fy + 38);
   ctx.textAlign = 'left';
 
-  const a = document.createElement('a');
-  a.download = `resultados-${filtroData !== 'todos' ? filtroData : 'todos'}.png`;
-  a.href = canvas.toDataURL('image/png');
-  a.click();
-  toast('Panfleto gerado!', 'success');
+  _panfletoShare(canvas, `resultados-${filtroData !== 'todos' ? filtroData : 'todos'}.png`);
 };
 
 // ============================================
@@ -3375,11 +3408,7 @@ window.gerarPanfletoClassificacoes = function() {
   ctx.fillText('Play Padel  \u00B7  Torneio Aniversário 2026', W / 2, H - FOOT_H + 36);
   ctx.textAlign = 'left';
 
-  const a = document.createElement('a');
-  a.download = `classificacoes-${catId}.png`;
-  a.href = canvas.toDataURL('image/png');
-  a.click();
-  toast('Panfleto gerado!', 'success');
+  _panfletoShare(canvas, `classificacoes-${catId}.png`);
 };
 
 // ============================================
@@ -3491,11 +3520,7 @@ window.gerarPanfletoCampeoes = function() {
   ctx.fillText('Play Padel  ·  Torneio Aniversário 2026', W / 2, fy + 38);
   ctx.textAlign = 'left';
 
-  const a = document.createElement('a');
-  a.download = 'campeoes.png';
-  a.href = canvas.toDataURL('image/png');
-  a.click();
-  toast('Panfleto gerado!', 'success');
+  _panfletoShare(canvas, 'campeoes.png');
 };
 
 // ============================================
