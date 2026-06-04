@@ -1862,6 +1862,7 @@ function randomSet() {
 }
 
 window.gerarResultadosAleatorios = function() {
+  if (!Auth.isAdmin()) return toast('Apenas administradores podem executar esta acção.', 'error');
   if (!confirm('Preencher todos os jogos pendentes com resultados aleatórios?\n(Apenas para testes — os resultados existentes não são alterados.)')) return;
   const jogos = getData('jogos');
   let count = 0;
@@ -2201,6 +2202,7 @@ function salvarResultado() {
 }
 
 function limparResultado() {
+  if (!Auth.isAdmin()) return toast('Apenas administradores podem executar esta acção.', 'error');
   if (!APP.editingId) return;
   if (!confirm('Limpar o resultado deste jogo?')) return;
   const jogos = getData('jogos');
@@ -2488,6 +2490,12 @@ function initAdmin() {
   // User role modal — show/hide categories on role change
   document.getElementById('userRole')?.addEventListener('change', updateUserCategoriesVisibility);
 
+  // Hide admin-only buttons for non-admin users
+  if (!Auth.isAdmin()) {
+    document.getElementById('btnGerarAleatorios')?.remove();
+    document.getElementById('btnLimparResultado')?.remove();
+  }
+
   // Ir para view inicial — restaurar da hash se disponível
   const _hashView = location.hash.slice(1);
   navigate(_hashView && document.getElementById('view-' + _hashView) ? _hashView : 'dashboard');
@@ -2743,7 +2751,7 @@ function renderFaseFinal() {
         </div>`).join('')}
       ${ffChampionColHtml(ffCurrentCat)}
     </div>
-    <div style="margin-top:1.25rem;display:flex;gap:.5rem;flex-wrap:wrap">
+    ${Auth.isAdmin() ? `<div style="margin-top:1.25rem;display:flex;gap:.5rem;flex-wrap:wrap">
       <button class="btn btn-ghost btn-sm" style="color:var(--amarelo);border-color:rgba(245,197,24,.3)" onclick="ffGerarAleatorios('${ffCurrentCat}')">
         <i class="ph ph-shuffle"></i> Resultados Aleatórios
       </button>
@@ -2756,7 +2764,7 @@ function renderFaseFinal() {
       <button class="btn btn-ghost btn-sm" style="color:var(--vermelho);border-color:rgba(255,74,74,.3)" onclick="ffReset('${ffCurrentCat}')">
         <i class="ph ph-arrow-counter-clockwise"></i> Resetar Bracket
       </button>
-    </div>`;
+    </div>` : ''}` ;
 }
 
 function ffCardHtml(j, catId) {
@@ -2860,6 +2868,7 @@ window.ffGenerate = function(catId) {
 };
 
 window.ffReset = function(catId) {
+  if (!Auth.isAdmin()) return toast('Apenas administradores podem executar esta acção.', 'error');
   if (!confirm(`Resetar o bracket de ${catId}? Todos os resultados desta fase serão apagados.`)) return;
   const ff = ffLoad(); delete ff[catId]; ffSave(ff);
   renderFaseFinal();
@@ -2878,7 +2887,7 @@ function ffRenderGlobal() {
       <button class="btn btn-primary btn-sm" onclick="ffGerarTodosBrackets()">
         <i class="ph ph-magic-wand"></i> Gerar Brackets em Falta
       </button>
-      <button class="btn btn-ghost btn-sm" style="color:var(--amarelo);border-color:rgba(245,197,24,.3)" onclick="ffGerarAleatoriosTodos()">
+      ${Auth.isAdmin() ? `<button class="btn btn-ghost btn-sm" style="color:var(--amarelo);border-color:rgba(245,197,24,.3)" onclick="ffGerarAleatoriosTodos()">
         <i class="ph ph-shuffle"></i> Resultados Aleatórios — Todos
       </button>
       <button class="btn btn-ghost btn-sm" style="color:var(--cinza-texto)" onclick="ffLimparResultadosTodos()">
@@ -2886,7 +2895,7 @@ function ffRenderGlobal() {
       </button>
       <button class="btn btn-ghost btn-sm" style="color:var(--vermelho);border-color:rgba(255,74,74,.3)" onclick="ffResetarTodos()">
         <i class="ph ph-arrow-counter-clockwise"></i> Resetar Brackets — Todos
-      </button>
+      </button>` : ''}
     </div>`;
 
   const catBlocks = cats.map(catId => {
@@ -2929,7 +2938,7 @@ function ffRenderGlobal() {
         <span style="font-size:1rem;font-weight:700;color:var(--verde)">${catId}</span>
         ${championBanner}
         <div style="margin-left:auto;display:flex;gap:.4rem">
-          <button class="btn btn-ghost btn-sm" style="font-size:.72rem;color:var(--amarelo)" onclick="ffGerarAleatorios('${catId}')" title="Resultados aleatórios ${catId}"><i class="ph ph-shuffle"></i></button>
+          ${Auth.isAdmin() ? `<button class="btn btn-ghost btn-sm" style="font-size:.72rem;color:var(--amarelo)" onclick="ffGerarAleatorios('${catId}')" title="Resultados aleatórios ${catId}"><i class="ph ph-shuffle"></i></button>` : ''}
           <button class="btn btn-ghost btn-sm" style="font-size:.72rem;color:var(--cinza-texto)" onclick="ffSetCat('${catId}')"><i class="ph ph-arrow-right"></i> Ver</button>
         </div>
       </div>
@@ -2963,6 +2972,7 @@ window.ffGerarTodosBrackets = function() {
 };
 
 window.ffGerarAleatoriosTodos = function() {
+  if (!Auth.isAdmin()) return toast('Apenas administradores podem executar esta acção.', 'error');
   const cats = ['M1', 'M2', 'F1', 'F2', 'M3', 'M4', 'M5'];
   const generated = cats.filter(c => ffLoad()[c]?.generated);
   if (generated.length === 0) return toast('Nenhum bracket gerado. Gera os brackets primeiro.', 'error');
@@ -2998,6 +3008,7 @@ window.ffGerarAleatoriosTodos = function() {
 };
 
 window.ffLimparResultadosTodos = function() {
+  if (!Auth.isAdmin()) return toast('Apenas administradores podem executar esta acção.', 'error');
   const cats = ['M1', 'M2', 'F1', 'F2', 'M3', 'M4', 'M5'];
   const ff = ffLoad();
   const generated = cats.filter(c => ff[c]?.generated);
@@ -3015,6 +3026,7 @@ window.ffLimparResultadosTodos = function() {
 };
 
 window.ffResetarTodos = function() {
+  if (!Auth.isAdmin()) return toast('Apenas administradores podem executar esta acção.', 'error');
   const cats = ['M1', 'M2', 'F1', 'F2', 'M3', 'M4', 'M5'];
   const ff = ffLoad();
   const generated = cats.filter(c => ff[c]?.generated);
@@ -3030,6 +3042,7 @@ window.ffResetarTodos = function() {
 };
 
 window.ffGerarAleatorios = function(catId) {
+  if (!Auth.isAdmin()) return toast('Apenas administradores podem executar esta acção.', 'error');
   if (!confirm(`Preencher todos os jogos pendentes de ${catId} com resultados aleatórios?\n(Apenas para testes)`))
     return;
   const ff = ffLoad();
@@ -3068,6 +3081,7 @@ window.ffGerarAleatorios = function(catId) {
 };
 
 window.ffLimparResultados = function(catId) {
+  if (!Auth.isAdmin()) return toast('Apenas administradores podem executar esta acção.', 'error');
   if (!confirm(`Limpar todos os resultados da Fase Final de ${catId}?`)) return;
   const ff = ffLoad();
   if (!ff[catId]?.generated) return;
