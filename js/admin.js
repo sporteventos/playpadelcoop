@@ -4347,15 +4347,19 @@ function renderHorario() {
   const dayJogos = allJogos.filter(j => j.data === selDate && (!selCampo || j.campo === selCampo));
   if (!dayJogos.length) return el.innerHTML = `<p style="color:var(--cinza-texto);padding:1rem">Sem jogos para os filtros seleccionados.</p>`;
 
-  // Club operating hours 06:00–23:00 in 1-hour increments (game duration = 1h)
-  // Also include :30 slots only if any game actually uses them
-  const gameHours = new Set(dayJogos.map(j => j.hora).filter(Boolean));
-  const hasHalfHour = [...gameHours].some(h => h.endsWith(':30'));
+  // Build slot list: 1-hour intervals, one series per minute-offset used by games.
+  // e.g. if games are at :30 → 06:30,07:30,...23:30 (no :00 gaps in between).
+  // If games use both :00 and :30, both series are shown (mixed-offset day).
+  const gameMinutes = [...new Set(dayJogos.map(j => j.hora).filter(Boolean).map(h => h.split(':')[1]))];
+  if (!gameMinutes.length) gameMinutes.push('00');
   const CLUB_SLOTS = [];
-  for (let h = 6; h <= 23; h++) {
-    CLUB_SLOTS.push(`${String(h).padStart(2,'0')}:00`);
-    if (hasHalfHour) CLUB_SLOTS.push(`${String(h).padStart(2,'0')}:30`);
-  }
+  gameMinutes.forEach(min => {
+    for (let h = 6; h <= 23; h++) {
+      const slot = `${String(h).padStart(2,'0')}:${min}`;
+      if (slot <= '23:30') CLUB_SLOTS.push(slot);
+    }
+  });
+  CLUB_SLOTS.sort();
   // Merge with any game times outside normal hours (edge cases)
   const times = [...new Set([...CLUB_SLOTS, ...dayJogos.map(j => j.hora).filter(Boolean)])].sort();
   const activeCampos = selCampo ? [selCampo] : [...new Set(dayJogos.map(j => j.campo))].sort();
