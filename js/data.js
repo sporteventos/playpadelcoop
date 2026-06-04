@@ -205,8 +205,17 @@ function ppFormatDate(d) {
     window.ppDataReady = fetch('data.json?_=' + Date.now())
       .then(function (r) { return r.ok ? r.json() : Promise.reject('404'); })
       .then(function (d) {
-        // Always update users from remote so operator accounts created on another device are available
-        if (d['users'] !== undefined) ppSave('users', d['users']);
+        // Merge remote users into local: preserve locally-created users (not yet pushed),
+        // but add any remote users that don't exist locally (created on another device).
+        if (Array.isArray(d['users']) && d['users'].length) {
+          try {
+            var localUsers = JSON.parse(localStorage.getItem('pp_users') || '[]');
+            var localIds   = new Set(localUsers.map(function(u) { return u.id; }));
+            // Remote user that already exists locally → local version wins (may have changes)
+            var merged = localUsers.concat(d['users'].filter(function(u) { return !localIds.has(u.id); }));
+            ppSave('users', merged);
+          } catch(e) { ppSave('users', d['users']); }
+        }
         // Always merge remote audit logs (deduplicate by id) so all devices see all actions
         if (Array.isArray(d.auditlog) && d.auditlog.length) {
           try {
