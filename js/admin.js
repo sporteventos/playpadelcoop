@@ -2776,6 +2776,7 @@ function initAdmin() {
   if (!Auth.isAdmin()) {
     document.getElementById('btnGerarAleatorios')?.remove();
     document.getElementById('btnLimparResultado')?.remove();
+    document.getElementById('btnLimparTodosResultados')?.remove();
   }
 
   // Ir para view inicial — restaurar da hash se disponível
