@@ -484,6 +484,37 @@ window._downloadFotoFlyer = function() {
   a.click();
 };
 
+window._shareWhatsapp = async function() {
+  const canvas = document.getElementById('fotoFlyerCanvas');
+  const jogo = APP._fotoFlyer?.jogo;
+  if (!jogo) return;
+  const filename = `resultado-${String(jogo.id).replace(/[^a-z0-9]/gi, '-')}.png`;
+  canvas.toBlob(async blob => {
+    const file = new File([blob], filename, { type: 'image/png' });
+    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+      try {
+        await navigator.share({ files: [file], title: 'Resultado Play Padel Coop' });
+      } catch (err) {
+        if (err.name !== 'AbortError') _downloadFotoFlyer();
+      }
+    } else {
+      // Fallback: open WhatsApp web with text result
+      const { w1, w2 } = matchSetsScore(jogo.resultado);
+      const r = jogo.resultado;
+      const sets = [[r.s1eq1,r.s1eq2],[r.s2eq1,r.s2eq2],[r.s3eq1,r.s3eq2]]
+        .filter(([a]) => a !== null).map(([a, b]) => `${a}-${b}`).join(' / ');
+      const winner = w1 > w2 ? jogo.eq1 : jogo.eq2;
+      const texto = `\u{1F3BE} *Play Padel Coop \u00B7 Torneio Anivers\u00E1rio*\n\n` +
+        `\u{1F3C6} *${escHtml(jogo.grupo)}*\n` +
+        `${jogo.data ? ppFormatDate(jogo.data) : ''}${jogo.hora ? ' \u00B7 ' + jogo.hora : ''}\n\n` +
+        `*${jogo.eq1}*  ${w1} \u2013 ${w2}  *${jogo.eq2}*\n` +
+        `Sets: ${sets}\n\n` +
+        `\u{1F3C6} Vencedor: *${winner}*`;
+      window.open('https://wa.me/?text=' + encodeURIComponent(texto), '_blank');
+    }
+  }, 'image/png');
+};
+
 // ============================================
 //  PANFLETO RESULTADOS
 // ============================================
