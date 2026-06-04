@@ -2320,6 +2320,33 @@ window.abrirResultado = function(jogoId) {
 function salvarResultado() {
   const s1e1 = document.getElementById('resS1E1').value;
   const s1e2 = document.getElementById('resS1E2').value;
+
+  // No sets filled → save schedule/team edits only (no result required)
+  if (s1e1 === '' && s1e2 === '') {
+    if (APP.ffEditing) { closeModal('modalResultado'); APP.ffEditing = null; return; }
+    const jogos = getData('jogos');
+    const idx = jogos.findIndex(j => j.id === APP.editingId);
+    if (idx >= 0) {
+      const newData  = document.getElementById('resData')?.value;
+      const newHora  = document.getElementById('resHora')?.value;
+      const newCampo = document.getElementById('resCampo')?.value;
+      const eq1Id    = document.getElementById('resEq1Sel')?.value;
+      const eq2Id    = document.getElementById('resEq2Sel')?.value;
+      if (newData)  jogos[idx].data  = newData;
+      if (newHora)  jogos[idx].hora  = newHora;
+      if (newCampo) jogos[idx].campo = newCampo;
+      if (eq1Id)    jogos[idx].eq1   = getDuplaLabel(eq1Id);
+      if (eq2Id)    jogos[idx].eq2   = getDuplaLabel(eq2Id);
+      setData('jogos', jogos);
+      Auth.log('SAVE_SCHEDULE', 'jogos', `Horário/equipas actualizados: jogo #${APP.editingId}`);
+      toast('Jogo actualizado.');
+    }
+    closeModal('modalResultado');
+    renderView(APP.currentView);
+    APP.editingId = null;
+    return;
+  }
+
   if (s1e1 === '' || s1e2 === '') return toast('Introduza pelo menos o resultado do 1.º set.', 'error');
   if (!getSetWinner(1)) return toast('Resultado do 1.º set inválido. Scores válidos: 6-0 a 6-4, 7-5, ou 6-6 + tie-break.', 'error');
 
