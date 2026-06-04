@@ -626,7 +626,7 @@ tbody tr:hover { background: var(--cinza-escuro); }
    ============================================ */
 .admin-standings-wrap { overflow-x: auto; }
 .admin-standings-grid {
-  display: grid; grid-template-columns: repeat(auto-fill, minmax(320px,1fr)); gap: 1rem;
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(360px,1fr)); gap: 1rem;
 }
 .admin-group-card {
   background: var(--preto-card); border: 1px solid var(--preto-borda); border-radius: var(--radius);

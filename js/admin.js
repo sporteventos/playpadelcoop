@@ -3321,8 +3321,8 @@ function _adminClassStandings(grupo, jogos) {
   const gJogos = jogos.filter(j => j.grupo === grupo.id);
   const pairs = {};
   gJogos.forEach(j => {
-    if (!pairs[j.eq1]) pairs[j.eq1] = { par: j.eq1, pj:0, v:0, d:0, pts:0, sw:0, sl:0 };
-    if (!pairs[j.eq2]) pairs[j.eq2] = { par: j.eq2, pj:0, v:0, d:0, pts:0, sw:0, sl:0 };
+    if (!pairs[j.eq1]) pairs[j.eq1] = { par: j.eq1, pj:0, v:0, d:0, pts:0, sv:0, sl:0, gv:0, gl:0 };
+    if (!pairs[j.eq2]) pairs[j.eq2] = { par: j.eq2, pj:0, v:0, d:0, pts:0, sv:0, sl:0, gv:0, gl:0 };
   });
   gJogos.forEach(j => {
     if (!j.resultado) return;
@@ -3330,15 +3330,16 @@ function _adminClassStandings(grupo, jogos) {
     const allSets = [[r.s1eq1,r.s1eq2],[r.s2eq1,r.s2eq2],[r.s3eq1,r.s3eq2]].filter(([a]) => a != null);
     let vEq1=0, vEq2=0;
     allSets.forEach(([a,b]) => {
-      if (a > b) vEq1++; else vEq2++;
-      if (pairs[j.eq1]) { pairs[j.eq1].sw += a; pairs[j.eq1].sl += b; }
-      if (pairs[j.eq2]) { pairs[j.eq2].sw += b; pairs[j.eq2].sl += a; }
+      if (a > b) { vEq1++; if (pairs[j.eq1]) pairs[j.eq1].sv++; if (pairs[j.eq2]) pairs[j.eq2].sl++; }
+      else        { vEq2++; if (pairs[j.eq2]) pairs[j.eq2].sv++; if (pairs[j.eq1]) pairs[j.eq1].sl++; }
+      if (pairs[j.eq1]) { pairs[j.eq1].gv += a; pairs[j.eq1].gl += b; }
+      if (pairs[j.eq2]) { pairs[j.eq2].gv += b; pairs[j.eq2].gl += a; }
     });
     const eq1win = vEq1 > vEq2;
     if (pairs[j.eq1]) { pairs[j.eq1].pj++; if (eq1win) { pairs[j.eq1].v++; pairs[j.eq1].pts+=3; } else pairs[j.eq1].d++; }
     if (pairs[j.eq2]) { pairs[j.eq2].pj++; if (!eq1win){ pairs[j.eq2].v++; pairs[j.eq2].pts+=3; } else pairs[j.eq2].d++; }
   });
-  return Object.values(pairs).sort((a,b) => b.pts - a.pts || (b.sw-b.sl)-(a.sw-a.sl) || b.sw - a.sw);
+  return Object.values(pairs).sort((a,b) => b.pts - a.pts || (b.sv-b.sl)-(a.sv-a.sl) || (b.gv-b.gl)-(a.gv-a.gl) || b.gv - a.gv);
 }
 
 function _renderAdminClassCat(catId, grupos, jogos, el) {
@@ -3355,7 +3356,7 @@ function _renderAdminClassCat(catId, grupos, jogos, el) {
           <span style="font-size:.68rem;color:var(--cinza-texto)">${done}/${gJogos.length} jogos</span>
         </div>
         <table class="std-table">
-          <thead><tr><th>#</th><th>Par</th><th>PJ</th><th>V</th><th>D</th><th>S</th><th>Pts</th></tr></thead>
+          <thead><tr><th>#</th><th>Par</th><th>PJ</th><th>V</th><th>D</th><th>S</th><th>J</th><th>Pts</th></tr></thead>
           <tbody>${rows.map((r, i) => {
             const [p1, p2] = r.par.split(' & ');
             return `
@@ -3372,7 +3373,7 @@ function _renderAdminClassCat(catId, grupos, jogos, el) {
                 </div>
               </td>
               <td>${r.pj}</td><td style="color:var(--verde)">${r.v}</td><td style="color:var(--vermelho)">${r.d}</td>
-              <td>${r.sw}-${r.sl}</td><td style="font-weight:700;color:var(--branco)">${r.pts}</td>
+              <td>${r.sv}-${r.sl}</td><td style="color:var(--cinza-texto)">${r.gv}-${r.gl}</td><td style="font-weight:700;color:var(--branco)">${r.pts}</td>
             </tr>`;
           }).join('')}
           </tbody>
