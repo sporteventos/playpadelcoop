@@ -1383,7 +1383,7 @@ function updateAlertBanner() {
   const msg    = document.getElementById('alertBannerMsg');
   if (!banner || !msg) return;
   if (pending > 20) {
-    msg.textContent = `${pending} jogos ainda sem resultado. Actualize o mais rapidamente possível.`;
+    msg.textContent = `${pending} jogos ainda sem resultado.`;
     banner.style.display = 'flex';
   } else {
     banner.style.display = 'none';
