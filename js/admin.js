@@ -4399,6 +4399,7 @@ function renderHorario() {
           const e1 = j.eq1 || 'A definir';
           const e2 = j.eq2 || 'A definir';
           const dragAttr = j._isFaseFinal ? '' : `draggable="true" ondragstart="horarioStartDrag(event,'${j.id}')" ondragend="horarioDragEnd(event)"`;
+          const moverBtn = j._isFaseFinal ? '' : `<button onclick="event.stopPropagation();horarioMoverDia('${j.id}')" style="margin-top:.35rem;width:100%;background:transparent;border:1px solid var(--preto-borda);border-radius:4px;color:var(--cinza-texto);font-size:.62rem;padding:.15rem .3rem;cursor:pointer;text-align:center" title="Mover para outro dia">↗ outro dia</button>`;
           return `<div class="schedule-slot has-game${conflict?' has-conflict':''}" ${dragAttr} ${slotAttr}>
             ${conflict ? '<span class="conflict-badge">CONFLITO</span>' : ''}
             <div style="font-size:.7rem;color:var(--cinza-texto);margin-bottom:.2rem">${j.grupo} <span style="color:var(--verde);font-weight:700">${t}</span></div>
@@ -4408,6 +4409,7 @@ function renderHorario() {
               <div style="flex:1">${e2.split(' & ').map(escHtml).join('<br>')}</div>
             </div>
             ${j.resultado ? (() => { const {w1,w2} = matchSetsScore(j.resultado); return `<div style="font-size:.68rem;color:var(--verde);margin-top:.2rem">${w1}–${w2} sets</div>`; })() : ''}
+            ${moverBtn}
           </div>`;
         }).join('')}
       `).join('')}
@@ -4481,6 +4483,39 @@ window.horarioDrop = function(ev, hora, campo) {
   jogos[idx].campo = campo;
   setData('jogos', jogos);
   Auth.log('HORARIO_DRAG', 'jogos', `Jogo #${jogoId} movido para ${hora} @ ${campo}`);
+  renderHorario();
+};
+
+// ── Mover jogo para outro dia ─────────────────────────────────
+window.horarioMoverDia = function(jogoId) {
+  const jogos = getData('jogos');
+  const j = jogos.find(x => String(x.id) === String(jogoId));
+  if (!j) return;
+  APP._moverDiaJogoId = String(jogoId);
+  const info = document.getElementById('moverDiaInfo');
+  if (info) info.textContent = `Jogo: ${j.grupo || '#' + jogoId} — ${j.eq1 || '?'} vs ${j.eq2 || '?'} (${j.data || 'sem data'})`;
+  const inp = document.getElementById('moverDiaData');
+  if (inp) inp.value = j.data || '';
+  openModal('modalMoverDia');
+};
+
+window.horarioConfirmarMoverDia = function() {
+  const jogoId = APP._moverDiaJogoId;
+  const novaData = document.getElementById('moverDiaData')?.value;
+  if (!jogoId || !novaData) return;
+  const jogos = getData('jogos');
+  const idx = jogos.findIndex(x => String(x.id) === jogoId);
+  if (idx < 0) return;
+  const antigaData = jogos[idx].data;
+  if (antigaData === novaData) { closeModal('modalMoverDia'); return; }
+  jogos[idx].data = novaData;
+  setData('jogos', jogos);
+  Auth.log('HORARIO_MOVER_DIA', 'jogos', `Jogo #${jogoId} movido de ${antigaData} para ${novaData}`);
+  closeModal('modalMoverDia');
+  toast(`Jogo movido para ${formatDate(novaData)}`);
+  // Switch date filter to new date so the user sees the result
+  const df = document.getElementById('horarioDataFilter');
+  if (df) df.value = novaData;
   renderHorario();
 };
 
