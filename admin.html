@@ -1200,6 +1200,22 @@
         </div>
       </div>
 
+      <!-- WO (Walkover) -->
+      <div id="resWoSection" style="margin:.2rem 0 .7rem">
+        <label style="display:flex;align-items:center;gap:.5rem;cursor:pointer;color:var(--cinza-texto);font-size:.82rem;user-select:none;padding:.45rem .65rem;border-radius:6px;border:1px solid var(--preto-borda)">
+          <input type="checkbox" id="resWoCheck" style="accent-color:var(--vermelho);cursor:pointer;width:14px;height:14px" onchange="toggleResWo()">
+          <i class="ph ph-warning-circle" style="color:var(--vermelho)"></i>
+          <span>Walkover (WO) — equipa não compareceu</span>
+        </label>
+        <div id="resWoPicker" style="display:none;margin-top:.5rem;padding:.6rem .75rem;background:rgba(255,74,74,.06);border:1px solid rgba(255,74,74,.25);border-radius:8px">
+          <div style="font-size:.7rem;color:var(--cinza-texto);margin-bottom:.5rem;text-transform:uppercase;letter-spacing:.05em">Qual equipa deu o WO? (não compareceu)</div>
+          <div style="display:flex;gap:.5rem;flex-wrap:wrap">
+            <button id="resWoEq1Btn" style="flex:1;border:1px solid rgba(255,74,74,.35);background:transparent;color:var(--cinza-texto);border-radius:6px;padding:.35rem .7rem;cursor:pointer;font-size:.78rem" onclick="selectResWo('eq1')">Equipa 1 — WO</button>
+            <button id="resWoEq2Btn" style="flex:1;border:1px solid rgba(255,74,74,.35);background:transparent;color:var(--cinza-texto);border-radius:6px;padding:.35rem .7rem;cursor:pointer;font-size:.78rem" onclick="selectResWo('eq2')">Equipa 2 — WO</button>
+          </div>
+        </div>
+      </div>
+
       <!-- Sets -->
       <style>
         .set-block{margin-bottom:.6rem;padding:.6rem .75rem;background:var(--cinza-escuro);border-radius:8px}

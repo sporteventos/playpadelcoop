@@ -821,7 +821,7 @@ window.abrirPanfletoFoto = function(jogoId, isFF, catId) {
 
   const { w1, w2 } = matchSetsScore(jogo.resultado);
   const r = jogo.resultado;
-  const sets = [[r.s1eq1,r.s1eq2],[r.s2eq1,r.s2eq2],[r.s3eq1,r.s3eq2]]
+  const sets = r.wo ? 'W.O.' : [[r.s1eq1,r.s1eq2],[r.s2eq1,r.s2eq2],[r.s3eq1,r.s3eq2]]
     .filter(([a]) => a !== null).map(([a, b]) => `${a}-${b}`).join('  /  ');
   const eq1Won = w1 > w2;
 
@@ -902,7 +902,7 @@ function _buildFotoFlyer(img) {
 
     const { w1, w2 } = matchSetsScore(jogo.resultado);
     const r = jogo.resultado;
-    const sets = [[r.s1eq1,r.s1eq2],[r.s2eq1,r.s2eq2],[r.s3eq1,r.s3eq2]]
+    const sets = r.wo ? 'Walkover (W.O.)' : [[r.s1eq1,r.s1eq2],[r.s2eq1,r.s2eq2],[r.s3eq1,r.s3eq2]]
       .filter(([a]) => a !== null).map(([a, b]) => `${a}-${b}`).join('  /  ');
     const eq1Won = w1 > w2;
 
@@ -1019,7 +1019,7 @@ window._shareWhatsapp = async function() {
       // Fallback: open WhatsApp web with text result
       const { w1, w2 } = matchSetsScore(jogo.resultado);
       const r = jogo.resultado;
-      const sets = [[r.s1eq1,r.s1eq2],[r.s2eq1,r.s2eq2],[r.s3eq1,r.s3eq2]]
+      const sets = r.wo ? 'W.O.' : [[r.s1eq1,r.s1eq2],[r.s2eq1,r.s2eq2],[r.s3eq1,r.s3eq2]]
         .filter(([a]) => a !== null).map(([a, b]) => `${a}-${b}`).join(' / ');
       const winner = w1 > w2 ? jogo.eq1 : jogo.eq2;
       const texto = `\u{1F3BE} *Play Padel Coop \u00B7 Torneio Anivers\u00E1rio*\n\n` +
@@ -1133,8 +1133,8 @@ window.gerarPanfletoResultados = function() {
     const r = j.resultado;
     const { w1, w2 } = matchSetsScore(r);
     const winner = w1 > w2 ? 1 : 2;
-    const setsArr = [[r.s1eq1, r.s1eq2], [r.s2eq1, r.s2eq2], [r.s3eq1, r.s3eq2]].filter(([a]) => a != null);
-    const setsStr = setsArr.map(([a, b]) => `${a}-${b}`).join('  ');
+    const setsArr = r.wo ? [] : [[r.s1eq1, r.s1eq2], [r.s2eq1, r.s2eq2], [r.s3eq1, r.s3eq2]].filter(([a]) => a != null);
+    const setsStr = r.wo ? 'W.O.' : setsArr.map(([a, b]) => `${a}-${b}`).join('  ');
 
     ctx.fillStyle = i % 2 === 0 ? '#111815' : '#0D1410';
     ctx.fillRect(0, y, W, ROW_H);
@@ -2292,6 +2292,7 @@ window.eliminarDupla = function(id) {
 
 // ---------- JOGOS ----------
 function matchSetsScore(r) {
+  if (r.wo) return r.wo === 'eq1' ? { w1: 0, w2: 2 } : { w1: 2, w2: 0 };
   let w1 = 0, w2 = 0;
   if (r.s1eq1 > r.s1eq2) w1++; else w2++;
   if (r.s2eq1 !== null) { if (r.s2eq1 > r.s2eq2) w1++; else w2++; }
@@ -2329,10 +2330,13 @@ function renderJogos(filtroData = 'todos', filtroCampo = 'todos', filtroGrupo = 
     const cat = j.grupo.split('-')[0];
     const resHtml = j.resultado
       ? (() => {
+          if (j.resultado.wo) {
+            return `<span style="background:rgba(255,74,74,.15);color:var(--vermelho);font-size:.7rem;font-weight:700;padding:.1rem .35rem;border-radius:4px">WO</span>`;
+          }
           const { w1, w2 } = matchSetsScore(j.resultado);
           const r = j.resultado;
           const sets = [[r.s1eq1,r.s1eq2],[r.s2eq1,r.s2eq2],[r.s3eq1,r.s3eq2]]
-            .filter(([a])=>a!==null).map(([a,b])=>`${a}-${b}`).join(' / ');
+            .filter(([a])=>a!=null).map(([a,b])=>`${a}-${b}`).join(' / ');
           return `<span class="score-display" title="${sets}" style="display:inline-flex;align-items:center;gap:.3rem">
             <span style="font-size:.85rem;font-weight:700;color:var(--branco)">${w1}</span>
             <span class="sd">–</span>
@@ -2621,6 +2625,19 @@ window.abrirResultado = function(jogoId) {
   resUpdateTeamName(1);
   resUpdateTeamName(2);
 
+  // Reset WO state
+  const _woChk = document.getElementById('resWoCheck');
+  if (_woChk) _woChk.checked = false;
+  const _woPk = document.getElementById('resWoPicker');
+  if (_woPk) _woPk.style.display = 'none';
+  APP._woSelection = null;
+  [1,2,3].forEach(n => { const b = document.getElementById(`setBlock${n}`); if (b) { b.style.opacity='1'; b.querySelectorAll('input').forEach(el => el.disabled = false); } });
+  // Update WO button labels with team names
+  const _wbT1 = j.eq1 || 'Equipa 1';
+  const _wbT2 = j.eq2 || 'Equipa 2';
+  const _wb1 = document.getElementById('resWoEq1Btn'); if (_wb1) _wb1.textContent = (_wbT1.length>28?_wbT1.substring(0,28)+'\u2026':_wbT1) + ' \u2014 WO';
+  const _wb2 = document.getElementById('resWoEq2Btn'); if (_wb2) _wb2.textContent = (_wbT2.length>28?_wbT2.substring(0,28)+'\u2026':_wbT2) + ' \u2014 WO';
+
   // Reset all inputs and visibility
   [1, 2, 3].forEach(n => clearSetInputs(n));
   [2, 3].forEach(n => { document.getElementById(`setBlock${n}`).style.display = 'none'; });
@@ -2628,24 +2645,31 @@ window.abrirResultado = function(jogoId) {
 
   const r = j.resultado;
   if (r) {
-    function loadSet(n, eq1, eq2, tbEq1, tbEq2) {
-      const isTbSet = (eq1 === 7 && eq2 === 6) || (eq1 === 6 && eq2 === 7);
-      document.getElementById(`resS${n}E1`).value = isTbSet ? 6 : eq1;
-      document.getElementById(`resS${n}E2`).value = isTbSet ? 6 : eq2;
-      if (isTbSet && tbEq1 != null) {
-        document.getElementById(`resTB${n}E1`).value = tbEq1;
-        document.getElementById(`resTB${n}E2`).value = tbEq2;
+    if (r.wo) {
+      if (_woChk) { _woChk.checked = true; if (_woPk) _woPk.style.display = ''; }
+      selectResWo(r.wo);
+    } else {
+      function loadSet(n, eq1, eq2, tbEq1, tbEq2) {
+        const isTbSet = (eq1 === 7 && eq2 === 6) || (eq1 === 6 && eq2 === 7);
+        document.getElementById(`resS${n}E1`).value = isTbSet ? 6 : eq1;
+        document.getElementById(`resS${n}E2`).value = isTbSet ? 6 : eq2;
+        if (isTbSet && tbEq1 != null) {
+          document.getElementById(`resTB${n}E1`).value = tbEq1;
+          document.getElementById(`resTB${n}E2`).value = tbEq2;
+        }
       }
+      loadSet(1, r.s1eq1, r.s1eq2, r.tb1eq1, r.tb1eq2);
+      if (r.s2eq1 !== null) loadSet(2, r.s2eq1, r.s2eq2, r.tb2eq1, r.tb2eq2);
+      if (r.s3eq1 !== null) loadSet(3, r.s3eq1, r.s3eq2, r.tb3eq1, r.tb3eq2);
     }
-    loadSet(1, r.s1eq1, r.s1eq2, r.tb1eq1, r.tb1eq2);
-    if (r.s2eq1 !== null) loadSet(2, r.s2eq1, r.s2eq2, r.tb2eq1, r.tb2eq2);
-    if (r.s3eq1 !== null) loadSet(3, r.s3eq1, r.s3eq2, r.tb3eq1, r.tb3eq2);
   }
 
-  // Trigger UI cascade
-  onSetInput(1);
-  if (r?.s2eq1 !== null) onSetInput(2);
-  if (r?.s3eq1 !== null) onSetInput(3);
+  // Trigger UI cascade (only when no WO)
+  if (!r?.wo) {
+    onSetInput(1);
+    if (r?.s2eq1 !== null) onSetInput(2);
+    if (r?.s3eq1 !== null) onSetInput(3);
+  }
 
   // Histórico de edições deste jogo
   const histEl = document.getElementById('resHistorico');
@@ -2669,7 +2693,71 @@ window.abrirResultado = function(jogoId) {
   openModal('modalResultado');
 };
 
+window.toggleResWo = function() {
+  const checked = document.getElementById('resWoCheck')?.checked;
+  const picker = document.getElementById('resWoPicker');
+  if (picker) picker.style.display = checked ? '' : 'none';
+  [1,2,3].forEach(n => {
+    const b = document.getElementById(`setBlock${n}`);
+    if (!b) return;
+    b.style.opacity = checked ? '0.3' : '1';
+    b.querySelectorAll('input').forEach(el => el.disabled = !!checked);
+  });
+  if (!checked) APP._woSelection = null;
+};
+
+window.selectResWo = function(eq) {
+  APP._woSelection = eq;
+  const aStyle = 'flex:1;background:var(--vermelho);color:#fff;border:1px solid var(--vermelho);border-radius:6px;padding:.35rem .7rem;cursor:pointer;font-size:.78rem;font-weight:600';
+  const iStyle = 'flex:1;border:1px solid rgba(255,74,74,.35);background:transparent;color:var(--cinza-texto);border-radius:6px;padding:.35rem .7rem;cursor:pointer;font-size:.78rem';
+  const btn1 = document.getElementById('resWoEq1Btn');
+  const btn2 = document.getElementById('resWoEq2Btn');
+  if (btn1) btn1.style.cssText = eq === 'eq1' ? aStyle : iStyle;
+  if (btn2) btn2.style.cssText = eq === 'eq2' ? aStyle : iStyle;
+  [1,2,3].forEach(n => { const b = document.getElementById(`setBlock${n}`); if (b) b.style.opacity = '0.25'; });
+};
+
 function salvarResultado() {
+  // WO (Walkover) handling — bypasses set entry
+  const woChecked = document.getElementById('resWoCheck')?.checked;
+  if (woChecked) {
+    if (!APP._woSelection) return toast('Indique qual equipa deu o WO.', 'error');
+    const resultado = { wo: APP._woSelection };
+    if (APP.ffEditing) {
+      const { catId, jogoId } = APP.ffEditing;
+      const ff = ffLoad();
+      const jIdx = ff[catId]?.jogos.findIndex(j => j.id === jogoId);
+      if (jIdx >= 0) { ff[catId].jogos[jIdx].resultado = resultado; ffSave(ff); ffPropagate(catId); }
+      closeModal('modalResultado');
+      renderView(APP.currentView);
+      Auth.log('SAVE_RESULT_FF', 'fasefinal', `WO: ${catId} jogo ${jogoId} \u2014 ${APP._woSelection}`);
+      toast('WO registado.');
+      APP.ffEditing = null; APP._woSelection = null; return;
+    }
+    const jogos = getData('jogos');
+    const idx = jogos.findIndex(j => j.id === APP.editingId);
+    if (idx < 0) return;
+    const resEditFields = document.getElementById('resEditFields');
+    if (resEditFields && resEditFields.style.display !== 'none') {
+      const newData = document.getElementById('resData')?.value;
+      const newHora = document.getElementById('resHora')?.value;
+      const newCampo = document.getElementById('resCampo')?.value;
+      if (newData) jogos[idx].data = newData;
+      if (newHora) jogos[idx].hora = newHora;
+      if (newCampo) jogos[idx].campo = newCampo;
+    }
+    jogos[idx].resultado = resultado;
+    setData('jogos', jogos);
+    closeModal('modalResultado');
+    renderView(APP.currentView);
+    Auth.log('SAVE_RESULT', 'resultados', `WO registado: jogo #${APP.editingId} \u2014 ${APP._woSelection}`);
+    toast(`WO registado para o jogo #${APP.editingId}.`);
+    const savedId = APP.editingId;
+    APP.editingId = null; APP._woSelection = null;
+    setTimeout(() => _ofereceNotificacao(savedId, false, null), 350);
+    return;
+  }
+
   const s1e1 = document.getElementById('resS1E1').value;
   const s1e2 = document.getElementById('resS1E2').value;
 
@@ -3739,21 +3827,37 @@ window.ffAbrirResultado = function(jogoId, catId) {
   [1, 2, 3].forEach(n => clearSetInputs(n));
   [2, 3].forEach(n => { document.getElementById(`setBlock${n}`).style.display = 'none'; });
   document.getElementById('matchResultBar').style.display = 'none';
+  // WO reset + button labels
+  const _ffWoChk = document.getElementById('resWoCheck');
+  if (_ffWoChk) _ffWoChk.checked = false;
+  const _ffWoPk = document.getElementById('resWoPicker');
+  if (_ffWoPk) _ffWoPk.style.display = 'none';
+  APP._woSelection = null;
+  [1,2,3].forEach(n => { const b = document.getElementById(`setBlock${n}`); if (b) { b.style.opacity='1'; b.querySelectorAll('input').forEach(el => el.disabled = false); } });
+  const _ffWb1 = document.getElementById('resWoEq1Btn'); if (_ffWb1) _ffWb1.textContent = ((j.eq1||'Eq1').length>28?(j.eq1||'Eq1').substring(0,28)+'\u2026':(j.eq1||'Eq1')) + ' \u2014 WO';
+  const _ffWb2 = document.getElementById('resWoEq2Btn'); if (_ffWb2) _ffWb2.textContent = ((j.eq2||'Eq2').length>28?(j.eq2||'Eq2').substring(0,28)+'\u2026':(j.eq2||'Eq2')) + ' \u2014 WO';
   const r = j.resultado;
   if (r) {
-    const loadSet = (n, e1, e2, tb1, tb2) => {
-      const isTb = (e1 === 7 && e2 === 6) || (e1 === 6 && e2 === 7);
-      document.getElementById(`resS${n}E1`).value = isTb ? 6 : e1;
-      document.getElementById(`resS${n}E2`).value = isTb ? 6 : e2;
-      if (isTb && tb1 != null) { document.getElementById(`resTB${n}E1`).value = tb1; document.getElementById(`resTB${n}E2`).value = tb2; }
-    };
-    loadSet(1, r.s1eq1, r.s1eq2, r.tb1eq1, r.tb1eq2);
-    if (r.s2eq1 !== null) loadSet(2, r.s2eq1, r.s2eq2, r.tb2eq1, r.tb2eq2);
-    if (r.s3eq1 !== null) loadSet(3, r.s3eq1, r.s3eq2, r.tb3eq1, r.tb3eq2);
+    if (r.wo) {
+      if (_ffWoChk) { _ffWoChk.checked = true; if (_ffWoPk) _ffWoPk.style.display = ''; }
+      selectResWo(r.wo);
+    } else {
+      const loadSet = (n, e1, e2, tb1, tb2) => {
+        const isTb = (e1 === 7 && e2 === 6) || (e1 === 6 && e2 === 7);
+        document.getElementById(`resS${n}E1`).value = isTb ? 6 : e1;
+        document.getElementById(`resS${n}E2`).value = isTb ? 6 : e2;
+        if (isTb && tb1 != null) { document.getElementById(`resTB${n}E1`).value = tb1; document.getElementById(`resTB${n}E2`).value = tb2; }
+      };
+      loadSet(1, r.s1eq1, r.s1eq2, r.tb1eq1, r.tb1eq2);
+      if (r.s2eq1 !== null) loadSet(2, r.s2eq1, r.s2eq2, r.tb2eq1, r.tb2eq2);
+      if (r.s3eq1 !== null) loadSet(3, r.s3eq1, r.s3eq2, r.tb3eq1, r.tb3eq2);
+    }
   }
-  onSetInput(1);
-  if (r?.s2eq1 !== null) onSetInput(2);
-  if (r?.s3eq1 !== null) onSetInput(3);
+  if (!r?.wo) {
+    onSetInput(1);
+    if (r?.s2eq1 !== null) onSetInput(2);
+    if (r?.s3eq1 !== null) onSetInput(3);
+  }
   openModal('modalResultado');
 };
 
@@ -4889,7 +4993,7 @@ function renderHorario() {
               <div style="color:var(--cinza-texto);font-size:.65rem;flex-shrink:0">vs</div>
               <div style="flex:1">${e2.split(' & ').map(escHtml).join('<br>')}</div>
             </div>
-            ${j.resultado ? (() => { const {w1,w2} = matchSetsScore(j.resultado); return `<div style="font-size:.68rem;color:var(--verde);margin-top:.2rem">${w1}–${w2} sets</div>`; })() : ''}
+            ${j.resultado ? (() => { if (j.resultado.wo) return `<div style="font-size:.68rem;color:var(--vermelho);margin-top:.2rem;font-weight:700">W.O.</div>`; const {w1,w2} = matchSetsScore(j.resultado); return `<div style="font-size:.68rem;color:var(--verde);margin-top:.2rem">${w1}–${w2} sets</div>`; })() : ''}
             ${moverBtn}
           </div>`;
         }).join('')}
@@ -5427,12 +5531,17 @@ function renderRelatorioJogos() {
           const clr = CAT_CLR[cat] || '#8AA396';
           let res = '—', winner = 0;
           if (j.resultado) {
-            const { w1, w2 } = matchSetsScore(j.resultado);
-            winner = w1 > w2 ? 1 : 2;
-            const r = j.resultado;
-            const sets = [[r.s1eq1,r.s1eq2],[r.s2eq1,r.s2eq2],[r.s3eq1,r.s3eq2]]
-              .filter(([a]) => a != null).map(([a,b]) => `${a}-${b}`).join(' / ');
-            res = `<span style="color:var(--verde);font-weight:700">${w1}–${w2}</span> <span style="color:var(--cinza-texto);font-size:.7rem">(${sets})</span>`;
+            if (j.resultado.wo) {
+              winner = j.resultado.wo === 'eq1' ? 2 : 1;
+              res = `<span style="background:rgba(255,74,74,.15);color:var(--vermelho);font-weight:700;padding:.1rem .35rem;border-radius:4px;font-size:.75rem">WO</span>`;
+            } else {
+              const { w1, w2 } = matchSetsScore(j.resultado);
+              winner = w1 > w2 ? 1 : 2;
+              const r = j.resultado;
+              const sets = [[r.s1eq1,r.s1eq2],[r.s2eq1,r.s2eq2],[r.s3eq1,r.s3eq2]]
+                .filter(([a]) => a != null).map(([a,b]) => `${a}-${b}`).join(' / ');
+              res = `<span style="color:var(--verde);font-weight:700">${w1}–${w2}</span> <span style="color:var(--cinza-texto);font-size:.7rem">(${sets})</span>`;
+            }
           }
           const e1style = winner === 1 ? 'color:var(--verde);font-weight:600' : winner === 2 ? 'color:var(--cinza-texto)' : 'color:var(--branco)';
           const e2style = winner === 2 ? 'color:var(--verde);font-weight:600' : winner === 1 ? 'color:var(--cinza-texto)' : 'color:var(--branco)';
