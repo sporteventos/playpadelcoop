@@ -683,7 +683,8 @@ tbody tr:hover { background: var(--cinza-escuro); }
   border-radius: 8px; padding: .5rem .7rem; font-size: .75rem; min-height: 3.5rem;
   position: relative;
 }
-.schedule-slot.has-game { background: var(--verde-bg); border-color: rgba(0,195,123,.3); }
+.schedule-slot.has-game { background: rgba(245,197,24,.07); border-color: rgba(245,197,24,.3); }
+.schedule-slot.has-game.has-result { background: rgba(0,195,123,.10); border-color: rgba(0,195,123,.35); }
 .schedule-slot.has-conflict { background: rgba(255,74,74,.08); border-color: rgba(255,74,74,.35); }
 .schedule-time { font-size: .68rem; color: var(--cinza-texto); font-weight: 600; }
 .schedule-slot.has-game[draggable] { cursor: grab; }
