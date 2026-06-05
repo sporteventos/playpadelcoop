@@ -2097,7 +2097,7 @@ function renderJogos(filtroData = 'todos', filtroCampo = 'todos', filtroGrupo = 
 
     const waBtns = j.resultado
       ? ''
-      : `<button class="btn-icon" style="color:#25D366" title="Partilhar imagem do jogo" onclick="waImageJogo('${j.id}',${!!j._isFF},'${j._cat||''}')"><i class="ph ph-share-network"></i></button>`;
+      : `<button class="btn-icon" style="color:#25D366" title="Notificação de jogo" onclick="waImageJogo('${j.id}',${!!j._isFF},'${j._cat||''}')"><i class="ph ph-share-network"></i></button>`;
 
     const acoes = j._isFF
       ? `<div style="display:flex;gap:0.3rem">
