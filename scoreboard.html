@@ -3,12 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#00C37B">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="Play Padel">Scoreboard ao Vivo — Play Padel 2026</title>
+  <meta name="apple-mobile-web-app-title" content="Play Padel">
+  <title>Scoreboard ao Vivo ΓÇö Play Padel 2026</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/@phosphor-icons/web@2.1.1/src/index.js"></script>
@@ -110,7 +109,7 @@
 <div class="top-bar">
   <div>
     <div class="top-bar-logo">PLAY PADEL <span style="color:var(--branco);font-weight:400">2026</span></div>
-    <div class="top-bar-title">Scoreboard ao Vivo · Maputo</div>
+    <div class="top-bar-title">Scoreboard ao Vivo ┬╖ Maputo</div>
   </div>
   <div class="refresh-indicator">
     <div class="refresh-dot"></div>
@@ -122,7 +121,7 @@
 <!-- LEGEND -->
 <div class="legend">
   <div class="legend-item"><div class="legend-dot" style="background:var(--verde)"></div> Qualifica directo</div>
-  <div class="legend-item"><div class="legend-dot" style="background:var(--amarelo)"></div> Possível wildcard</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--amarelo)"></div> Poss├¡vel wildcard</div>
   <div class="legend-item"><div class="legend-dot" style="background:var(--cinza-escuro)"></div> Eliminado</div>
   <span style="margin-left:auto"><span class="live-badge">LIVE</span></span>
 </div>
@@ -133,11 +132,11 @@
 <!-- STANDINGS CONTENT -->
 <div class="content" id="mainContent"></div>
 
-<div class="last-update">Última actualização: <span id="lastUpdate">—</span></div>
+<div class="last-update">├Ültima actualiza├º├úo: <span id="lastUpdate">ΓÇö</span></div>
 
 <script src="js/data.js"></script>
 <script>
-  // ── Helpers ────────────────────────────────────────────────────────────────
+  // ΓöÇΓöÇ Helpers ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
   function ppLoad(key) { try { return JSON.parse(localStorage.getItem('pp_' + key)); } catch(e) { return null; } }
 
   function getData(key) {
@@ -148,7 +147,7 @@
 
   const CATS = ['M1','M2','M3','M4','M5','F1','F2'];
 
-  // ── Standings Calculation ──────────────────────────────────────────────────
+  // ΓöÇΓöÇ Standings Calculation ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
   function computeStandings(grupo, jogos) {
     const gJogos = jogos.filter(j => j.grupo === grupo.id);
     const table  = {};
@@ -171,7 +170,7 @@
 
   function escHtml(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
-  // ── Render ──────────────────────────────────────────────────────────────────
+  // ΓöÇΓöÇ Render ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
   function renderAll() {
     const jogos  = getData('jogos');
     const grupos = getData('grupos');
@@ -228,7 +227,7 @@
     document.getElementById('cat-' + cat)?.classList.add('active');
   }
 
-  // ── Auto-refresh countdown ──────────────────────────────────────────────────
+  // ΓöÇΓöÇ Auto-refresh countdown ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
   let countdown = 30;
   const countEl = document.getElementById('refreshCountdown');
 
@@ -242,7 +241,7 @@
     setTimeout(tick, 1000);
   }
 
-  // ── Init ───────────────────────────────────────────────────────────────────
+  // ΓöÇΓöÇ Init ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
   renderAll();
   setTimeout(tick, 1000);
 </script>

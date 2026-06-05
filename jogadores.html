@@ -6,9 +6,8 @@
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#00C37B">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Play Padel">
-  <title>Jogadores ∑ Play Padel Torneio</title>
+  <title>Jogadores ¬∑ Play Padel Torneio</title>
   <link rel="stylesheet" href="css/style.css"/>
   <link rel="stylesheet" href="css/pages.css"/>
   <script src="https://unpkg.com/@phosphor-icons/web@2.1.1/src/index.js" defer></script>
@@ -21,13 +20,13 @@
     <img src="playpadellogo.jpg" alt="Play Padel" style="height:34px;width:34px;border-radius:7px;object-fit:cover;flex-shrink:0"/>
     <div class="nav-logo-text">
       <span class="nav-logo-title">Play Padel</span>
-      <span class="nav-logo-sub">Torneio 2.∫ Anivers·rio</span>
+      <span class="nav-logo-sub">Torneio 2.¬∫ Anivers√°rio</span>
     </div>
   </a>
   <ul class="nav-links">
-    <li><a href="index.html"><i class="ph ph-house nav-icon"></i> InÌcio</a></li>
-    <li><a href="calendario.html"><i class="ph ph-calendar nav-icon"></i> Calend·rio</a></li>
-    <li><a href="classificacoes.html"><i class="ph ph-trophy nav-icon"></i> ClassificaÁıes</a></li>
+    <li><a href="index.html"><i class="ph ph-house nav-icon"></i> In√≠cio</a></li>
+    <li><a href="calendario.html"><i class="ph ph-calendar nav-icon"></i> Calend√°rio</a></li>
+    <li><a href="classificacoes.html"><i class="ph ph-trophy nav-icon"></i> Classifica√ß√µes</a></li>
     <li><a href="fasefinal.html"><i class="ph ph-brackets-round nav-icon"></i> Fase Final</a></li>
     <li><a href="jogadores.html" class="active"><i class="ph ph-users nav-icon"></i> Jogadores</a></li>
     <li><a href="regulamento.html"><i class="ph ph-book-open nav-icon"></i> Regulamento</a></li>
@@ -38,9 +37,9 @@
 </nav>
 <div class="nav-drawer" id="navDrawer">
   <ul>
-    <li><a href="index.html"><i class="ph ph-house"></i> InÌcio</a></li>
-    <li><a href="calendario.html"><i class="ph ph-calendar"></i> Calend·rio</a></li>
-    <li><a href="classificacoes.html"><i class="ph ph-trophy"></i> ClassificaÁıes</a></li>
+    <li><a href="index.html"><i class="ph ph-house"></i> In√≠cio</a></li>
+    <li><a href="calendario.html"><i class="ph ph-calendar"></i> Calend√°rio</a></li>
+    <li><a href="classificacoes.html"><i class="ph ph-trophy"></i> Classifica√ß√µes</a></li>
     <li><a href="fasefinal.html"><i class="ph ph-brackets-round nav-icon"></i> Fase Final</a></li>
     <li><a href="jogadores.html" class="active"><i class="ph ph-users"></i> Jogadores</a></li>
     <li><a href="regulamento.html"><i class="ph ph-book-open"></i> Regulamento</a></li>
@@ -61,18 +60,18 @@
   <div class="filters-inner">
     <div class="search-wrap search-wrap--large">
       <i class="ph ph-magnifying-glass"></i>
-      <input type="search" id="searchJogador" class="search-input" placeholder="Nome do jogador ou parÖ" autocomplete="off"/>
+      <input type="search" id="searchJogador" class="search-input" placeholder="Nome do jogador ou par‚Ä¶" autocomplete="off"/>
       <span class="search-count" id="searchCount"></span>
     </div>
 
   </div>
 </div>
 
-<!-- CONTE⁄DO -->
+<!-- CONTE√öDO -->
 <main class="page-main" id="jogadoresMain">
   <div id="playerGrid" class="player-grid"></div>
   <div class="empty-state hidden" id="emptyState">
-    <div class="empty-icon">??</div>
+    <div class="empty-icon">üéæ</div>
     <p class="empty-title">Nenhum jogador encontrado</p>
     <p class="empty-sub">Tente pesquisar por outro nome</p>
   </div>
@@ -80,8 +79,8 @@
 
 <footer class="footer">
   <div class="footer-bottom" style="max-width:1200px;margin:0 auto">
-    <p class="footer-copy">© 2026 <span>Play Padel</span> ∑ Torneio 2.∫ Anivers·rio</p>
-    <a href="index.html" class="footer-copy" style="color:var(--verde);text-decoration:none">? Voltar ao inÌcio</a>
+    <p class="footer-copy">¬© 2026 <span>Play Padel</span> ¬∑ Torneio 2.¬∫ Anivers√°rio</p>
+    <a href="index.html" class="footer-copy" style="color:var(--verde);text-decoration:none">‚Üê Voltar ao in√≠cio</a>
   </div>
 </footer>
 
@@ -110,12 +109,12 @@ document.addEventListener('DOMContentLoaded', () => {
     (catData?.jogos || []).filter(j => j.eq1 && j.eq2).map(j => ({
       ...j,
       grupo: catId + '-' + (j.fase === 'F' ? 'Final' : j.fase),
-      campo: j.campo || 'ó',
+      campo: j.campo || '‚Äî',
       _isFF: true
     }))
   );
 
-  // Mapa: nomeJogador ? { par, grupos[], jogos[] }
+  // Mapa: nomeJogador ‚Üí { par, grupos[], jogos[] }
   const playerMap = {};
 
   function addPlayer(name, par, jogo) {
@@ -210,9 +209,9 @@ document.addEventListener('DOMContentLoaded', () => {
           <div style="display:flex;align-items:center;justify-content:space-between;gap:.5rem;flex-wrap:wrap">
             <div>
               <div style="font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:${isToday ? 'var(--verde)' : 'var(--cinza-texto)'};margin-bottom:.2rem">
-                ${isToday ? '? Hoje!' : '?? PrÛximo Jogo'}
+                ${isToday ? '‚ö° Hoje!' : 'üìÖ Pr√≥ximo Jogo'}
               </div>
-              <div style="font-size:.82rem;font-weight:600;color:var(--branco)">${ppFormatDate(nextJogo.data)} ∑ ${nextJogo.hora} ∑ ${nextJogo.campo}</div>
+              <div style="font-size:.82rem;font-weight:600;color:var(--branco)">${ppFormatDate(nextJogo.data)} ¬∑ ${nextJogo.hora} ¬∑ ${nextJogo.campo}</div>
               <div style="font-size:.75rem;color:var(--cinza-texto)">vs ${opp}</div>
             </div>
 
@@ -237,7 +236,7 @@ document.addEventListener('DOMContentLoaded', () => {
         <span class="pm-grupo cat-${j.grupo.split('-')[0]}">${j.grupo}</span>
         <span class="pm-campo">${j.campo}</span>
         <span class="pm-opp">vs ${opp}</span>
-        ${resultLabel || '<span class="result-pill result-pending">ó</span>'}
+        ${resultLabel || '<span class="result-pill result-pending">‚Äî</span>'}
       </div>`;
     }).join('');
 
@@ -256,14 +255,14 @@ document.addEventListener('DOMContentLoaded', () => {
         <div class="player-avatar cat-${cat}">${initials}</div>
         <div class="player-info">
           <p class="player-name">${nomeHtml}</p>
-          <p class="player-par">${pares.join(' ∑ ')}</p>
+          <p class="player-par">${pares.join(' ¬∑ ')}</p>
           <div class="player-tags">
             ${grupos.map(g => `<span class="match-grupo cat-${g.split('-')[0]}">${g}</span>`).join('')}
           </div>
         </div>
         <div class="player-stats">
           <span class="pstat">${p.jogos.length}<small>Jogos</small></span>
-          <span class="pstat pstat-win">${wins}<small>VitÛrias</small></span>
+          <span class="pstat pstat-win">${wins}<small>Vit√≥rias</small></span>
           <span class="pstat pstat-loss">${losses}<small>Derrotas</small></span>
           <span class="pstat" style="color:var(--amarelo)">${winRate}%<small>Taxa V</small></span>
         </div>
@@ -309,7 +308,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 </script>
 <script>
-  /* Reload once when remote data.json is fetched ó gives all visitors live results */
+  /* Reload once when remote data.json is fetched ‚Äî gives all visitors live results */
   (function() {
     var key = '_pp_synced';
     if (!sessionStorage.getItem(key)) {
