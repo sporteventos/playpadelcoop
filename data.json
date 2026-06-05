@@ -1659,7 +1659,20 @@
       "grupo": "F2-A",
       "eq1": "Cris Vasconcelos & Beatriz Madeira",
       "eq2": "Florence & Jinane",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 6,
+        "s1eq2": 2,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 3,
+        "s2eq2": 6,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": 6,
+        "s3eq2": 2,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 7,
@@ -3027,6 +3040,16 @@
     }
   ],
   "auditlog": [
+    {
+      "id": "mq168ux7rqxguuq",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "SAVE_RESULT",
+      "target": "resultados",
+      "detail": "Resultado guardado: jogo #6",
+      "ts": "2026-06-05T17:01:48.043Z"
+    },
     {
       "id": "mq161tkg2q3a5bo",
       "userId": "mpz8aq9sg983ubo",
@@ -6538,5 +6561,5 @@
       "ts": "2026-06-03T06:06:37.211Z"
     }
   ],
-  "_updated": "2026-06-05T16:58:13.886Z"
+  "_updated": "2026-06-05T17:02:23.514Z"
 }
