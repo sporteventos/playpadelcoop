@@ -4927,8 +4927,21 @@ function renderRelatorioJogos() {
   const el = document.getElementById('relatorioJogosContent');
   if (!el) return;
 
-  const jogos = getData('jogos');
   const CAT_CLR = { M1:'#4A9EFF', M2:'#00C37B', M3:'#39FF8F', M4:'#F5C518', M5:'#FF9A3C', F1:'#FF6BB0', F2:'#C97BFF' };
+
+  // Merge fase-final games
+  const jogos = getData('jogos') || [];
+  const ffData = ffLoad();
+  const faseLabels = { QF:'Quartos-Final', SF:'Meia-Final', F:'Final' };
+  const ffJogos = Object.entries(ffData).flatMap(([catId, catData]) =>
+    (catData?.jogos || []).filter(j => j.data).map(j => ({
+      ...j,
+      grupo: `${catId} ${faseLabels[j.fase] || j.fase}${j.num > 1 ? ' '+j.num : ''}`,
+      campo: j.campo || 'Fase Final',
+      _ff: true,
+    }))
+  );
+  const allJogos = [...jogos, ...ffJogos];
 
   // Populate filters
   const dataEl   = document.getElementById('rjFiltroData');
@@ -4937,14 +4950,14 @@ function renderRelatorioJogos() {
 
   if (dataEl) {
     const saved = dataEl.value;
-    const dates = [...new Set(jogos.map(j => j.data).filter(Boolean))].sort();
+    const dates = [...new Set(allJogos.map(j => j.data).filter(Boolean))].sort();
     dataEl.innerHTML = '<option value="todos">Todas as datas</option>' +
       dates.map(d => `<option value="${d}">${formatDate(d)}</option>`).join('');
-    if (saved) dataEl.value = saved;
+    if (saved && dates.includes(saved)) dataEl.value = saved;
   }
   if (grupoEl) {
     const saved = grupoEl.value;
-    const grupos = [...new Set(jogos.map(j => j.grupo).filter(Boolean))].sort();
+    const grupos = [...new Set(allJogos.map(j => j.grupo).filter(Boolean))].sort();
     grupoEl.innerHTML = '<option value="todos">Todos os grupos</option>' +
       grupos.map(g => `<option value="${g}">${g}</option>`).join('');
     if (saved) grupoEl.value = saved;
@@ -4954,7 +4967,7 @@ function renderRelatorioJogos() {
   const selGrupo  = grupoEl?.value  || 'todos';
   const selEstado = estadoEl?.value || 'todos';
 
-  let filtered = jogos;
+  let filtered = allJogos;
   if (selData   !== 'todos') filtered = filtered.filter(j => j.data  === selData);
   if (selGrupo  !== 'todos') filtered = filtered.filter(j => j.grupo === selGrupo);
   if (selEstado === 'pendente')  filtered = filtered.filter(j => !j.resultado);
@@ -5005,7 +5018,7 @@ function renderRelatorioJogos() {
       </thead>
       <tbody>
         ${filtered.map((j, i) => {
-          const cat = (j.grupo || '').split('-')[0];
+          const cat = (j.grupo || '').split(/[-\s]/)[0];
           const clr = CAT_CLR[cat] || '#8AA396';
           let res = '—', winner = 0;
           if (j.resultado) {
