@@ -1596,7 +1596,20 @@
       "grupo": "M3-B",
       "eq1": "Edson Uamusse & Salomão",
       "eq2": "Ivandro Remane & João Peixoto",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 6,
+        "s1eq2": 3,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 6,
+        "s2eq2": 3,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": null,
+        "s3eq2": null,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 2,
@@ -1696,7 +1709,20 @@
       "grupo": "F2-C",
       "eq1": "Nilda & Lize",
       "eq2": "Dalila & Tatiana",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 2,
+        "s1eq2": 6,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 3,
+        "s2eq2": 6,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": null,
+        "s3eq2": null,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 12,
@@ -3001,6 +3027,46 @@
     }
   ],
   "auditlog": [
+    {
+      "id": "mq161tkg2q3a5bo",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "SAVE_RESULT",
+      "target": "resultados",
+      "detail": "Resultado guardado: jogo #11",
+      "ts": "2026-06-05T16:56:19.696Z"
+    },
+    {
+      "id": "mq15yicc29n7w4n",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "SAVE_RESULT",
+      "target": "resultados",
+      "detail": "Resultado guardado: jogo #1",
+      "ts": "2026-06-05T16:53:45.180Z"
+    },
+    {
+      "id": "mq15vicxrfhpevq",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "LOGIN",
+      "target": "auth",
+      "detail": "Login: euamusse (admin)",
+      "ts": "2026-06-05T16:51:25.233Z"
+    },
+    {
+      "id": "mq15va4kzr94s4o",
+      "userId": "mpzxoo1v8l1za3r",
+      "username": "djanasse",
+      "role": "operator",
+      "action": "LOGOUT",
+      "target": "auth",
+      "detail": "Logout: djanasse",
+      "ts": "2026-06-05T16:51:14.564Z"
+    },
     {
       "id": "mq11d8rh8a33nfq",
       "userId": "mpzxoo1v8l1za3r",
@@ -6472,5 +6538,5 @@
       "ts": "2026-06-03T06:06:37.211Z"
     }
   ],
-  "_updated": "2026-06-05T14:45:18.488Z"
+  "_updated": "2026-06-05T16:58:13.886Z"
 }
