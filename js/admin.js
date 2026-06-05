@@ -3920,6 +3920,19 @@ window.gerarPanfletoClassificacoes = function() {
   const catColor = catId ? ({ M1:'#4A9EFF', M2:'#00C37B', M3:'#39FF8F', M4:'#F5C518', M5:'#FF9A3C', F1:'#FF6BB0', F2:'#C97BFF' }[catId] || '#00C37B') : '#00C37B';
   const labelTxt = catId ? catId.toUpperCase() : 'TODOS OS GRUPOS';
   const filename = catId ? `classificacoes-${catId}.png` : 'classificacoes-todos.png';
+
+  const W = 1080, PAD = 44;
+  const COLS = 2, COL_GAP = 16;
+  const CARD_W = (W - PAD * 2 - COL_GAP * (COLS - 1)) / COLS;
+  const CP = 14, CARD_HEAD_H = 38, COL_HEAD_H = 26, ROW_H = 30, CARD_BOT = 10;
+  const HEAD_H = 195, FOOT_H = 56, ROW_GAP = 14;
+
+  function cardHeight(g) { return CARD_HEAD_H + COL_HEAD_H + g.rows.length * ROW_H + CARD_BOT; }
+
+  const cardRows = [];
+  for (let i = 0; i < groupData.length; i += COLS) cardRows.push(groupData.slice(i, i + COLS));
+
+  let contentH = 0;
   cardRows.forEach(row => { contentH += Math.max(...row.map(cardHeight)) + ROW_GAP; });
 
   const H = HEAD_H + contentH + FOOT_H;
