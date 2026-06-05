@@ -3832,13 +3832,9 @@ function _adminGroupCardHTML(g, rows, gJogos, done, catId) {
             <tr class="${i===0?'std-q1':i===1?'std-q2':''}">
               <td>${i+1}</td>
               <td>
-                <div style="display:flex;align-items:center;gap:.35rem;min-width:0">
-                  <div style="min-width:0;flex:1">
-                    <span style="display:block;font-size:.8rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:128px">${escHtml(p1||r.par)}</span>
-                    ${p2?`<span style="display:block;font-size:.8rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:128px;color:var(--cinza-texto)">${escHtml(p2)}</span>`:''}
-                  </div>
-                  <button class="btn-icon" style="flex-shrink:0;font-size:.6rem;padding:.1rem .2rem;opacity:.45" data-par="${escHtml(r.par)}" data-cat="${catId}" data-grupo="${g.id}" onclick="editarGrupoPar(this.dataset.par,this.dataset.cat,this.dataset.grupo)" title="Mudar grupo"><i class="ph ph-swap"></i></button>
-                  <button class="btn-icon" style="flex-shrink:0;font-size:.6rem;padding:.1rem .2rem;opacity:.45;color:var(--vermelho)" data-par="${escHtml(r.par)}" data-grupo="${g.id}" onclick="removerParDoGrupo(this.dataset.par,this.dataset.grupo)" title="Remover par do grupo"><i class="ph ph-trash"></i></button>
+                <div style="min-width:0">
+                  <span style="display:block;font-size:.8rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:160px">${escHtml(p1||r.par)}</span>
+                  ${p2?`<span style="display:block;font-size:.8rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:160px;color:var(--cinza-texto)">${escHtml(p2)}</span>`:''}
                 </div>
               </td>
               <td>${r.pj}</td><td style="color:var(--verde)">${r.v}</td><td style="color:var(--vermelho)">${r.d}</td>
@@ -4404,7 +4400,8 @@ function renderHorario() {
   }
   // Always include actual game times (even if they don't match dominant minute)
   const times = [...new Set([...CLUB_SLOTS, ...dayJogos.map(j => j.hora).filter(Boolean)])].sort();
-  const activeCampos = selCampo ? [selCampo] : [...new Set(dayJogos.map(j => j.campo))].sort();
+  const campoOrder = Object.fromEntries(getData('campos').map((c,i) => [c.nome, c.id ?? i]));
+  const activeCampos = selCampo ? [selCampo] : [...new Set(dayJogos.map(j => j.campo))].sort((a,b) => (campoOrder[a]??99) - (campoOrder[b]??99));
 
   // Build player slots map to detect conflicts (skip TBD slots)
   const playerSlots = {};
