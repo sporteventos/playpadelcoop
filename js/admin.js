@@ -1359,7 +1359,7 @@ function renderDashboard() {
     const allLogs = Auth.getLogs();
     const logs = isAdmin
       ? allLogs.slice(0, 12)
-      : allLogs.filter(l => l.userId === me?.id).slice(0, 12);
+      : allLogs.filter(l => l.role === 'operator').slice(0, 12);
     if (!logs.length) {
       feed.innerHTML = `<div style="text-align:center;padding:1.5rem;color:var(--cinza-texto);font-size:.8rem">Sem actividade registada.</div>`;
     } else {
