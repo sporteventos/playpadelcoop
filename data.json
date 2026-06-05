@@ -1659,20 +1659,7 @@
       "grupo": "F2-A",
       "eq1": "Cris Vasconcelos & Beatriz Madeira",
       "eq2": "Florence & Jinane",
-      "resultado": {
-        "s1eq1": 6,
-        "s1eq2": 2,
-        "tb1eq1": null,
-        "tb1eq2": null,
-        "s2eq1": 3,
-        "s2eq2": 6,
-        "tb2eq1": null,
-        "tb2eq2": null,
-        "s3eq1": 6,
-        "s3eq2": 2,
-        "tb3eq1": null,
-        "tb3eq2": null
-      }
+      "resultado": null
     },
     {
       "id": 7,
@@ -6561,5 +6548,5 @@
       "ts": "2026-06-03T06:06:37.211Z"
     }
   ],
-  "_updated": "2026-06-05T17:02:23.514Z"
+  "_updated": "2026-06-05T17:02:59.086Z"
 }
