@@ -4915,7 +4915,6 @@ window.cjLimparJogos = function(catId) {
   } else {
     if (!confirm(`Eliminar todos os jogos de ${catId}?`)) return;
   }
-  const jogos = getData('jogos') || [];
   const filtrados = jogos.filter(j => !j.grupo?.startsWith(catId + '-'));
   setData('jogos', filtrados);
   Auth.log('CONSTRUTOR_JOGOS', 'jogos', `${catId}: jogos eliminados`);
