@@ -3740,7 +3740,8 @@ function renderAdminClassificacoes() {
   if (!tabsEl || !contentEl) return;
 
   _classActiveCat = null;
-  tabsEl.innerHTML = cats.map(c => `
+  tabsEl.innerHTML = `<button class="tab-btn active" onclick="_adminClassTab('__all__',this)">Todos</button>` +
+    cats.map(c => `
     <button class="tab-btn" onclick="_adminClassTab('${c}',this)">${c}</button>
   `).join('');
 
@@ -3903,31 +3904,22 @@ window.saveEditarGrupo = function() {
 //  PANFLETO CLASSIFICAÇÕES
 // ============================================
 window.gerarPanfletoClassificacoes = function() {
-  const catId = _classActiveCat;
-  if (!catId) return toast('Selecione uma categoria primeiro.', 'error');
+  const catId = _classActiveCat;  // null = todos
+  const cats  = catId ? [catId] : getData('categorias').map(c => c.id);
 
-  const grupos = getData('grupos').filter(g => g.cat === catId);
-  const jogos  = getData('jogos');
-  if (!grupos.length) return toast('Sem grupos para esta categoria.', 'error');
+  const allGrupos = getData('grupos').filter(g => cats.includes(g.cat));
+  const jogos     = getData('jogos');
+  if (!allGrupos.length) return toast('Sem grupos para gerar.', 'error');
 
-  const groupData = grupos.map(g => {
+  const groupData = allGrupos.map(g => {
     const rows = _adminClassStandings(g, jogos);
     const gJogos = jogos.filter(j => j.grupo === g.id);
     return { id: g.id, rows, total: gJogos.length, done: gJogos.filter(j => j.resultado).length };
   });
 
-  const W = 1080, PAD = 44;
-  const COLS = 2, COL_GAP = 16;
-  const CARD_W = (W - PAD * 2 - COL_GAP * (COLS - 1)) / COLS;
-  const CP = 14, CARD_HEAD_H = 38, COL_HEAD_H = 26, ROW_H = 30, CARD_BOT = 10;
-  const HEAD_H = 195, FOOT_H = 56, ROW_GAP = 14;
-
-  function cardHeight(g) { return CARD_HEAD_H + COL_HEAD_H + g.rows.length * ROW_H + CARD_BOT; }
-
-  const cardRows = [];
-  for (let i = 0; i < groupData.length; i += COLS) cardRows.push(groupData.slice(i, i + COLS));
-
-  let contentH = 0;
+  const catColor = catId ? ({ M1:'#4A9EFF', M2:'#00C37B', M3:'#39FF8F', M4:'#F5C518', M5:'#FF9A3C', F1:'#FF6BB0', F2:'#C97BFF' }[catId] || '#00C37B') : '#00C37B';
+  const labelTxt = catId ? catId.toUpperCase() : 'TODOS OS GRUPOS';
+  const filename = catId ? `classificacoes-${catId}.png` : 'classificacoes-todos.png';
   cardRows.forEach(row => { contentH += Math.max(...row.map(cardHeight)) + ROW_GAP; });
 
   const H = HEAD_H + contentH + FOOT_H;
@@ -3936,7 +3928,7 @@ window.gerarPanfletoClassificacoes = function() {
   const ctx = canvas.getContext('2d');
 
   const CAT_CLR = { M1:'#4A9EFF', M2:'#00C37B', M3:'#39FF8F', M4:'#F5C518', M5:'#FF9A3C', F1:'#FF6BB0', F2:'#C97BFF' };
-  const catColor = CAT_CLR[catId] || '#00C37B';
+  // catColor and labelTxt already computed above
 
   function cTrunc(text, maxW) {
     if (ctx.measureText(text).width <= maxW) return text;
@@ -3964,7 +3956,7 @@ window.gerarPanfletoClassificacoes = function() {
   ctx.fillText('CLASSIFICAÇÕES', PAD, 146);
   ctx.fillStyle = catColor;
   ctx.font = 'bold 28px Arial, sans-serif';
-  ctx.fillText(catId.toUpperCase(), PAD, 178);
+  ctx.fillText(labelTxt, PAD, 178);
 
   // Divider
   ctx.fillStyle = '#1C2620'; ctx.fillRect(PAD, 188, W - PAD * 2, 2);
@@ -4061,7 +4053,7 @@ window.gerarPanfletoClassificacoes = function() {
   ctx.fillText('Play Padel  \u00B7  Torneio Aniversário 2026', W / 2, H - FOOT_H + 36);
   ctx.textAlign = 'left';
 
-  _panfletoShare(canvas, `classificacoes-${catId}.png`);
+  _panfletoShare(canvas, filename);
 };
 
 // ============================================
