@@ -1262,7 +1262,9 @@ function renderView(view) {
     case 'estatisticas': renderEstatisticas(); break;
     case 'importar':     renderImportar();     break;
     case 'horario':      renderHorario();      break;
-    case 'relatorioJogos': renderRelatorioJogos(); break;
+    case 'relatorioJogos':    renderRelatorioJogos();    break;
+    case 'construtorGrupos':  renderConstrutorGrupos();  break;
+    case 'construtorJogos':   renderConstrutorJogos();   break;
   }
 }
 
@@ -2750,6 +2752,10 @@ function initAdmin() {
   document.getElementById('rjFiltroData')?.addEventListener('change',   () => renderRelatorioJogos());
   document.getElementById('rjFiltroGrupo')?.addEventListener('change',  () => renderRelatorioJogos());
   document.getElementById('rjFiltroEstado')?.addEventListener('change', () => renderRelatorioJogos());
+
+  // Construtor de Grupos / Jogos filters
+  document.getElementById('cgFiltroCategoria')?.addEventListener('change', () => renderConstrutorGrupos());
+  document.getElementById('cjFiltroCategoria')?.addEventListener('change', () => renderConstrutorJogos());
 
   // Panfleto com Foto — file input
   document.getElementById('fotoFlyerInput')?.addEventListener('change', function() {
@@ -4550,6 +4556,340 @@ window.horarioDrop = function(ev, hora, campo) {
   setData('jogos', jogos);
   Auth.log('HORARIO_DRAG', 'jogos', `Jogo #${jogoId} movido para ${hora} @ ${campo}`);
   renderHorario();
+};
+
+// ── Construtor de Grupos ──────────────────────────────────────
+function renderConstrutorGrupos() {
+  const el = document.getElementById('construtorGruposContent');
+  const catSel = document.getElementById('cgFiltroCategoria');
+  if (!el) return;
+
+  const cats   = getData('categorias') || [];
+  const grupos = getData('grupos')     || [];
+  const duplas = getData('duplas')     || [];
+
+  // Populate category filter
+  if (catSel) {
+    const saved = catSel.value;
+    catSel.innerHTML = cats.map(c => `<option value="${c.id}">${c.id} — ${c.nome}</option>`).join('');
+    if (saved && cats.find(c => c.id === saved)) catSel.value = saved;
+  }
+  const catId = catSel?.value || cats[0]?.id;
+  if (!catId) { el.innerHTML = `<p style="color:var(--cinza-texto);padding:1rem">Sem categorias.</p>`; return; }
+
+  const catGrupos = grupos.filter(g => g.cat === catId).sort((a,b) => a.letra.localeCompare(b.letra));
+
+  // Duplas for this cat — both assigned and unassigned
+  const catDuplas = duplas.filter(d => {
+    // A dupla belongs to cat if its grupo starts with catId or if j1/j2 players have catId
+    return d.grupo && d.grupo.startsWith(catId + '-');
+  });
+  const assignedIds = new Set(catDuplas.map(d => d.id));
+
+  // All duplas for this cat (regardless of group assignment) — look at jogadores' cat
+  const jogadores = getData('jogadores') || [];
+  const allCatDuplas = duplas.filter(d => {
+    if (!d.j1 || !d.j2) return false;
+    // Check if already in a group of this cat
+    if (d.grupo && d.grupo.startsWith(catId + '-')) return true;
+    // Otherwise not in this cat
+    return false;
+  });
+
+  function duplaLabel(d) {
+    const j1 = jogadores.find(j => j.id === d.j1);
+    const j2 = jogadores.find(j => j.id === d.j2);
+    return `${j1?.nome || d.j1} & ${j2?.nome || d.j2}`;
+  }
+
+  // Count duplas per group
+  const grupoCount = {};
+  catGrupos.forEach(g => { grupoCount[g.id] = duplas.filter(d => d.grupo === g.id).length; });
+
+  el.innerHTML = `
+    <div style="display:flex;gap:1rem;align-items:center;margin-bottom:1rem;flex-wrap:wrap">
+      <div style="display:flex;gap:.5rem;align-items:center">
+        <label style="color:var(--cinza-texto);font-size:.82rem">Nº grupos:</label>
+        <input id="cgNumGrupos" type="number" min="1" max="16" value="${catGrupos.length || 1}"
+          class="form-input" style="width:70px;padding:.3rem .5rem"/>
+        <button class="btn btn-ghost btn-sm" onclick="cgDefinirGrupos()">
+          <i class="ph ph-arrows-clockwise"></i> Actualizar grupos
+        </button>
+      </div>
+      <button class="btn btn-ghost btn-sm" style="color:var(--amarelo);border-color:rgba(245,197,24,.3)"
+        onclick="cgAutoDistribuir()">
+        <i class="ph ph-magic-wand"></i> Auto-distribuir
+      </button>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1rem">
+      ${catGrupos.map(g => {
+        const gDuplas = duplas.filter(d => d.grupo === g.id);
+        return `<div class="admin-group-card" id="cgCard_${g.id}"
+            ondragover="cgDragOver(event,'${g.id}')" ondragleave="cgDragLeave(event,'${g.id}')"
+            ondrop="cgDrop(event,'${g.id}')">
+          <div class="admin-group-card-header" style="display:flex;justify-content:space-between;align-items:center">
+            <span style="font-weight:700;color:var(--branco)">${g.id}</span>
+            <span style="font-size:.68rem;color:var(--cinza-texto)">${gDuplas.length} duplas</span>
+          </div>
+          <div id="cgSlot_${g.id}" style="min-height:60px;padding:.5rem 0">
+            ${gDuplas.map(d => `
+              <div class="cg-dupla-chip" draggable="true"
+                ondragstart="cgDragStart(event,'${d.id}')"
+                style="display:flex;align-items:center;justify-content:space-between;
+                  background:var(--cinza-escuro);border:1px solid var(--preto-borda);
+                  border-radius:6px;padding:.35rem .6rem;margin-bottom:.35rem;cursor:grab;font-size:.78rem">
+                <span style="color:var(--branco)">${escHtml(duplaLabel(d))}</span>
+                <button onclick="cgRemoverDupla('${d.id}')" style="background:none;border:none;
+                  color:var(--cinza-texto);cursor:pointer;font-size:.8rem;padding:0 .2rem"
+                  title="Remover do grupo">✕</button>
+              </div>`).join('')}
+            ${gDuplas.length === 0 ? `<p style="color:var(--cinza-texto);font-size:.75rem;text-align:center;padding:.5rem 0">Arraste duplas para aqui</p>` : ''}
+          </div>
+        </div>`;
+      }).join('')}
+    </div>
+
+    ${catGrupos.length === 0 ? `<p style="color:var(--cinza-texto);padding:1rem">Defina o número de grupos e clique "Actualizar grupos".</p>` : ''}
+  `;
+}
+
+window.cgDefinirGrupos = function() {
+  const catSel = document.getElementById('cgFiltroCategoria');
+  const catId  = catSel?.value;
+  if (!catId) return;
+  const n = parseInt(document.getElementById('cgNumGrupos')?.value) || 1;
+  const grupos = getData('grupos') || [];
+  const letras = 'ABCDEFGHIJKLMNOP'.slice(0, n).split('');
+
+  // Remove existing grupos for this cat, add new ones
+  const other = grupos.filter(g => g.cat !== catId);
+  const novo  = letras.map(l => ({ id: `${catId}-${l}`, cat: catId, letra: l }));
+  setData('grupos', [...other, ...novo]);
+  Auth.log('CONSTRUTOR_GRUPOS', 'grupos', `${catId}: definidos ${n} grupos`);
+  renderConstrutorGrupos();
+};
+
+window.cgAutoDistribuir = function() {
+  const catSel = document.getElementById('cgFiltroCategoria');
+  const catId  = catSel?.value;
+  if (!catId) return;
+  const grupos = (getData('grupos') || []).filter(g => g.cat === catId).sort((a,b) => a.letra.localeCompare(b.letra));
+  if (!grupos.length) return toast('Defina os grupos primeiro.', 'error');
+  const duplas = getData('duplas') || [];
+  const catDuplas = duplas.filter(d => d.grupo && d.grupo.startsWith(catId + '-'));
+  if (!catDuplas.length) return toast('Sem duplas nesta categoria.', 'error');
+
+  // Distribute round-robin across groups
+  const updated = duplas.map(d => {
+    if (!d.grupo || !d.grupo.startsWith(catId + '-')) return d;
+    return d; // keep existing assignment; auto-distribute only unassigned
+  });
+  // Re-assign all cat duplas evenly
+  catDuplas.forEach((d, i) => {
+    const g = grupos[i % grupos.length];
+    const idx = updated.findIndex(x => x.id === d.id);
+    if (idx >= 0) updated[idx] = { ...updated[idx], grupo: g.id };
+  });
+  setData('duplas', updated);
+  Auth.log('CONSTRUTOR_GRUPOS', 'duplas', `${catId}: auto-distribuição em ${grupos.length} grupos`);
+  toast(`Duplas distribuídas por ${grupos.length} grupos`);
+  renderConstrutorGrupos();
+};
+
+window.cgRemoverDupla = function(duplaId) {
+  // This doesn't delete the dupla — it just clears its group assignment
+  const duplas = getData('duplas') || [];
+  const idx = duplas.findIndex(d => d.id === duplaId);
+  if (idx < 0) return;
+  duplas[idx] = { ...duplas[idx], grupo: null };
+  setData('duplas', duplas);
+  renderConstrutorGrupos();
+};
+
+APP._cgDragId = null;
+window.cgDragStart = function(ev, duplaId) {
+  APP._cgDragId = duplaId;
+  ev.dataTransfer.effectAllowed = 'move';
+};
+window.cgDragOver = function(ev, grupoId) {
+  ev.preventDefault();
+  document.getElementById('cgCard_' + grupoId)?.classList.add('drag-over');
+};
+window.cgDragLeave = function(ev, grupoId) {
+  document.getElementById('cgCard_' + grupoId)?.classList.remove('drag-over');
+};
+window.cgDrop = function(ev, grupoId) {
+  ev.preventDefault();
+  document.getElementById('cgCard_' + grupoId)?.classList.remove('drag-over');
+  const duplaId = APP._cgDragId;
+  APP._cgDragId = null;
+  if (!duplaId) return;
+  const duplas = getData('duplas') || [];
+  const idx = duplas.findIndex(d => d.id === duplaId);
+  if (idx < 0) return;
+  duplas[idx] = { ...duplas[idx], grupo: grupoId };
+  setData('duplas', duplas);
+  Auth.log('CONSTRUTOR_GRUPOS', 'duplas', `Dupla ${duplaId} movida para ${grupoId}`);
+  renderConstrutorGrupos();
+};
+
+// ── Construtor de Jogos (round-robin) ────────────────────────
+function renderConstrutorJogos() {
+  const el = document.getElementById('construtorJogosContent');
+  const catSel = document.getElementById('cjFiltroCategoria');
+  if (!el) return;
+
+  const cats   = getData('categorias') || [];
+  const grupos = getData('grupos')     || [];
+  const duplas = getData('duplas')     || [];
+  const jogos  = getData('jogos')      || [];
+
+  if (catSel) {
+    const saved = catSel.value;
+    catSel.innerHTML = cats.map(c => `<option value="${c.id}">${c.id} — ${c.nome}</option>`).join('');
+    if (saved && cats.find(c => c.id === saved)) catSel.value = saved;
+  }
+  const catId = catSel?.value || cats[0]?.id;
+  if (!catId) { el.innerHTML = `<p style="color:var(--cinza-texto);padding:1rem">Sem categorias.</p>`; return; }
+
+  const catGrupos = grupos.filter(g => g.cat === catId).sort((a,b) => a.letra.localeCompare(b.letra));
+  if (!catGrupos.length) {
+    el.innerHTML = `<p style="color:var(--cinza-texto);padding:1rem">Sem grupos para ${catId}. Crie grupos no Construtor de Grupos primeiro.</p>`;
+    return;
+  }
+
+  const jogadores = getData('jogadores') || [];
+  function duplaLabel(d) {
+    const j1 = jogadores.find(j => j.id === d.j1);
+    const j2 = jogadores.find(j => j.id === d.j2);
+    return `${j1?.nome || d.j1} & ${j2?.nome || d.j2}`;
+  }
+
+  // Preview: for each group, list the round-robin games that would be generated
+  const preview = catGrupos.map(g => {
+    const gDuplas = duplas.filter(d => d.grupo === g.id);
+    const pairs = [];
+    for (let i = 0; i < gDuplas.length; i++)
+      for (let j = i + 1; j < gDuplas.length; j++)
+        pairs.push([gDuplas[i], gDuplas[j]]);
+    const existing = jogos.filter(j => j.grupo === g.id);
+    return { grupo: g, duplas: gDuplas, pairs, existing };
+  });
+
+  const totalNovo   = preview.reduce((s, p) => s + p.pairs.length, 0);
+  const totalExiste = preview.reduce((s, p) => s + p.existing.length, 0);
+
+  el.innerHTML = `
+    <div style="background:var(--cinza-escuro);border-radius:8px;padding:1rem;margin-bottom:1.25rem;display:flex;gap:1.5rem;flex-wrap:wrap;align-items:flex-start">
+      <div style="flex:1;min-width:220px">
+        <p style="color:var(--cinza-texto);font-size:.82rem;margin-bottom:.75rem">
+          Serão gerados <strong style="color:var(--branco)">${totalNovo}</strong> jogos round-robin
+          para os <strong style="color:var(--branco)">${catGrupos.length}</strong> grupos de <strong style="color:var(--verde)">${catId}</strong>.
+          ${totalExiste > 0 ? `<br><span style="color:var(--amarelo)">⚠ Já existem ${totalExiste} jogos para este grupo — serão substituídos.</span>` : ''}
+        </p>
+        <div style="display:flex;gap:.6rem;flex-wrap:wrap;margin-bottom:.75rem">
+          <div>
+            <label style="color:var(--cinza-texto);font-size:.75rem;display:block;margin-bottom:.2rem">Data por omissão</label>
+            <input id="cjDataOmissao" type="date" class="form-input" style="padding:.3rem .5rem;font-size:.82rem"/>
+          </div>
+          <div>
+            <label style="color:var(--cinza-texto);font-size:.75rem;display:block;margin-bottom:.2rem">Hora por omissão</label>
+            <input id="cjHoraOmissao" type="time" class="form-input" style="padding:.3rem .5rem;font-size:.82rem"/>
+          </div>
+        </div>
+        <div style="display:flex;gap:.6rem">
+          <button class="btn btn-primary" onclick="cjGerarJogos()">
+            <i class="ph ph-play"></i> Gerar jogos
+          </button>
+          ${totalExiste > 0 ? `<button class="btn btn-ghost" style="color:var(--vermelho);border-color:rgba(255,74,74,.3)" onclick="cjLimparJogos('${catId}')">
+            <i class="ph ph-trash"></i> Limpar jogos de ${catId}
+          </button>` : ''}
+        </div>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1rem">
+      ${preview.map(({ grupo: g, duplas: gDuplas, pairs, existing }) => `
+        <div class="admin-group-card">
+          <div class="admin-group-card-header" style="display:flex;justify-content:space-between">
+            <span style="font-weight:700;color:var(--branco)">${g.id}</span>
+            <span style="font-size:.68rem;color:var(--cinza-texto)">${gDuplas.length} duplas · ${pairs.length} jogos</span>
+          </div>
+          ${gDuplas.length < 2 ? `<p style="color:var(--amarelo);font-size:.75rem;padding:.5rem">Mínimo 2 duplas para gerar jogos.</p>` : ''}
+          <div style="padding:.5rem 0">
+            ${pairs.map(([d1, d2], i) => `
+              <div style="display:flex;align-items:center;gap:.4rem;padding:.25rem 0;font-size:.75rem;
+                border-bottom:1px solid var(--preto-borda);color:var(--cinza-texto)">
+                <span style="min-width:14px;text-align:right;color:var(--cinza-texto);opacity:.5">${i+1}</span>
+                <span style="flex:1;text-align:right;color:var(--branco)">${escHtml(duplaLabel(d1))}</span>
+                <span style="color:var(--cinza-texto);font-size:.65rem;flex-shrink:0">vs</span>
+                <span style="flex:1;color:var(--branco)">${escHtml(duplaLabel(d2))}</span>
+              </div>`).join('')}
+          </div>
+        </div>`).join('')}
+    </div>`;
+}
+
+window.cjGerarJogos = function() {
+  const catId = document.getElementById('cjFiltroCategoria')?.value;
+  if (!catId) return;
+  if (!confirm(`Gerar todos os jogos round-robin para ${catId}?\nJogos existentes desta categoria serão removidos.`)) return;
+
+  const grupos   = (getData('grupos')   || []).filter(g => g.cat === catId);
+  const duplas   = getData('duplas')    || [];
+  const jogos    = getData('jogos')     || [];
+  const jogadores = getData('jogadores') || [];
+  const dataOm  = document.getElementById('cjDataOmissao')?.value  || '';
+  const horaOm  = document.getElementById('cjHoraOmissao')?.value  || '';
+
+  function duplaLabel(d) {
+    const j1 = jogadores.find(j => j.id === d.j1);
+    const j2 = jogadores.find(j => j.id === d.j2);
+    return `${j1?.nome || d.j1} & ${j2?.nome || d.j2}`;
+  }
+
+  // Remove existing games for this cat
+  const outros = jogos.filter(j => !j.grupo?.startsWith(catId + '-'));
+
+  // Generate round-robin per group
+  const novos = [];
+  let maxId = jogos.reduce((m, j) => Math.max(m, typeof j.id === 'number' ? j.id : parseInt(j.id) || 0), 0);
+
+  grupos.sort((a, b) => a.letra.localeCompare(b.letra)).forEach(g => {
+    const gDuplas = duplas.filter(d => d.grupo === g.id);
+    for (let i = 0; i < gDuplas.length; i++) {
+      for (let k = i + 1; k < gDuplas.length; k++) {
+        maxId++;
+        novos.push({
+          id:     maxId,
+          grupo:  g.id,
+          eq1:    duplaLabel(gDuplas[i]),
+          eq2:    duplaLabel(gDuplas[k]),
+          data:   dataOm || null,
+          hora:   horaOm || null,
+          campo:  null,
+          resultado: null,
+        });
+      }
+    }
+  });
+
+  setData('jogos', [...outros, ...novos]);
+  Auth.log('CONSTRUTOR_JOGOS', 'jogos', `${catId}: gerados ${novos.length} jogos round-robin`);
+  toast(`${novos.length} jogos gerados para ${catId}`);
+  renderConstrutorJogos();
+};
+
+window.cjLimparJogos = function(catId) {
+  if (!catId) return;
+  if (!confirm(`Eliminar todos os jogos de ${catId}?`)) return;
+  const jogos = getData('jogos') || [];
+  const filtrados = jogos.filter(j => !j.grupo?.startsWith(catId + '-'));
+  setData('jogos', filtrados);
+  Auth.log('CONSTRUTOR_JOGOS', 'jogos', `${catId}: jogos eliminados`);
+  toast(`Jogos de ${catId} eliminados`);
+  renderConstrutorJogos();
 };
 
 // ── Relatório de Jogos ───────────────────────────────────────

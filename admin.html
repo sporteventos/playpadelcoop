@@ -97,6 +97,14 @@
 
       <div class="sidebar-group">
         <div class="sidebar-group-label">Competição</div>
+        <button class="sidebar-link" data-view="construtorGrupos">
+          <i class="ph ph-squares-four sl-icon"></i>
+          Construtor de Grupos
+        </button>
+        <button class="sidebar-link" data-view="construtorJogos">
+          <i class="ph ph-shuffle sl-icon"></i>
+          Construtor de Jogos
+        </button>
         <button class="sidebar-link" data-view="jogos">
           <i class="ph ph-calendar sl-icon"></i>
           Calendário de Jogos
@@ -668,6 +676,32 @@
           </div>
         </div>
         <div id="relatorioJogosContent"></div>
+      </section>
+
+      <section class="view" id="view-construtorGrupos">
+        <div class="page-header" style="margin-bottom:1.25rem">
+          <div>
+            <h1 class="page-title">Construtor de Grupos</h1>
+            <p class="page-desc">Organize as duplas inscritas por grupo dentro de cada categoria</p>
+          </div>
+          <div style="display:flex;gap:.6rem;align-items:center">
+            <select id="cgFiltroCategoria" class="form-input" style="width:auto;padding:.4rem .75rem;font-size:.82rem"></select>
+          </div>
+        </div>
+        <div id="construtorGruposContent"></div>
+      </section>
+
+      <section class="view" id="view-construtorJogos">
+        <div class="page-header" style="margin-bottom:1.25rem">
+          <div>
+            <h1 class="page-title">Construtor de Jogos</h1>
+            <p class="page-desc">Gerar jogos round-robin para os grupos seleccionados</p>
+          </div>
+          <div style="display:flex;gap:.6rem;align-items:center">
+            <select id="cjFiltroCategoria" class="form-input" style="width:auto;padding:.4rem .75rem;font-size:.82rem"></select>
+          </div>
+        </div>
+        <div id="construtorJogosContent"></div>
       </section>
 
     </main><!-- /admin-content -->
