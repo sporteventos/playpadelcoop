@@ -1263,8 +1263,12 @@ function renderView(view) {
     case 'importar':     renderImportar();     break;
     case 'horario':      renderHorario();      break;
     case 'relatorioJogos':    renderRelatorioJogos();    break;
-    case 'construtorGrupos':  renderConstrutorGrupos();  break;
-    case 'construtorJogos':   renderConstrutorJogos();   break;
+    case 'construtorGrupos':
+      if (!Auth.isAdmin()) { toast('Acesso restrito a administradores.', 'error'); return; }
+      renderConstrutorGrupos(); break;
+    case 'construtorJogos':
+      if (!Auth.isAdmin()) { toast('Acesso restrito a administradores.', 'error'); return; }
+      renderConstrutorJogos(); break;
   }
 }
 
@@ -2789,6 +2793,8 @@ function initAdmin() {
     document.getElementById('btnGerarAleatorios')?.remove();
     document.getElementById('btnLimparResultado')?.remove();
     document.getElementById('btnLimparTodosResultados')?.remove();
+    document.getElementById('btnSidebarConstrutorGrupos')?.remove();
+    document.getElementById('btnSidebarConstrutorJogos')?.remove();
   }
 
   // Ir para view inicial — restaurar da hash se disponível
@@ -4680,6 +4686,14 @@ window.cgAutoDistribuir = function() {
   const catDuplas = duplas.filter(d => d.grupo && d.grupo.startsWith(catId + '-'));
   if (!catDuplas.length) return toast('Sem duplas nesta categoria.', 'error');
 
+  // Warn if games with results already exist
+  const jogos = getData('jogos') || [];
+  const comResultado = jogos.filter(j => j.grupo?.startsWith(catId + '-') && j.resultado).length;
+  if (comResultado > 0) {
+    const conf = prompt(`⚠ ATENÇÃO: Existem ${comResultado} jogo(s) com resultado registado para ${catId}.\nA auto-distribuição irá reorganizar as duplas e pode invalidar os jogos existentes.\n\nEscreva CONFIRMAR para continuar:`);
+    if (conf?.trim().toUpperCase() !== 'CONFIRMAR') return toast('Operação cancelada.', 'error');
+  } else if (!confirm(`Auto-distribuir todas as duplas de ${catId} pelos ${grupos.length} grupos?`)) return;
+
   // Distribute round-robin across groups
   const updated = duplas.map(d => {
     if (!d.grupo || !d.grupo.startsWith(catId + '-')) return d;
@@ -4834,7 +4848,17 @@ function renderConstrutorJogos() {
 window.cjGerarJogos = function() {
   const catId = document.getElementById('cjFiltroCategoria')?.value;
   if (!catId) return;
-  if (!confirm(`Gerar todos os jogos round-robin para ${catId}?\nJogos existentes desta categoria serão removidos.`)) return;
+
+  // Count games with results
+  const jogosExist = getData('jogos') || [];
+  const comResultado = jogosExist.filter(j => j.grupo?.startsWith(catId + '-') && j.resultado).length;
+
+  if (comResultado > 0) {
+    const conf = prompt(`⚠ ATENÇÃO CRÍTICA: Existem ${comResultado} jogo(s) com resultado registado para ${catId}.\nGerar novos jogos irá ELIMINAR permanentemente todos os resultados desta categoria.\n\nEscreva CONFIRMAR para continuar:`);
+    if (conf?.trim().toUpperCase() !== 'CONFIRMAR') return toast('Operação cancelada.', 'error');
+  } else {
+    if (!confirm(`Gerar todos os jogos round-robin para ${catId}?\nJogos existentes desta categoria serão removidos.`)) return;
+  }
 
   const grupos   = (getData('grupos')   || []).filter(g => g.cat === catId);
   const duplas   = getData('duplas')    || [];
@@ -4883,7 +4907,14 @@ window.cjGerarJogos = function() {
 
 window.cjLimparJogos = function(catId) {
   if (!catId) return;
-  if (!confirm(`Eliminar todos os jogos de ${catId}?`)) return;
+  const jogos = getData('jogos') || [];
+  const comResultado = jogos.filter(j => j.grupo?.startsWith(catId + '-') && j.resultado).length;
+  if (comResultado > 0) {
+    const conf = prompt(`⚠ ATENÇÃO: Existem ${comResultado} jogo(s) com resultado para ${catId}.\nEscreva CONFIRMAR para eliminar tudo:`);
+    if (conf?.trim().toUpperCase() !== 'CONFIRMAR') return toast('Operação cancelada.', 'error');
+  } else {
+    if (!confirm(`Eliminar todos os jogos de ${catId}?`)) return;
+  }
   const jogos = getData('jogos') || [];
   const filtrados = jogos.filter(j => !j.grupo?.startsWith(catId + '-'));
   setData('jogos', filtrados);
