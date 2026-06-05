@@ -2998,21 +2998,19 @@
       ],
       "createdAt": "2026-06-04T20:14:42.728Z",
       "createdBy": "euamusse"
-    },
-    {
-      "id": "mpzgv2i1eed46hx",
-      "username": "hzandamela",
-      "name": "Helio Zandamela",
-      "role": "admin",
-      "salt": "mpzgv2i1wqdr16zmpzgv2i17d3o9j9",
-      "passwordHash": "d5fe89ca",
-      "active": true,
-      "categories": [],
-      "createdAt": "2026-06-04T12:23:28.112Z",
-      "createdBy": "euamusse"
     }
   ],
   "auditlog": [
+    {
+      "id": "mq0f9pv3eodp5qp",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "DELETE_USER",
+      "target": "utilizadores",
+      "detail": "Eliminado \"hzandamela\"",
+      "ts": "2026-06-05T04:26:38.511Z"
+    },
     {
       "id": "mq0edtck831uzxf",
       "userId": "mpz8aq9sg983ubo",
@@ -5874,5 +5872,5 @@
       "ts": "2026-06-03T06:06:37.211Z"
     }
   ],
-  "_updated": "2026-06-05T04:02:01.595Z"
+  "_updated": "2026-06-05T04:26:39.471Z"
 }
