@@ -1851,7 +1851,7 @@
     {
       "id": 27,
       "data": "2026-06-06",
-      "hora": "20:00",
+      "hora": "19:00",
       "campo": "Play Padel",
       "grupo": "M3-C",
       "eq1": "Keiss Chiraze & Saif Issa",
@@ -1921,7 +1921,7 @@
     {
       "id": 35,
       "data": "2026-06-06",
-      "hora": "16:00",
+      "hora": "19:00",
       "campo": "TVCabo",
       "grupo": "M5-B",
       "eq1": "Mizzy & Zayan Imitiaz",
@@ -1951,7 +1951,7 @@
     {
       "id": 38,
       "data": "2026-06-06",
-      "hora": "19:00",
+      "hora": "16:00",
       "campo": "TVCabo",
       "grupo": "M3-B",
       "eq1": "Shueb & Sahad",
@@ -2151,7 +2151,7 @@
     {
       "id": 58,
       "data": "2026-06-06",
-      "hora": "19:00",
+      "hora": "20:00",
       "campo": "Play Padel",
       "grupo": "M1-C",
       "eq1": "Carlos Cardeano & José Santos",
@@ -2321,8 +2321,8 @@
     {
       "id": 75,
       "data": "2026-06-07",
-      "hora": "09:00",
-      "campo": "Stella Artois",
+      "hora": "15:00",
+      "campo": "Play Padel",
       "grupo": "M2-B",
       "eq1": "José Moreira & Nuno L. Pereira",
       "eq2": "Jameel & Tahir",
@@ -3001,6 +3001,86 @@
     }
   ],
   "auditlog": [
+    {
+      "id": "mq0t2d3hciwae8n",
+      "userId": "mpz46x5c2zupza0",
+      "username": "bgaspar",
+      "role": "operator",
+      "action": "HORARIO_DRAG",
+      "target": "jogos",
+      "detail": "Jogo #35 movido para 19:00 @ TVCabo",
+      "ts": "2026-06-05T10:52:49.997Z"
+    },
+    {
+      "id": "mq0t0t2rh01gi8s",
+      "userId": "mpz46x5c2zupza0",
+      "username": "bgaspar",
+      "role": "operator",
+      "action": "HORARIO_DRAG",
+      "target": "jogos",
+      "detail": "Jogo #75 movido para 15:00 @ Play Padel",
+      "ts": "2026-06-05T10:51:37.395Z"
+    },
+    {
+      "id": "mq0t0o9dj1uuldf",
+      "userId": "mpz46x5c2zupza0",
+      "username": "bgaspar",
+      "role": "operator",
+      "action": "HORARIO_DRAG",
+      "target": "jogos",
+      "detail": "Jogo #75 movido para 12:00 @ TVCabo",
+      "ts": "2026-06-05T10:51:31.153Z"
+    },
+    {
+      "id": "mq0t0hskn98busx",
+      "userId": "mpz46x5c2zupza0",
+      "username": "bgaspar",
+      "role": "operator",
+      "action": "HORARIO_DRAG",
+      "target": "jogos",
+      "detail": "Jogo #76 movido para 10:00 @ Stella Artois",
+      "ts": "2026-06-05T10:51:22.772Z"
+    },
+    {
+      "id": "mq0szu07erm6bcv",
+      "userId": "mpz46x5c2zupza0",
+      "username": "bgaspar",
+      "role": "operator",
+      "action": "HORARIO_DRAG",
+      "target": "jogos",
+      "detail": "Jogo #76 movido para 15:00 @ Play Padel",
+      "ts": "2026-06-05T10:50:51.943Z"
+    },
+    {
+      "id": "mq0szqigi3bh13h",
+      "userId": "mpz46x5c2zupza0",
+      "username": "bgaspar",
+      "role": "operator",
+      "action": "HORARIO_DRAG",
+      "target": "jogos",
+      "detail": "Jogo #66 movido para 13:00 @ TVCabo",
+      "ts": "2026-06-05T10:50:47.416Z"
+    },
+    {
+      "id": "mq0szjtkwgtb8ue",
+      "userId": "mpz46x5c2zupza0",
+      "username": "bgaspar",
+      "role": "operator",
+      "action": "HORARIO_DRAG",
+      "target": "jogos",
+      "detail": "Jogo #66 movido para 15:00 @ Play Padel",
+      "ts": "2026-06-05T10:50:38.744Z"
+    },
+    {
+      "id": "mq0sy7fifv0aj6w",
+      "userId": "mpz46x5c2zupza0",
+      "username": "bgaspar",
+      "role": "operator",
+      "action": "HORARIO_DRAG",
+      "target": "jogos",
+      "detail": "Jogo #27 movido para 19:00 @ Play Padel",
+      "ts": "2026-06-05T10:49:36.030Z"
+    },
     {
       "id": "mq0sustkdzjt0xv",
       "userId": "mpz46x5c2zupza0",
@@ -6022,5 +6102,5 @@
       "ts": "2026-06-03T06:06:37.211Z"
     }
   ],
-  "_updated": "2026-06-05T10:48:01.844Z"
+  "_updated": "2026-06-05T10:53:05.778Z"
 }
