@@ -3936,6 +3936,8 @@ window.gerarPanfletoClassificacoes = function() {
   cardRows.forEach(row => { contentH += Math.max(...row.map(cardHeight)) + ROW_GAP; });
 
   const H = HEAD_H + contentH + FOOT_H;
+
+  function draw(logoImg) {
   const canvas = document.createElement('canvas');
   canvas.width = W; canvas.height = H;
   const ctx = canvas.getContext('2d');
@@ -3974,7 +3976,16 @@ window.gerarPanfletoClassificacoes = function() {
   // Divider
   ctx.fillStyle = '#1C2620'; ctx.fillRect(PAD, 188, W - PAD * 2, 2);
 
-  // Group cards
+  // Logo (top-right)
+  if (logoImg) {
+    const LOGO_SZ = 80, LOGO_X = W - PAD - 80, LOGO_Y = 18;
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(LOGO_X + LOGO_SZ / 2, LOGO_Y + LOGO_SZ / 2, LOGO_SZ / 2, 0, Math.PI * 2);
+    ctx.clip();
+    ctx.drawImage(logoImg, LOGO_X, LOGO_Y, LOGO_SZ, LOGO_SZ);
+    ctx.restore();
+  }
   let curY = HEAD_H;
   cardRows.forEach(row => {
     const maxCH = Math.max(...row.map(cardHeight));
@@ -4048,7 +4059,7 @@ window.gerarPanfletoClassificacoes = function() {
         ctx.fillStyle = r.d > 0 ? '#FF4A4A' : '#8AA396';
         ctx.fillText(r.d, rx.d, rcy);
         ctx.fillStyle = '#8AA396'; ctx.font = '11px Arial, sans-serif';
-        ctx.fillText(`${r.sw}-${r.sl}`, rx.sets, rcy);
+        ctx.fillText(`${r.sv}-${r.sl}`, rx.sets, rcy);
         ctx.fillStyle = '#F0F7F3'; ctx.font = 'bold 13px Arial, sans-serif';
         ctx.textAlign = 'right';
         ctx.fillText(r.pts, rx.pts, rcy);
@@ -4067,6 +4078,12 @@ window.gerarPanfletoClassificacoes = function() {
   ctx.textAlign = 'left';
 
   _panfletoShare(canvas, filename);
+  } // end draw()
+
+  const logo = new Image();
+  logo.onload  = () => draw(logo);
+  logo.onerror = () => draw(null);
+  logo.src = 'playpadellogo.jpg';
 };
 
 // ============================================
