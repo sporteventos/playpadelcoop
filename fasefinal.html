@@ -1,9 +1,14 @@
-Ôªø<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-PT">
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Fase Final ¬∑ Play Padel Torneio</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#00C37B">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Play Padel">
+  <title>Fase Final ∑ Play Padel Torneio</title>
   <link rel="stylesheet" href="css/style.css"/>
   <link rel="stylesheet" href="css/pages.css"/>
   <script src="https://unpkg.com/@phosphor-icons/web@2.1.1/src/index.js" defer></script>
@@ -82,7 +87,7 @@
     .bracket-empty { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 4rem 2rem; text-align: center; gap: 1rem; }
     .bracket-empty-icon { font-size: 3.5rem; color: var(--cinza-texto); }
     .bracket-empty-text { color: var(--cinza-texto); max-width: 320px; line-height: 1.5; }
-    /* Champion column ‚Äî inside the bracket flex row */
+    /* Champion column ó inside the bracket flex row */
     .bk-round-champion { min-width: 240px; max-width: 300px; }
     .champion-rhead { color: var(--amarelo) !important; border-bottom-color: rgba(245,197,24,.3) !important; text-align: center; }
     .champion-col-body {
@@ -115,13 +120,13 @@
     <img src="playpadellogo.jpg" alt="Play Padel" style="height:34px;width:34px;border-radius:7px;object-fit:cover;flex-shrink:0"/>
     <div class="nav-logo-text">
       <span class="nav-logo-title">Play Padel</span>
-      <span class="nav-logo-sub">Torneio 2.¬∫ Anivers√°rio</span>
+      <span class="nav-logo-sub">Torneio 2.∫ Anivers·rio</span>
     </div>
   </a>
   <ul class="nav-links">
-    <li><a href="index.html"><i class="ph ph-house nav-icon"></i> In√≠cio</a></li>
-    <li><a href="calendario.html"><i class="ph ph-calendar nav-icon"></i> Calend√°rio</a></li>
-    <li><a href="classificacoes.html"><i class="ph ph-trophy nav-icon"></i> Classifica√ß√µes</a></li>
+    <li><a href="index.html"><i class="ph ph-house nav-icon"></i> InÌcio</a></li>
+    <li><a href="calendario.html"><i class="ph ph-calendar nav-icon"></i> Calend·rio</a></li>
+    <li><a href="classificacoes.html"><i class="ph ph-trophy nav-icon"></i> ClassificaÁıes</a></li>
     <li><a href="fasefinal.html" class="active"><i class="ph ph-brackets-round nav-icon"></i> Fase Final</a></li>
     <li><a href="jogadores.html"><i class="ph ph-users nav-icon"></i> Jogadores</a></li>
     <li><a href="regulamento.html"><i class="ph ph-book-open nav-icon"></i> Regulamento</a></li>
@@ -132,9 +137,9 @@
 </nav>
 <div class="nav-drawer" id="navDrawer">
   <ul>
-    <li><a href="index.html"><i class="ph ph-house"></i> In√≠cio</a></li>
-    <li><a href="calendario.html"><i class="ph ph-calendar"></i> Calend√°rio</a></li>
-    <li><a href="classificacoes.html"><i class="ph ph-trophy"></i> Classifica√ß√µes</a></li>
+    <li><a href="index.html"><i class="ph ph-house"></i> InÌcio</a></li>
+    <li><a href="calendario.html"><i class="ph ph-calendar"></i> Calend·rio</a></li>
+    <li><a href="classificacoes.html"><i class="ph ph-trophy"></i> ClassificaÁıes</a></li>
     <li><a href="fasefinal.html" class="active"><i class="ph ph-brackets-round"></i> Fase Final</a></li>
     <li><a href="jogadores.html"><i class="ph ph-users"></i> Jogadores</a></li>
     <li><a href="regulamento.html"><i class="ph ph-book-open"></i> Regulamento</a></li>
@@ -144,9 +149,9 @@
 <!-- PAGE HERO -->
 <div class="page-hero">
   <div class="page-hero-content">
-    <p class="page-hero-tag"><i class="ph ph-brackets-round"></i> Eliminat√≥rias</p>
+    <p class="page-hero-tag"><i class="ph ph-brackets-round"></i> EliminatÛrias</p>
     <h1 class="page-hero-title">Fase <span>Final</span></h1>
-    <p class="page-hero-sub">Quartos de final, meias-finais e finais ¬∑ selecione a categoria</p>
+    <p class="page-hero-sub">Quartos de final, meias-finais e finais ∑ selecione a categoria</p>
   </div>
 </div>
 
@@ -158,8 +163,8 @@
 
 <footer class="footer">
   <div class="footer-bottom" style="max-width:1200px;margin:0 auto">
-    <p class="footer-copy">¬© 2026 <span>Play Padel</span> ¬∑ Torneio 2.¬∫ Anivers√°rio</p>
-    <a href="index.html" class="footer-copy" style="color:var(--verde);text-decoration:none">‚Üê Voltar ao in√≠cio</a>
+    <p class="footer-copy">© 2026 <span>Play Padel</span> ∑ Torneio 2.∫ Anivers·rio</p>
+    <a href="index.html" class="footer-copy" style="color:var(--verde);text-decoration:none">? Voltar ao inÌcio</a>
   </div>
 </footer>
 
@@ -224,7 +229,7 @@ document.addEventListener('DOMContentLoaded', () => {
       scoreHtml = `<div class="bk-card-score">${sets}</div>`;
     }
     const schedHtml = (j.data || j.hora)
-      ? `<div style="font-size:.65rem;color:var(--cinza-texto);margin-bottom:.25rem">${j.data ? ppFormatDate(j.data) : ''}${j.hora ? ' ¬∑ ' + j.hora : ''}</div>`
+      ? `<div style="font-size:.65rem;color:var(--cinza-texto);margin-bottom:.25rem">${j.data ? ppFormatDate(j.data) : ''}${j.hora ? ' ∑ ' + j.hora : ''}</div>`
       : '';
     return `
       <div class="bk-card${done ? ' done' : ''}${isFinal ? ' is-final' : ''}">
@@ -246,9 +251,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!name) return '';
     const nameFmt = name.split(' & ').join('<br>');
     return `<div class="bk-round bk-round-champion bk-round-final-connector">
-      <div class="bk-rhead champion-rhead">Campe√£o ¬∑ ${currentCat}</div>
+      <div class="bk-rhead champion-rhead">Campe„o ∑ ${currentCat}</div>
       <div class="champion-col-body">
-        <div class="champion-col-trophy">üèÜ</div>
+        <div class="champion-col-trophy">??</div>
         <div class="champion-col-name">${nameFmt}</div>
         ${grupo ? `<div class="champion-col-grup">${grupo}</div>` : ''}
       </div>
@@ -264,7 +269,7 @@ document.addEventListener('DOMContentLoaded', () => {
       content.innerHTML = `
         <div class="bracket-empty">
           <i class="ph ph-hourglass bracket-empty-icon"></i>
-          <p class="bracket-empty-text">O bracket para <strong>${catId}</strong> ainda n√£o foi gerado.<br>Aguarde a conclus√£o da fase de grupos.</p>
+          <p class="bracket-empty-text">O bracket para <strong>${catId}</strong> ainda n„o foi gerado.<br>Aguarde a conclus„o da fase de grupos.</p>
         </div>`;
       return;
     }
@@ -317,7 +322,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 </script>
 <script>
-  /* Reload once when remote data.json is fetched ‚Äî gives all visitors live results */
+  /* Reload once when remote data.json is fetched ó gives all visitors live results */
   (function() {
     var key = '_pp_synced';
     if (!sessionStorage.getItem(key)) {

@@ -1403,6 +1403,31 @@ function renderDashboard() {
   document.getElementById('dashPendentes').textContent     = semRes;
   document.getElementById('dashProgresso').textContent     = pct + '%';
 
+  // Jogos em atraso: pendentes cuja data+hora já passou
+  const nowStr = new Date().toISOString().slice(0, 16); // "YYYY-MM-DDTHH:mm"
+  const emAtraso = jogos.filter(j => !j.resultado && j.data && j.hora && (j.data + 'T' + j.hora) < nowStr);
+  const dashAtraso = document.getElementById('dashEmAtraso');
+  if (dashAtraso) dashAtraso.textContent = emAtraso.length;
+  const badgeAtraso = document.getElementById('badgeAtraso');
+  if (badgeAtraso) { badgeAtraso.textContent = emAtraso.length; badgeAtraso.style.display = emAtraso.length ? '' : 'none'; }
+  const dashAtrasoPanel = document.getElementById('dashAtrasoPanel');
+  if (dashAtrasoPanel) {
+    dashAtrasoPanel.style.display = emAtraso.length ? '' : 'none';
+    document.getElementById('dashAtrasoCount').textContent = emAtraso.length + (emAtraso.length === 1 ? ' jogo em atraso' : ' jogos em atraso');
+    document.getElementById('dashAtrasoBody').innerHTML = emAtraso.slice(0, 5).map(j =>
+      `<tr style="background:rgba(255,74,74,.04)">
+        <td><span class="td-mono" style="color:var(--vermelho)">${formatDate(j.data)}</span></td>
+        <td style="color:var(--vermelho);font-weight:700">${j.hora}</td>
+        <td><span class="badge badge-cinza">${j.campo}</span></td>
+        <td><span class="cat-pill cat-${j.grupo.split('-')[0]}">${j.grupo}</span></td>
+        <td style="text-align:right">${j.eq1.split(' & ').join('<br>')}</td>
+        <td style="color:var(--cinza-texto);padding:0 .4rem">VS</td>
+        <td>${j.eq2.split(' & ').join('<br>')}</td>
+        <td><button class="btn btn-danger btn-sm" style="font-size:.65rem;padding:.2rem .5rem" onclick="abrirResultado(${j.id})"><i class="ph ph-pencil-simple"></i> Lançar</button></td>
+      </tr>`
+    ).join('');
+  }
+
   // Próximos jogos pendentes: group stage first, then FF (only where both teams known)
   const proximosGrupos = jogos.filter(j => !j.resultado).slice(0, 6);
   const proximosFF     = ffJogos.filter(j => !j.resultado && j.eq1 && j.eq2);
@@ -2479,6 +2504,25 @@ window.abrirResultado = function(jogoId) {
   if (r?.s2eq1 !== null) onSetInput(2);
   if (r?.s3eq1 !== null) onSetInput(3);
 
+  // Histórico de edições deste jogo
+  const histEl = document.getElementById('resHistorico');
+  if (histEl) {
+    const hist = Auth.getLogs().filter(l =>
+      (l.action === 'SAVE_RESULT' || l.action === 'CLEAR_RESULT' || l.action === 'SAVE_SCHEDULE') &&
+      l.detail.includes('#' + jogoId)
+    ).slice(0, 5);
+    if (hist.length) {
+      histEl.style.display = '';
+      histEl.innerHTML = `<div style="font-size:.68rem;color:var(--cinza-texto);margin-bottom:.3rem;font-weight:600;text-transform:uppercase;letter-spacing:.04em">Histórico</div>` +
+        hist.map(l => `<div style="font-size:.7rem;color:var(--cinza-texto);padding:.15rem 0;border-bottom:1px solid var(--preto-borda);display:flex;justify-content:space-between;gap:.5rem">
+          <span><span style="color:${l.action==='SAVE_RESULT'?'var(--verde)':l.action==='CLEAR_RESULT'?'var(--vermelho)':'var(--amarelo)'};font-weight:700">${l.action}</span> — ${escHtml(l.username)}</span>
+          <span style="white-space:nowrap">${new Date(l.ts).toLocaleString('pt-PT',{dateStyle:'short',timeStyle:'short'})}</span>
+        </div>`).join('');
+    } else {
+      histEl.style.display = 'none';
+    }
+  }
+
   openModal('modalResultado');
 };
 
@@ -2567,6 +2611,8 @@ function salvarResultado() {
     renderView(APP.currentView);
     Auth.log('SAVE_RESULT_FF', 'fasefinal', `Resultado FF: ${catId} jogo ${jogoId}`);
     toast('Resultado guardado.');
+    const savedFF = ff[catId]?.jogos[jIdx];
+    if (savedFF) setTimeout(() => _ofereceNotificacao(jogoId, true, catId), 350);
     APP.ffEditing = null;
     return;
   }
@@ -2595,8 +2641,29 @@ function salvarResultado() {
   renderView(APP.currentView);
   Auth.log('SAVE_RESULT', 'resultados', `Resultado guardado: jogo #${APP.editingId}`);
   toast(`Resultado guardado para o jogo #${APP.editingId}.`);
+  const savedId = APP.editingId;
+  setTimeout(() => _ofereceNotificacao(savedId, false, null), 350);
   APP.editingId = null;
 }
+
+// ── Oferecer notificação de resultado após guardar ─────────────────
+window._ofereceNotificacao = function(jogoId, isFF, catId) {
+  const el = document.getElementById('notifResJogoId');
+  const el2 = document.getElementById('notifResJogoIdFF');
+  const elCat = document.getElementById('notifResCatId');
+  if (el)  el.value  = jogoId;
+  if (el2) el2.value = isFF ? 'true' : 'false';
+  if (elCat) elCat.value = catId || '';
+  openModal('modalNotifResultado');
+};
+
+window._notifResPartilhar = function() {
+  const jogoId = document.getElementById('notifResJogoId')?.value;
+  const isFF   = document.getElementById('notifResJogoIdFF')?.value === 'true';
+  const catId  = document.getElementById('notifResCatId')?.value || '';
+  closeModal('modalNotifResultado');
+  if (jogoId) abrirPanfletoFoto(jogoId, isFF, catId);
+};
 
 function limparResultado() {
   if (!Auth.isAdmin()) return toast('Apenas administradores podem executar esta acção.', 'error');

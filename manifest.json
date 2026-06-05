@@ -1,0 +1,37 @@
+{
+  "name": "Play Padel · Torneio Aniversário 2026",
+  "short_name": "Play Padel",
+  "description": "Calendário, classificações e resultados do Torneio de 2.º Aniversário Play Padel",
+  "start_url": "/playpadelcoop/",
+  "scope": "/playpadelcoop/",
+  "display": "standalone",
+  "background_color": "#0A0F0D",
+  "theme_color": "#00C37B",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "playpadellogo.jpg",
+      "sizes": "192x192",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "playpadellogo.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg",
+      "purpose": "any"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Calendário",
+      "url": "/playpadelcoop/calendario.html",
+      "description": "Ver calendário de jogos"
+    },
+    {
+      "name": "Classificações",
+      "url": "/playpadelcoop/classificacoes.html",
+      "description": "Ver classificações"
+    }
+  ]
+}

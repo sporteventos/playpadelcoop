@@ -4,6 +4,8 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Backoffice · Play Padel Torneio</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#00C37B">
   <link rel="stylesheet" href="css/admin.css"/>
   <script src="https://unpkg.com/@phosphor-icons/web@2.1.1/src/index.js" defer></script>
 </head>
@@ -117,6 +119,7 @@
           <i class="ph ph-trophy sl-icon"></i>
           Resultados
           <span class="sl-badge" id="badgePendentes">—</span>
+          <span class="sl-badge" id="badgeAtraso" style="display:none;background:rgba(255,74,74,.2);color:var(--vermelho);margin-left:.15rem" title="Jogos em atraso">⚠</span>
         </button>
         <button class="sidebar-link" data-view="importar">
           <i class="ph ph-upload-simple sl-icon"></i>
@@ -261,6 +264,20 @@
             <div class="stat-card-icon">📊</div>
             <div class="stat-card-value" id="dashProgresso">—</div>
             <div class="stat-card-label">Progresso</div>
+          </div>
+        </div>
+
+        <!-- Progress per category -->
+        <div id="dashAtrasoPanel" class="panel" style="margin-bottom:1.5rem;border:1px solid rgba(255,74,74,.3);background:rgba(255,74,74,.04);display:none">
+          <div class="panel-header" style="color:var(--vermelho)">
+            <span class="panel-title" style="color:var(--vermelho)"><i class="ph ph-warning-circle"></i> <span id="dashAtrasoCount">Jogos em atraso</span></span>
+            <button class="panel-action" onclick="navigate('resultados')">Ver resultados →</button>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Data</th><th>Hora</th><th>Campo</th><th>Grupo</th><th style="text-align:right">Equipa 1</th><th></th><th>Equipa 2</th><th></th></tr></thead>
+              <tbody id="dashAtrasoBody"></tbody>
+            </table>
           </div>
         </div>
 
@@ -1242,6 +1259,9 @@
       <!-- Resultado final -->
       <div id="matchResultBar" style="display:none"></div>
 
+      <!-- Histórico de edições -->
+      <div id="resHistorico" style="display:none;margin-top:.75rem;padding:.6rem .75rem;border-radius:6px;background:var(--preto-card);border:1px solid var(--preto-borda)"></div>
+
     </div>
     <div class="modal-footer">
       <button id="btnLimparResultado" class="btn btn-danger" onclick="limparResultado()"><i class="ph ph-eraser"></i> Limpar</button>
@@ -1251,6 +1271,25 @@
   </div>
 </div>
 
+
+<!-- Modal: Notificação de Resultado -->
+<div class="modal-overlay" id="modalNotifResultado" role="dialog" aria-modal="true">
+  <div class="modal" style="max-width:340px;width:100%;text-align:center">
+    <div class="modal-header" style="justify-content:center">
+      <h3 class="modal-title"><i class="ph ph-check-circle" style="color:var(--verde)"></i> Resultado guardado!</h3>
+    </div>
+    <div class="modal-body" style="padding:1.25rem 1.5rem 1.5rem">
+      <p style="color:var(--cinza-texto);font-size:.88rem;margin:0 0 1.25rem">Deseja gerar o <strong style="color:var(--branco)">Panfleto com Foto</strong> e partilhar o resultado?</p>
+      <input type="hidden" id="notifResJogoId">
+      <input type="hidden" id="notifResJogoIdFF">
+      <input type="hidden" id="notifResCatId">
+      <div style="display:flex;gap:.75rem;justify-content:center;flex-wrap:wrap">
+        <button class="btn btn-primary btn-sm" onclick="_notifResPartilhar()"><i class="ph ph-camera"></i> Criar Panfleto</button>
+        <button class="btn btn-ghost btn-sm" onclick="closeModal('modalNotifResultado')">Agora não</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- Toast container -->
 <div class="toast-container" id="toastContainer" aria-live="polite" aria-atomic="false"></div>

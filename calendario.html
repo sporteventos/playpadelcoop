@@ -1,9 +1,14 @@
-Ôªø<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-PT">
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Calend√°rio ¬∑ Play Padel Torneio</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#00C37B">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Play Padel">
+  <title>Calend·rio ∑ Play Padel Torneio</title>
   <link rel="stylesheet" href="css/style.css"/>
   <link rel="stylesheet" href="css/pages.css"/>
   <script src="https://unpkg.com/@phosphor-icons/web@2.1.1/src/index.js" defer></script>
@@ -29,13 +34,13 @@
     <img src="playpadellogo.jpg" alt="Play Padel" style="height:34px;width:34px;border-radius:7px;object-fit:cover;flex-shrink:0"/>
     <div class="nav-logo-text">
       <span class="nav-logo-title">Play Padel</span>
-      <span class="nav-logo-sub">Torneio 2.¬∫ Anivers√°rio</span>
+      <span class="nav-logo-sub">Torneio 2.∫ Anivers·rio</span>
     </div>
   </a>
   <ul class="nav-links">
-    <li><a href="index.html"><i class="ph ph-house nav-icon"></i> In√≠cio</a></li>
-    <li><a href="calendario.html" class="active"><i class="ph ph-calendar nav-icon"></i> Calend√°rio</a></li>
-    <li><a href="classificacoes.html"><i class="ph ph-trophy nav-icon"></i> Classifica√ß√µes</a></li>
+    <li><a href="index.html"><i class="ph ph-house nav-icon"></i> InÌcio</a></li>
+    <li><a href="calendario.html" class="active"><i class="ph ph-calendar nav-icon"></i> Calend·rio</a></li>
+    <li><a href="classificacoes.html"><i class="ph ph-trophy nav-icon"></i> ClassificaÁıes</a></li>
     <li><a href="fasefinal.html"><i class="ph ph-brackets-round nav-icon"></i> Fase Final</a></li>
     <li><a href="jogadores.html"><i class="ph ph-users nav-icon"></i> Jogadores</a></li>
     <li><a href="regulamento.html"><i class="ph ph-book-open nav-icon"></i> Regulamento</a></li>
@@ -46,9 +51,9 @@
 </nav>
 <div class="nav-drawer" id="navDrawer">
   <ul>
-    <li><a href="index.html"><i class="ph ph-house"></i> In√≠cio</a></li>
-    <li><a href="calendario.html" class="active"><i class="ph ph-calendar"></i> Calend√°rio</a></li>
-    <li><a href="classificacoes.html"><i class="ph ph-trophy"></i> Classifica√ß√µes</a></li>
+    <li><a href="index.html"><i class="ph ph-house"></i> InÌcio</a></li>
+    <li><a href="calendario.html" class="active"><i class="ph ph-calendar"></i> Calend·rio</a></li>
+    <li><a href="classificacoes.html"><i class="ph ph-trophy"></i> ClassificaÁıes</a></li>
     <li><a href="fasefinal.html"><i class="ph ph-brackets-round"></i> Fase Final</a></li>
     <li><a href="jogadores.html"><i class="ph ph-users"></i> Jogadores</a></li>
     <li><a href="regulamento.html"><i class="ph ph-book-open"></i> Regulamento</a></li>
@@ -58,9 +63,9 @@
 <!-- PAGE HERO -->
 <div class="page-hero">
   <div class="page-hero-content">
-    <p class="page-hero-tag"><i class="ph ph-calendar"></i> Calend√°rio Oficial</p>
-    <h1 class="page-hero-title">Calend√°rio de <span>Jogos</span></h1>
-    <p class="page-hero-sub">Todos os jogos do torneio ¬∑ filtre por dia, campo ou grupo</p>
+    <p class="page-hero-tag"><i class="ph ph-calendar"></i> Calend·rio Oficial</p>
+    <h1 class="page-hero-title">Calend·rio de <span>Jogos</span></h1>
+    <p class="page-hero-sub">Todos os jogos do torneio ∑ filtre por dia, campo ou grupo</p>
   </div>
 </div>
 
@@ -71,7 +76,7 @@
     <!-- Dias (tabs) -->
     <div class="day-tabs" id="dayTabs" role="tablist" aria-label="Dias do torneio"></div>
 
-    <!-- Filtros secund√°rios -->
+    <!-- Filtros secund·rios -->
     <div class="filters-secondary">
       <div class="filter-select-wrap">
         <i class="ph ph-tennis"></i>
@@ -90,7 +95,7 @@
       </div>
       <div class="search-wrap">
         <i class="ph ph-magnifying-glass"></i>
-        <input type="search" id="searchJogador" class="search-input" placeholder="Pesquisar jogador‚Ä¶"/>
+        <input type="search" id="searchJogador" class="search-input" placeholder="Pesquisar jogadorÖ"/>
       </div>
     </div>
 
@@ -102,7 +107,7 @@
   <div class="results-summary" id="resultsSummary"></div>
   <div id="jogosList"></div>
   <div class="empty-state hidden" id="emptyState">
-    <div class="empty-icon">üéæ</div>
+    <div class="empty-icon">??</div>
     <p class="empty-title">Sem jogos encontrados</p>
     <p class="empty-sub">Tente alterar os filtros</p>
   </div>
@@ -110,8 +115,8 @@
 
 <footer class="footer">
   <div class="footer-bottom" style="max-width:1200px;margin:0 auto">
-    <p class="footer-copy">¬© 2026 <span>Play Padel</span> ¬∑ Torneio 2.¬∫ Anivers√°rio</p>
-    <a href="index.html" class="footer-copy" style="color:var(--verde);text-decoration:none">‚Üê Voltar ao in√≠cio</a>
+    <p class="footer-copy">© 2026 <span>Play Padel</span> ∑ Torneio 2.∫ Anivers·rio</p>
+    <a href="index.html" class="footer-copy" style="color:var(--verde);text-decoration:none">? Voltar ao inÌcio</a>
   </div>
 </footer>
 
@@ -235,7 +240,7 @@ document.addEventListener('DOMContentLoaded', () => {
     empty.classList.add('hidden');
     summary.textContent = `${list.length} jogo${list.length !== 1 ? 's' : ''} encontrado${list.length !== 1 ? 's' : ''}`;
 
-    // Agrupar por data ‚Üí campo ‚Üí hora
+    // Agrupar por data ? campo ? hora
     const byDate = {};
     list.forEach(j => {
       byDate[j.data] = byDate[j.data] || {};
@@ -288,9 +293,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const r = j.resultado;
     const scoreHtml = temRes ? `
       <div class="match-score">
-        <div class="score-row"><span class="score-row-label">1.¬∫ Set</span>${setScore(r.s1eq1, r.s1eq2, r.tb1eq1, r.tb1eq2)}</div>
-        ${r.s2eq1 !== null ? `<div class="score-row"><span class="score-row-label">2.¬∫ Set</span>${setScore(r.s2eq1, r.s2eq2, r.tb2eq1, r.tb2eq2)}</div>` : ''}
-        ${r.s3eq1 !== null ? `<div class="score-row"><span class="score-row-label">3.¬∫ Set</span>${setScore(r.s3eq1, r.s3eq2, r.tb3eq1, r.tb3eq2)}</div>` : ''}
+        <div class="score-row"><span class="score-row-label">1.∫ Set</span>${setScore(r.s1eq1, r.s1eq2, r.tb1eq1, r.tb1eq2)}</div>
+        ${r.s2eq1 !== null ? `<div class="score-row"><span class="score-row-label">2.∫ Set</span>${setScore(r.s2eq1, r.s2eq2, r.tb2eq1, r.tb2eq2)}</div>` : ''}
+        ${r.s3eq1 !== null ? `<div class="score-row"><span class="score-row-label">3.∫ Set</span>${setScore(r.s3eq1, r.s3eq2, r.tb3eq1, r.tb3eq2)}</div>` : ''}
       </div>` : '';
 
     const hl = activeSearch ? activeSearch.toLowerCase() : '';
@@ -337,7 +342,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 </script>
 <script>
-  /* Reload once when remote data.json is fetched ‚Äî gives all visitors live results */
+  /* Reload once when remote data.json is fetched ó gives all visitors live results */
   (function() {
     var key = '_pp_synced';
     if (!sessionStorage.getItem(key)) {
