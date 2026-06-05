@@ -363,7 +363,7 @@
     },
     {
       "id": "j38",
-      "nome": "Fabio Damato",
+      "nome": "Nuno Correa Mendes",
       "tel": ""
     },
     {
@@ -1755,7 +1755,7 @@
       "campo": "Stella Artois",
       "grupo": "M2-B",
       "eq1": "Jameel & Tahir",
-      "eq2": "Dej Cruz & Fabio Damato",
+      "eq2": "Dej Cruz & Nuno Correa Mendes",
       "resultado": null
     },
     {
@@ -2335,7 +2335,7 @@
       "campo": "Stella Artois",
       "grupo": "M2-B",
       "eq1": "João Henriques & Bruno Morais",
-      "eq2": "Dej Cruz & Fabio Damato",
+      "eq2": "Dej Cruz & Nuno Correa Mendes",
       "resultado": null
     },
     {
@@ -2575,7 +2575,7 @@
       "campo": "Stella Artois",
       "grupo": "M2-B",
       "eq1": "José Moreira & Nuno L. Pereira",
-      "eq2": "Dej Cruz & Fabio Damato",
+      "eq2": "Dej Cruz & Nuno Correa Mendes",
       "resultado": null
     },
     {
@@ -3001,6 +3001,16 @@
     }
   ],
   "auditlog": [
+    {
+      "id": "mq0sustkdzjt0xv",
+      "userId": "mpz46x5c2zupza0",
+      "username": "bgaspar",
+      "role": "operator",
+      "action": "RENAME_JOGADOR",
+      "target": "jogadores",
+      "detail": "\"Fabio Damato\" → \"Nuno Correa Mendes\"",
+      "ts": "2026-06-05T10:46:57.128Z"
+    },
     {
       "id": "mq0srbswbgunqpq",
       "userId": "mpz46x5c2zupza0",
@@ -6012,5 +6022,5 @@
       "ts": "2026-06-03T06:06:37.211Z"
     }
   ],
-  "_updated": "2026-06-05T10:45:20.941Z"
+  "_updated": "2026-06-05T10:48:01.844Z"
 }
