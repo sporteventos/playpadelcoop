@@ -130,12 +130,73 @@ window.notificarDia = function() {
   const filtroData  = document.getElementById('filtroDataJogos').value;
   const filtroCampo = document.getElementById('filtroCampoJogos').value;
   const filtroGrupo = document.getElementById('filtroGrupoJogos')?.value || 'todos';
-  let jogos = getData('jogos');
+  let jogos = getAllJogosNormalized().filter(j => !j.resultado);
   if (filtroData  !== 'todos') jogos = jogos.filter(j => j.data  === filtroData);
   if (filtroCampo !== 'todos') jogos = jogos.filter(j => j.campo === filtroCampo);
   if (filtroGrupo !== 'todos') jogos = jogos.filter(j => j.grupo === filtroGrupo);
-  if (!jogos.length) return toast('Sem jogos para o filtro actual.', 'error');
-  window.open('https://wa.me/?text=' + encodeURIComponent(waMsgBundle(jogos)), '_blank');
+  if (!jogos.length) return toast('Sem jogos pendentes para o filtro actual.', 'error');
+  toast('A gerar ' + jogos.length + ' imagem(ns)…', 'success');
+  const items = new Array(jogos.length).fill(null);
+  let pending = jogos.length;
+  jogos.forEach((j, i) => {
+    _buildGameCanvas(j, canvas => {
+      canvas.toBlob(blob => {
+        const url = URL.createObjectURL(blob);
+        items[i] = { blob, name: 'notificacao-' + (j.id || (i + 1)) + '.png', url, j };
+        if (--pending === 0) {
+          (APP._bundleUrls || []).forEach(u => URL.revokeObjectURL(u));
+          APP._bundleItems = items;
+          APP._bundleUrls  = items.map(x => x.url);
+          const info = document.getElementById('bundleShareInfo');
+          const grid = document.getElementById('bundleImgGrid');
+          if (info) info.textContent = items.length + (items.length === 1 ? ' imagem gerada' : ' imagens geradas') + ' · jogos pendentes';
+          if (grid) grid.innerHTML = items.map((b, idx) => `
+            <div style="background:var(--preto-card);border:1px solid var(--preto-borda);border-radius:8px;overflow:hidden">
+              <img src="${b.url}" style="width:100%;display:block">
+              <div style="padding:.35rem .6rem;font-size:.68rem;color:var(--cinza-texto);line-height:1.4">${escHtml(b.j.grupo||'—')} · ${formatDate(b.j.data)||'—'} ${b.j.hora||''}</div>
+              <div style="padding:.3rem .5rem .5rem;display:flex;gap:.35rem">
+                <button class="btn btn-ghost btn-sm" style="flex:1;font-size:.65rem" onclick="_bundleDownloadOne(${idx})"><i class="ph ph-download-simple"></i> Guardar</button>
+                <button class="btn btn-sm" style="flex:1;font-size:.65rem;background:#25D366;color:#fff;border:none" onclick="_bundleShareOne(${idx})"><i class="ph ph-share-network"></i></button>
+              </div>
+            </div>
+          `).join('');
+          openModal('modalBundleShare');
+        }
+      }, 'image/png');
+    });
+  });
+};
+
+window._bundleDownloadOne = function(idx) {
+  const item = (APP._bundleItems || [])[idx];
+  if (!item) return;
+  const a = document.createElement('a'); a.href = item.url; a.download = item.name; a.click();
+};
+
+window._bundleShareOne = async function(idx) {
+  const item = (APP._bundleItems || [])[idx];
+  if (!item) return;
+  const file = new File([item.blob], item.name, { type: 'image/png' });
+  if (navigator.canShare && navigator.canShare({ files: [file] })) {
+    try { await navigator.share({ files: [file], title: 'Play Padel · Torneio Aniversário 2026' }); }
+    catch (err) { if (err.name !== 'AbortError') _bundleDownloadOne(idx); }
+  } else { _bundleDownloadOne(idx); }
+};
+
+window._bundleDownloadAll = function() {
+  (APP._bundleItems || []).forEach((item, i) => {
+    setTimeout(() => { const a = document.createElement('a'); a.href = item.url; a.download = item.name; a.click(); }, i * 300);
+  });
+};
+
+window._bundleShareAll = async function() {
+  const items = APP._bundleItems || [];
+  if (!items.length) return;
+  const files = items.map(b => new File([b.blob], b.name, { type: 'image/png' }));
+  if (navigator.canShare && navigator.canShare({ files })) {
+    try { await navigator.share({ files, title: 'Play Padel · Torneio Aniversário 2026' }); }
+    catch (err) { if (err.name !== 'AbortError') _bundleDownloadAll(); }
+  } else { _bundleDownloadAll(); }
 };
 
 // ============================================
@@ -180,22 +241,10 @@ window._panfletoWhatsapp = async function() {
 };
 
 // ============================================
-//  GAME IMAGE (WA IMAGE SHARE)
+//  GAME IMAGE CANVAS BUILDER (shared)
 // ============================================
-window.waImageJogo = function(jogoId, isFF, catId) {
+window._buildGameCanvas = function(j, onDone) {
   const CAT_CLR = { M1:'#4A9EFF', M2:'#00C37B', M3:'#39FF8F', M4:'#F5C518', M5:'#FF9A3C', F1:'#FF6BB0', F2:'#C97BFF' };
-  let j;
-  if (isFF) {
-    const ff = ffLoad();
-    j = (ff[catId]?.jogos || []).find(g => String(g.id) === String(jogoId));
-    if (!j) return toast('Jogo não encontrado.', 'error');
-    const faseLabel = j.fase === 'F' ? 'Final' : j.fase === 'SF' ? 'Meia-Final' + (j.num > 1 ? ' ' + j.num : '') : 'Quarto de Final' + (j.num ? ' ' + j.num : '');
-    j = { ...j, grupo: catId + ' — ' + faseLabel, campo: j.campo || '—', _cat: catId };
-  } else {
-    j = (getData('jogos') || []).find(g => String(g.id) === String(jogoId));
-    if (!j) return toast('Jogo não encontrado.', 'error');
-  }
-
   function draw(logoImg) {
     const W = 700, H = 820, PAD = 44;
     const LOGO_SZ = 88, LOGO_X = PAD, LOGO_Y = 20;
@@ -386,14 +435,32 @@ window.waImageJogo = function(jogoId, isFF, catId) {
     ctx.fillStyle = g; ctx.fillRect(0, H - 6, W, 6);
 
     ctx.textAlign = 'left';
-    _panfletoShare(canvas, 'jogo-' + jogoId + '.png');
+    onDone(canvas);
   }
 
-  // Load logo first, then draw (canvas taints if crossOrigin mismatch)
+  // Load logo then draw
   const logo = new Image();
   logo.onload = () => draw(logo);
   logo.onerror = () => draw(null);
   logo.src = 'playpadellogo.jpg';
+};
+
+// ============================================
+//  GAME IMAGE (WA IMAGE SHARE)
+// ============================================
+window.waImageJogo = function(jogoId, isFF, catId) {
+  let j;
+  if (isFF) {
+    const ff = ffLoad();
+    j = (ff[catId]?.jogos || []).find(g => String(g.id) === String(jogoId));
+    if (!j) return toast('Jogo não encontrado.', 'error');
+    const faseLabel = j.fase === 'F' ? 'Final' : j.fase === 'SF' ? 'Meia-Final' + (j.num > 1 ? ' ' + j.num : '') : 'Quarto de Final' + (j.num ? ' ' + j.num : '');
+    j = { ...j, grupo: catId + ' — ' + faseLabel, campo: j.campo || '—', _cat: catId };
+  } else {
+    j = (getData('jogos') || []).find(g => String(g.id) === String(jogoId));
+    if (!j) return toast('Jogo não encontrado.', 'error');
+  }
+  _buildGameCanvas(j, canvas => _panfletoShare(canvas, 'jogo-' + jogoId + '.png'));
 };
 
 window.gerarPanfleto = function() {
