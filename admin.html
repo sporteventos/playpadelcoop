@@ -581,7 +581,7 @@
 
       <!-- ── LOGS ─────────────────────────────────────── -->
       <section class="view" id="view-logs">
-        <div class="page-header" style="margin-bottom:1.5rem">
+        <div class="page-header" style="margin-bottom:1rem">
           <div>
             <h1 class="page-title">Logs de Auditoria</h1>
             <p class="page-desc">Registo de todas as acções no backoffice</p>
@@ -589,6 +589,17 @@
           <button class="btn btn-ghost" style="gap:.4rem" onclick="renderLogs()">
             <i class="ph ph-arrows-clockwise"></i> Actualizar
           </button>
+        </div>
+        <div style="display:flex;gap:.6rem;flex-wrap:wrap;margin-bottom:1rem">
+          <input id="logsFilterUser" class="form-input" placeholder="Utilizador…" style="max-width:170px;font-size:.8rem" oninput="_logsApplyFilters()">
+          <select id="logsFilterRole" class="form-select" style="max-width:140px;font-size:.8rem" onchange="_logsApplyFilters()">
+            <option value="">Todos os roles</option>
+            <option value="admin">Admin</option>
+            <option value="operator">Operador</option>
+          </select>
+          <select id="logsFilterAction" class="form-select" style="max-width:190px;font-size:.8rem" onchange="_logsApplyFilters()"><option value="">Todas as acções</option></select>
+          <button class="btn btn-ghost btn-sm" onclick="_logsClearFilters()" style="font-size:.75rem"><i class="ph ph-x"></i> Limpar</button>
+          <span id="logsCount" style="align-self:center;font-size:.75rem;color:var(--cinza-texto)"></span>
         </div>
         <div id="tblLogs"></div>
       </section>

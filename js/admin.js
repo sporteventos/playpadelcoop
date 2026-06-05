@@ -3727,7 +3727,6 @@ function _hideUserError() {
 // ============================================
 function renderLogs() {
   if (!Auth.isAdmin()) { navigate('dashboard'); return; }
-  const logs = Auth.getLogs().slice(0, 300);
 
   const actionStyle = {
     LOGIN:            'color:var(--verde)',
@@ -3749,41 +3748,118 @@ function renderLogs() {
     DELETE_CAMPO:     'color:var(--vermelho)',
   };
 
-  document.getElementById('tblLogs').innerHTML = logs.length === 0
-    ? `<div style="text-align:center;padding:3rem;color:var(--cinza-texto)"><i class="ph ph-clipboard-text" style="font-size:2.5rem;display:block;margin-bottom:.6rem"></i>Sem registos de auditoria.</div>`
+  const allLogs = Auth.getLogs().slice(0, 500);
+  APP._logsAll   = allLogs;
+  APP._logsSort  = APP._logsSort  || { col: 'ts', dir: -1 };
+
+  // Populate action filter
+  const actionSel = document.getElementById('logsFilterAction');
+  if (actionSel) {
+    const actions = [...new Set(allLogs.map(l => l.action))].sort();
+    const cur = actionSel.value;
+    actionSel.innerHTML = '<option value="">Todas as acções</option>' +
+      actions.map(a => `<option value="${a}"${a === cur ? ' selected' : ''}>${a}</option>`).join('');
+  }
+
+  window._logsApplyFilters();
+}
+
+window._logsApplyFilters = function() {
+  const actionStyle = {
+    LOGIN:            'color:var(--verde)',
+    LOGOUT:           'color:var(--cinza-texto)',
+    CREATE_USER:      'color:var(--amarelo)',
+    UPDATE_USER:      'color:var(--amarelo)',
+    DELETE_USER:      'color:var(--vermelho)',
+    ENABLE_USER:      'color:var(--verde)',
+    DISABLE_USER:     'color:var(--vermelho)',
+    FORCE_LOGOUT:     'color:var(--vermelho)',
+    SAVE_RESULT:      'color:var(--verde)',
+    SAVE_RESULT_FF:   'color:var(--verde)',
+    CLEAR_RESULT:     'color:var(--cinza-texto)',
+    GENERATE_BRACKET: 'color:var(--amarelo)',
+    RESET_BRACKET:    'color:var(--vermelho)',
+    RENAME_JOGADOR:   'color:var(--amarelo)',
+    CREATE_CAMPO:     'color:var(--verde)',
+    UPDATE_CAMPO:     'color:var(--amarelo)',
+    DELETE_CAMPO:     'color:var(--vermelho)',
+  };
+  const allLogs = APP._logsAll || [];
+  const userFilter   = (document.getElementById('logsFilterUser')?.value   || '').toLowerCase().trim();
+  const roleFilter   =  document.getElementById('logsFilterRole')?.value   || '';
+  const actionFilter =  document.getElementById('logsFilterAction')?.value || '';
+  const { col, dir } = APP._logsSort || { col: 'ts', dir: -1 };
+
+  let logs = allLogs.filter(l =>
+    (!userFilter   || l.username.toLowerCase().includes(userFilter)) &&
+    (!roleFilter   || l.role === roleFilter) &&
+    (!actionFilter || l.action === actionFilter)
+  );
+
+  logs = logs.slice().sort((a, b) => {
+    let va = a[col] ?? '', vb = b[col] ?? '';
+    if (col === 'ts') { va = new Date(va).getTime(); vb = new Date(vb).getTime(); }
+    else { va = String(va).toLowerCase(); vb = String(vb).toLowerCase(); }
+    return va < vb ? -dir : va > vb ? dir : 0;
+  });
+
+  const countEl = document.getElementById('logsCount');
+  if (countEl) countEl.textContent = logs.length + ' / ' + allLogs.length + ' entradas';
+
+  const sortArrow = (c) => c === col ? (dir === 1 ? ' ▲' : ' ▼') : ' ▽';
+  const thStyle = 'padding:.55rem .7rem;font-size:.7rem;font-weight:600;text-transform:uppercase;white-space:nowrap;cursor:pointer;user-select:none;color:var(--cinza-texto)';
+  const thActive = 'color:var(--branco);';
+
+  const el = document.getElementById('tblLogs');
+  if (!el) return;
+  el.innerHTML = logs.length === 0
+    ? `<div style="text-align:center;padding:3rem;color:var(--cinza-texto)"><i class="ph ph-clipboard-text" style="font-size:2.5rem;display:block;margin-bottom:.6rem"></i>Sem registos para os filtros seleccionados.</div>`
     : `<div class="card" style="overflow-x:auto">
         <table style="width:100%;border-collapse:collapse">
           <thead>
-            <tr style="border-bottom:1px solid var(--preto-borda);text-align:left">
-              <th style="padding:.55rem .7rem;color:var(--cinza-texto);font-size:.7rem;font-weight:600;text-transform:uppercase;white-space:nowrap">Data/Hora</th>
-              <th style="padding:.55rem .7rem;color:var(--cinza-texto);font-size:.7rem;font-weight:600;text-transform:uppercase">Utilizador</th>
-              <th style="padding:.55rem .7rem;color:var(--cinza-texto);font-size:.7rem;font-weight:600;text-transform:uppercase">Role</th>
-              <th style="padding:.55rem .7rem;color:var(--cinza-texto);font-size:.7rem;font-weight:600;text-transform:uppercase">Ação</th>
-              <th style="padding:.55rem .7rem;color:var(--cinza-texto);font-size:.7rem;font-weight:600;text-transform:uppercase">Alvo</th>
-              <th style="padding:.55rem .7rem;color:var(--cinza-texto);font-size:.7rem;font-weight:600;text-transform:uppercase">Detalhe</th>
+            <tr style="border-bottom:1px solid var(--preto-borda);text-align:left;background:var(--cinza-escuro)">
+              <th style="${thStyle}${'ts'===col?thActive:''}" onclick="_logsSort('ts')">Data/Hora${sortArrow('ts')}</th>
+              <th style="${thStyle}${'username'===col?thActive:''}" onclick="_logsSort('username')">Utilizador${sortArrow('username')}</th>
+              <th style="${thStyle}${'role'===col?thActive:''}" onclick="_logsSort('role')">Role${sortArrow('role')}</th>
+              <th style="${thStyle}${'action'===col?thActive:''}" onclick="_logsSort('action')">Acção${sortArrow('action')}</th>
+              <th style="${thStyle}${'target'===col?thActive:''}" onclick="_logsSort('target')">Alvo${sortArrow('target')}</th>
+              <th style="${thStyle}${'detail'===col?thActive:''}" onclick="_logsSort('detail')">Detalhe${sortArrow('detail')}</th>
             </tr>
           </thead>
           <tbody>
-            ${logs.map(l => `
-              <tr style="border-bottom:1px solid var(--preto-borda)">
-                <td style="padding:.55rem .7rem;font-size:.7rem;color:var(--cinza-texto);white-space:nowrap">${new Date(l.ts).toLocaleString('pt-PT')}</td>
-                <td style="padding:.55rem .7rem;font-weight:600;font-size:.82rem">${escHtml(l.username)}</td>
-                <td style="padding:.55rem .7rem">
+            ${logs.map((l, i) => `
+              <tr style="border-bottom:1px solid var(--preto-borda);background:${i%2===0?'var(--preto-card)':'var(--cinza-escuro)'}">
+                <td style="padding:.5rem .7rem;font-size:.7rem;color:var(--cinza-texto);white-space:nowrap">${new Date(l.ts).toLocaleString('pt-PT')}</td>
+                <td style="padding:.5rem .7rem;font-weight:600;font-size:.82rem">${escHtml(l.username)}</td>
+                <td style="padding:.5rem .7rem">
                   <span style="font-size:.62rem;font-weight:700;text-transform:uppercase;padding:.15rem .45rem;border-radius:3px;background:${l.role === 'admin' ? 'rgba(245,197,24,.15)' : 'rgba(0,195,123,.12)'};color:${l.role === 'admin' ? 'var(--amarelo)' : 'var(--verde)'}">
                     ${l.role === 'admin' ? 'Admin' : l.role === 'operator' ? 'Oper.' : l.role}
                   </span>
                 </td>
-                <td style="padding:.55rem .7rem">
+                <td style="padding:.5rem .7rem">
                   <span style="font-size:.68rem;font-weight:700;${actionStyle[l.action] || 'color:var(--branco)'}">${l.action}</span>
                 </td>
-                <td style="padding:.55rem .7rem;font-size:.75rem;color:var(--cinza-texto)">${escHtml(l.target)}</td>
-                <td style="padding:.55rem .7rem;font-size:.75rem;color:var(--cinza-texto)">${escHtml(l.detail)}</td>
+                <td style="padding:.5rem .7rem;font-size:.75rem;color:var(--cinza-texto)">${escHtml(l.target)}</td>
+                <td style="padding:.5rem .7rem;font-size:.75rem;color:var(--cinza-texto)">${escHtml(l.detail)}</td>
               </tr>
             `).join('')}
           </tbody>
         </table>
       </div>`;
-}
+};
+
+window._logsSort = function(col) {
+  const s = APP._logsSort || { col: 'ts', dir: -1 };
+  APP._logsSort = { col, dir: s.col === col ? -s.dir : -1 };
+  _logsApplyFilters();
+};
+
+window._logsClearFilters = function() {
+  const u = document.getElementById('logsFilterUser');   if (u) u.value = '';
+  const r = document.getElementById('logsFilterRole');   if (r) r.value = '';
+  const a = document.getElementById('logsFilterAction'); if (a) a.value = '';
+  _logsApplyFilters();
+};
 
 // ============================================
 //  SESSÕES VIEW
