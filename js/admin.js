@@ -4589,7 +4589,10 @@ function renderHorario() {
           const moverBtn = j._isFaseFinal ? '' : `<button onclick="event.stopPropagation();horarioMoverDia('${j.id}')" style="margin-top:.35rem;width:100%;background:transparent;border:1px solid var(--preto-borda);border-radius:4px;color:var(--cinza-texto);font-size:.62rem;padding:.15rem .3rem;cursor:pointer;text-align:center" title="Mover para outro dia">↗ outro dia</button>`;
           return `<div class="schedule-slot has-game${j.resultado?' has-result':''}${conflict?' has-conflict':''}" ${dragAttr} ${slotAttr}>
             ${conflict ? '<span class="conflict-badge">CONFLITO</span>' : ''}
-            <div style="font-size:.7rem;color:var(--cinza-texto);margin-bottom:.2rem">${j.grupo} <span style="color:var(--verde);font-weight:700">${t}</span></div>
+            <div style="font-size:.7rem;color:var(--cinza-texto);margin-bottom:.2rem;display:flex;justify-content:space-between;align-items:center">
+              <span>${j.grupo} <span style="color:var(--verde);font-weight:700">${t}</span></span>
+              ${j._isFaseFinal ? '' : `<span style="font-family:monospace;font-size:.62rem;color:var(--cinza-texto);opacity:.7">#${j.id}</span>`}
+            </div>
             <div style="display:flex;align-items:center;gap:.3rem;font-size:.75rem;font-weight:600;color:var(--branco);line-height:1.4">
               <div style="flex:1;text-align:right">${e1.split(' & ').map(escHtml).join('<br>')}</div>
               <div style="color:var(--cinza-texto);font-size:.65rem;flex-shrink:0">vs</div>
