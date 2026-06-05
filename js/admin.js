@@ -480,7 +480,7 @@ window.waImageJogo = function(jogoId, isFF, catId) {
 // ============================================
 window.gerarBannerInstalacao = function() {
   function draw(logoImg) {
-    const W = 700, H = 900, PAD = 44;
+    const W = 700, H = 980, PAD = 44;
     const canvas = document.createElement('canvas');
     canvas.width = W; canvas.height = H;
     const ctx = canvas.getContext('2d');
@@ -570,8 +570,8 @@ window.gerarBannerInstalacao = function() {
       ctx.fillStyle = '#C8DDD5'; ctx.font = '13.5px Arial, sans-serif';
       lines.forEach((l, i) => ctx.fillText(l, bx + bw2 / 2, fy + 56 + i * 26));
     }
-    drawBlock(PAD, bw, '\uD83E\uDD16  Android (Chrome)', ['Menu  ⋮  (3 pontos)', '"Instalar app" ou', '"Adicionar ao ecrã"'], '#4A9EFF');
-    drawBlock(PAD + bw + 16, bw, '\uD83C\uDF4F  iPhone (Safari)', ['Botão Partilhar  ↑', '"Adicionar ao ecrã', 'de início"'], '#C97BFF');
+    drawBlock(PAD, bw, 'Android (Chrome)', ['Menu  ⋮  (3 pontos)', '"Instalar app" ou', '"Adicionar ao ecrã"'], '#4A9EFF');
+    drawBlock(PAD + bw + 16, bw, 'iPhone (Safari)', ['Botão Partilhar  ↑', '"Adicionar ao ecrã', 'de início"'], '#C97BFF');
     fy += 174;
 
     // URL
