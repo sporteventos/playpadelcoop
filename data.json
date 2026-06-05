@@ -2071,8 +2071,8 @@
     {
       "id": 50,
       "data": "2026-06-07",
-      "hora": "07:00",
-      "campo": "Play Padel",
+      "hora": "11:00",
+      "campo": "TVCabo",
       "grupo": "F1-B",
       "eq1": "Érica Capela & Sarah Taillon",
       "eq2": "Inês Pires & Daniela Duarte",
@@ -3001,6 +3001,36 @@
     }
   ],
   "auditlog": [
+    {
+      "id": "mq0ymot4zsc0fhr",
+      "userId": "mpz46x5c2zupza0",
+      "username": "bgaspar",
+      "role": "operator",
+      "action": "HORARIO_DRAG",
+      "target": "jogos",
+      "detail": "Jogo #50 movido para 11:00 @ TVCabo",
+      "ts": "2026-06-05T13:28:36.376Z"
+    },
+    {
+      "id": "mq0ymcdaa6939rh",
+      "userId": "mpz46x5c2zupza0",
+      "username": "bgaspar",
+      "role": "operator",
+      "action": "LOGIN",
+      "target": "auth",
+      "detail": "Login: bgaspar (operator)",
+      "ts": "2026-06-05T13:28:20.254Z"
+    },
+    {
+      "id": "mq0u9qgaupgs06n",
+      "userId": "mpz46x5c2zupza0",
+      "username": "bgaspar",
+      "role": "operator",
+      "action": "LOGOUT",
+      "target": "auth",
+      "detail": "Logout: bgaspar",
+      "ts": "2026-06-05T11:26:33.514Z"
+    },
     {
       "id": "mq0tbhswm4975f7",
       "userId": "mpz46x5c2zupza0",
@@ -6112,5 +6142,5 @@
       "ts": "2026-06-03T06:06:37.211Z"
     }
   ],
-  "_updated": "2026-06-05T11:00:40.960Z"
+  "_updated": "2026-06-05T13:52:11.944Z"
 }
