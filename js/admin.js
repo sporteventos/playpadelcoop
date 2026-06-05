@@ -1353,7 +1353,13 @@ function renderDashboard() {
   // Activity feed from audit log
   const feed = document.getElementById('dashActivityFeed');
   if (feed) {
-    const logs = Auth.getLogs().slice(0, 12);
+    const me = Auth.me();
+    const isAdmin = Auth.isAdmin();
+    // Operators see only their own activity; admins see all (excluding system noise if desired)
+    const allLogs = Auth.getLogs();
+    const logs = isAdmin
+      ? allLogs.slice(0, 12)
+      : allLogs.filter(l => l.userId === me?.id).slice(0, 12);
     if (!logs.length) {
       feed.innerHTML = `<div style="text-align:center;padding:1.5rem;color:var(--cinza-texto);font-size:.8rem">Sem actividade registada.</div>`;
     } else {
@@ -2795,6 +2801,7 @@ function initAdmin() {
     document.getElementById('btnLimparTodosResultados')?.remove();
     document.getElementById('btnSidebarConstrutorGrupos')?.remove();
     document.getElementById('btnSidebarConstrutorJogos')?.remove();
+    document.getElementById('btnDashVerLogs')?.remove();
   }
 
   // Ir para view inicial — restaurar da hash se disponível
