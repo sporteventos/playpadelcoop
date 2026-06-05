@@ -142,7 +142,7 @@ window.notificarDia = function() {
     _buildGameCanvas(j, canvas => {
       canvas.toBlob(blob => {
         const url = URL.createObjectURL(blob);
-        items[i] = { blob, name: 'notificacao-' + (j.id || (i + 1)) + '.png', url, j };
+        items[i] = { blob, name: 'jogo-' + (j.id || (i + 1)) + '.png', url, j };
         if (--pending === 0) {
           (APP._bundleUrls || []).forEach(u => URL.revokeObjectURL(u));
           APP._bundleItems = items;
@@ -297,7 +297,7 @@ window._buildGameCanvas = function(j, onDone) {
     ctx.font = '18px Arial, sans-serif';
     ctx.fillText('TORNEIO ANIVERSÁRIO 2026', TEXT_X, 100);
 
-    // Category / phase pill (top right)
+    // Category / phase pill (top right) + ID badge
     const grpText = j.grupo.toUpperCase();
     ctx.font = 'bold 14px Arial, sans-serif';
     const gpw = ctx.measureText(grpText).width + 28;
@@ -308,6 +308,18 @@ window._buildGameCanvas = function(j, onDone) {
     ctx.beginPath(); ctx.roundRect(gpx, gpy, gpw, gph, 6); ctx.stroke();
     ctx.fillStyle = clr; ctx.textAlign = 'center';
     ctx.fillText(grpText, gpx + gpw / 2, gpy + gph * 0.72);
+
+    // Game ID badge (below group pill)
+    if (j.id && !j._ff) {
+      const idText = '#' + j.id;
+      ctx.font = 'bold 12px "Courier New", monospace';
+      const idw = ctx.measureText(idText).width + 18;
+      const idh = 22, idx2 = W - PAD - idw, idy = gpy + gph + 6;
+      ctx.fillStyle = 'rgba(138,163,150,.12)';
+      ctx.beginPath(); ctx.roundRect(idx2, idy, idw, idh, 4); ctx.fill();
+      ctx.fillStyle = '#8AA396'; ctx.textAlign = 'center';
+      ctx.fillText(idText, idx2 + idw / 2, idy + 15);
+    }
 
     // Separator
     ctx.fillStyle = '#1C2620'; ctx.fillRect(0, 136, W, 2);
