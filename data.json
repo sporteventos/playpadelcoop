@@ -1695,7 +1695,20 @@
       "grupo": "F2-A",
       "eq1": "Donatella Detto & Julianna",
       "eq2": "Ilária & Cristina",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 1,
+        "s1eq2": 6,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 2,
+        "s2eq2": 6,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": null,
+        "s3eq2": null,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 8,
@@ -3066,6 +3079,16 @@
     }
   ],
   "auditlog": [
+    {
+      "id": "mq18haqx1bsbvpr",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "SAVE_RESULT",
+      "target": "resultados",
+      "detail": "Resultado guardado: jogo #7",
+      "ts": "2026-06-05T18:04:21.033Z"
+    },
     {
       "id": "mq1819skca88dzt",
       "userId": "mpz8aq9sg983ubo",
@@ -6637,5 +6660,5 @@
       "ts": "2026-06-03T06:06:37.211Z"
     }
   ],
-  "_updated": "2026-06-05T17:51:59.425Z"
+  "_updated": "2026-06-05T18:05:52.739Z"
 }
