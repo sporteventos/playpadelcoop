@@ -475,6 +475,131 @@ window.waImageJogo = function(jogoId, isFF, catId) {
   _buildGameCanvas(j, canvas => _panfletoShare(canvas, 'jogo-' + jogoId + '.png'));
 };
 
+// ============================================
+//  BANNER INSTALAÇÃO APP
+// ============================================
+window.gerarBannerInstalacao = function() {
+  function draw(logoImg) {
+    const W = 700, H = 900, PAD = 44;
+    const canvas = document.createElement('canvas');
+    canvas.width = W; canvas.height = H;
+    const ctx = canvas.getContext('2d');
+
+    // Background
+    ctx.fillStyle = '#0A0F0D';
+    ctx.fillRect(0, 0, W, H);
+
+    // Top gradient bar
+    let g = ctx.createLinearGradient(0, 0, W, 0);
+    g.addColorStop(0, '#00C37B'); g.addColorStop(1, '#39FF8F');
+    ctx.fillStyle = g; ctx.fillRect(0, 0, W, 8);
+
+    // Header zone
+    ctx.fillStyle = '#0D1411'; ctx.fillRect(0, 8, W, 120);
+
+    // Logo
+    if (logoImg) {
+      ctx.save();
+      ctx.beginPath();
+      ctx.arc(PAD + 44, 8 + 60, 44, 0, Math.PI * 2);
+      ctx.clip();
+      ctx.drawImage(logoImg, PAD, 24, 88, 88);
+      ctx.restore();
+    }
+
+    // Title
+    ctx.fillStyle = '#00C37B'; ctx.font = 'bold 36px Arial, sans-serif'; ctx.textAlign = 'left';
+    ctx.fillText('PLAY PADEL', PAD + 104, 65);
+    ctx.fillStyle = '#8AA396'; ctx.font = '17px Arial, sans-serif';
+    ctx.fillText('TORNEIO 2.º ANIVERSÁRIO 2026', PAD + 104, 94);
+
+    // Separator
+    ctx.fillStyle = '#1C2620'; ctx.fillRect(0, 128, W, 2);
+
+    // Main headline
+    ctx.textAlign = 'center';
+    ctx.fillStyle = '#F0F7F3'; ctx.font = 'bold 32px Arial, sans-serif';
+    ctx.fillText('Acompanha o torneio', W / 2, 185);
+    ctx.fillStyle = '#00C37B'; ctx.font = 'bold 36px Arial, sans-serif';
+    ctx.fillText('em tempo real!', W / 2, 232);
+
+    // Subtitle
+    ctx.fillStyle = '#8AA396'; ctx.font = '17px Arial, sans-serif';
+    ctx.fillText('Resultados, classificações e calendário', W / 2, 270);
+    ctx.fillText('actualizados ao minuto.', W / 2, 294);
+
+    // Features list
+    const features = [
+      { icon: '\uD83D\uDCC5', label: 'Calendário completo de jogos' },
+      { icon: '\uD83C\uDFC6', label: 'Classificações ao vivo' },
+      { icon: '\uD83E\uDD4A', label: 'Fase Final — bracket eliminatório' },
+      { icon: '\uD83D\uDC65', label: 'Perfil de cada jogador e dupla' },
+    ];
+    let fy = 348;
+    features.forEach(f => {
+      // Card
+      ctx.fillStyle = '#111815';
+      ctx.beginPath(); ctx.roundRect(PAD, fy - 26, W - PAD * 2, 52, 8); ctx.fill();
+      ctx.strokeStyle = '#1C2620'; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.roundRect(PAD, fy - 26, W - PAD * 2, 52, 8); ctx.stroke();
+      ctx.textAlign = 'left';
+      ctx.font = '22px Arial, sans-serif'; ctx.fillStyle = '#F0F7F3';
+      ctx.fillText(f.icon + '  ' + f.label, PAD + 18, fy + 8);
+      fy += 68;
+    });
+
+    // Separator
+    ctx.fillStyle = '#1C2620'; ctx.fillRect(PAD, fy + 4, W - PAD * 2, 1);
+    fy += 24;
+
+    // Install instructions header
+    ctx.textAlign = 'center';
+    ctx.fillStyle = '#F5C518'; ctx.font = 'bold 20px Arial, sans-serif';
+    ctx.fillText('\uD83D\uDCF2  Como instalar como App gratuita', W / 2, fy + 20);
+    fy += 52;
+
+    // Android block
+    const bw = (W - PAD * 2 - 16) / 2;
+    function drawBlock(bx, bw2, title, lines, clr) {
+      ctx.fillStyle = clr + '18';
+      ctx.beginPath(); ctx.roundRect(bx, fy, bw2, 158, 10); ctx.fill();
+      ctx.strokeStyle = clr + '55'; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.roundRect(bx, fy, bw2, 158, 10); ctx.stroke();
+      ctx.fillStyle = clr; ctx.font = 'bold 15px Arial, sans-serif'; ctx.textAlign = 'center';
+      ctx.fillText(title, bx + bw2 / 2, fy + 26);
+      ctx.fillStyle = '#C8DDD5'; ctx.font = '13.5px Arial, sans-serif';
+      lines.forEach((l, i) => ctx.fillText(l, bx + bw2 / 2, fy + 56 + i * 26));
+    }
+    drawBlock(PAD, bw, '\uD83E\uDD16  Android (Chrome)', ['Menu  ⋮  (3 pontos)', '"Instalar app" ou', '"Adicionar ao ecrã"'], '#4A9EFF');
+    drawBlock(PAD + bw + 16, bw, '\uD83C\uDF4F  iPhone (Safari)', ['Botão Partilhar  ↑', '"Adicionar ao ecrã', 'de início"'], '#C97BFF');
+    fy += 174;
+
+    // URL
+    ctx.textAlign = 'center';
+    ctx.fillStyle = '#39FF8F'; ctx.font = 'bold 15px "Courier New", monospace';
+    ctx.fillText('sporteventos.github.io/playpadelcoop', W / 2, fy + 18);
+
+    // Bottom bar
+    const by = H - 52;
+    ctx.fillStyle = '#111815'; ctx.fillRect(0, by, W, 52);
+    ctx.fillStyle = '#1C2620'; ctx.fillRect(0, by, W, 1);
+    ctx.fillStyle = '#4A6058'; ctx.font = '15px Arial, sans-serif';
+    ctx.fillText('Play Padel Coop  ·  Torneio 2.º Aniversário 2026  ·  Maputo', W / 2, by + 32);
+
+    // Bottom gradient bar
+    g = ctx.createLinearGradient(0, 0, W, 0);
+    g.addColorStop(0, '#00C37B'); g.addColorStop(1, '#39FF8F');
+    ctx.fillStyle = g; ctx.fillRect(0, H - 6, W, 6);
+
+    _panfletoShare(canvas, 'instalar-app-playpadel.png');
+  }
+
+  const logo = new Image();
+  logo.onload = () => draw(logo);
+  logo.onerror = () => draw(null);
+  logo.src = 'playpadellogo.jpg';
+};
+
 window.gerarPanfleto = function() {
   const filtroData  = document.getElementById('filtroDataJogos').value;
   const filtroCampo = document.getElementById('filtroCampoJogos').value;
