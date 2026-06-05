@@ -3739,12 +3739,13 @@ function renderAdminClassificacoes() {
   const contentEl = document.getElementById('adminClassContent');
   if (!tabsEl || !contentEl) return;
 
-  _classActiveCat = cats[0] || null;
-  tabsEl.innerHTML = cats.map((c, i) => `
-    <button class="tab-btn${i===0?' active':''}" onclick="_adminClassTab('${c}',this)">${c}</button>
+  _classActiveCat = null;
+  tabsEl.innerHTML = cats.map(c => `
+    <button class="tab-btn" onclick="_adminClassTab('${c}',this)">${c}</button>
   `).join('');
 
-  _renderAdminClassCat(cats[0], grupos, jogos, contentEl);
+  // Default: show all groups from all categories
+  _renderAdminClassAllCats(cats, grupos, jogos, contentEl);
 }
 
 function _adminClassTab(catId, btn) {
@@ -3753,7 +3754,26 @@ function _adminClassTab(catId, btn) {
   btn.classList.add('active');
   const grupos = getData('grupos');
   const jogos  = getData('jogos');
-  _renderAdminClassCat(catId, grupos, jogos, document.getElementById('adminClassContent'));
+  if (catId === '__all__') {
+    _classActiveCat = null;
+    _renderAdminClassAllCats(getData('categorias').map(c => c.id), grupos, jogos, document.getElementById('adminClassContent'));
+  } else {
+    _renderAdminClassCat(catId, grupos, jogos, document.getElementById('adminClassContent'));
+  }
+}
+
+function _renderAdminClassAllCats(cats, grupos, jogos, el) {
+  el.innerHTML = cats.map(catId => {
+    const catGroups = _adminClassCatGroups(catId, grupos);
+    if (!catGroups.length) return '';
+    return catGroups.map(g => {
+      const rows = _adminClassStandings(g, jogos);
+      const gJogos = jogos.filter(j => j.grupo === g.id);
+      const done = gJogos.filter(j => j.resultado).length;
+      return _adminGroupCardHTML(g, rows, gJogos, done, catId);
+    }).join('');
+  }).join('');
+  el.innerHTML = `<div class="admin-standings-grid">${el.innerHTML}</div>`;
 }
 
 function _adminClassCatGroups(catId, grupos) {
@@ -3793,7 +3813,13 @@ function _renderAdminClassCat(catId, grupos, jogos, el) {
       const rows = _adminClassStandings(g, jogos);
       const gJogos = jogos.filter(j => j.grupo === g.id);
       const done = gJogos.filter(j => j.resultado).length;
-      return `<div class="admin-group-card">
+      return _adminGroupCardHTML(g, rows, gJogos, done, catId);
+    }).join('')}
+  </div>`;
+}
+
+function _adminGroupCardHTML(g, rows, gJogos, done, catId) {
+  return `<div class="admin-group-card">
         <div class="admin-group-card-header">
           <span style="font-weight:700;color:var(--branco)">${g.id}</span>
           <span style="font-size:.68rem;color:var(--cinza-texto)">${done}/${gJogos.length} jogos</span>
@@ -3822,8 +3848,6 @@ function _renderAdminClassCat(catId, grupos, jogos, el) {
           </tbody>
         </table>
       </div>`;
-    }).join('')}
-  </div>`;
 }
 
 // ============================================
@@ -4328,9 +4352,7 @@ function renderHorario() {
   if (!el) return;
 
   const jogos  = getData('jogos');
-  const campos = getData('campos').map(c => c.nome);
-
-  // Merge fase-final games so their dates appear in the filter
+  const campos = getData('campos').sort((a,b) => (a.id||0)-(b.id||0)).map(c => c.nome);
   const ffData = ffLoad();
   const ffJogos = Object.entries(ffData).flatMap(([catId, catData]) =>
     (catData?.jogos || []).filter(j => j.data).map(j => ({
@@ -4530,7 +4552,7 @@ window.horarioMoverDiaRefreshSlots = function() {
   if (!novaData) { container.innerHTML = ''; return; }
 
   const jogos   = getData('jogos');
-  const campos  = getData('campos').map(c => c.nome);
+  const campos  = getData('campos').sort((a,b) => (a.id||0)-(b.id||0)).map(c => c.nome);
   const jogoAtual = jogos.find(x => String(x.id) === String(jogoId));
 
   // Games on target date, excluding the game being moved
