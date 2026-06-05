@@ -5013,6 +5013,7 @@ function renderRelatorioJogos() {
     <table style="width:100%;border-collapse:collapse;font-size:.82rem">
       <thead>
         <tr style="background:var(--cinza-escuro);color:var(--cinza-texto);font-size:.72rem;text-transform:uppercase;letter-spacing:.05em">
+          <th style="padding:.5rem .75rem;text-align:left">#</th>
           <th style="padding:.5rem .75rem;text-align:left">Data</th>
           <th style="padding:.5rem .75rem;text-align:left">Hora</th>
           <th style="padding:.5rem .75rem;text-align:left">Campo</th>
@@ -5039,6 +5040,7 @@ function renderRelatorioJogos() {
           const e1style = winner === 1 ? 'color:var(--verde);font-weight:600' : winner === 2 ? 'color:var(--cinza-texto)' : 'color:var(--branco)';
           const e2style = winner === 2 ? 'color:var(--verde);font-weight:600' : winner === 1 ? 'color:var(--cinza-texto)' : 'color:var(--branco)';
           return `<tr style="background:${i%2===0?'var(--preto-card)':'var(--cinza-escuro)'};border-bottom:1px solid var(--preto-borda)">
+            <td style="padding:.45rem .75rem;color:var(--cinza-texto);font-family:monospace;font-size:.75rem">${j._ff ? '—' : ('#' + j.id)}</td>
             <td style="padding:.45rem .75rem;color:var(--cinza-texto)">${j.data ? j.data.split('-').reverse().join('/') : '—'}</td>
             <td style="padding:.45rem .75rem;font-family:monospace;font-weight:700;color:var(--branco)">${j.hora || '—'}</td>
             <td style="padding:.45rem .75rem;color:var(--cinza-texto)">${escHtml(j.campo || '—')}</td>
