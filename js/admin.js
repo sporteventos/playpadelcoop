@@ -836,6 +836,11 @@ window.abrirPanfletoFoto = function(jogoId, isFF, catId) {
 
   document.getElementById('fotoFlyerInput').value = '';
   document.getElementById('fotoFlyerPreview').style.display = 'none';
+  // Reset zoom/pan sliders
+  const zEl = document.getElementById('fotoFlyerZoom');
+  if (zEl) { zEl.value = 100; const lbl = document.getElementById('fotoFlyerZoomLbl'); if (lbl) lbl.textContent = '100%'; }
+  const pxEl = document.getElementById('fotoFlyerPanX'); if (pxEl) pxEl.value = 0;
+  const pyEl = document.getElementById('fotoFlyerPanY'); if (pyEl) pyEl.value = 0;
   openModal('modalFotoFlyer');
 };
 
@@ -850,10 +855,18 @@ function _buildFotoFlyer(img) {
   canvas.width = W; canvas.height = H;
   const ctx = canvas.getContext('2d');
 
-  // Photo (cover-fill)
-  const scl = Math.max(W / img.naturalWidth, H / img.naturalHeight);
+  // Store img reference for re-render on zoom/pan change
+  if (APP._fotoFlyer) APP._fotoFlyer.img = img;
+
+  // Photo with zoom + pan
+  const zoomFactor = (parseInt(document.getElementById('fotoFlyerZoom')?.value ?? 100)) / 100;
+  const panX = parseInt(document.getElementById('fotoFlyerPanX')?.value ?? 0) / 100;
+  const panY = parseInt(document.getElementById('fotoFlyerPanY')?.value ?? 0) / 100;
+  const baseScl = Math.max(W / img.naturalWidth, H / img.naturalHeight);
+  const scl = baseScl * zoomFactor;
   const iw = img.naturalWidth * scl, ih = img.naturalHeight * scl;
-  ctx.drawImage(img, (W - iw) / 2, (H - ih) / 2, iw, ih);
+  const baseX = (W - iw) / 2, baseY = (H - ih) / 2;
+  ctx.drawImage(img, baseX * (1 - panX), baseY * (1 - panY), iw, ih);
 
   // Gradient overlay photo → dark band
   const grad = ctx.createLinearGradient(0, H - BAND_H - 260, 0, H);
@@ -974,6 +987,11 @@ function _buildFotoFlyer(img) {
   logo.onerror = () => drawBand(null);
   logo.src = 'playpadellogo.jpg';
 }
+
+window._rebuildFotoFlyer = function() {
+  const img = APP._fotoFlyer?.img;
+  if (img) _buildFotoFlyer(img);
+};
 
 window._downloadFotoFlyer = function() {
   const canvas = document.getElementById('fotoFlyerCanvas');
@@ -3065,6 +3083,11 @@ function initAdmin() {
   document.getElementById('fotoFlyerInput')?.addEventListener('change', function() {
     const file = this.files[0];
     if (!file) return;
+    // Reset zoom/pan for new image
+    const zEl = document.getElementById('fotoFlyerZoom');
+    if (zEl) { zEl.value = 100; const lbl = document.getElementById('fotoFlyerZoomLbl'); if (lbl) lbl.textContent = '100%'; }
+    const pxEl = document.getElementById('fotoFlyerPanX'); if (pxEl) pxEl.value = 0;
+    const pyEl = document.getElementById('fotoFlyerPanY'); if (pyEl) pyEl.value = 0;
     const img = new Image();
     img.onload = () => _buildFotoFlyer(img);
     img.src = URL.createObjectURL(file);

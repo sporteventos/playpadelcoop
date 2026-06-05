@@ -793,6 +793,25 @@
       <input type="file" id="fotoFlyerInput" accept="image/*" class="form-input" style="margin-bottom:1rem;padding:.45rem .7rem;cursor:pointer">
       <p style="font-size:.75rem;color:var(--cinza-texto);margin-top:-.5rem;margin-bottom:1rem">Seleccione uma foto e a pré-visualização é gerada automaticamente.</p>
       <div id="fotoFlyerPreview" style="display:none">
+        <!-- Zoom / Pan controls -->
+        <div style="background:var(--preto-card);border:1px solid var(--preto-borda);border-radius:8px;padding:.6rem .9rem;margin-bottom:.75rem;font-size:.75rem">
+          <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.4rem">
+            <i class="ph ph-magnifying-glass-minus" style="color:var(--cinza-texto);cursor:pointer;font-size:1rem" onclick="var e=document.getElementById('fotoFlyerZoom');e.value=Math.max(+e.min,+e.value-5);document.getElementById('fotoFlyerZoomLbl').textContent=e.value+'%';_rebuildFotoFlyer()"></i>
+            <input type="range" id="fotoFlyerZoom" min="50" max="300" value="100" step="5" style="flex:1;accent-color:var(--verde);cursor:pointer" oninput="document.getElementById('fotoFlyerZoomLbl').textContent=this.value+'%';_rebuildFotoFlyer()">
+            <i class="ph ph-magnifying-glass-plus" style="color:var(--cinza-texto);cursor:pointer;font-size:1rem" onclick="var e=document.getElementById('fotoFlyerZoom');e.value=Math.min(+e.max,+e.value+5);document.getElementById('fotoFlyerZoomLbl').textContent=e.value+'%';_rebuildFotoFlyer()"></i>
+            <span id="fotoFlyerZoomLbl" style="color:var(--cinza-texto);min-width:2.8rem;text-align:right">100%</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.3rem">
+            <span style="color:var(--cinza-texto);min-width:3.8rem">Pan ←→</span>
+            <input type="range" id="fotoFlyerPanX" min="-100" max="100" value="0" step="2" style="flex:1;accent-color:var(--verde);cursor:pointer" oninput="_rebuildFotoFlyer()">
+            <button onclick="document.getElementById('fotoFlyerPanX').value=0;document.getElementById('fotoFlyerPanY').value=0;document.getElementById('fotoFlyerZoom').value=100;document.getElementById('fotoFlyerZoomLbl').textContent='100%';_rebuildFotoFlyer()" style="background:none;border:1px solid var(--preto-borda);color:var(--cinza-texto);border-radius:4px;padding:.1rem .45rem;cursor:pointer;font-size:.8rem" title="Repor posição e zoom">↺</button>
+          </div>
+          <div style="display:flex;align-items:center;gap:.5rem">
+            <span style="color:var(--cinza-texto);min-width:3.8rem">Pan ↑↓</span>
+            <input type="range" id="fotoFlyerPanY" min="-100" max="100" value="0" step="2" style="flex:1;accent-color:var(--verde);cursor:pointer" oninput="_rebuildFotoFlyer()">
+            <span style="min-width:2.35rem"></span>
+          </div>
+        </div>
         <canvas id="fotoFlyerCanvas" style="width:100%;border-radius:10px;border:1px solid var(--preto-borda);display:block"></canvas>
         <div style="display:flex;gap:.75rem;margin-top:.75rem;flex-wrap:wrap">
           <button class="btn btn-primary btn-sm" onclick="_downloadFotoFlyer()"><i class="ph ph-download-simple"></i> Guardar PNG</button>
