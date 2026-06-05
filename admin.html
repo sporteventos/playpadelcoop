@@ -483,8 +483,14 @@
             <button class="btn btn-ghost" onclick="notificarDia()" style="color:#25D366;border-color:rgba(37,211,102,.3);font-size:.75rem" title="Gerar mensagem WA com todos os jogos do dia/filtro seleccionado">
               <i class="ph ph-share-network"></i> Notificar em Bundle
             </button>
-            <button class="btn btn-ghost" onclick="gerarPanfleto()" style="color:var(--amarelo);border-color:rgba(245,197,24,.3);font-size:.75rem" title="Gerar imagem PNG do calendário do dia (para partilhar no WhatsApp)">
-              <i class="ph ph-image"></i> Gerar Panfleto
+            <button class="btn btn-ghost" onclick="gerarPanfleto()" style="color:var(--amarelo);border-color:rgba(245,197,24,.3);font-size:.75rem" title="Gerar imagem PNG do calendário completo">
+              <i class="ph ph-image"></i> Panfleto Completo
+            </button>
+            <button class="btn btn-ghost" onclick="gerarPanfleto('manha')" style="color:var(--amarelo);border-color:rgba(245,197,24,.3);font-size:.75rem" title="Gerar panfleto só com jogos da manhã (até às 12h)">
+              <i class="ph ph-sun"></i> Manhã
+            </button>
+            <button class="btn btn-ghost" onclick="gerarPanfleto('tarde')" style="color:var(--amarelo);border-color:rgba(245,197,24,.3);font-size:.75rem" title="Gerar panfleto só com jogos da tarde (a partir das 12h)">
+              <i class="ph ph-moon"></i> Tarde
             </button>
           <div class="table-wrap">
             <table>

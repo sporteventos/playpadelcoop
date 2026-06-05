@@ -600,7 +600,7 @@ window.gerarBannerInstalacao = function() {
   logo.src = 'playpadellogo.jpg';
 };
 
-window.gerarPanfleto = function() {
+window.gerarPanfleto = function(periodo) {
   const filtroData  = document.getElementById('filtroDataJogos').value;
   const filtroCampo = document.getElementById('filtroCampoJogos').value;
   const filtroGrupo = document.getElementById('filtroGrupoJogos')?.value || 'todos';
@@ -608,8 +608,19 @@ window.gerarPanfleto = function() {
   if (filtroData  !== 'todos') jogos = jogos.filter(j => j.data  === filtroData);
   if (filtroCampo !== 'todos') jogos = jogos.filter(j => j.campo === filtroCampo);
   if (filtroGrupo !== 'todos') jogos = jogos.filter(j => j.grupo === filtroGrupo);
-  if (!jogos.length) return toast('Sem jogos para o filtro actual.', 'error');
+
+  // Split by morning / afternoon
+  if (periodo === 'manha')  jogos = jogos.filter(j => j.hora && j.hora < '12:00');
+  if (periodo === 'tarde')  jogos = jogos.filter(j => j.hora && j.hora >= '12:00');
+
+  if (!jogos.length) return toast(
+    periodo === 'manha'  ? 'Sem jogos de manhã para o filtro actual.' :
+    periodo === 'tarde'  ? 'Sem jogos de tarde para o filtro actual.'  :
+    'Sem jogos para o filtro actual.', 'error');
   jogos = [...jogos].sort((a, b) => (a.data + a.hora).localeCompare(b.data + b.hora) || a.campo.localeCompare(b.campo));
+
+  const periodoLabel = periodo === 'manha' ? 'MANHÃ (até 12h)' : periodo === 'tarde' ? 'TARDE (12h+)' : null;
+  const filenameSuffix = periodo === 'manha' ? '-manha' : periodo === 'tarde' ? '-tarde' : '';
 
   const W      = 1080;
   const PAD    = 44;
@@ -680,6 +691,14 @@ window.gerarPanfleto = function() {
   ctx.fillStyle = '#8AA396';
   ctx.font = '22px Arial, sans-serif';
   ctx.fillText(dayLabel, PAD, 146);
+
+  // Period label (Manhã / Tarde) if applicable
+  if (periodoLabel) {
+    const plX = PAD + ctx.measureText(dayLabel).width + 18;
+    ctx.fillStyle = '#F5C518';
+    ctx.font = 'bold 18px Arial, sans-serif';
+    ctx.fillText('\u00B7  ' + periodoLabel, plX, 146);
+  }
 
   ctx.fillStyle = '#F0F7F3';
   ctx.font = 'bold 18px Arial, sans-serif';
@@ -791,7 +810,7 @@ window.gerarPanfleto = function() {
   ctx.fillText('Play Padel  \u00B7  Torneio Aniversário 2026', W / 2, fy + 38);
   ctx.textAlign = 'left';
 
-  _panfletoShare(canvas, `jogos-${filtroData !== 'todos' ? filtroData : 'todos'}.png`);
+  _panfletoShare(canvas, `jogos-${filtroData !== 'todos' ? filtroData : 'todos'}${filenameSuffix}.png`);
   } // end draw()
 
   const logo = new Image();
