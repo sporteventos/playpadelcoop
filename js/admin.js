@@ -2070,19 +2070,13 @@ function renderJogos(filtroData = 'todos', filtroCampo = 'todos', filtroGrupo = 
 
     const waBtns = `<button class="btn-icon" style="color:#25D366" title="Partilhar imagem do jogo" onclick="waImageJogo('${j.id}',${!!j._isFF},'${j._cat||''}')"><i class="ph ph-share-network"></i></button>`;
 
-    const fotoBtn = j.resultado
-      ? `<button class="btn-icon" style="color:var(--amarelo)" title="Panfleto com foto" onclick="abrirPanfletoFoto('${j.id}',${j._isFF ? 'true' : 'false'},'${j._cat || ''}')"><i class="ph ph-camera"></i></button>`
-      : '';
-
     const acoes = j._isFF
       ? `<div style="display:flex;gap:0.3rem">
           <button class="btn-icon btn-edit" title="Lançar resultado" onclick="ffAbrirResultado('${j.id}','${j._cat}')"><i class="ph ph-pencil-simple"></i></button>
-          ${fotoBtn}
         </div>`
       : `<div style="display:flex;gap:0.3rem">
           <button class="btn-icon btn-edit" title="Editar jogo / lançar resultado" onclick="abrirResultado(${j.id})"><i class="ph ph-pencil-simple"></i></button>
           <button class="btn-icon btn-del"  title="Eliminar jogo"    onclick="deleteJogo(${j.id})"><i class="ph ph-trash"></i></button>
-          ${fotoBtn}
         </div>`;
 
     return `
@@ -5022,6 +5016,7 @@ function renderRelatorioJogos() {
           <th style="padding:.5rem .75rem;text-align:center">Resultado</th>
           <th style="padding:.5rem .75rem;text-align:left">Equipa 2</th>
           <th style="padding:.5rem .75rem;text-align:center">Estado</th>
+          <th style="padding:.5rem .75rem;text-align:center">Foto</th>
         </tr>
       </thead>
       <tbody>
@@ -5052,6 +5047,9 @@ function renderRelatorioJogos() {
               ${j.resultado
                 ? '<span style="color:var(--verde);font-size:.7rem;background:rgba(0,195,123,.12);padding:.1rem .45rem;border-radius:4px">✓ Concluído</span>'
                 : '<span style="color:var(--amarelo);font-size:.7rem;background:rgba(245,197,24,.12);padding:.1rem .45rem;border-radius:4px">⏳ Pendente</span>'}
+            </td>
+            <td style="padding:.45rem .75rem;text-align:center">
+              ${j.resultado ? `<button class="btn-icon" style="color:var(--amarelo)" title="Panfleto com foto" onclick="abrirPanfletoFoto('${j.id}',${j._ff ? 'true' : 'false'},'${j._cat || j._catId || ''}')"><i class="ph ph-camera"></i></button>` : ''}
             </td>
           </tr>`;
         }).join('')}
