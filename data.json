@@ -858,7 +858,7 @@
     },
     {
       "id": "j138",
-      "nome": "Reehan M.",
+      "nome": "Abdur Rehmane",
       "tel": ""
     },
     {
@@ -1814,7 +1814,7 @@
       "hora": "16:00",
       "campo": "Play Padel",
       "grupo": "M1-B",
-      "eq1": "Rehan Fayaz & Reehan M.",
+      "eq1": "Rehan Fayaz & Abdur Rehmane",
       "eq2": "Naim Hassan & Sidik",
       "resultado": null
     },
@@ -2134,7 +2134,7 @@
       "hora": "13:00",
       "campo": "Play Padel",
       "grupo": "M1-B",
-      "eq1": "Rehan Fayaz & Reehan M.",
+      "eq1": "Rehan Fayaz & Abdur Rehmane",
       "eq2": "Gonçalo Nascimento & João Catela",
       "resultado": null
     },
@@ -2815,7 +2815,7 @@
       "campo": "TVCabo",
       "grupo": "M1-B",
       "eq1": "Karim Kanifani & Octávio Barros",
-      "eq2": "Rehan Fayaz & Reehan M.",
+      "eq2": "Rehan Fayaz & Abdur Rehmane",
       "resultado": null
     },
     {
@@ -3001,6 +3001,16 @@
     }
   ],
   "auditlog": [
+    {
+      "id": "mq0tbhswm4975f7",
+      "userId": "mpz46x5c2zupza0",
+      "username": "bgaspar",
+      "role": "operator",
+      "action": "RENAME_JOGADOR",
+      "target": "jogadores",
+      "detail": "\"Reehan M.\" → \"Abdur Rehmane\"",
+      "ts": "2026-06-05T10:59:56.000Z"
+    },
     {
       "id": "mq0t2d3hciwae8n",
       "userId": "mpz46x5c2zupza0",
@@ -6102,5 +6112,5 @@
       "ts": "2026-06-03T06:06:37.211Z"
     }
   ],
-  "_updated": "2026-06-05T10:53:05.778Z"
+  "_updated": "2026-06-05T11:00:40.960Z"
 }
