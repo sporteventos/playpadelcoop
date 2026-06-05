@@ -303,7 +303,7 @@
     },
     {
       "id": "j26",
-      "nome": "Claudia",
+      "nome": "Claudia Sumaya",
       "tel": ""
     },
     {
@@ -358,7 +358,7 @@
     },
     {
       "id": "j37",
-      "nome": "Elves",
+      "nome": "Elves Poeira",
       "tel": ""
     },
     {
@@ -528,7 +528,7 @@
     },
     {
       "id": "j72",
-      "nome": "Jameel",
+      "nome": "Jameel Abdula",
       "tel": ""
     },
     {
@@ -708,7 +708,7 @@
     },
     {
       "id": "j108",
-      "nome": "Marlou",
+      "nome": "Marlou Mulder",
       "tel": ""
     },
     {
@@ -1754,7 +1754,7 @@
       "hora": "10:00",
       "campo": "Stella Artois",
       "grupo": "M2-B",
-      "eq1": "Jameel & Tahir",
+      "eq1": "Jameel Abdula & Tahir",
       "eq2": "Dej Cruz & Nuno Correa Mendes",
       "resultado": null
     },
@@ -1765,7 +1765,7 @@
       "campo": "Play Padel",
       "grupo": "F1-C",
       "eq1": "Marta Botelho & Ana Oliveira",
-      "eq2": "Omar Fernandes & Claudia",
+      "eq2": "Omar Fernandes & Claudia Sumaya",
       "resultado": null
     },
     {
@@ -1795,7 +1795,7 @@
       "campo": "Play Padel",
       "grupo": "F1-C",
       "eq1": "Anouk Fumane & Letícia",
-      "eq2": "Omar Fernandes & Claudia",
+      "eq2": "Omar Fernandes & Claudia Sumaya",
       "resultado": null
     },
     {
@@ -1805,7 +1805,7 @@
       "campo": "Play Padel",
       "grupo": "M3-D",
       "eq1": "Sueil & Ahmed Riaze",
-      "eq2": "Elves & Uweizy",
+      "eq2": "Elves Poeira & Uweizy",
       "resultado": null
     },
     {
@@ -1944,7 +1944,7 @@
       "hora": "18:00",
       "campo": "TVCabo",
       "grupo": "F1-A",
-      "eq1": "Stacey & Marlou",
+      "eq1": "Stacey & Marlou Mulder",
       "eq2": "Helen Khumalo & Narcisa Nhamitambo",
       "resultado": null
     },
@@ -2114,7 +2114,7 @@
       "hora": "11:00",
       "campo": "Play Padel",
       "grupo": "F1-C",
-      "eq1": "Omar Fernandes & Claudia",
+      "eq1": "Omar Fernandes & Claudia Sumaya",
       "eq2": "Diana Carvalho & Ilga João",
       "resultado": null
     },
@@ -2245,7 +2245,7 @@
       "campo": "TVCabo",
       "grupo": "M3-D",
       "eq1": "Gonçalo Marques & Pedro Gonçalves",
-      "eq2": "Elves & Uweizy",
+      "eq2": "Elves Poeira & Uweizy",
       "resultado": null
     },
     {
@@ -2325,7 +2325,7 @@
       "campo": "Play Padel",
       "grupo": "M2-B",
       "eq1": "José Moreira & Nuno L. Pereira",
-      "eq2": "Jameel & Tahir",
+      "eq2": "Jameel Abdula & Tahir",
       "resultado": null
     },
     {
@@ -2454,7 +2454,7 @@
       "hora": "18:30",
       "campo": "Play Padel",
       "grupo": "F1-A",
-      "eq1": "Stacey & Marlou",
+      "eq1": "Stacey & Marlou Mulder",
       "eq2": "Caironice & Carmen",
       "resultado": null
     },
@@ -2655,7 +2655,7 @@
       "campo": "TVCabo",
       "grupo": "M2-B",
       "eq1": "João Henriques & Bruno Morais",
-      "eq2": "Jameel & Tahir",
+      "eq2": "Jameel Abdula & Tahir",
       "resultado": null
     },
     {
@@ -2714,7 +2714,7 @@
       "hora": "18:30",
       "campo": "Stella Artois",
       "grupo": "F1-A",
-      "eq1": "Stacey & Marlou",
+      "eq1": "Stacey & Marlou Mulder",
       "eq2": "Cynthia Cavalcanti & Kátia Sousa",
       "resultado": null
     },
@@ -2775,7 +2775,7 @@
       "campo": "Play Padel",
       "grupo": "M3-D",
       "eq1": "Alexandre Salazar & Pedro Gonzalez",
-      "eq2": "Elves & Uweizy",
+      "eq2": "Elves Poeira & Uweizy",
       "resultado": null
     },
     {
@@ -3001,6 +3001,46 @@
     }
   ],
   "auditlog": [
+    {
+      "id": "mq0zll84b3gh5p8",
+      "userId": "mpz46x5c2zupza0",
+      "username": "bgaspar",
+      "role": "operator",
+      "action": "RENAME_JOGADOR",
+      "target": "jogadores",
+      "detail": "\"Marlou\" → \"Marlou Mulder\"",
+      "ts": "2026-06-05T13:55:44.692Z"
+    },
+    {
+      "id": "mq0zkw1od22l4o5",
+      "userId": "mpz46x5c2zupza0",
+      "username": "bgaspar",
+      "role": "operator",
+      "action": "RENAME_JOGADOR",
+      "target": "jogadores",
+      "detail": "\"Jameel\" → \"Jameel Abdula\"",
+      "ts": "2026-06-05T13:55:12.061Z"
+    },
+    {
+      "id": "mq0zkabzrbzalfo",
+      "userId": "mpz46x5c2zupza0",
+      "username": "bgaspar",
+      "role": "operator",
+      "action": "RENAME_JOGADOR",
+      "target": "jogadores",
+      "detail": "\"Elves\" → \"Elves Poeira\"",
+      "ts": "2026-06-05T13:54:43.919Z"
+    },
+    {
+      "id": "mq0zjvv17invj7f",
+      "userId": "mpz46x5c2zupza0",
+      "username": "bgaspar",
+      "role": "operator",
+      "action": "RENAME_JOGADOR",
+      "target": "jogadores",
+      "detail": "\"Claudia\" → \"Claudia Sumaya\"",
+      "ts": "2026-06-05T13:54:25.166Z"
+    },
     {
       "id": "mq0ymot4zsc0fhr",
       "userId": "mpz46x5c2zupza0",
@@ -6142,5 +6182,5 @@
       "ts": "2026-06-03T06:06:37.211Z"
     }
   ],
-  "_updated": "2026-06-05T13:52:11.944Z"
+  "_updated": "2026-06-05T13:56:13.240Z"
 }
