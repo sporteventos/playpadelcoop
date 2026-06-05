@@ -814,8 +814,8 @@ body {
   flex-wrap: wrap;
   align-items: center;
   justify-content: center;
-  gap: 2rem 3rem;
-  max-width: 900px;
+  gap: 1.5rem 2rem;
+  max-width: 1100px;
   margin: 0 auto;
 }
 .patrocinador-item {
