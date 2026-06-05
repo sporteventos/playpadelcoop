@@ -1619,7 +1619,20 @@
       "grupo": "F1-A",
       "eq1": "Helen Khumalo & Narcisa Nhamitambo",
       "eq2": "Cynthia Cavalcanti & Kátia Sousa",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 6,
+        "s1eq2": 2,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 6,
+        "s2eq2": 0,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": null,
+        "s3eq2": null,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 3,
@@ -3053,6 +3066,36 @@
     }
   ],
   "auditlog": [
+    {
+      "id": "mq1819skca88dzt",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "SAVE_RESULT",
+      "target": "resultados",
+      "detail": "Resultado guardado: jogo #2",
+      "ts": "2026-06-05T17:51:53.300Z"
+    },
+    {
+      "id": "mq17hznvywjf02k",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "LOGIN",
+      "target": "auth",
+      "detail": "Login: euamusse (admin)",
+      "ts": "2026-06-05T17:36:53.707Z"
+    },
+    {
+      "id": "mq17hur4ptg2lqu",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "LOGOUT",
+      "target": "auth",
+      "detail": "Logout: euamusse",
+      "ts": "2026-06-05T17:36:47.345Z"
+    },
     {
       "id": "mq16qt6da2av1b7",
       "userId": "mpz8aq9sg983ubo",
@@ -6594,5 +6637,5 @@
       "ts": "2026-06-03T06:06:37.211Z"
     }
   ],
-  "_updated": "2026-06-05T17:15:51.141Z"
+  "_updated": "2026-06-05T17:51:59.425Z"
 }
