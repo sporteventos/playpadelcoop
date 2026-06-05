@@ -3002,6 +3002,16 @@
   ],
   "auditlog": [
     {
+      "id": "mq10e3umb3obuv6",
+      "userId": "mpz46x5c2zupza0",
+      "username": "bgaspar",
+      "role": "operator",
+      "action": "LOGIN",
+      "target": "auth",
+      "detail": "Login: bgaspar (operator)",
+      "ts": "2026-06-05T14:17:55.198Z"
+    },
+    {
       "id": "mq0zll84b3gh5p8",
       "userId": "mpz46x5c2zupza0",
       "username": "bgaspar",
@@ -6182,5 +6192,5 @@
       "ts": "2026-06-03T06:06:37.211Z"
     }
   ],
-  "_updated": "2026-06-05T13:56:13.240Z"
+  "_updated": "2026-06-05T14:19:16.493Z"
 }
