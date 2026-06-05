@@ -163,6 +163,11 @@ const Auth = (() => {
     if (u.username === 'admin')
       return { ok: false, error: 'Não é possível eliminar o admin principal.' };
     _write(K_USERS, users.filter(x => x.id !== id));
+    // Record tombstone so the merge in data.js never re-adds this user from remote data.json
+    try {
+      const tomb = JSON.parse(localStorage.getItem('pp_users_deleted') || '[]');
+      if (!tomb.includes(id)) { tomb.push(id); localStorage.setItem('pp_users_deleted', JSON.stringify(tomb)); }
+    } catch(e) {}
     log('DELETE_USER', 'utilizadores', `Eliminado "${u.username}"`);
     return { ok: true };
   }

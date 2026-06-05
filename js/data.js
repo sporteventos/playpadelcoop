@@ -209,10 +209,14 @@ function ppFormatDate(d) {
         // but add any remote users that don't exist locally (created on another device).
         if (Array.isArray(d['users']) && d['users'].length) {
           try {
-            var localUsers = JSON.parse(localStorage.getItem('pp_users') || '[]');
-            var localIds   = new Set(localUsers.map(function(u) { return u.id; }));
-            // Remote user that already exists locally → local version wins (may have changes)
-            var merged = localUsers.concat(d['users'].filter(function(u) { return !localIds.has(u.id); }));
+            var localUsers  = JSON.parse(localStorage.getItem('pp_users') || '[]');
+            var localIds    = new Set(localUsers.map(function(u) { return u.id; }));
+            var deletedIds  = new Set(JSON.parse(localStorage.getItem('pp_users_deleted') || '[]'));
+            // Remote user already exists locally → local version wins
+            // Remote user in tombstone → was deleted locally, never re-add
+            var merged = localUsers.concat(d['users'].filter(function(u) {
+              return !localIds.has(u.id) && !deletedIds.has(u.id);
+            }));
             ppSave('users', merged);
           } catch(e) { ppSave('users', d['users']); }
         }
