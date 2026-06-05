@@ -1262,6 +1262,7 @@ function renderView(view) {
     case 'estatisticas': renderEstatisticas(); break;
     case 'importar':     renderImportar();     break;
     case 'horario':      renderHorario();      break;
+    case 'relatorioJogos': renderRelatorioJogos(); break;
   }
 }
 
@@ -2744,6 +2745,11 @@ function initAdmin() {
   // Horário filters
   document.getElementById('horarioDataFilter')?.addEventListener('change', () => renderHorario());
   document.getElementById('horarioCampoFilter')?.addEventListener('change', () => renderHorario());
+
+  // Relatório de Jogos filters
+  document.getElementById('rjFiltroData')?.addEventListener('change',   () => renderRelatorioJogos());
+  document.getElementById('rjFiltroGrupo')?.addEventListener('change',  () => renderRelatorioJogos());
+  document.getElementById('rjFiltroEstado')?.addEventListener('change', () => renderRelatorioJogos());
 
   // Panfleto com Foto — file input
   document.getElementById('fotoFlyerInput')?.addEventListener('change', function() {
@@ -4545,6 +4551,122 @@ window.horarioDrop = function(ev, hora, campo) {
   Auth.log('HORARIO_DRAG', 'jogos', `Jogo #${jogoId} movido para ${hora} @ ${campo}`);
   renderHorario();
 };
+
+// ── Relatório de Jogos ───────────────────────────────────────
+function renderRelatorioJogos() {
+  const el = document.getElementById('relatorioJogosContent');
+  if (!el) return;
+
+  const jogos = getData('jogos');
+  const CAT_CLR = { M1:'#4A9EFF', M2:'#00C37B', M3:'#39FF8F', M4:'#F5C518', M5:'#FF9A3C', F1:'#FF6BB0', F2:'#C97BFF' };
+
+  // Populate filters
+  const dataEl   = document.getElementById('rjFiltroData');
+  const grupoEl  = document.getElementById('rjFiltroGrupo');
+  const estadoEl = document.getElementById('rjFiltroEstado');
+
+  if (dataEl) {
+    const saved = dataEl.value;
+    const dates = [...new Set(jogos.map(j => j.data).filter(Boolean))].sort();
+    dataEl.innerHTML = '<option value="todos">Todas as datas</option>' +
+      dates.map(d => `<option value="${d}">${formatDate(d)}</option>`).join('');
+    if (saved) dataEl.value = saved;
+  }
+  if (grupoEl) {
+    const saved = grupoEl.value;
+    const grupos = [...new Set(jogos.map(j => j.grupo).filter(Boolean))].sort();
+    grupoEl.innerHTML = '<option value="todos">Todos os grupos</option>' +
+      grupos.map(g => `<option value="${g}">${g}</option>`).join('');
+    if (saved) grupoEl.value = saved;
+  }
+
+  const selData   = dataEl?.value   || 'todos';
+  const selGrupo  = grupoEl?.value  || 'todos';
+  const selEstado = estadoEl?.value || 'todos';
+
+  let filtered = jogos;
+  if (selData   !== 'todos') filtered = filtered.filter(j => j.data  === selData);
+  if (selGrupo  !== 'todos') filtered = filtered.filter(j => j.grupo === selGrupo);
+  if (selEstado === 'pendente')  filtered = filtered.filter(j => !j.resultado);
+  if (selEstado === 'concluido') filtered = filtered.filter(j =>  j.resultado);
+  filtered = [...filtered].sort((a, b) =>
+    (a.data + (a.hora||'') + a.grupo).localeCompare(b.data + (b.hora||'') + b.grupo)
+  );
+
+  // Summary bar
+  const total     = filtered.length;
+  const concluido = filtered.filter(j => j.resultado).length;
+  const pendente  = total - concluido;
+  const pct       = total ? Math.round(concluido / total * 100) : 0;
+
+  if (!total) {
+    el.innerHTML = `<p style="color:var(--cinza-texto);padding:1rem">Sem jogos para os filtros seleccionados.</p>`;
+    return;
+  }
+
+  el.innerHTML = `
+    <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:1.25rem">
+      <div class="stat-card" style="flex:1;min-width:140px">
+        <div class="stat-value">${total}</div><div class="stat-label">Total</div>
+      </div>
+      <div class="stat-card" style="flex:1;min-width:140px">
+        <div class="stat-value" style="color:var(--verde)">${concluido}</div><div class="stat-label">Concluídos</div>
+      </div>
+      <div class="stat-card" style="flex:1;min-width:140px">
+        <div class="stat-value" style="color:var(--amarelo)">${pendente}</div><div class="stat-label">Pendentes</div>
+      </div>
+      <div class="stat-card" style="flex:1;min-width:140px">
+        <div class="stat-value">${pct}%</div><div class="stat-label">Concluído</div>
+      </div>
+    </div>
+    <div style="overflow-x:auto">
+    <table style="width:100%;border-collapse:collapse;font-size:.82rem">
+      <thead>
+        <tr style="background:var(--cinza-escuro);color:var(--cinza-texto);font-size:.72rem;text-transform:uppercase;letter-spacing:.05em">
+          <th style="padding:.5rem .75rem;text-align:left">Data</th>
+          <th style="padding:.5rem .75rem;text-align:left">Hora</th>
+          <th style="padding:.5rem .75rem;text-align:left">Campo</th>
+          <th style="padding:.5rem .75rem;text-align:left">Grupo</th>
+          <th style="padding:.5rem .75rem;text-align:left">Equipa 1</th>
+          <th style="padding:.5rem .75rem;text-align:center">Resultado</th>
+          <th style="padding:.5rem .75rem;text-align:left">Equipa 2</th>
+          <th style="padding:.5rem .75rem;text-align:center">Estado</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${filtered.map((j, i) => {
+          const cat = (j.grupo || '').split('-')[0];
+          const clr = CAT_CLR[cat] || '#8AA396';
+          let res = '—', winner = 0;
+          if (j.resultado) {
+            const { w1, w2 } = matchSetsScore(j.resultado);
+            winner = w1 > w2 ? 1 : 2;
+            const r = j.resultado;
+            const sets = [[r.s1eq1,r.s1eq2],[r.s2eq1,r.s2eq2],[r.s3eq1,r.s3eq2]]
+              .filter(([a]) => a != null).map(([a,b]) => `${a}-${b}`).join(' / ');
+            res = `<span style="color:var(--verde);font-weight:700">${w1}–${w2}</span> <span style="color:var(--cinza-texto);font-size:.7rem">(${sets})</span>`;
+          }
+          const e1style = winner === 1 ? 'color:var(--verde);font-weight:600' : winner === 2 ? 'color:var(--cinza-texto)' : 'color:var(--branco)';
+          const e2style = winner === 2 ? 'color:var(--verde);font-weight:600' : winner === 1 ? 'color:var(--cinza-texto)' : 'color:var(--branco)';
+          return `<tr style="background:${i%2===0?'var(--preto-card)':'var(--cinza-escuro)'};border-bottom:1px solid var(--preto-borda)">
+            <td style="padding:.45rem .75rem;color:var(--cinza-texto)">${j.data ? j.data.split('-').reverse().join('/') : '—'}</td>
+            <td style="padding:.45rem .75rem;font-family:monospace;font-weight:700;color:var(--branco)">${j.hora || '—'}</td>
+            <td style="padding:.45rem .75rem;color:var(--cinza-texto)">${escHtml(j.campo || '—')}</td>
+            <td style="padding:.45rem .75rem"><span style="background:${clr}22;color:${clr};border-radius:4px;padding:.1rem .45rem;font-size:.72rem;font-weight:700">${escHtml(j.grupo || '—')}</span></td>
+            <td style="padding:.45rem .75rem;${e1style}">${escHtml(j.eq1 || 'A definir')}</td>
+            <td style="padding:.45rem .75rem;text-align:center">${res}</td>
+            <td style="padding:.45rem .75rem;${e2style}">${escHtml(j.eq2 || 'A definir')}</td>
+            <td style="padding:.45rem .75rem;text-align:center">
+              ${j.resultado
+                ? '<span style="color:var(--verde);font-size:.7rem;background:rgba(0,195,123,.12);padding:.1rem .45rem;border-radius:4px">✓ Concluído</span>'
+                : '<span style="color:var(--amarelo);font-size:.7rem;background:rgba(245,197,24,.12);padding:.1rem .45rem;border-radius:4px">⏳ Pendente</span>'}
+            </td>
+          </tr>`;
+        }).join('')}
+      </tbody>
+    </table>
+    </div>`;
+}
 
 // ── Mover jogo para outro dia ─────────────────────────────────
 window.horarioMoverDia = function(jogoId) {

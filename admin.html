@@ -101,10 +101,18 @@
           <i class="ph ph-calendar sl-icon"></i>
           Calendário de Jogos
         </button>
+        <button class="sidebar-link" data-view="horario">
+          <i class="ph ph-clock-countdown sl-icon"></i>
+          Construtor de Horário
+        </button>
         <button class="sidebar-link" data-view="resultados">
           <i class="ph ph-trophy sl-icon"></i>
           Resultados
           <span class="sl-badge" id="badgePendentes">—</span>
+        </button>
+        <button class="sidebar-link" data-view="importar">
+          <i class="ph ph-upload-simple sl-icon"></i>
+          Importar Resultados
         </button>
         <button class="sidebar-link" data-view="fasefinal">
           <i class="ph ph-brackets-round sl-icon"></i>
@@ -130,6 +138,10 @@
 
       <div class="sidebar-group">
         <div class="sidebar-group-label">Relatórios</div>
+        <button class="sidebar-link" data-view="relatorioJogos">
+          <i class="ph ph-table sl-icon"></i>
+          Relatório de Jogos
+        </button>
         <button class="sidebar-link" data-view="classificacoes">
           <i class="ph ph-chart-bar sl-icon"></i>
           Classificações
@@ -137,14 +149,6 @@
         <button class="sidebar-link" data-view="estatisticas">
           <i class="ph ph-chart-pie sl-icon"></i>
           Estatísticas
-        </button>
-        <button class="sidebar-link" data-view="importar">
-          <i class="ph ph-upload-simple sl-icon"></i>
-          Importar Resultados
-        </button>
-        <button class="sidebar-link" data-view="horario">
-          <i class="ph ph-clock-countdown sl-icon"></i>
-          Construtor de Horário
         </button>
       </div>
 
@@ -645,6 +649,25 @@
           </div>
         </div>
         <div id="horarioContent"></div>
+      </section>
+
+      <section class="view" id="view-relatorioJogos">
+        <div class="page-header" style="margin-bottom:1.25rem">
+          <div>
+            <h1 class="page-title">Relatório de Jogos</h1>
+            <p class="page-desc">Resultados e estado de todos os jogos por data e grupo</p>
+          </div>
+          <div style="display:flex;gap:.6rem;align-items:center;flex-wrap:wrap">
+            <select id="rjFiltroData"  class="form-input" style="width:auto;padding:.4rem .75rem;font-size:.82rem"></select>
+            <select id="rjFiltroGrupo" class="form-input" style="width:auto;padding:.4rem .75rem;font-size:.82rem"></select>
+            <select id="rjFiltroEstado" class="form-input" style="width:auto;padding:.4rem .75rem;font-size:.82rem">
+              <option value="todos">Todos os estados</option>
+              <option value="pendente">Pendentes</option>
+              <option value="concluido">Concluídos</option>
+            </select>
+          </div>
+        </div>
+        <div id="relatorioJogosContent"></div>
       </section>
 
     </main><!-- /admin-content -->
