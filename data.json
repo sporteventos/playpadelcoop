@@ -1807,7 +1807,20 @@
       "grupo": "F2-C",
       "eq1": "Saira Sale & Sónia Caravela",
       "eq2": "Steph & Ronell",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 1,
+        "s1eq2": 6,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 6,
+        "s2eq2": 2,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": 1,
+        "s3eq2": 6,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 14,
@@ -3093,6 +3106,26 @@
   ],
   "auditlog": [
     {
+      "id": "mq1avyeofozpu17",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "SAVE_RESULT",
+      "target": "resultados",
+      "detail": "Resultado guardado: jogo #13",
+      "ts": "2026-06-05T19:11:44.112Z"
+    },
+    {
+      "id": "mq1au7z21z2ag3k",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "LOGIN",
+      "target": "auth",
+      "detail": "Login: euamusse (admin)",
+      "ts": "2026-06-05T19:10:23.198Z"
+    },
+    {
       "id": "mq19czrmhqupstv",
       "userId": "mpz8aq9sg983ubo",
       "username": "euamusse",
@@ -3373,6 +3406,16 @@
       "ts": "2026-06-05T13:28:20.254Z"
     },
     {
+      "id": "mq0wu986uykn5fu",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "LOGIN",
+      "target": "auth",
+      "detail": "Login: euamusse (admin)",
+      "ts": "2026-06-05T12:38:30.198Z"
+    },
+    {
       "id": "mq0wtgn39w5wtih",
       "userId": "mpz8aq9sg983ubo",
       "username": "euamusse",
@@ -3391,6 +3434,16 @@
       "target": "auth",
       "detail": "Logout: euamusse",
       "ts": "2026-06-05T12:37:41.958Z"
+    },
+    {
+      "id": "mq0usfbbws1mvi6",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "LOGOUT",
+      "target": "auth",
+      "detail": "Logout: admin",
+      "ts": "2026-06-05T11:41:05.543Z"
     },
     {
       "id": "mq0u9qgaupgs06n",
@@ -3431,6 +3484,36 @@
       "target": "jogadores",
       "detail": "\"Reehan M.\" → \"Abdur Rehmane\"",
       "ts": "2026-06-05T10:59:56.000Z"
+    },
+    {
+      "id": "mq0t8p4thdwrx1n",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "LOGOUT",
+      "target": "auth",
+      "detail": "Logout: euamusse",
+      "ts": "2026-06-05T10:57:45.533Z"
+    },
+    {
+      "id": "mq0t8p3zf6ztkso",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "LOGOUT",
+      "target": "auth",
+      "detail": "Logout: euamusse",
+      "ts": "2026-06-05T10:57:45.503Z"
+    },
+    {
+      "id": "mq0t6jhgmhjmavm",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "LOGIN",
+      "target": "auth",
+      "detail": "Login: admin (admin)",
+      "ts": "2026-06-05T10:56:04.900Z"
     },
     {
       "id": "mq0t2d3hciwae8n",
@@ -5253,16 +5336,6 @@
       "ts": "2026-06-04T10:07:53.262Z"
     },
     {
-      "id": "mpzc0pm5nfvxi2o",
-      "userId": "mpz46x5c2zupza0",
-      "username": "bgaspar",
-      "role": "operator",
-      "action": "GENERATE_BRACKET",
-      "target": "fasefinal",
-      "detail": "Bracket gerado: M4",
-      "ts": "2026-06-04T10:07:53.261Z"
-    },
-    {
       "id": "mpzc0pm5f6rf9hp",
       "userId": "mpz46x5c2zupza0",
       "username": "bgaspar",
@@ -5270,6 +5343,16 @@
       "action": "GENERATE_BRACKET",
       "target": "fasefinal",
       "detail": "Bracket gerado: M3",
+      "ts": "2026-06-04T10:07:53.261Z"
+    },
+    {
+      "id": "mpzc0pm5nfvxi2o",
+      "userId": "mpz46x5c2zupza0",
+      "username": "bgaspar",
+      "role": "operator",
+      "action": "GENERATE_BRACKET",
+      "target": "fasefinal",
+      "detail": "Bracket gerado: M4",
       "ts": "2026-06-04T10:07:53.261Z"
     },
     {
@@ -5283,16 +5366,6 @@
       "ts": "2026-06-04T10:07:53.260Z"
     },
     {
-      "id": "mpzc0pm3orrbffx",
-      "userId": "mpz46x5c2zupza0",
-      "username": "bgaspar",
-      "role": "operator",
-      "action": "GENERATE_BRACKET",
-      "target": "fasefinal",
-      "detail": "Bracket gerado: F1",
-      "ts": "2026-06-04T10:07:53.259Z"
-    },
-    {
       "id": "mpzc0pm367mtbow",
       "userId": "mpz46x5c2zupza0",
       "username": "bgaspar",
@@ -5300,6 +5373,16 @@
       "action": "GENERATE_BRACKET",
       "target": "fasefinal",
       "detail": "Bracket gerado: M2",
+      "ts": "2026-06-04T10:07:53.259Z"
+    },
+    {
+      "id": "mpzc0pm3orrbffx",
+      "userId": "mpz46x5c2zupza0",
+      "username": "bgaspar",
+      "role": "operator",
+      "action": "GENERATE_BRACKET",
+      "target": "fasefinal",
+      "detail": "Bracket gerado: F1",
       "ts": "2026-06-04T10:07:53.259Z"
     },
     {
@@ -5543,16 +5626,6 @@
       "ts": "2026-06-04T09:20:14.577Z"
     },
     {
-      "id": "mpzabfu8h0q1lhx",
-      "userId": "mpz8aq9sg983ubo",
-      "username": "euamusse",
-      "role": "admin",
-      "action": "GENERATE_BRACKET",
-      "target": "fasefinal",
-      "detail": "Bracket gerado: M3",
-      "ts": "2026-06-04T09:20:14.576Z"
-    },
-    {
       "id": "mpzabfu8n0hkr7s",
       "userId": "mpz8aq9sg983ubo",
       "username": "euamusse",
@@ -5563,13 +5636,23 @@
       "ts": "2026-06-04T09:20:14.576Z"
     },
     {
-      "id": "mpzabfu7zqri1l3",
+      "id": "mpzabfu8h0q1lhx",
       "userId": "mpz8aq9sg983ubo",
       "username": "euamusse",
       "role": "admin",
       "action": "GENERATE_BRACKET",
       "target": "fasefinal",
-      "detail": "Bracket gerado: M2",
+      "detail": "Bracket gerado: M3",
+      "ts": "2026-06-04T09:20:14.576Z"
+    },
+    {
+      "id": "mpzabfu7udh75w9",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "GENERATE_BRACKET",
+      "target": "fasefinal",
+      "detail": "Bracket gerado: F2",
       "ts": "2026-06-04T09:20:14.575Z"
     },
     {
@@ -5583,13 +5666,13 @@
       "ts": "2026-06-04T09:20:14.575Z"
     },
     {
-      "id": "mpzabfu7udh75w9",
+      "id": "mpzabfu7zqri1l3",
       "userId": "mpz8aq9sg983ubo",
       "username": "euamusse",
       "role": "admin",
       "action": "GENERATE_BRACKET",
       "target": "fasefinal",
-      "detail": "Bracket gerado: F2",
+      "detail": "Bracket gerado: M2",
       "ts": "2026-06-04T09:20:14.575Z"
     },
     {
@@ -6683,5 +6766,5 @@
       "ts": "2026-06-03T06:06:37.211Z"
     }
   ],
-  "_updated": "2026-06-05T18:29:03.668Z"
+  "_updated": "2026-06-05T19:11:50.660Z"
 }
