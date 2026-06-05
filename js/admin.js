@@ -197,7 +197,7 @@ window.waImageJogo = function(jogoId, isFF, catId) {
   }
 
   function draw(logoImg) {
-    const W = 700, H = 700, PAD = 44;
+    const W = 700, H = 820, PAD = 44;
     const LOGO_SZ = 88, LOGO_X = PAD, LOGO_Y = 20;
     const TEXT_X = PAD + LOGO_SZ + 16;
     const canvas = document.createElement('canvas');
@@ -345,13 +345,40 @@ window.waImageJogo = function(jogoId, isFF, catId) {
       ctx.textAlign = 'left';
     }
 
+    // Message zone — lembrete do clube (pending games)
+    if (!j.resultado) {
+      const mY = 580;
+      ctx.fillStyle = '#0D1411'; ctx.fillRect(0, mY, W, 160);
+      ctx.fillStyle = '#1C2620'; ctx.fillRect(0, mY, W, 1);
+
+      // Header band
+      const bW = W - PAD * 2, bH = 38, bX = PAD, bY = mY + 12;
+      ctx.fillStyle = clr + '1A';
+      ctx.beginPath(); ctx.roundRect(bX, bY, bW, bH, 6); ctx.fill();
+      ctx.strokeStyle = clr + '55'; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.roundRect(bX, bY, bW, bH, 6); ctx.stroke();
+      ctx.fillStyle = clr; ctx.font = 'bold 13px Arial, sans-serif'; ctx.textAlign = 'center';
+      ctx.fillText('LEMBRETE DO CLUBE', W / 2, bY + 26);
+
+      // Content lines
+      ctx.fillStyle = '#C8DDD5'; ctx.font = '14px Arial, sans-serif';
+      ctx.fillText('O vosso jogo est\u00e1 marcado para:', W / 2, mY + 72);
+      const ds2 = j.data ? ppWeekday(j.data) + ', ' + formatDate(j.data) : 'Data a definir';
+      ctx.fillStyle = clr; ctx.font = 'bold 15px Arial, sans-serif';
+      ctx.fillText(ds2 + '   \u00B7   ' + (j.hora || '\u2014') + '   \u00B7   ' + (j.campo || '\u2014'), W / 2, mY + 96);
+      ctx.fillStyle = '#F5C518'; ctx.font = '13px Arial, sans-serif';
+      ctx.fillText('\u26A0  Os hor\u00e1rios s\u00e3o estimativas \u2014 dependem do jogo anterior', W / 2, mY + 122);
+      ctx.fillStyle = '#8AA396'; ctx.font = '13px Arial, sans-serif';
+      ctx.fillText('Chegue 15 minutos antes  \u00B7  Contamos com a sua presen\u00e7a!', W / 2, mY + 145);
+    }
+
     // Footer
-    const fy = H - 60;
-    ctx.fillStyle = '#111815'; ctx.fillRect(0, fy, W, 60);
+    const fy = H - 78;
+    ctx.fillStyle = '#111815'; ctx.fillRect(0, fy, W, 78);
     ctx.fillStyle = '#1C2620'; ctx.fillRect(0, fy, W, 1);
     ctx.fillStyle = '#4A6058'; ctx.font = '17px Arial, sans-serif';
     ctx.textAlign = 'center';
-    ctx.fillText('Play Padel  \u00B7  Torneio Aniversário 2026', W / 2, fy + 36);
+    ctx.fillText('Play Padel  \u00B7  Torneio Aniversário 2026', W / 2, fy + 44);
 
     // Bottom gradient bar
     g = ctx.createLinearGradient(0, 0, W, 0);
@@ -2068,7 +2095,9 @@ function renderJogos(filtroData = 'todos', filtroCampo = 'todos', filtroGrupo = 
         })()
       : `<span class="badge badge-amarelo">Pendente</span>`;
 
-    const waBtns = `<button class="btn-icon" style="color:#25D366" title="Partilhar imagem do jogo" onclick="waImageJogo('${j.id}',${!!j._isFF},'${j._cat||''}')"><i class="ph ph-share-network"></i></button>`;
+    const waBtns = j.resultado
+      ? ''
+      : `<button class="btn-icon" style="color:#25D366" title="Partilhar imagem do jogo" onclick="waImageJogo('${j.id}',${!!j._isFF},'${j._cat||''}')"><i class="ph ph-share-network"></i></button>`;
 
     const acoes = j._isFF
       ? `<div style="display:flex;gap:0.3rem">
