@@ -816,6 +816,7 @@ window.abrirPanfletoFoto = function(jogoId, isFF, catId) {
   }
   if (!jogo) return toast('Jogo não encontrado.', 'error');
   if (!jogo.resultado) return toast('Este jogo ainda não tem resultado.', 'error');
+  if (jogo.resultado.wo) { _gerarPanfletoWO(jogo); return; }
 
   APP._fotoFlyer = { jogo };
 
@@ -842,6 +843,131 @@ window.abrirPanfletoFoto = function(jogoId, isFF, catId) {
   const pxEl = document.getElementById('fotoFlyerPanX'); if (pxEl) pxEl.value = 0;
   const pyEl = document.getElementById('fotoFlyerPanY'); if (pyEl) pyEl.value = 0;
   openModal('modalFotoFlyer');
+};
+
+// ============================================
+//  PANFLETO WO (sem foto)
+// ============================================
+window._gerarPanfletoWO = function(jogo) {
+  const W = 1080, H = 1350;
+  const CAT_CLR = { M1:'#4A9EFF', M2:'#00C37B', M3:'#39FF8F', M4:'#F5C518', M5:'#FF9A3C', F1:'#FF6BB0', F2:'#C97BFF' };
+  const canvas = document.createElement('canvas');
+  canvas.width = W; canvas.height = H;
+  const ctx = canvas.getContext('2d');
+
+  const woTeam  = jogo.resultado.wo;          // 'eq1' | 'eq2'
+  const winner  = woTeam === 'eq1' ? jogo.eq2 : jogo.eq1;
+  const cat     = (jogo.grupo || '').split(/[-\s]/)[0];
+  const catClr  = CAT_CLR[cat] || '#8AA396';
+
+  function drawWoCanvas(logoImg) {
+    // Background
+    ctx.fillStyle = '#080D0B';
+    ctx.fillRect(0, 0, W, H);
+    // Grid pattern
+    ctx.save();
+    ctx.strokeStyle = 'rgba(255,74,74,0.035)';
+    ctx.lineWidth = 1;
+    for (let y = 0; y < H; y += 64) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke(); }
+    for (let x = 0; x < W; x += 64) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke(); }
+    ctx.restore();
+
+    // Logo
+    const LOGO_SZ = 68, LX = (W - LOGO_SZ) / 2, LY = 52;
+    if (logoImg) {
+      ctx.save();
+      ctx.beginPath(); ctx.arc(LX + LOGO_SZ/2, LY + LOGO_SZ/2, LOGO_SZ/2, 0, Math.PI*2); ctx.clip();
+      ctx.drawImage(logoImg, LX, LY, LOGO_SZ, LOGO_SZ);
+      ctx.restore();
+    }
+    ctx.textAlign = 'center';
+    ctx.fillStyle = '#00C37B'; ctx.font = 'bold 32px Arial, sans-serif';
+    ctx.fillText('PLAY PADEL COOP', W/2, LY + LOGO_SZ + 44);
+    ctx.fillStyle = '#8AA396'; ctx.font = '21px Arial, sans-serif';
+    ctx.fillText('TORNEIO ANIVERSÁRIO 2026', W/2, LY + LOGO_SZ + 76);
+    const sepY = LY + LOGO_SZ + 102;
+    ctx.strokeStyle = 'rgba(255,74,74,0.35)'; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(80, sepY); ctx.lineTo(W-80, sepY); ctx.stroke();
+
+    // WO Badge circle
+    const cx = W/2, cBY = sepY + 148, RR = 112;
+    const radGrad = ctx.createRadialGradient(cx, cBY, 0, cx, cBY, RR + 60);
+    radGrad.addColorStop(0, 'rgba(255,74,74,0.18)'); radGrad.addColorStop(1, 'rgba(255,74,74,0)');
+    ctx.fillStyle = radGrad; ctx.fillRect(cx-RR-60, cBY-RR-60, (RR+60)*2, (RR+60)*2);
+    ctx.beginPath(); ctx.arc(cx, cBY, RR, 0, Math.PI*2);
+    ctx.fillStyle = 'rgba(255,74,74,0.10)'; ctx.fill();
+    ctx.strokeStyle = '#FF4A4A'; ctx.lineWidth = 3; ctx.stroke();
+    ctx.fillStyle = '#FF4A4A'; ctx.textAlign = 'center';
+    ctx.font = 'bold 86px Arial, sans-serif'; ctx.fillText('W.O.', cx, cBY + 30);
+    ctx.font = 'bold 42px Arial, sans-serif'; ctx.fillText('WALKOVER', cx, cBY + RR + 58);
+    ctx.fillStyle = '#8AA396'; ctx.font = '22px Arial, sans-serif';
+    ctx.fillText('Equipa não compareceu', cx, cBY + RR + 92);
+
+    // Match meta
+    const MIY = cBY + RR + 152;
+    const bw = ctx.measureText((jogo.grupo||'').toUpperCase()).width + 44;
+    ctx.fillStyle = catClr + '28';
+    ctx.beginPath(); ctx.roundRect((W-bw)/2, MIY, bw, 40, 8); ctx.fill();
+    ctx.fillStyle = catClr; ctx.font = 'bold 20px Arial, sans-serif'; ctx.textAlign = 'center';
+    ctx.fillText((jogo.grupo||'').toUpperCase(), W/2, MIY + 27);
+    const meta = [jogo.data ? ppFormatDate(jogo.data) : '', jogo.hora, (jogo.campo && jogo.campo !== '—') ? jogo.campo : ''].filter(Boolean).join('  ·  ');
+    ctx.fillStyle = '#8AA396'; ctx.font = '20px Arial, sans-serif';
+    ctx.fillText(meta, W/2, MIY + 74);
+
+    // Teams
+    const PAD = 60, TY = MIY + 168;
+    const eq1IsWinner = woTeam === 'eq2';
+
+    function drawTeam(name, xBase, align, isWinner) {
+      const parts = name.split(' & ');
+      ctx.fillStyle = isWinner ? '#39FF8F' : '#FF4A4A';
+      ctx.textAlign = align;
+      ctx.font = `bold ${parts.length === 2 ? 31 : 35}px Arial, sans-serif`;
+      if (parts.length === 2) { ctx.fillText(parts[0], xBase, TY - 16); ctx.fillText(parts[1], xBase, TY + 26); }
+      else { ctx.fillText(name, xBase, TY + 6); }
+    }
+    drawTeam(jogo.eq1, PAD, 'left', eq1IsWinner);
+    drawTeam(jogo.eq2, W-PAD, 'right', !eq1IsWinner);
+    ctx.fillStyle = '#8AA396'; ctx.font = '20px Arial, sans-serif'; ctx.textAlign = 'center';
+    ctx.fillText('VS', W/2, TY + 6);
+
+    // WO badge below loser team
+    const isEq1Loser = woTeam === 'eq1';
+    const wbW = 74, wbH = 28;
+    const wbX = isEq1Loser ? PAD : W - PAD - wbW;
+    ctx.fillStyle = 'rgba(255,74,74,0.18)';
+    ctx.beginPath(); ctx.roundRect(wbX, TY + 40, wbW, wbH, 6); ctx.fill();
+    ctx.fillStyle = '#FF4A4A'; ctx.font = 'bold 16px Arial, sans-serif';
+    ctx.textAlign = isEq1Loser ? 'left' : 'right';
+    ctx.fillText('WO', isEq1Loser ? PAD + 10 : W - PAD - 10, TY + 58);
+
+    // Footer band
+    const BAND_H = 190, BY = H - BAND_H;
+    const gr2 = ctx.createLinearGradient(0, 0, W, 0);
+    gr2.addColorStop(0, '#FF4A4A'); gr2.addColorStop(1, '#A01818');
+    ctx.fillStyle = gr2; ctx.fillRect(0, BY, W, 5);
+    ctx.fillStyle = 'rgba(10,15,13,0.96)'; ctx.fillRect(0, BY+5, W, BAND_H-5);
+    ctx.textAlign = 'center';
+    ctx.fillStyle = '#F5C518'; ctx.font = 'bold 22px Arial, sans-serif';
+    ctx.fillText('VITÓRIA POR WALKOVER', W/2, BY + 52);
+    const wParts = winner.split(' & ');
+    ctx.fillStyle = '#F0F7F3';
+    if (wParts.length === 2) {
+      ctx.font = 'bold 30px Arial, sans-serif';
+      ctx.fillText(wParts[0], W/2, BY + 96);
+      ctx.fillText(wParts[1], W/2, BY + 136);
+    } else {
+      ctx.font = 'bold 34px Arial, sans-serif';
+      ctx.fillText(winner, W/2, BY + 114);
+    }
+
+    _panfletoShare(canvas, `wo-jogo-${jogo.id || 'x'}.png`);
+  }
+
+  const logo = new Image();
+  logo.onload = () => drawWoCanvas(logo);
+  logo.onerror = () => drawWoCanvas(null);
+  logo.src = 'playpadellogo.jpg';
 };
 
 function _buildFotoFlyer(img) {
@@ -5560,7 +5686,10 @@ function renderRelatorioJogos() {
                 : '<span style="color:var(--amarelo);font-size:.7rem;background:rgba(245,197,24,.12);padding:.1rem .45rem;border-radius:4px">⏳ Pendente</span>'}
             </td>
             <td style="padding:.45rem .75rem;text-align:center">
-              ${j.resultado ? `<button class="btn-icon" style="color:var(--amarelo)" title="Panfleto com foto" onclick="abrirPanfletoFoto('${j.id}',${j._ff ? 'true' : 'false'},'${j._cat || j._catId || ''}')"><i class="ph ph-camera"></i></button>` : ''}
+              ${j.resultado ? (() => {
+                const isWo = !!j.resultado.wo;
+                return `<button class="btn-icon" style="color:${isWo ? 'var(--vermelho)' : 'var(--amarelo)'}" title="${isWo ? 'Panfleto WO' : 'Panfleto com foto'}" onclick="abrirPanfletoFoto('${j.id}',${j._ff ? 'true' : 'false'},'${j._cat || j._catId || ''}')"><i class="ph ph-${isWo ? 'warning-circle' : 'camera'}"></i></button>`;
+              })() : ''}
             </td>
           </tr>`;
         }).join('')}
