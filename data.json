@@ -1696,9 +1696,9 @@
         "s2eq2": 5,
         "s3eq1": 3,
         "s3eq2": 2,
-        "serve": "eq2",
-        "nota": "Serviço de Vasco Silva",
-        "ts": "2026-06-06T05:49:23.634Z"
+        "serve": "Vasco Silva",
+        "nota": "",
+        "ts": "2026-06-06T06:00:57.666Z"
       }
     },
     {
@@ -3170,6 +3170,16 @@
     }
   ],
   "auditlog": [
+    {
+      "id": "mq1y2v692pa6x14",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "SUSPEND_GAME",
+      "target": "resultados",
+      "detail": "Jogo #5 suspenso [serve:Vasco Silva]",
+      "ts": "2026-06-06T06:00:57.681Z"
+    },
     {
       "id": "mq1xnznmuyky7pa",
       "userId": "mpz8aq9sg983ubo",
@@ -7151,5 +7161,5 @@
       "ts": "2026-06-03T06:06:37.211Z"
     }
   ],
-  "_updated": "2026-06-06T05:49:29.620Z"
+  "_updated": "2026-06-06T06:01:02.695Z"
 }
