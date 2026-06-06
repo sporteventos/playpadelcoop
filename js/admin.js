@@ -1182,6 +1182,133 @@ window._gerarPanfletoSuspenso = function(jogo) {
   logo.src = 'playpadellogo.jpg';
 };
 
+// ── Panfleto: Jogo Adiado ─────────────────────────────────────
+window._gerarPanfletoAdiado = function(jogo) {
+  if (!jogo) return toast('Jogo não encontrado.', 'error');
+  const W = 1080, H = 1350;
+  const CAT_CLR = { M1:'#4A9EFF', M2:'#00C37B', M3:'#39FF8F', M4:'#F5C518', M5:'#FF9A3C', F1:'#FF6BB0', F2:'#C97BFF' };
+  const canvas = document.createElement('canvas');
+  canvas.width = W; canvas.height = H;
+  const ctx = canvas.getContext('2d');
+  const BLUE = '#6B9CF7';
+
+  const a   = jogo.adiado || {};
+  const cat = (jogo.grupo || '').split(/[-\s]/)[0];
+  const catClr = CAT_CLR[cat] || '#8AA396';
+
+  function draw(logoImg) {
+    // Background
+    ctx.fillStyle = '#080D0B';
+    ctx.fillRect(0, 0, W, H);
+    // Grid
+    ctx.save();
+    ctx.strokeStyle = 'rgba(107,156,247,0.04)';
+    ctx.lineWidth = 1;
+    for (let y = 0; y < H; y += 64) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke(); }
+    for (let x = 0; x < W; x += 64) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke(); }
+    ctx.restore();
+
+    // Logo
+    const LOGO_SZ = 68, LX = (W - LOGO_SZ) / 2, LY = 52;
+    if (logoImg) {
+      ctx.save();
+      ctx.beginPath(); ctx.arc(LX + LOGO_SZ/2, LY + LOGO_SZ/2, LOGO_SZ/2, 0, Math.PI*2); ctx.clip();
+      ctx.drawImage(logoImg, LX, LY, LOGO_SZ, LOGO_SZ);
+      ctx.restore();
+    }
+    ctx.textAlign = 'center';
+    ctx.fillStyle = '#00C37B'; ctx.font = 'bold 32px Arial, sans-serif';
+    ctx.fillText('PLAY PADEL COOP', W/2, LY + LOGO_SZ + 44);
+    ctx.fillStyle = '#8AA396'; ctx.font = '21px Arial, sans-serif';
+    ctx.fillText('TORNEIO ANIVERSÁRIO 2026', W/2, LY + LOGO_SZ + 76);
+    const sepY = LY + LOGO_SZ + 102;
+    ctx.strokeStyle = 'rgba(107,156,247,0.35)'; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(80, sepY); ctx.lineTo(W-80, sepY); ctx.stroke();
+
+    // 📅 Badge circle
+    const cx = W/2, cBY = sepY + 148, RR = 112;
+    const radGrad = ctx.createRadialGradient(cx, cBY, 0, cx, cBY, RR + 60);
+    radGrad.addColorStop(0, 'rgba(107,156,247,0.18)'); radGrad.addColorStop(1, 'rgba(107,156,247,0)');
+    ctx.fillStyle = radGrad; ctx.fillRect(cx-RR-60, cBY-RR-60, (RR+60)*2, (RR+60)*2);
+    ctx.beginPath(); ctx.arc(cx, cBY, RR, 0, Math.PI*2);
+    ctx.fillStyle = 'rgba(107,156,247,0.10)'; ctx.fill();
+    ctx.strokeStyle = BLUE; ctx.lineWidth = 3; ctx.stroke();
+    ctx.fillStyle = BLUE; ctx.textAlign = 'center';
+    ctx.font = 'bold 82px Arial, sans-serif'; ctx.fillText('📅', cx, cBY + 30);
+    ctx.font = 'bold 40px Arial, sans-serif'; ctx.fillText('ADIADO', cx, cBY + RR + 56);
+    ctx.fillStyle = '#8AA396'; ctx.font = '22px Arial, sans-serif';
+    ctx.fillText('Jogo adiado — nova data a confirmar', cx, cBY + RR + 92);
+
+    // Match meta
+    const MIY = cBY + RR + 152;
+    const bw = ctx.measureText((jogo.grupo||'').toUpperCase()).width + 44;
+    ctx.fillStyle = catClr + '28';
+    ctx.beginPath(); ctx.roundRect((W-bw)/2, MIY, bw, 40, 8); ctx.fill();
+    ctx.fillStyle = catClr; ctx.font = 'bold 20px Arial, sans-serif'; ctx.textAlign = 'center';
+    ctx.fillText((jogo.grupo||'').toUpperCase(), W/2, MIY + 27);
+    const meta = [jogo.data ? ppFormatDate(jogo.data) : '', jogo.hora, (jogo.campo && jogo.campo !== '—') ? jogo.campo : ''].filter(Boolean).join('  ·  ');
+    ctx.fillStyle = '#8AA396'; ctx.font = '20px Arial, sans-serif';
+    ctx.fillText(meta + (meta ? '  ·  Cancelado' : 'Data original cancelada'), W/2, MIY + 74);
+
+    // Teams
+    const PAD = 60, TY = MIY + 168;
+    function drawTeam(name, xBase, align) {
+      const parts = name.split(' & ');
+      ctx.fillStyle = '#F0F7F3';
+      ctx.textAlign = align;
+      ctx.font = `bold ${parts.length === 2 ? 31 : 35}px Arial, sans-serif`;
+      if (parts.length === 2) { ctx.fillText(parts[0], xBase, TY - 16); ctx.fillText(parts[1], xBase, TY + 26); }
+      else { ctx.fillText(name, xBase, TY + 6); }
+    }
+    drawTeam(jogo.eq1 || '?', PAD, 'left');
+    drawTeam(jogo.eq2 || '?', W-PAD, 'right');
+    ctx.fillStyle = '#8AA396'; ctx.font = '20px Arial, sans-serif'; ctx.textAlign = 'center';
+    ctx.fillText('VS', W/2, TY + 6);
+
+    // Motivo box
+    if (a.motivo) {
+      const MOY = TY + 80;
+      ctx.fillStyle = 'rgba(107,156,247,0.10)';
+      ctx.beginPath(); ctx.roundRect(W/2 - 240, MOY, 480, 66, 8); ctx.fill();
+      ctx.strokeStyle = 'rgba(107,156,247,0.3)'; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.roundRect(W/2 - 240, MOY, 480, 66, 8); ctx.stroke();
+      ctx.fillStyle = '#8AA396'; ctx.font = '18px Arial, sans-serif'; ctx.textAlign = 'center';
+      ctx.fillText('Motivo', W/2, MOY + 24);
+      ctx.fillStyle = BLUE; ctx.font = 'bold 22px Arial, sans-serif';
+      // Wrap if too long
+      const maxW = 440;
+      const words = a.motivo.split(' ');
+      let line = '', lineY = MOY + 52;
+      words.forEach(w => {
+        const test = line + (line ? ' ' : '') + w;
+        if (ctx.measureText(test).width > maxW && line) {
+          ctx.fillText(line, W/2, lineY); line = w; lineY += 28;
+        } else { line = test; }
+      });
+      if (line) ctx.fillText(line, W/2, lineY);
+    }
+
+    // Footer band
+    const BAND_H = 190, BY = H - BAND_H;
+    const gr2 = ctx.createLinearGradient(0, 0, W, 0);
+    gr2.addColorStop(0, BLUE); gr2.addColorStop(1, '#2A3A7A');
+    ctx.fillStyle = gr2; ctx.fillRect(0, BY, W, 5);
+    ctx.fillStyle = 'rgba(10,15,13,0.96)'; ctx.fillRect(0, BY+5, W, BAND_H-5);
+    ctx.textAlign = 'center';
+    ctx.fillStyle = BLUE; ctx.font = 'bold 22px Arial, sans-serif';
+    ctx.fillText('JOGO ADIADO', W/2, BY + 52);
+    ctx.fillStyle = '#8AA396'; ctx.font = '20px Arial, sans-serif';
+    ctx.fillText('Aguardar confirmação de nova data e hora', W/2, BY + 92);
+
+    _panfletoShare(canvas, `adiado-jogo-${jogo.id || 'x'}.png`);
+  }
+
+  const logo = new Image();
+  logo.onload = () => draw(logo);
+  logo.onerror = () => draw(null);
+  logo.src = 'playpadellogo.jpg';
+};
+
 function _buildFotoFlyer(img) {
   const jogo = APP._fotoFlyer?.jogo;
   if (!jogo || !jogo.resultado) return;
@@ -6305,8 +6432,9 @@ function renderRelatorioJogos() {
   let filtered = allJogos;
   if (selData   !== 'todos') filtered = filtered.filter(j => j.data  === selData);
   if (selGrupo  !== 'todos') filtered = filtered.filter(j => j.grupo === selGrupo);
-  if (selEstado === 'pendente')  filtered = filtered.filter(j => !j.resultado && !j.suspenso);
+  if (selEstado === 'pendente')  filtered = filtered.filter(j => !j.resultado && !j.suspenso && !j.adiado);
   if (selEstado === 'suspenso')  filtered = filtered.filter(j => !j.resultado &&  !!j.suspenso);
+  if (selEstado === 'adiado')    filtered = filtered.filter(j => !j.resultado &&  !!j.adiado);
   if (selEstado === 'concluido') filtered = filtered.filter(j =>  j.resultado);
   filtered = [...filtered].sort((a, b) =>
     (a.data + (a.hora||'') + a.grupo).localeCompare(b.data + (b.hora||'') + b.grupo)
@@ -6388,7 +6516,9 @@ function renderRelatorioJogos() {
                 ? (j.resultado.wo
                     ? '<span style="color:var(--vermelho);font-size:.7rem;background:rgba(255,74,74,.12);padding:.1rem .45rem;border-radius:4px">WO</span>'
                     : '<span style="color:var(--verde);font-size:.7rem;background:rgba(0,195,123,.12);padding:.1rem .45rem;border-radius:4px">✓ Concluído</span>')
-                : j.suspenso
+                : j.adiado
+                  ? `<span style="color:#6B9CF7;font-size:.7rem;background:rgba(107,156,247,.12);padding:.1rem .45rem;border-radius:4px" title="${escHtml(j.adiado.motivo||'')}">📅 Adiado${j.adiado.motivo ? ' — '+escHtml(j.adiado.motivo.substring(0,40)) : ''}</span>`
+                  : j.suspenso
                   ? `<span style="color:#FF9A3C;font-size:.7rem;background:rgba(255,154,60,.12);padding:.1rem .45rem;border-radius:4px">⏸ Suspenso${j.suspenso.nota ? ' — '+j.suspenso.nota.substring(0,30) : ''}</span>`
                   : '<span style="color:var(--amarelo);font-size:.7rem;background:rgba(245,197,24,.12);padding:.1rem .45rem;border-radius:4px">⏳ Pendente</span>'}
             </td>
@@ -6396,7 +6526,7 @@ function renderRelatorioJogos() {
               ${j.resultado ? (() => {
                 const isWo = !!j.resultado.wo;
                 return `<button class="btn-icon" style="color:${isWo ? 'var(--vermelho)' : 'var(--amarelo)'}" title="${isWo ? 'Panfleto WO' : 'Panfleto com foto'}" onclick="abrirPanfletoFoto('${j.id}',${j._ff ? 'true' : 'false'},'${j._cat || j._catId || ''}')"><i class="ph ph-${isWo ? 'warning-circle' : 'camera'}"></i></button>`;
-              })() : j.suspenso && !j._ff ? `<button class="btn-icon" style="color:#FF9A3C" title="Panfleto jogo suspenso" onclick="_gerarPanfletoSuspenso(getData('jogos').find(x=>String(x.id)==='${j.id}'))"><i class="ph ph-pause-circle"></i></button>` : ''}
+              })() : j.adiado && !j._ff ? `<button class="btn-icon" style="color:#6B9CF7" title="Panfleto jogo adiado" onclick="_gerarPanfletoAdiado(getData('jogos').find(x=>String(x.id)==='${j.id}'))"><i class="ph ph-calendar-x"></i></button>` : j.suspenso && !j._ff ? `<button class="btn-icon" style="color:#FF9A3C" title="Panfleto jogo suspenso" onclick="_gerarPanfletoSuspenso(getData('jogos').find(x=>String(x.id)==='${j.id}'))"><i class="ph ph-pause-circle"></i></button>` : ''}
             </td>
           </tr>`;
         }).join('')}
