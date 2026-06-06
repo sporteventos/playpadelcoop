@@ -2044,7 +2044,21 @@
       "grupo": "F1-C",
       "eq1": "Anouk Fumane & Letícia",
       "eq2": "Omar Fernandes & Claudia Sumaya",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 6,
+        "s1eq2": 3,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 4,
+        "s2eq2": 6,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": 6,
+        "s3eq2": 0,
+        "tb3eq1": null,
+        "tb3eq2": null
+      },
+      "suspenso": null
     },
     {
       "id": 22,
@@ -2381,7 +2395,21 @@
       "grupo": "F2-C",
       "eq1": "Dalila & Tatiana",
       "eq2": "Steph & Ronell",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 6,
+        "s1eq2": 4,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 3,
+        "s2eq2": 6,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": 2,
+        "s3eq2": 6,
+        "tb3eq1": null,
+        "tb3eq2": null
+      },
+      "suspenso": null
     },
     {
       "id": 45,
@@ -3366,6 +3394,26 @@
     }
   ],
   "auditlog": [
+    {
+      "id": "mq2fj4ad9dua7je",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "SAVE_RESULT",
+      "target": "resultados",
+      "detail": "Resultado guardado: jogo #44",
+      "ts": "2026-06-06T14:09:29.461Z"
+    },
+    {
+      "id": "mq2fifcpc5rdwim",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "SAVE_RESULT",
+      "target": "resultados",
+      "detail": "Resultado guardado: jogo #21",
+      "ts": "2026-06-06T14:08:57.145Z"
+    },
     {
       "id": "mq2ffsl7oqw563i",
       "userId": "mpz8aq9sg983ubo",
@@ -7827,5 +7875,5 @@
       "ts": "2026-06-03T06:06:37.211Z"
     }
   ],
-  "_updated": "2026-06-06T14:08:21.760Z"
+  "_updated": "2026-06-06T14:09:35.387Z"
 }
