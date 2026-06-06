@@ -2186,7 +2186,20 @@
       "grupo": "M3-C",
       "eq1": "Keiss Chiraze & Saif Issa",
       "eq2": "Akil & Kalil",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 6,
+        "s1eq2": 4,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 6,
+        "s2eq2": 4,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": null,
+        "s3eq2": null,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 28,
@@ -3559,6 +3572,16 @@
     }
   ],
   "auditlog": [
+    {
+      "id": "mq2q9ady807y2wm",
+      "userId": "mpzxoo1v8l1za3r",
+      "username": "djanasse",
+      "role": "operator",
+      "action": "SAVE_RESULT",
+      "target": "resultados",
+      "detail": "Resultado guardado: jogo #27",
+      "ts": "2026-06-06T19:09:46.583Z"
+    },
     {
       "id": "mq2q741e6cw73m3",
       "userId": "mpzxoo1v8l1za3r",
@@ -8300,5 +8323,5 @@
       "ts": "2026-06-03T06:06:37.211Z"
     }
   ],
-  "_updated": "2026-06-06T19:09:06.868Z"
+  "_updated": "2026-06-06T19:10:04.372Z"
 }
