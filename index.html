@@ -374,13 +374,18 @@
 // ---- Live stats counters ----
 (function() {
   const jogos = ppGet('jogos');
-  const total = jogos.length;
-  const disputados = jogos.filter(j => !!j.resultado).length;
+  // Include fase final games
+  const ffRaw = ppLoad('fasefinal') || {};
+  const jogosFF = Object.values(ffRaw).flatMap(cat => (cat && cat.jogos) ? cat.jogos.filter(j => j.eq1 && j.eq2) : []);
+  const todos = jogos.concat(jogosFF);
+
+  const total = todos.length;
+  const disputados = todos.filter(j => !!j.resultado).length;
   const pct = total ? Math.round(disputados / total * 100) : 0;
 
   // Count sets played across all finished games
   let sets = 0;
-  jogos.forEach(j => {
+  todos.forEach(j => {
     if (!j.resultado) return;
     const r = j.resultado;
     if (r.wo) return; // WO counts as a result but 0 sets
@@ -389,7 +394,7 @@
     if (r.s3eq1 != null) sets++;
   });
 
-  // Games today
+  // Games today (group stage only — FF games usually have no date)
   const today = new Date().toISOString().slice(0, 10);
   const hoje = jogos.filter(j => j.data === today);
   const hojeDisputados = hoje.filter(j => !!j.resultado).length;
