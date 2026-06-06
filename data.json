@@ -1888,9 +1888,9 @@
         "tb1eq1": 4,
         "tb1eq2": 7,
         "s2eq1": 7,
-        "s2eq2": 5,
-        "tb2eq1": null,
-        "tb2eq2": null,
+        "s2eq2": 6,
+        "tb2eq1": 7,
+        "tb2eq2": 5,
         "s3eq1": 3,
         "s3eq2": 6,
         "tb3eq1": null,
@@ -3314,6 +3314,26 @@
     }
   ],
   "auditlog": [
+    {
+      "id": "mq25ah3rowvx1lx",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "SAVE_RESULT",
+      "target": "resultados",
+      "detail": "Resultado guardado: jogo #14",
+      "ts": "2026-06-06T09:22:50.007Z"
+    },
+    {
+      "id": "mq24spbq1abh0vt",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "LOGIN",
+      "target": "auth",
+      "detail": "Login: euamusse (admin)",
+      "ts": "2026-06-06T09:09:00.854Z"
+    },
     {
       "id": "mq24kmszkb3hneq",
       "userId": "mpz8aq9sg983ubo",
@@ -7655,5 +7675,5 @@
       "ts": "2026-06-03T06:06:37.211Z"
     }
   ],
-  "_updated": "2026-06-06T09:03:04.761Z"
+  "_updated": "2026-06-06T09:24:29.356Z"
 }
