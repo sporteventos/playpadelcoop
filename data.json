@@ -2139,7 +2139,21 @@
       "grupo": "M1-B",
       "eq1": "Karim Kanifani & Octávio Barros",
       "eq2": "Gonçalo Nascimento & João Catela",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 6,
+        "s1eq2": 1,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 6,
+        "s2eq2": 3,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": null,
+        "s3eq2": null,
+        "tb3eq1": null,
+        "tb3eq2": null
+      },
+      "suspenso": null
     },
     {
       "id": 26,
@@ -3532,6 +3546,16 @@
     }
   ],
   "auditlog": [
+    {
+      "id": "mq2o3bxvg86p423",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "SAVE_RESULT",
+      "target": "resultados",
+      "detail": "Resultado guardado: jogo #25",
+      "ts": "2026-06-06T18:09:09.427Z"
+    },
     {
       "id": "mq2nq1yg3avm964",
       "userId": "mpz8aq9sg983ubo",
@@ -8233,5 +8257,5 @@
       "ts": "2026-06-03T06:06:37.211Z"
     }
   ],
-  "_updated": "2026-06-06T18:00:28.194Z"
+  "_updated": "2026-06-06T18:10:00.658Z"
 }
