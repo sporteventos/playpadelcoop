@@ -1948,7 +1948,20 @@
       "grupo": "F1-C",
       "eq1": "Marta Botelho & Ana Oliveira",
       "eq2": "Omar Fernandes & Claudia Sumaya",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 6,
+        "s1eq2": 2,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 6,
+        "s2eq2": 3,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": null,
+        "s3eq2": null,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 19,
@@ -3261,6 +3274,16 @@
     }
   ],
   "auditlog": [
+    {
+      "id": "mq2392p0a20coyn",
+      "userId": "mpzxoo1v8l1za3r",
+      "username": "djanasse",
+      "role": "operator",
+      "action": "SAVE_RESULT",
+      "target": "resultados",
+      "detail": "Resultado guardado: jogo #18",
+      "ts": "2026-06-06T08:25:45.444Z"
+    },
     {
       "id": "mq235t08bmogj05",
       "userId": "mpzxoo1v8l1za3r",
@@ -7392,5 +7415,5 @@
       "ts": "2026-06-03T06:06:37.211Z"
     }
   ],
-  "_updated": "2026-06-06T08:23:37.854Z"
+  "_updated": "2026-06-06T08:27:23.797Z"
 }
