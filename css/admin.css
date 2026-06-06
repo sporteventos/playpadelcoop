@@ -493,8 +493,9 @@ tbody tr:hover { background: var(--cinza-escuro); }
 .modal-close:hover { color: var(--vermelho); background: var(--vermelho-bg); }
 .modal-body { padding: 1.5rem; }
 .modal-footer {
-  display: flex; justify-content: flex-end; gap: 0.65rem;
-  padding: 1rem 1.5rem; border-top: 1px solid var(--preto-borda);
+  display: flex; justify-content: flex-end; gap: 0.5rem;
+  padding: 0.75rem 1.25rem; border-top: 1px solid var(--preto-borda);
+  flex-wrap: wrap;
 }
 
 /* Form in modal */
