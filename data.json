@@ -2269,7 +2269,21 @@
       "grupo": "F2-A",
       "eq1": "Florence & Jinane",
       "eq2": "Ilária & Cristina",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 7,
+        "s1eq2": 6,
+        "tb1eq1": 7,
+        "tb1eq2": 4,
+        "s2eq1": 6,
+        "s2eq2": 1,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": null,
+        "s3eq2": null,
+        "tb3eq1": null,
+        "tb3eq2": null
+      },
+      "suspenso": null
     },
     {
       "id": 35,
@@ -3447,6 +3461,16 @@
     }
   ],
   "auditlog": [
+    {
+      "id": "mq2kdncc4ripq8r",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "SAVE_RESULT",
+      "target": "resultados",
+      "detail": "Resultado guardado: jogo #34",
+      "ts": "2026-06-06T16:25:12.300Z"
+    },
     {
       "id": "mq2kcqov3lflpqr",
       "userId": "mpz8aq9sg983ubo",
@@ -8058,5 +8082,5 @@
       "ts": "2026-06-03T06:06:37.211Z"
     }
   ],
-  "_updated": "2026-06-06T16:24:36.385Z"
+  "_updated": "2026-06-06T16:25:18.873Z"
 }
