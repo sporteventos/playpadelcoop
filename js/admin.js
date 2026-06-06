@@ -4978,11 +4978,11 @@ window.gerarPanfletoClassificacoes = function() {
   const labelTxt = catId ? catId.toUpperCase() : 'TODOS OS GRUPOS';
   const filename = catId ? `classificacoes-${catId}.png` : 'classificacoes-todos.png';
 
-  const W = 1080, PAD = 44;
-  const COLS = 2, COL_GAP = 16;
+  const W = 1920, PAD = 52;
+  const COLS = 3, COL_GAP = 24;
   const CARD_W = (W - PAD * 2 - COL_GAP * (COLS - 1)) / COLS;
-  const CP = 14, CARD_HEAD_H = 38, COL_HEAD_H = 26, ROW_H = 30, CARD_BOT = 10;
-  const HEAD_H = 195, FOOT_H = 56, ROW_GAP = 14;
+  const CP = 18, CARD_HEAD_H = 48, COL_HEAD_H = 32, ROW_H = 38, CARD_BOT = 14;
+  const HEAD_H = 240, FOOT_H = 64, ROW_GAP = 18;
 
   function cardHeight(g) { return CARD_HEAD_H + COL_HEAD_H + g.rows.length * ROW_H + CARD_BOT; }
 
@@ -5018,24 +5018,24 @@ window.gerarPanfletoClassificacoes = function() {
 
   // Header
   ctx.fillStyle = catColor;
-  ctx.font = 'bold 52px Arial, sans-serif';
-  ctx.fillText('PLAY PADEL', PAD, 72);
+  ctx.font = 'bold 66px Arial, sans-serif';
+  ctx.fillText('PLAY PADEL', PAD, 86);
   ctx.fillStyle = '#F0F7F3';
-  ctx.font = '32px Arial, sans-serif';
-  ctx.fillText('TORNEIO ANIVERSÁRIO 2026', PAD, 112);
+  ctx.font = '40px Arial, sans-serif';
+  ctx.fillText('TORNEIO ANIVERSÁRIO 2026', PAD, 136);
   ctx.fillStyle = '#8AA396';
-  ctx.font = '22px Arial, sans-serif';
-  ctx.fillText('CLASSIFICAÇÕES', PAD, 146);
+  ctx.font = '27px Arial, sans-serif';
+  ctx.fillText('CLASSIFICAÇÕES', PAD, 176);
   ctx.fillStyle = catColor;
-  ctx.font = 'bold 28px Arial, sans-serif';
-  ctx.fillText(labelTxt, PAD, 178);
+  ctx.font = 'bold 35px Arial, sans-serif';
+  ctx.fillText(labelTxt, PAD, 218);
 
   // Divider
-  ctx.fillStyle = '#1C2620'; ctx.fillRect(PAD, 188, W - PAD * 2, 2);
+  ctx.fillStyle = '#1C2620'; ctx.fillRect(PAD, 230, W - PAD * 2, 2);
 
   // Logo (top-right)
   if (logoImg) {
-    const LOGO_SZ = 80, LOGO_X = W - PAD - 80, LOGO_Y = 18;
+    const LOGO_SZ = 100, LOGO_X = W - PAD - 100, LOGO_Y = 22;
     ctx.save();
     ctx.beginPath();
     ctx.arc(LOGO_X + LOGO_SZ / 2, LOGO_Y + LOGO_SZ / 2, LOGO_SZ / 2, 0, Math.PI * 2);
@@ -5063,9 +5063,9 @@ window.gerarPanfletoClassificacoes = function() {
       ctx.beginPath(); ctx.roundRect(cx, cy, CARD_W, CARD_HEAD_H, [8, 8, 0, 0]); ctx.fill();
       ctx.fillStyle = gc; ctx.fillRect(cx, cy + CARD_HEAD_H - 2, CARD_W, 2);
 
-      ctx.fillStyle = gc; ctx.font = 'bold 18px Arial, sans-serif';
+      ctx.fillStyle = gc; ctx.font = 'bold 22px Arial, sans-serif';
       ctx.fillText(g.id, cx + CP, cy + CARD_HEAD_H * 0.68);
-      ctx.fillStyle = '#4A6058'; ctx.font = '12px Arial, sans-serif';
+      ctx.fillStyle = '#4A6058'; ctx.font = '15px Arial, sans-serif';
       ctx.textAlign = 'right';
       ctx.fillText(`${g.done}/${g.total} jogos`, cx + CARD_W - CP, cy + CARD_HEAD_H * 0.68);
       ctx.textAlign = 'left';
@@ -5074,14 +5074,14 @@ window.gerarPanfletoClassificacoes = function() {
       const colH = cy + CARD_HEAD_H + COL_HEAD_H * 0.80;
       const rx = {
         rank: cx + CP,
-        par:  cx + CP + 22,
-        pj:   cx + CARD_W - CP - 162,
-        v:    cx + CARD_W - CP - 126,
-        d:    cx + CARD_W - CP - 93,
-        sets: cx + CARD_W - CP - 62,
+        par:  cx + CP + 28,
+        pj:   cx + CARD_W - CP - 200,
+        v:    cx + CARD_W - CP - 154,
+        d:    cx + CARD_W - CP - 112,
+        sets: cx + CARD_W - CP - 74,
         pts:  cx + CARD_W - CP,
       };
-      ctx.fillStyle = '#4A6058'; ctx.font = 'bold 10px Arial, sans-serif';
+      ctx.fillStyle = '#4A6058'; ctx.font = 'bold 13px Arial, sans-serif';
       ctx.fillText('#',   rx.rank, colH);
       ctx.fillText('PAR', rx.par,  colH);
       ctx.textAlign = 'center';
@@ -5102,11 +5102,11 @@ window.gerarPanfletoClassificacoes = function() {
 
         const rcy = ry + ROW_H * 0.68;
         ctx.fillStyle = ri === 0 ? '#39FF8F' : ri === 1 ? '#8AA396' : '#4A6058';
-        ctx.font = 'bold 12px Arial, sans-serif';
+        ctx.font = 'bold 15px Arial, sans-serif';
         ctx.fillText(`${ri + 1}`, rx.rank, rcy);
 
         ctx.fillStyle = ri === 0 ? '#F0F7F3' : '#C4D4CC';
-        ctx.font = '12px Arial, sans-serif';
+        ctx.font = '15px Arial, sans-serif';
         ctx.fillText(cTrunc(r.par, rx.pj - rx.par - 8), rx.par, rcy);
 
         ctx.fillStyle = '#8AA396'; ctx.textAlign = 'center';
@@ -5115,9 +5115,9 @@ window.gerarPanfletoClassificacoes = function() {
         ctx.fillText(r.v, rx.v, rcy);
         ctx.fillStyle = r.d > 0 ? '#FF4A4A' : '#8AA396';
         ctx.fillText(r.d, rx.d, rcy);
-        ctx.fillStyle = '#8AA396'; ctx.font = '11px Arial, sans-serif';
+        ctx.fillStyle = '#8AA396'; ctx.font = '14px Arial, sans-serif';
         ctx.fillText(`${r.sv}-${r.sl}`, rx.sets, rcy);
-        ctx.fillStyle = '#F0F7F3'; ctx.font = 'bold 13px Arial, sans-serif';
+        ctx.fillStyle = '#F0F7F3'; ctx.font = 'bold 16px Arial, sans-serif';
         ctx.textAlign = 'right';
         ctx.fillText(r.pts, rx.pts, rcy);
         ctx.textAlign = 'left';
@@ -5129,9 +5129,9 @@ window.gerarPanfletoClassificacoes = function() {
   // Footer
   ctx.fillStyle = '#111815'; ctx.fillRect(0, H - FOOT_H, W, FOOT_H);
   ctx.fillStyle = '#1C2620'; ctx.fillRect(0, H - FOOT_H, W, 1);
-  ctx.fillStyle = '#4A6058'; ctx.font = '17px Arial, sans-serif';
+  ctx.fillStyle = '#4A6058'; ctx.font = '20px Arial, sans-serif';
   ctx.textAlign = 'center';
-  ctx.fillText('Play Padel  \u00B7  Torneio Aniversário 2026', W / 2, H - FOOT_H + 36);
+  ctx.fillText('Play Padel  \u00B7  Torneio Aniversário 2026', W / 2, H - FOOT_H + 42);
   ctx.textAlign = 'left';
 
   _panfletoShare(canvas, filename);
