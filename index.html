@@ -12,6 +12,47 @@
   <link rel="stylesheet" href="css/style.css"/>
   <link rel="stylesheet" href="css/pages.css"/>
   <script src="https://unpkg.com/@phosphor-icons/web@2.1.1/src/index.js" defer></script>
+  <style>
+    /* ── Live stats section ── */
+    .live-stats-section { background: var(--preto-card, #111815); border-top: 1px solid #1C2620; border-bottom: 1px solid #1C2620; padding: 2rem 0; }
+    .live-stats-inner { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; }
+    .live-tag { display: flex; align-items: center; gap: .45rem; font-size: .68rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--verde, #00C37B); margin-bottom: 1.1rem; }
+    .live-tag-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--verde, #00C37B); animation: livepulse 1.5s ease-in-out infinite; }
+    @keyframes livepulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.4;transform:scale(.7)} }
+    .live-stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; }
+    .live-stat-card { background: #0A0F0D; border: 1px solid #1C2620; border-radius: 12px; padding: 1.1rem 1.25rem; }
+    .live-stat-card--hl { border-color: rgba(0,195,123,.3); background: rgba(0,195,123,.04); }
+    .live-stat-val { font-size: 2.2rem; font-weight: 800; color: var(--branco, #F0F7F3); line-height: 1; margin-bottom: .25rem; font-variant-numeric: tabular-nums; }
+    .live-stat-card--hl .live-stat-val { color: var(--verde, #00C37B); }
+    .live-stat-lbl { font-size: .72rem; text-transform: uppercase; letter-spacing: .07em; color: #8AA396; margin-bottom: .55rem; }
+    .live-progress { height: 4px; background: #1C2620; border-radius: 2px; overflow: hidden; }
+    .live-progress-fill { height: 100%; background: var(--verde, #00C37B); border-radius: 2px; transition: width .6s ease; }
+    .live-stat-sub { font-size: .7rem; color: #4A6058; margin-top: .2rem; }
+    /* ── Top pares section ── */
+    .top-pares-section { padding: 3rem 0 2.5rem; background: var(--preto, #0A0F0D); }
+    .top-pares-inner { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; }
+    .top-pares-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 1.4rem; flex-wrap: wrap; gap: .5rem; }
+    .top-pares-link { font-size: .82rem; color: var(--verde, #00C37B); text-decoration: none; display: flex; align-items: center; gap: .3rem; white-space: nowrap; }
+    .top-pares-link:hover { text-decoration: underline; }
+    .top-pares-list { display: flex; flex-direction: column; gap: .55rem; }
+    .top-par-card { display: grid; grid-template-columns: 2.2rem 1fr auto; align-items: center; gap: .75rem; background: #111815; border: 1px solid #1C2620; border-radius: 10px; padding: .75rem 1rem; transition: border-color .15s; }
+    .top-par-card:hover { border-color: rgba(0,195,123,.25); }
+    .top-par-rank { font-size: 1.1rem; text-align: center; font-weight: 800; color: #4A6058; }
+    .top-par-rank--1 { color: #F5C518; }
+    .top-par-rank--2 { color: #C0C0C0; }
+    .top-par-rank--3 { color: #CD7F32; }
+    .top-par-names { font-size: .88rem; color: var(--branco, #F0F7F3); font-weight: 600; line-height: 1.4; }
+    .top-par-names span { display: block; }
+    .top-par-names span + span { color: #8AA396; font-weight: 400; font-size: .82rem; }
+    .top-par-stats { display: flex; gap: .6rem; align-items: center; }
+    .top-par-stat { text-align: center; min-width: 2.4rem; }
+    .top-par-stat-val { font-size: 1rem; font-weight: 800; line-height: 1; }
+    .top-par-stat-val--v { color: var(--verde, #00C37B); }
+    .top-par-stat-val--d { color: #FF4A4A; }
+    .top-par-stat-lbl { font-size: .58rem; text-transform: uppercase; letter-spacing: .05em; color: #4A6058; }
+    .top-par-rate { font-size: .7rem; color: #8AA396; white-space: nowrap; }
+    @media (max-width: 480px) { .top-par-card { grid-template-columns: 2rem 1fr; } .top-par-stats { display: none; } }
+  </style>
 </head>
 <body>
 
@@ -122,8 +163,33 @@
   </div>
 </div>
 
-<!-- ===================== NAV CARDS ===================== -->
-<section class="nav-cards-section" id="modulos">
+<!-- ===================== LIVE STATS ===================== -->
+<section class="live-stats-section">
+  <div class="live-stats-inner">
+    <div class="live-tag"><span class="live-tag-dot"></span> Torneio em tempo real</div>
+    <div class="live-stats-grid">
+      <div class="live-stat-card live-stat-card--hl">
+        <div class="live-stat-val" id="lsDisputados">&mdash;</div>
+        <div class="live-stat-lbl">Jogos disputados</div>
+        <div class="live-progress"><div class="live-progress-fill" id="lsProgressFill" style="width:0%"></div></div>
+        <div class="live-stat-sub" id="lsProgressSub"></div>
+      </div>
+      <div class="live-stat-card">
+        <div class="live-stat-val" id="lsSets">&mdash;</div>
+        <div class="live-stat-lbl">Sets jogados</div>
+      </div>
+      <div class="live-stat-card">
+        <div class="live-stat-val" id="lsPct">&mdash;</div>
+        <div class="live-stat-lbl">% conclu&iacute;do</div>
+      </div>
+      <div class="live-stat-card">
+        <div class="live-stat-val" id="lsHoje">&mdash;</div>
+        <div class="live-stat-lbl">Jogos hoje</div>
+        <div class="live-stat-sub" id="lsHojeSub"></div>
+      </div>
+    </div>
+  </div>
+</section><section class="nav-cards-section" id="modulos">
   <div class="main-container">
     <div class="section-header">
       <p class="section-tag">NAVEGAR</p>
@@ -193,6 +259,20 @@
     </div>
 
     <div id="jogosList"></div>
+  </div>
+</section>
+
+<!-- ===================== TOP PARES ===================== -->
+<section class="top-pares-section">
+  <div class="top-pares-inner">
+    <div class="top-pares-header">
+      <div>
+        <p class="section-tag">LEADERBOARD</p>
+        <h2 class="section-title">TOP <span>PARES</span></h2>
+      </div>
+      <a href="jogadores.html" class="top-pares-link">Ver todos <i class="ph ph-arrow-right"></i></a>
+    </div>
+    <div class="top-pares-list" id="topParesList"></div>
   </div>
 </section>
 
@@ -290,6 +370,90 @@
 <script src="js/data.js"></script>
 <script src="js/app.js"></script>
 <script>
+// ---- Live stats counters ----
+(function() {
+  const jogos = ppGet('jogos');
+  const total = jogos.length;
+  const disputados = jogos.filter(j => !!j.resultado).length;
+  const pct = total ? Math.round(disputados / total * 100) : 0;
+
+  // Count sets played across all finished games
+  let sets = 0;
+  jogos.forEach(j => {
+    if (!j.resultado) return;
+    const r = j.resultado;
+    if (r.wo) return; // WO counts as a result but 0 sets
+    if (r.s1eq1 != null) sets++;
+    if (r.s2eq1 != null) sets++;
+    if (r.s3eq1 != null) sets++;
+  });
+
+  // Games today
+  const today = new Date().toISOString().slice(0, 10);
+  const hoje = jogos.filter(j => j.data === today);
+  const hojeDisputados = hoje.filter(j => !!j.resultado).length;
+
+  document.getElementById('lsDisputados').textContent = disputados;
+  document.getElementById('lsProgressFill').style.width = pct + '%';
+  document.getElementById('lsProgressSub').textContent = total ? disputados + ' de ' + total + ' jogos' : '';
+  document.getElementById('lsSets').textContent = sets;
+  document.getElementById('lsPct').textContent = pct + '%';
+  document.getElementById('lsHoje').textContent = hoje.length;
+  document.getElementById('lsHojeSub').textContent = hoje.length ? hojeDisputados + ' conclu\u00eddos' : 'sem jogos hoje';
+})();
+
+// ---- Top Pares leaderboard ----
+(function() {
+  const jogos = ppGet('jogos').filter(j => j.resultado && !j.resultado.wo);
+  const stats = {};
+  function add(par, win, sw, sl) {
+    if (!par) return;
+    if (!stats[par]) stats[par] = { par, pj:0, v:0, d:0, sw:0, sl:0 };
+    stats[par].pj++;
+    if (win) stats[par].v++; else stats[par].d++;
+    stats[par].sw += sw; stats[par].sl += sl;
+  }
+  jogos.forEach(j => {
+    const r = j.resultado;
+    const allSets = [[r.s1eq1,r.s1eq2],[r.s2eq1,r.s2eq2],[r.s3eq1,r.s3eq2]].filter(([a]) => a != null);
+    let v1=0, v2=0, sw1=0, sl1=0;
+    allSets.forEach(([a,b]) => { if(a>b) v1++; else v2++; sw1+=a; sl1+=b; });
+    add(j.eq1, v1>v2, sw1, sl1);
+    add(j.eq2, v2>v1, sl1, sw1);
+  });
+
+  const top5 = Object.values(stats)
+    .filter(s => s.pj > 0)
+    .sort((a,b) => b.v-a.v || a.d-b.d || (b.sw-b.sl)-(a.sw-a.sl))
+    .slice(0, 5);
+
+  const medals = ['\uD83E\uDD47','\uD83E\uDD48','\uD83E\uDD49'];
+  const rankClass = ['top-par-rank--1','top-par-rank--2','top-par-rank--3'];
+
+  const el = document.getElementById('topParesList');
+  if (!el) return;
+  if (!top5.length) { el.innerHTML = '<p style="color:#8AA396;font-size:.85rem">Nenhum resultado lan\u00e7ado ainda.</p>'; return; }
+
+  el.innerHTML = top5.map((s, i) => {
+    const rank = i < 3 ? medals[i] : (i+1);
+    const rCls = i < 3 ? rankClass[i] : '';
+    const parts = s.par.split(' & ');
+    const rate = s.pj ? Math.round(s.v/s.pj*100) : 0;
+    return `<div class="top-par-card">
+      <div class="top-par-rank ${rCls}">${rank}</div>
+      <div class="top-par-names"><span>${parts[0]}</span>${parts[1]?`<span>${parts[1]}</span>`:''}</div>
+      <div class="top-par-stats">
+        <div class="top-par-stat"><div class="top-par-stat-val top-par-stat-val--v">${s.v}</div><div class="top-par-stat-lbl">V</div></div>
+        <div class="top-par-stat"><div class="top-par-stat-val top-par-stat-val--d">${s.d}</div><div class="top-par-stat-lbl">D</div></div>
+        <div class="top-par-stat"><div class="top-par-stat-val" style="color:#8AA396">${s.sw}-${s.sl}</div><div class="top-par-stat-lbl">Sets</div></div>
+        <div class="top-par-rate">${rate}%</div>
+      </div>
+    </div>`;
+  }).join('');
+})();
+</script>
+<script>
+// ---- Próximos jogos ----
 (function () {
   const jogos = ppGet('jogos');
   const pending = jogos
