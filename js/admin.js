@@ -2790,15 +2790,28 @@ window.abrirResultado = function(jogoId) {
   [2, 3].forEach(n => { document.getElementById(`setBlock${n}`).style.display = 'none'; });
   document.getElementById('matchResultBar').style.display = 'none';
 
-  // Reset suspenso note banner
+  // Reset suspenso panel
   const _suspBanner = document.getElementById('resSuspensoBanner');
   const _suspNota   = document.getElementById('resSuspensoNota');
-  if (_suspBanner) _suspBanner.style.display = 'none';
-  if (_suspNota)   _suspNota.value = '';
+  APP._suspensoServe = null;
+  if (_suspNota) _suspNota.value = '';
+  // Update serve button labels with actual team names
+  const _sbt1 = document.getElementById('resSuspensoServeEq1');
+  const _sbt2 = document.getElementById('resSuspensoServeEq2');
+  const _st1 = (j.eq1 || 'Equipa 1').substring(0, 24);
+  const _st2 = (j.eq2 || 'Equipa 2').substring(0, 24);
+  if (_sbt1) { _sbt1.textContent = _st1; _sbt1.style.cssText = 'flex:1;font-size:.72rem;padding:.28rem .5rem'; }
+  if (_sbt2) { _sbt2.textContent = _st2; _sbt2.style.cssText = 'flex:1;font-size:.72rem;padding:.28rem .5rem'; }
 
   const r = j.resultado;
   const s = j.suspenso; // partial data when game was suspended
   const loadData = r || s; // prefer resultado, fall back to suspenso
+
+  // Show suspension panel only for non-finished games
+  const _suspTitle = document.getElementById('resSuspensoBannerTitle');
+  if (_suspBanner) _suspBanner.style.display = (!r) ? '' : 'none';
+  if (_suspTitle) _suspTitle.textContent = s ? '\u23f8 Jogo Suspenso (estado parcial guardado)' : '\u23f8 Suspens\u00e3o';
+
   if (r) {
     if (r.wo) {
       if (_woChk) { _woChk.checked = true; if (_woPk) _woPk.style.display = ''; }
@@ -2819,8 +2832,8 @@ window.abrirResultado = function(jogoId) {
     }
   } else if (s) {
     // Load suspended partial state — no validation needed
-    if (_suspBanner) _suspBanner.style.display = '';
     if (_suspNota && s.nota)  _suspNota.value = s.nota;
+    if (s.serve) selectSuspensoServe(s.serve);
     function loadSetRaw(n, eq1, eq2) {
       if (eq1 == null || eq2 == null) return;
       document.getElementById(`resS${n}E1`).value = eq1;
@@ -2889,6 +2902,25 @@ window.selectResWo = function(eq) {
 };
 
 // ── Suspender jogo (estado parcial) ─────────────────────────────
+window.selectSuspensoServe = function(eq) {
+  APP._suspensoServe = eq;
+  ['eq1', 'eq2'].forEach(e => {
+    const btn = document.getElementById('resSuspensoServe' + (e === 'eq1' ? 'Eq1' : 'Eq2'));
+    if (!btn) return;
+    if (e === eq) {
+      btn.style.background = 'rgba(255,154,60,.25)';
+      btn.style.color = '#FF9A3C';
+      btn.style.borderColor = 'rgba(255,154,60,.6)';
+      btn.style.fontWeight = '700';
+    } else {
+      btn.style.background = '';
+      btn.style.color = '';
+      btn.style.borderColor = '';
+      btn.style.fontWeight = '';
+    }
+  });
+};
+
 window.suspenderJogo = function() {
   if (APP.ffEditing) return toast('Suspensão não disponível para jogos de Fase Final.', 'error');
   if (!APP.editingId) return;
@@ -2908,6 +2940,7 @@ window.suspenderJogo = function() {
     s1eq1: r1.eq1, s1eq2: r1.eq2,
     s2eq1: r2 ? r2.eq1 : null, s2eq2: r2 ? r2.eq2 : null,
     s3eq1: r3 ? r3.eq1 : null, s3eq2: r3 ? r3.eq2 : null,
+    serve: APP._suspensoServe || null,
     nota,
     ts: new Date().toISOString(),
   };
@@ -2933,7 +2966,8 @@ window.suspenderJogo = function() {
   closeModal('modalResultado');
   renderView(APP.currentView);
   const notaStr = nota ? ` — "${nota}"` : '';
-  Auth.log('SUSPEND_GAME', 'resultados', `Jogo #${APP.editingId} suspenso${notaStr}`);
+  const serveStr = suspenso.serve ? ` [serve:${suspenso.serve}]` : '';
+  Auth.log('SUSPEND_GAME', 'resultados', `Jogo #${APP.editingId} suspenso${serveStr}${notaStr}`);
   toast(`Jogo #${APP.editingId} suspenso — retomará noutra data.`, 'success');
   APP.editingId = null;
 };

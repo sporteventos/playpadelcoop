@@ -411,7 +411,9 @@ document.addEventListener('DOMContentLoaded', () => {
       : isSuspenso ? (() => {
           const s = j.suspenso;
           const partial = [s.s1eq1!=null?`1\u00BA: ${s.s1eq1}-${s.s1eq2}`:null, s.s2eq1!=null?`2\u00BA: ${s.s2eq1}-${s.s2eq2}`:null, s.s3eq1!=null?`3\u00BA: ${s.s3eq1}-${s.s3eq2}`:null].filter(Boolean).join('  ');
-          return `<div class="match-score"><div class="score-row" style="justify-content:center;flex-direction:column;gap:.2rem"><span style="background:rgba(255,154,60,.10);color:#FF9A3C;padding:.2rem .8rem;border-radius:6px;font-size:.78rem;font-weight:700">⏸ Interrompido${partial ? ' — '+partial : ''}</span>${s.nota?`<span style="font-size:.7rem;color:#8AA396;margin-top:.15rem">${s.nota}</span>`:''}</div></div>`;
+          const serveTeam = s.serve === 'eq1' ? j.eq1 : s.serve === 'eq2' ? j.eq2 : null;
+          const serveHtml = serveTeam ? `<span style="font-size:.68rem;color:#8AA396;margin-top:.1rem">\u26a1 Serviço: <strong style="color:#FF9A3C">${serveTeam.split(' & ')[0]}</strong></span>` : '';
+          return `<div class="match-score"><div class="score-row" style="justify-content:center;flex-direction:column;gap:.2rem"><span style="background:rgba(255,154,60,.10);color:#FF9A3C;padding:.2rem .8rem;border-radius:6px;font-size:.78rem;font-weight:700">\u23f8 Interrompido${partial ? ' \u2014 '+partial : ''}</span>${serveHtml}${s.nota?`<span style="font-size:.7rem;color:#8AA396;margin-top:.15rem">${s.nota}</span>`:''}</div></div>`;
         })()
       : '';
 
@@ -499,7 +501,9 @@ document.addEventListener('DOMContentLoaded', () => {
             stateClass = 'sched-cell-susp';
             const s = j.suspenso;
             const p = [s.s1eq1!=null?`${s.s1eq1}-${s.s1eq2}`:null,s.s2eq1!=null?`${s.s2eq1}-${s.s2eq2}`:null].filter(Boolean).join(' / ');
-            scoreHtml  = `<span class="sched-score sched-score-susp">⏸${p?' '+p:''}</span>`;
+            const serveTeam = s.serve === 'eq1' ? j.eq1 : s.serve === 'eq2' ? j.eq2 : null;
+            const serveSuffix = serveTeam ? ` \u26a1${serveTeam.split(' & ')[0]}` : '';
+            scoreHtml  = `<span class="sched-score sched-score-susp">\u23f8${p?' '+p:''}${serveSuffix}</span>`;
           } else if (temRes) {
             stateClass = 'sched-cell-done';
             const sc = setsCount(j.resultado);
