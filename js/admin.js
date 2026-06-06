@@ -2066,12 +2066,16 @@ function _timeAgo(iso) {
 function updateAlertBanner() {
   const jogos = getData('jogos');
   const pending = jogos.filter(j => !j.resultado).length;
-  const banner = document.getElementById('alertBanner');
-  const msg    = document.getElementById('alertBannerMsg');
+  const banner  = document.getElementById('alertBanner');
+  const msg     = document.getElementById('alertBannerMsg');
+  const icon    = document.getElementById('alertBannerIcon');
+  const btn     = document.getElementById('alertBannerBtn');
+  const conflitosPanel = document.getElementById('dashConflitosPanel');
+  const conflitosBody  = document.getElementById('dashConflitosBody');
   if (!banner || !msg) return;
 
-  // Detect scheduling conflicts across all dates
-  const playerDays = {}; // key: "player|date" → [hours]
+  // ── Detect scheduling conflicts across all dates ──
+  const playerDays = {}; // key: "player_lower|date" → { name, hours[] }
   const campoSlots = {}; // key: "campo|date|hora" → count
   jogos.forEach(j => {
     if (!j.data) return;
@@ -2083,30 +2087,72 @@ function updateAlertBanner() {
       if (!pair) return;
       pair.split(' & ').forEach(p => {
         const k = `${p.trim().toLowerCase()}|${j.data}`;
-        if (!playerDays[k]) playerDays[k] = [];
-        if (j.hora) playerDays[k].push(j.hora);
+        if (!playerDays[k]) playerDays[k] = { name: p.trim(), date: j.data, hours: [] };
+        if (j.hora) playerDays[k].hours.push(j.hora);
       });
     });
   });
-  const playerConflicts = Object.entries(playerDays).filter(([,h]) => h.length > 1).length;
-  const campoConflicts  = Object.values(campoSlots).filter(n => n > 1).length;
-  const totalConflicts  = playerConflicts + campoConflicts;
 
+  const playerConflictEntries = Object.values(playerDays).filter(v => v.hours.length > 1);
+  const campoConflictEntries  = Object.entries(campoSlots).filter(([,n]) => n > 1).map(([k]) => { const [campo, date, hora] = k.split('|'); return { campo, date, hora }; });
+  const totalConflicts = playerConflictEntries.length + campoConflictEntries.length;
+
+  // ── Dashboard conflict details panel ──
+  if (conflitosPanel && conflitosBody) {
+    if (totalConflicts > 0) {
+      let html = '';
+      if (playerConflictEntries.length) {
+        html += `<div style="font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--vermelho);margin-bottom:.5rem;margin-top:.25rem"><i class="ph ph-user-x"></i> Jogador com 2+ jogos no mesmo dia</div>`;
+        html += `<div style="display:flex;flex-direction:column;gap:.35rem;margin-bottom:.85rem">`;
+        playerConflictEntries.forEach(v => {
+          html += `<div style="display:flex;align-items:center;gap:.6rem;font-size:.8rem;background:rgba(255,74,74,.06);border:1px solid rgba(255,74,74,.2);border-radius:7px;padding:.4rem .75rem">
+            <i class="ph ph-user" style="color:var(--vermelho);flex-shrink:0"></i>
+            <span style="font-weight:700;color:var(--branco);flex:1">${escHtml(v.name)}</span>
+            <span style="color:var(--cinza-texto);font-size:.72rem">${ppFormatDate(v.date)}</span>
+            <span style="color:var(--vermelho);font-family:monospace;font-size:.75rem">${v.hours.sort().join(' · ')}</span>
+          </div>`;
+        });
+        html += `</div>`;
+      }
+      if (campoConflictEntries.length) {
+        html += `<div style="font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--vermelho);margin-bottom:.5rem"><i class="ph ph-warning-diamond"></i> Campo duplamente reservado</div>`;
+        html += `<div style="display:flex;flex-direction:column;gap:.35rem">`;
+        campoConflictEntries.forEach(v => {
+          html += `<div style="display:flex;align-items:center;gap:.6rem;font-size:.8rem;background:rgba(255,74,74,.06);border:1px solid rgba(255,74,74,.2);border-radius:7px;padding:.4rem .75rem">
+            <i class="ph ph-map-pin" style="color:var(--vermelho);flex-shrink:0"></i>
+            <span style="font-weight:700;color:var(--branco);flex:1">${escHtml(v.campo)}</span>
+            <span style="color:var(--cinza-texto);font-size:.72rem">${ppFormatDate(v.date)}</span>
+            <span style="color:var(--vermelho);font-family:monospace;font-size:.75rem">${v.hora}</span>
+          </div>`;
+        });
+        html += `</div>`;
+      }
+      conflitosBody.innerHTML = html;
+      conflitosPanel.style.display = '';
+    } else {
+      conflitosPanel.style.display = 'none';
+    }
+  }
+
+  // ── Alert top banner ──
   if (totalConflicts > 0) {
     const parts = [];
-    if (playerConflicts) parts.push(`${playerConflicts} jogador${playerConflicts>1?'es':''} com jogos duplicados no mesmo dia`);
-    if (campoConflicts)  parts.push(`${campoConflicts} campo${campoConflicts>1?'s':''} duplamente reservado${campoConflicts>1?'s':''}`);
-    msg.innerHTML = `<i class="ph ph-warning" style="margin-right:.3rem"></i> ${parts.join(' · ')} — verifique o Construtor de Horário`;
-    banner.style.background = 'rgba(255,74,74,.12)';
-    banner.style.borderBottomColor = 'rgba(255,74,74,.3)';
+    if (playerConflictEntries.length) parts.push(`${playerConflictEntries.length} jogador${playerConflictEntries.length>1?'es':''} com jogos em conflito`);
+    if (campoConflictEntries.length)  parts.push(`${campoConflictEntries.length} campo${campoConflictEntries.length>1?'s':''} duplamente reservado${campoConflictEntries.length>1?'s':''}`);
+    msg.innerHTML = `<strong>${parts.join(' · ')}</strong> — verifique o Construtor de Horário`;
     msg.style.color = 'var(--vermelho)';
-    banner.querySelector('button')?.style.setProperty('background','rgba(255,74,74,.2)');
+    if (icon) { icon.className = 'ph ph-warning'; icon.style.color = 'var(--vermelho)'; }
+    if (btn)  { btn.textContent = 'Ver Horário'; btn.onclick = () => navigate('horario'); btn.style.background = 'rgba(255,74,74,.2)'; btn.style.borderColor = 'rgba(255,74,74,.4)'; btn.style.color = 'var(--vermelho)'; }
+    banner.style.background = 'rgba(255,74,74,.08)';
+    banner.style.borderBottomColor = 'rgba(255,74,74,.3)';
     banner.style.display = 'flex';
   } else if (pending > 20) {
     msg.textContent = `${pending} jogos ainda sem resultado.`;
-    banner.style.background = '';
-    banner.style.borderBottomColor = '';
     msg.style.color = 'var(--amarelo)';
+    if (icon) { icon.className = 'ph ph-clock'; icon.style.color = 'var(--amarelo)'; }
+    if (btn)  { btn.textContent = 'Lançar resultados'; btn.onclick = () => navigate('resultados'); btn.style.background = 'rgba(245,197,24,.2)'; btn.style.borderColor = 'rgba(245,197,24,.4)'; btn.style.color = 'var(--amarelo)'; }
+    banner.style.background = 'rgba(245,197,24,.08)';
+    banner.style.borderBottomColor = 'rgba(245,197,24,.3)';
     banner.style.display = 'flex';
   } else {
     banner.style.display = 'none';
