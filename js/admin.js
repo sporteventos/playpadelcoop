@@ -2857,8 +2857,9 @@ function renderJogos(filtroData = 'todos', filtroCampo = 'todos', filtroGrupo = 
   if (filtroGrupo !== 'todos')  jogos = jogos.filter(j => j.grupo === filtroGrupo);
   if (filtroResultado !== 'todos') {
     jogos = jogos.filter(j => {
-      if (filtroResultado === 'pendente')      return !j.resultado && !j.suspenso;
+      if (filtroResultado === 'pendente')      return !j.resultado && !j.suspenso && !j.adiado;
       if (filtroResultado === 'suspenso')     return !!j.suspenso && !j.resultado;
+      if (filtroResultado === 'adiado')       return !!j.adiado   && !j.resultado;
       if (filtroResultado === 'com_resultado') return !!j.resultado;
       if (filtroResultado === 'wo')           return j.resultado?.wo;
       // score filters like '2-0', '1-2' etc.
@@ -2887,6 +2888,8 @@ function renderJogos(filtroData = 'todos', filtroCampo = 'todos', filtroGrupo = 
             <span style="font-size:.65rem;color:var(--cinza-texto);letter-spacing:.05em">sets</span>
           </span>`;
         })()
+      : j.adiado
+        ? `<span style="background:rgba(107,156,247,.15);color:#6B9CF7;font-size:.7rem;font-weight:700;padding:.1rem .35rem;border-radius:4px" title="${escHtml(j.adiado.motivo||'')}">&#x1F4C5; Adiado${j.adiado.motivo ? ' — '+escHtml(j.adiado.motivo) : ''}</span>`
       : j.suspenso
         ? `<span style="background:rgba(255,154,60,.15);color:#FF9A3C;font-size:.7rem;font-weight:700;padding:.1rem .35rem;border-radius:4px">⏸ Suspenso</span>`
         : `<span class="badge badge-amarelo">Pendente</span>`;
@@ -3520,6 +3523,7 @@ function salvarResultado() {
   const idx = jogos.findIndex(j => j.id === APP.editingId);
   if (idx < 0) return;
   jogos[idx].suspenso  = null; // clear suspenso too when saving final result
+  jogos[idx].adiado    = null; // clear adiado — game was played
   jogos[idx].resultado = resultado;
   // Save schedule + duplas edits (edit fields are shown for group games)
   const resEditFields = document.getElementById('resEditFields');
@@ -3633,11 +3637,31 @@ function _populateJogoEqSelects(grupoId) {
   document.getElementById('jogoEq2').innerHTML = opts;
 }
 
+window.toggleAdiadoFields = function() {
+  const checked = document.getElementById('jogoAdiadoToggle').checked;
+  const fields  = document.getElementById('jogoAdiadoFields');
+  if (fields) fields.style.display = checked ? 'flex' : 'none';
+};
+
+function _resetAdiadoModal() {
+  const tog = document.getElementById('jogoAdiadoToggle');
+  if (tog) tog.checked = false;
+  const fields = document.getElementById('jogoAdiadoFields');
+  if (fields) fields.style.display = 'none';
+  const m = document.getElementById('jogoAdiadoMotivo');
+  if (m) m.value = '';
+  const d = document.getElementById('jogoAdiadoData');
+  if (d) d.value = '';
+  const h = document.getElementById('jogoAdiadoHora');
+  if (h) h.value = '';
+}
+
 function abrirNovoJogo() {
   APP.editingId = null;
   document.getElementById('modalJogoTitle').textContent = 'Novo Jogo';
   document.getElementById('jogoData').value = '';
   document.getElementById('jogoHora').value = '';
+  _resetAdiadoModal();
   populateJogoModal();
   openModal('modalJogo');
 }
@@ -3656,6 +3680,16 @@ window.editarJogo = function(id) {
   // Resolve eq1/eq2 strings to dupla IDs for the selects
   document.getElementById('jogoEq1').value = _eqStrToDuplaId(j.eq1 || '', j.grupo || '');
   document.getElementById('jogoEq2').value = _eqStrToDuplaId(j.eq2 || '', j.grupo || '');
+  // Load adiado state
+  _resetAdiadoModal();
+  if (j.adiado) {
+    const tog = document.getElementById('jogoAdiadoToggle');
+    if (tog) tog.checked = true;
+    const fields = document.getElementById('jogoAdiadoFields');
+    if (fields) fields.style.display = 'flex';
+    const m = document.getElementById('jogoAdiadoMotivo');
+    if (m) m.value = j.adiado.motivo || '';
+  }
   openModal('modalJogo');
 };
 
@@ -3672,22 +3706,43 @@ function salvarJogo() {
   if (duplaId1 === duplaId2)
     return toast('As duas duplas devem ser diferentes.', 'error');
 
+  // Adiado state
+  const adiadoToggle = document.getElementById('jogoAdiadoToggle')?.checked;
+  const adiadoMotivo = (document.getElementById('jogoAdiadoMotivo')?.value || '').trim();
+  const adiadoNovaData = document.getElementById('jogoAdiadoData')?.value;
+  const adiadoNovaHora = document.getElementById('jogoAdiadoHora')?.value;
+
+  let finalData = data;
+  let finalHora = hora;
+  let adiadoVal = null;
+
+  if (adiadoToggle) {
+    if (adiadoNovaData && adiadoNovaHora) {
+      // Reagendado: update date/time and clear adiado flag
+      finalData = adiadoNovaData;
+      finalHora = adiadoNovaHora;
+      adiadoVal = null; // back to normal at new date
+    } else {
+      adiadoVal = { motivo: adiadoMotivo, ts: Date.now() };
+    }
+  }
+
   const eq1 = getDuplaLabel(duplaId1);
   const eq2 = getDuplaLabel(duplaId2);
 
   const jogos = getData('jogos');
   if (APP.editingId !== null) {
     const idx = jogos.findIndex(j => j.id === APP.editingId);
-    if (idx !== -1) jogos[idx] = { ...jogos[idx], data, hora, campo, grupo, eq1, eq2 };
+    if (idx !== -1) jogos[idx] = { ...jogos[idx], data: finalData, hora: finalHora, campo, grupo, eq1, eq2, adiado: adiadoVal };
     APP.editingId = null;
     setData('jogos', jogos);
     closeModal('modalJogo');
     renderView(APP.currentView);
     populateDataSelects();
-    toast('Jogo actualizado.');
+    toast(adiadoVal ? 'Jogo marcado como adiado.' : adiadoToggle ? `Jogo reagendado para ${finalData} \u00e0s ${finalHora}.` : 'Jogo actualizado.');
   } else {
     const newId = Math.max(0, ...jogos.map(j => j.id)) + 1;
-    jogos.push({ id: newId, data, hora, campo, grupo, eq1, eq2, resultado: null });
+    jogos.push({ id: newId, data: finalData, hora: finalHora, campo, grupo, eq1, eq2, resultado: null, adiado: adiadoVal });
     setData('jogos', jogos);
     closeModal('modalJogo');
     renderView(APP.currentView);

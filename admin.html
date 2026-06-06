@@ -511,6 +511,7 @@
               <option value="todos">Todos os estados</option>
               <option value="pendente">&#9200; Pendente</option>
               <option value="suspenso">⏸ Suspenso</option>
+              <option value="adiado">&#x1F4C5; Adiado</option>
               <option value="com_resultado">Com resultado</option>
               <option value="wo">W.O.</option>
               <option value="2-0">2–0</option>
@@ -1128,6 +1129,27 @@
       <div class="form-group-modal">
         <label class="form-label" for="jogoEq2">Equipa 2 (par)</label>
         <select class="form-select" id="jogoEq2"></select>
+      </div>
+      <!-- Adiado section -->
+      <div class="form-group-modal" style="border-top:1px solid var(--preto-borda);padding-top:.75rem;margin-top:.25rem">
+        <label style="display:flex;align-items:center;gap:.5rem;cursor:pointer;color:var(--cinza-texto);font-size:.8rem;user-select:none">
+          <input type="checkbox" id="jogoAdiadoToggle" onchange="toggleAdiadoFields()">
+          &#x1F4C5; Marcar como Adiado
+        </label>
+        <div id="jogoAdiadoFields" style="display:none;margin-top:.6rem;display:flex;flex-direction:column;gap:.5rem">
+          <input class="form-input" type="text" id="jogoAdiadoMotivo" placeholder="Motivo (ex: jogador doente)" maxlength="120">
+          <div class="form-row">
+            <div class="form-group-modal">
+              <label class="form-label">Reagendado para</label>
+              <input class="form-input" type="date" id="jogoAdiadoData" min="2026-06-05" max="2026-06-14">
+            </div>
+            <div class="form-group-modal">
+              <label class="form-label">Hora</label>
+              <input class="form-input" type="time" id="jogoAdiadoHora" step="1800">
+            </div>
+          </div>
+          <p style="font-size:.7rem;color:var(--cinza-texto);margin:0">Se preencher nova data e hora, o jogo regressa ao calend&aacute;rio normal nessa data (estado Adiado fica limpo).</p>
+        </div>
       </div>
     </div>
     <div class="modal-footer">
