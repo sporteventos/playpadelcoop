@@ -273,14 +273,24 @@
         <!-- Progress per category -->
         <div id="dashAtrasoPanel" class="panel" style="margin-bottom:1.5rem;border:1px solid rgba(255,74,74,.3);background:rgba(255,74,74,.04);display:none">
           <div class="panel-header" style="color:var(--vermelho)">
-            <span class="panel-title" style="color:var(--vermelho)"><i class="ph ph-warning-circle"></i> <span id="dashAtrasoCount">Jogos em atraso</span></span>
+            <span class="panel-title" id="dashAtrasoTitle" style="color:var(--vermelho)"><i class="ph ph-warning-circle"></i> <span id="dashAtrasoCount">Jogos em atraso</span></span>
             <button class="panel-action" onclick="navigate('resultados')">Ver resultados →</button>
           </div>
-          <div class="table-wrap">
-            <table>
-              <thead><tr><th>Data</th><th>Hora</th><th>Campo</th><th>Grupo</th><th style="text-align:right">Equipa 1</th><th></th><th>Equipa 2</th><th></th></tr></thead>
-              <tbody id="dashAtrasoBody"></tbody>
-            </table>
+          <!-- Sub-section: suspensos -->
+          <div id="dashSuspensoSection" style="display:none;padding:.4rem 1rem .2rem;border-bottom:1px solid rgba(255,154,60,.2)">
+            <div style="font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#FF9A3C;margin-bottom:.35rem">⏸ Jogos Interrompidos — aguardam retoma</div>
+            <div class="table-wrap">
+              <table><thead><tr><th>Data</th><th>Hora</th><th>Campo</th><th>Grupo</th><th style="text-align:right">Equipa 1</th><th></th><th>Equipa 2</th><th>Parcial / Serve</th><th></th></tr></thead>
+              <tbody id="dashSuspensoBody"></tbody></table>
+            </div>
+          </div>
+          <!-- Sub-section: em falta -->
+          <div id="dashEmFaltaSection" style="display:none;padding:.4rem 1rem .2rem">
+            <div style="font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--vermelho);margin-bottom:.35rem"><i class="ph ph-warning"></i> Sem resultado — data já passou</div>
+            <div class="table-wrap">
+              <table><thead><tr><th>Data</th><th>Hora</th><th>Campo</th><th>Grupo</th><th style="text-align:right">Equipa 1</th><th></th><th>Equipa 2</th><th></th></tr></thead>
+              <tbody id="dashAtrasoBody"></tbody></table>
+            </div>
           </div>
         </div>
 

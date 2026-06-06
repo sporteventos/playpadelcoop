@@ -1849,27 +1849,85 @@ function renderDashboard() {
 
   // Jogos em atraso: pendentes cuja data+hora já passou
   const nowStr = new Date().toISOString().slice(0, 16); // "YYYY-MM-DDTHH:mm"
-  const emAtraso = jogos.filter(j => !j.resultado && j.data && j.hora && (j.data + 'T' + j.hora) < nowStr);
+  const emAtraso   = jogos.filter(j => !j.resultado && j.data && j.hora && (j.data + 'T' + j.hora) < nowStr);
+  const suspensos  = emAtraso.filter(j => !!j.suspenso);
+  const emFalta    = emAtraso.filter(j => !j.suspenso);
+
+  // Badge shows only truly missing games (not suspended)
   const dashAtraso = document.getElementById('dashEmAtraso');
-  if (dashAtraso) dashAtraso.textContent = emAtraso.length;
+  if (dashAtraso) dashAtraso.textContent = emFalta.length || emAtraso.length;
   const badgeAtraso = document.getElementById('badgeAtraso');
-  if (badgeAtraso) { badgeAtraso.textContent = emAtraso.length; badgeAtraso.style.display = emAtraso.length ? '' : 'none'; }
+  if (badgeAtraso) { badgeAtraso.textContent = emFalta.length; badgeAtraso.style.display = emFalta.length ? '' : 'none'; }
+
   const dashAtrasoPanel = document.getElementById('dashAtrasoPanel');
   if (dashAtrasoPanel) {
-    dashAtrasoPanel.style.display = emAtraso.length ? '' : 'none';
-    document.getElementById('dashAtrasoCount').textContent = emAtraso.length + (emAtraso.length === 1 ? ' jogo em atraso' : ' jogos em atraso');
-    document.getElementById('dashAtrasoBody').innerHTML = emAtraso.slice(0, 5).map(j =>
-      `<tr style="background:rgba(255,74,74,.04)">
-        <td><span class="td-mono" style="color:var(--vermelho)">${formatDate(j.data)}</span></td>
-        <td style="color:var(--vermelho);font-weight:700">${j.hora}</td>
-        <td><span class="badge badge-cinza">${j.campo}</span></td>
-        <td><span class="cat-pill cat-${j.grupo.split('-')[0]}">${j.grupo}</span></td>
-        <td style="text-align:right">${j.eq1.split(' & ').join('<br>')}</td>
-        <td style="color:var(--cinza-texto);padding:0 .4rem">VS</td>
-        <td>${j.eq2.split(' & ').join('<br>')}</td>
-        <td><button class="btn btn-danger btn-sm" style="font-size:.65rem;padding:.2rem .5rem" onclick="abrirResultado(${j.id})"><i class="ph ph-pencil-simple"></i> Lançar</button></td>
-      </tr>`
-    ).join('');
+    const hasAny = emAtraso.length > 0;
+    dashAtrasoPanel.style.display = hasAny ? '' : 'none';
+
+    // Panel border/bg: red if there are missing games, orange if only suspended
+    if (emFalta.length) {
+      dashAtrasoPanel.style.border = '1px solid rgba(255,74,74,.3)';
+      dashAtrasoPanel.style.background = 'rgba(255,74,74,.04)';
+    } else {
+      dashAtrasoPanel.style.border = '1px solid rgba(255,154,60,.3)';
+      dashAtrasoPanel.style.background = 'rgba(255,154,60,.04)';
+    }
+
+    // Header label
+    const titleEl = document.getElementById('dashAtrasoTitle');
+    const countEl = document.getElementById('dashAtrasoCount');
+    if (titleEl) {
+      titleEl.style.color = emFalta.length ? 'var(--vermelho)' : '#FF9A3C';
+      titleEl.querySelector('i').className = emFalta.length ? 'ph ph-warning-circle' : 'ph ph-pause-circle';
+    }
+    if (countEl) {
+      const parts = [];
+      if (emFalta.length)   parts.push(`${emFalta.length} jogo${emFalta.length > 1 ? 's' : ''} sem resultado`);
+      if (suspensos.length) parts.push(`${suspensos.length} interrompido${suspensos.length > 1 ? 's' : ''}`);
+      countEl.textContent = parts.join('  ·  ');
+    }
+
+    // Suspended sub-section
+    const suspSection = document.getElementById('dashSuspensoSection');
+    const suspBody    = document.getElementById('dashSuspensoBody');
+    if (suspSection) suspSection.style.display = suspensos.length ? '' : 'none';
+    if (suspBody) {
+      suspBody.innerHTML = suspensos.slice(0, 5).map(j => {
+        const s = j.suspenso;
+        const partial = [s.s1eq1!=null?`${s.s1eq1}-${s.s1eq2}`:null, s.s2eq1!=null?`${s.s2eq1}-${s.s2eq2}`:null, s.s3eq1!=null?`${s.s3eq1}-${s.s3eq2}`:null].filter(Boolean).join(' / ');
+        const serve = s.serve && s.serve !== 'eq1' && s.serve !== 'eq2' ? `<span style="color:#FF9A3C;font-size:.7rem">⚡ ${escHtml(s.serve)}</span>` : '';
+        return `<tr style="background:rgba(255,154,60,.04)">
+          <td><span class="td-mono" style="color:#FF9A3C">${formatDate(j.data)}</span></td>
+          <td style="color:#FF9A3C;font-weight:700">${j.hora}</td>
+          <td><span class="badge badge-cinza">${j.campo}</span></td>
+          <td><span class="cat-pill cat-${j.grupo.split('-')[0]}">${j.grupo}</span></td>
+          <td style="text-align:right">${j.eq1.split(' & ').join('<br>')}</td>
+          <td style="color:var(--cinza-texto);padding:0 .4rem">VS</td>
+          <td>${j.eq2.split(' & ').join('<br>')}</td>
+          <td style="font-size:.75rem;color:var(--cinza-texto)">${partial ? `<span style="font-family:monospace">${partial}</span>` : ''}${serve ? '<br>' + serve : ''}</td>
+          <td><button class="btn btn-sm" style="font-size:.65rem;padding:.2rem .5rem;background:rgba(255,154,60,.15);color:#FF9A3C;border:1px solid rgba(255,154,60,.4)" onclick="abrirResultado(${j.id})"><i class="ph ph-arrow-clockwise"></i> Retomar</button></td>
+        </tr>`;
+      }).join('');
+    }
+
+    // Missing (no result, no suspend) sub-section
+    const faltaSection = document.getElementById('dashEmFaltaSection');
+    const faltaBody    = document.getElementById('dashAtrasoBody');
+    if (faltaSection) faltaSection.style.display = emFalta.length ? '' : 'none';
+    if (faltaBody) {
+      faltaBody.innerHTML = emFalta.slice(0, 5).map(j =>
+        `<tr style="background:rgba(255,74,74,.04)">
+          <td><span class="td-mono" style="color:var(--vermelho)">${formatDate(j.data)}</span></td>
+          <td style="color:var(--vermelho);font-weight:700">${j.hora}</td>
+          <td><span class="badge badge-cinza">${j.campo}</span></td>
+          <td><span class="cat-pill cat-${j.grupo.split('-')[0]}">${j.grupo}</span></td>
+          <td style="text-align:right">${j.eq1.split(' & ').join('<br>')}</td>
+          <td style="color:var(--cinza-texto);padding:0 .4rem">VS</td>
+          <td>${j.eq2.split(' & ').join('<br>')}</td>
+          <td><button class="btn btn-danger btn-sm" style="font-size:.65rem;padding:.2rem .5rem" onclick="abrirResultado(${j.id})"><i class="ph ph-pencil-simple"></i> Lançar</button></td>
+        </tr>`
+      ).join('');
+    }
   }
 
   // Próximos jogos pendentes: group stage first, then FF (only where both teams known)
