@@ -3333,6 +3333,12 @@ window.abrirResultado = function(jogoId) {
   const _suspNota   = document.getElementById('resSuspensoNota');
   APP._suspensoServe = null;
   if (_suspNota) _suspNota.value = '';
+
+  // Reset adiado panel
+  const _adiadoBanner = document.getElementById('resAdiadoBanner');
+  const _adiadoMotivo = document.getElementById('resAdiadoMotivo');
+  if (_adiadoBanner) _adiadoBanner.style.display = 'none';
+  if (_adiadoMotivo) _adiadoMotivo.value = '';
   // Build per-player serve buttons from actual team names
   const _serveBtnsWrap = document.getElementById('resSuspensoServeBtns');
   if (_serveBtnsWrap) {
@@ -3422,6 +3428,12 @@ window.abrirResultado = function(jogoId) {
     }
   }
 
+  // Pre-fill adiado banner if game is already marked as adiado
+  if (j.adiado && !j.resultado) {
+    if (_adiadoBanner) _adiadoBanner.style.display = '';
+    if (_adiadoMotivo) _adiadoMotivo.value = j.adiado.motivo || '';
+  }
+
   openModal('modalResultado');
 };
 
@@ -3461,6 +3473,38 @@ window.selectSuspensoServe = function(playerName) {
     btn.style.borderColor  = active ? 'rgba(255,154,60,.6)' : '';
     btn.style.fontWeight   = active ? '700' : '';
   });
+};
+
+window.adiarJogo = function() {
+  if (APP.ffEditing) return toast('Adiamento não disponível para jogos de Fase Final.', 'error');
+  if (!APP.editingId) return;
+  const banner = document.getElementById('resAdiadoBanner');
+  // First click: show the banner so user fills in motivo
+  if (!banner || banner.style.display === 'none') {
+    if (banner) banner.style.display = '';
+    document.getElementById('resAdiadoMotivo')?.focus();
+    return;
+  }
+  // Second click (banner already visible): save
+  const motivo = (document.getElementById('resAdiadoMotivo')?.value || '').trim();
+  const jogos = getData('jogos');
+  const idx = jogos.findIndex(j => j.id === APP.editingId);
+  if (idx < 0) return;
+  jogos[idx].adiado   = { motivo, ts: Date.now() };
+  jogos[idx].suspenso = null;
+  // Save any schedule edits too
+  const newData  = document.getElementById('resData')?.value;
+  const newHora  = document.getElementById('resHora')?.value;
+  const newCampo = document.getElementById('resCampo')?.value;
+  if (newData)  jogos[idx].data  = newData;
+  if (newHora)  jogos[idx].hora  = newHora;
+  if (newCampo) jogos[idx].campo = newCampo;
+  setData('jogos', jogos);
+  closeModal('modalResultado');
+  renderView(APP.currentView);
+  updateAlertBanner();
+  Auth.log('ADIAR_JOGO', 'jogos', `Jogo #${APP.editingId} adiado${motivo ? ': '+motivo : ''}`);
+  toast(motivo ? `Jogo adiado — ${motivo}` : 'Jogo marcado como adiado.');
 };
 
 window.suspenderJogo = function() {

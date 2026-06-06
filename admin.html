@@ -1373,6 +1373,13 @@
         <input id="resSuspensoNota" class="form-input" type="text" placeholder="Nota opcional (ex: parou no 1.º set 4-5, retoma TBD)" style="font-size:.78rem;padding:.35rem .6rem">
       </div>
 
+      <!-- Jogo adiado: motivo -->
+      <div id="resAdiadoBanner" style="display:none;margin-top:.6rem;padding:.5rem .75rem;border-radius:6px;background:rgba(107,156,247,.08);border:1px solid rgba(107,156,247,.3)">
+        <div style="font-size:.7rem;color:#6B9CF7;font-weight:700;text-transform:uppercase;letter-spacing:.04em;margin-bottom:.45rem">&#x1F4C5; Adiar jogo</div>
+        <input id="resAdiadoMotivo" class="form-input" type="text" placeholder="Motivo (ex: jogador doente, campo indispon&iacute;vel)" maxlength="120" style="font-size:.78rem;padding:.35rem .6rem">
+        <p style="font-size:.68rem;color:var(--cinza-texto);margin:.4rem 0 0">O jogo fica marcado como Adiado. Quando houver nova data, editar o jogo e reagendar.</p>
+      </div>
+
       <!-- Histórico de edições -->
       <div id="resHistorico" style="display:none;margin-top:.75rem;padding:.6rem .75rem;border-radius:6px;background:var(--preto-card);border:1px solid var(--preto-borda)"></div>
 
@@ -1380,6 +1387,7 @@
     <div class="modal-footer">
       <button id="btnLimparResultado" class="btn btn-danger" onclick="limparResultado()"><i class="ph ph-eraser"></i> Limpar</button>
       <button class="btn btn-ghost" onclick="closeModal('modalResultado')">Cancelar</button>
+      <button class="btn" style="background:rgba(107,156,247,.15);color:#6B9CF7;border:1px solid rgba(107,156,247,.4)" onclick="adiarJogo()" title="Marcar jogo como adiado sem resultado"><i class="ph ph-calendar-x"></i> Adiar</button>
       <button class="btn" style="background:rgba(255,154,60,.15);color:#FF9A3C;border:1px solid rgba(255,154,60,.4)" onclick="suspenderJogo()" title="Guardar o estado parcial do jogo — será retomado noutra data"><i class="ph ph-pause-circle"></i> Suspender</button>
       <button class="btn btn-primary" onclick="salvarResultado()"><i class="ph ph-floppy-disk"></i> Guardar</button>
     </div>
