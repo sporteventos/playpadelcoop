@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#00C37B">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Play Padel">
+  <title>Estatísticas · Play Padel Torneio</title>
+  <link rel="stylesheet" href="css/style.css"/>
+  <link rel="stylesheet" href="css/pages.css"/>
+  <script src="https://unpkg.com/@phosphor-icons/web@2.1.1/src/index.js" defer></script>
+  <style>
+    .stats-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .stats-table {
+      width: 100%; border-collapse: collapse; font-size: .88rem;
+    }
+    .stats-table thead tr {
+      border-bottom: 2px solid var(--preto-borda);
+    }
+    .stats-table th {
+      padding: .55rem .75rem; text-align: left;
+      font-size: .68rem; text-transform: uppercase; letter-spacing: .07em;
+      color: var(--cinza-texto); font-weight: 700; white-space: nowrap;
+    }
+    .stats-table th.num { text-align: right; }
+    .stats-table td {
+      padding: .65rem .75rem; border-bottom: 1px solid rgba(255,255,255,.04);
+      vertical-align: middle;
+    }
+    .stats-table tbody tr:hover { background: rgba(255,255,255,.025); }
+    .stats-table td.num { text-align: right; }
+    .rank-medal { font-size: 1.05rem; }
+    .rank-num { font-size: .82rem; font-weight: 700; color: var(--cinza-texto); }
+    .par-name1 { font-size: .9rem; font-weight: 700; color: var(--branco); white-space: nowrap; }
+    .par-name2 { font-size: .78rem; color: var(--cinza-texto); font-weight: 400; }
+    .par-grupo { display: inline-block; font-size: .6rem; font-weight: 700;
+      letter-spacing: .06em; text-transform: uppercase; border-radius: 4px;
+      padding: .1rem .35rem; vertical-align: middle; opacity: .85; margin-left: .35rem; }
+    .stat-v  { color: var(--verde); font-weight: 800; }
+    .stat-d  { color: var(--vermelho); }
+    .stat-pj { color: var(--cinza-texto); }
+    .bar-wrap { display: flex; align-items: center; gap: .5rem; }
+    .bar-bg { flex: 1; height: 5px; background: rgba(255,255,255,.07); border-radius: 3px; overflow: hidden; min-width: 40px; max-width: 80px; }
+    .bar-fill { height: 100%; border-radius: 3px; background: var(--verde); }
+    .pct-txt { font-size: .8rem; color: var(--cinza-texto); min-width: 2.8rem; text-align: right; }
+    .sets-txt { font-size: .82rem; color: var(--cinza-texto); font-variant-numeric: tabular-nums; }
+    .no-results { padding: 3rem 1rem; text-align: center; color: var(--cinza-texto); }
+    .stats-search-wrap { position: relative; max-width: 320px; }
+    .stats-search-wrap i { position: absolute; left: .75rem; top: 50%; transform: translateY(-50%); color: var(--cinza-texto); font-size: .95rem; pointer-events: none; }
+    .stats-search { width: 100%; background: var(--preto-card); border: 1px solid var(--preto-borda); border-radius: 8px; padding: .5rem .75rem .5rem 2.2rem; color: var(--branco); font-size: .85rem; outline: none; }
+    .stats-search:focus { border-color: var(--verde); }
+    .stats-search::placeholder { color: var(--cinza-texto); }
+    .toolbar-row { display: flex; align-items: center; gap: .75rem; flex-wrap: wrap; margin-bottom: 1.25rem; }
+    .sort-select { background: var(--preto-card); border: 1px solid var(--preto-borda); color: var(--branco); font-size: .82rem; padding: .45rem .65rem; border-radius: 8px; cursor: pointer; }
+    .sort-select:focus { outline: none; border-color: var(--verde); }
+    @media (max-width: 520px) {
+      .stats-table th:nth-child(6), .stats-table td:nth-child(6),
+      .stats-table th:nth-child(7), .stats-table td:nth-child(7) { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar" id="navbar">
+  <a class="nav-logo" href="index.html">
+    <img src="playpadellogo.jpg" alt="Play Padel" style="height:34px;width:34px;border-radius:7px;object-fit:cover;flex-shrink:0"/>
+    <div class="nav-logo-text">
+      <span class="nav-logo-title">Play Padel</span>
+      <span class="nav-logo-sub">Torneio 2.º Aniversário</span>
+    </div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html"><i class="ph ph-house nav-icon"></i> Início</a></li>
+    <li><a href="calendario.html"><i class="ph ph-calendar nav-icon"></i> Calendário</a></li>
+    <li><a href="classificacoes.html"><i class="ph ph-trophy nav-icon"></i> Classificações</a></li>
+    <li><a href="fasefinal.html"><i class="ph ph-brackets-round nav-icon"></i> Fase Final</a></li>
+    <li><a href="jogadores.html"><i class="ph ph-users nav-icon"></i> Jogadores</a></li>
+    <li><a href="estatisticas.html" class="active"><i class="ph ph-chart-bar nav-icon"></i> Estatísticas</a></li>
+    <li><a href="regulamento.html"><i class="ph ph-book-open nav-icon"></i> Regulamento</a></li>
+  </ul>
+  <button class="nav-hamburger" id="hamburger" aria-label="Menu" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+<div class="nav-drawer" id="navDrawer">
+  <ul>
+    <li><a href="index.html"><i class="ph ph-house"></i> Início</a></li>
+    <li><a href="calendario.html"><i class="ph ph-calendar"></i> Calendário</a></li>
+    <li><a href="classificacoes.html"><i class="ph ph-trophy"></i> Classificações</a></li>
+    <li><a href="fasefinal.html"><i class="ph ph-brackets-round"></i> Fase Final</a></li>
+    <li><a href="jogadores.html"><i class="ph ph-users"></i> Jogadores</a></li>
+    <li><a href="estatisticas.html" class="active"><i class="ph ph-chart-bar"></i> Estatísticas</a></li>
+    <li><a href="regulamento.html"><i class="ph ph-book-open"></i> Regulamento</a></li>
+  </ul>
+</div>
+
+<!-- PAGE HERO -->
+<div class="page-hero">
+  <div class="page-hero-content">
+    <p class="page-hero-tag"><i class="ph ph-chart-bar"></i> Ranking de Pares</p>
+    <h1 class="page-hero-title">Estatísticas <span>dos Pares</span></h1>
+    <p class="page-hero-sub">Classificação geral por vitórias, derrotas e sets em todos os grupos</p>
+  </div>
+</div>
+
+<!-- FILTROS CATEGORIAS -->
+<div class="filters-bar" id="filtersBar">
+  <div class="filters-inner">
+    <div class="cat-tabs" id="catTabs" role="tablist" aria-label="Categorias"></div>
+  </div>
+</div>
+
+<!-- CONTENT -->
+<main class="page-main">
+  <div class="toolbar-row">
+    <div class="stats-search-wrap">
+      <i class="ph ph-magnifying-glass"></i>
+      <input class="stats-search" id="statsSearch" type="search" placeholder="Pesquisar par…" autocomplete="off"/>
+    </div>
+    <select class="sort-select" id="sortSelect">
+      <option value="v">Ordenar: Vitórias</option>
+      <option value="pct">Ordenar: % Vitória</option>
+      <option value="sets">Ordenar: Diff. Sets</option>
+      <option value="pj">Ordenar: Jogos Jogados</option>
+    </select>
+    <span id="statsCount" style="font-size:.78rem;color:var(--cinza-texto);margin-left:auto"></span>
+  </div>
+  <div class="stats-table-wrap">
+    <table class="stats-table" id="statsTable">
+      <thead>
+        <tr>
+          <th style="width:2.5rem">#</th>
+          <th>Par</th>
+          <th class="num">PJ</th>
+          <th class="num">V</th>
+          <th class="num">D</th>
+          <th class="num">Sets</th>
+          <th>Taxa V%</th>
+        </tr>
+      </thead>
+      <tbody id="statsBody">
+        <tr><td colspan="7" class="no-results">A carregar…</td></tr>
+      </tbody>
+    </table>
+  </div>
+</main>
+
+<footer class="footer">
+  <div class="footer-bottom" style="max-width:1200px;margin:0 auto">
+    <p class="footer-copy">© 2026 <span>Play Padel</span> · Torneio 2.º Aniversário</p>
+    <a href="index.html" class="footer-copy" style="color:var(--verde);text-decoration:none">← Voltar ao início</a>
+  </div>
+</footer>
+
+<script src="js/data.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+
+  // ---- Navbar scroll ----
+  const navbar = document.getElementById('navbar');
+  window.addEventListener('scroll', () => navbar.classList.toggle('scrolled', scrollY > 20));
+
+  // ---- Hamburger ----
+  const hamburger = document.getElementById('hamburger');
+  const drawer    = document.getElementById('navDrawer');
+  hamburger.addEventListener('click', () => {
+    const open = drawer.classList.toggle('open');
+    hamburger.setAttribute('aria-expanded', open);
+  });
+  document.addEventListener('click', e => {
+    if (!drawer.contains(e.target) && !hamburger.contains(e.target)) drawer.classList.remove('open');
+  });
+
+  const CAT_CLR = { M1:'#4A9EFF', M2:'#00C37B', M3:'#39FF8F', M4:'#F5C518', M5:'#FF9A3C', F1:'#FF6BB0', F2:'#C97BFF' };
+  const CATS = [
+    { id:'todos', nome:'Todos' },
+    { id:'M1', nome:'Masculino 1' },
+    { id:'M2', nome:'Masculino 2' },
+    { id:'M3', nome:'Masculino 3' },
+    { id:'M4', nome:'Masculino 4' },
+    { id:'M5', nome:'Masculino 5' },
+    { id:'F1', nome:'Feminino 1' },
+    { id:'F2', nome:'Feminino 2' },
+  ];
+
+  let activeCat = 'todos';
+  let sortKey = 'v';
+  let searchQ = '';
+
+  // ---- Tabs ----
+  const catTabs = document.getElementById('catTabs');
+  CATS.forEach((c, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'day-tab' + (i === 0 ? ' active' : '');
+    btn.textContent = c.id === 'todos' ? 'Todos' : c.id;
+    btn.title = c.nome;
+    btn.dataset.val = c.id;
+    btn.setAttribute('role', 'tab');
+    btn.setAttribute('aria-selected', i === 0);
+    btn.addEventListener('click', () => {
+      activeCat = c.id;
+      catTabs.querySelectorAll('.day-tab').forEach(t => {
+        t.classList.toggle('active', t.dataset.val === c.id);
+        t.setAttribute('aria-selected', t.dataset.val === c.id);
+      });
+      render();
+    });
+    catTabs.appendChild(btn);
+  });
+
+  // ---- Sort & Search ----
+  document.getElementById('sortSelect').addEventListener('change', e => { sortKey = e.target.value; render(); });
+  document.getElementById('statsSearch').addEventListener('input', e => { searchQ = e.target.value.toLowerCase(); render(); });
+
+  // ---- Data ----
+  function buildStats() {
+    const jogosGrupos = ppGet('jogos').filter(j => j.resultado);
+    const ffRaw = ppLoad('fasefinal') || {};
+    const jogosFF = Object.values(ffRaw)
+      .flatMap(cat => (cat && cat.jogos) ? cat.jogos.filter(j => j.eq1 && j.eq2 && j.resultado) : []);
+    const jogos = jogosGrupos.concat(jogosFF);
+
+    const stats = {};
+    function add(par, grupo, win, sw, sl) {
+      if (!par) return;
+      if (!stats[par]) {
+        const cat = grupo ? grupo.replace(/-.*$/, '') : '';
+        stats[par] = { par, cat, grupo, pj:0, v:0, d:0, sw:0, sl:0 };
+      }
+      stats[par].pj++;
+      if (win) stats[par].v++; else stats[par].d++;
+      stats[par].sw += sw; stats[par].sl += sl;
+    }
+
+    jogos.forEach(j => {
+      const r = j.resultado;
+      if (r.wo) {
+        // WO: winner gets 1 win, loser 1 loss, no sets
+        if (r.wo === 'eq1') { add(j.eq2, j.grupo, true, 0, 0); add(j.eq1, j.grupo, false, 0, 0); }
+        else                { add(j.eq1, j.grupo, true, 0, 0); add(j.eq2, j.grupo, false, 0, 0); }
+        return;
+      }
+      const allSets = [[r.s1eq1,r.s1eq2],[r.s2eq1,r.s2eq2],[r.s3eq1,r.s3eq2]].filter(([a]) => a != null);
+      let v1=0, v2=0, sw1=0, sl1=0;
+      allSets.forEach(([a,b]) => { if(a>b) v1++; else v2++; sw1+=a; sl1+=b; });
+      add(j.eq1, j.grupo, v1>v2, sw1, sl1);
+      add(j.eq2, j.grupo, v2>v1, sl1, sw1);
+    });
+
+    return Object.values(stats);
+  }
+
+  const medals = ['\uD83E\uDD47','\uD83E\uDD48','\uD83E\uDD49'];
+
+  function sortFn(a, b) {
+    if (sortKey === 'pct') {
+      const pa = a.pj ? a.v/a.pj : 0, pb = b.pj ? b.v/b.pj : 0;
+      return pb - pa || b.v - a.v || a.d - b.d;
+    }
+    if (sortKey === 'sets') return (b.sw-b.sl) - (a.sw-a.sl) || b.v - a.v;
+    if (sortKey === 'pj')   return b.pj - a.pj || b.v - a.v;
+    // default: v
+    return b.v - a.v || a.d - b.d || (b.sw-b.sl)-(a.sw-a.sl);
+  }
+
+  function escHtml(s) { return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+  function render() {
+    let rows = buildStats();
+    if (activeCat !== 'todos') rows = rows.filter(s => s.cat === activeCat);
+    if (searchQ) rows = rows.filter(s => s.par.toLowerCase().includes(searchQ));
+    rows.sort(sortFn);
+
+    document.getElementById('statsCount').textContent = rows.length + ' pares';
+
+    const tbody = document.getElementById('statsBody');
+    if (!rows.length) {
+      tbody.innerHTML = `<tr><td colspan="7" class="no-results">Nenhum resultado encontrado.</td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = rows.map((s, i) => {
+      const pct = s.pj ? Math.round(s.v / s.pj * 100) : 0;
+      const parts = s.par.split(' & ');
+      const cat = s.cat || '';
+      const clr = CAT_CLR[cat] || '#8AA396';
+      const rankCell = i < 3
+        ? `<span class="rank-medal">${medals[i]}</span>`
+        : `<span class="rank-num">${i+1}</span>`;
+      const grupoTag = s.grupo
+        ? `<span class="par-grupo" style="background:${clr}22;color:${clr};border:1px solid ${clr}44">${escHtml(s.grupo)}</span>`
+        : '';
+      return `<tr>
+        <td style="text-align:center">${rankCell}</td>
+        <td>
+          <div class="par-name1">${escHtml(parts[0])}${grupoTag}</div>
+          ${parts[1] ? `<div class="par-name2">${escHtml(parts[1])}</div>` : ''}
+        </td>
+        <td class="num stat-pj">${s.pj}</td>
+        <td class="num stat-v">${s.v}</td>
+        <td class="num stat-d">${s.d}</td>
+        <td class="num sets-txt">${s.sw}-${s.sl}</td>
+        <td>
+          <div class="bar-wrap">
+            <div class="bar-bg"><div class="bar-fill" style="width:${pct}%"></div></div>
+            <span class="pct-txt">${pct}%</span>
+          </div>
+        </td>
+      </tr>`;
+    }).join('');
+  }
+
+  render();
+});
+</script>
+<script>
+  /* Reload once when remote data.json is fetched — gives all visitors live results */
+  (function() {
+    var key = '_pp_synced_stats';
+    if (!sessionStorage.getItem(key)) {
+      window.addEventListener('pp:datasynced', function() {
+        sessionStorage.setItem(key, '1');
+        location.reload();
+      }, { once: true });
+    }
+  }());
+</script>
+<script>if("serviceWorker"in navigator){navigator.serviceWorker.register("/playpadelcoop/sw.js").catch(function(){});}</script>
+</body>
+</html>

@@ -7,6 +7,7 @@ const PRECACHE = [
   '/playpadelcoop/classificacoes.html',
   '/playpadelcoop/fasefinal.html',
   '/playpadelcoop/jogadores.html',
+  '/playpadelcoop/estatisticas.html',
   '/playpadelcoop/regulamento.html',
   '/playpadelcoop/manifest.json',
   '/playpadelcoop/icon-192.png',
