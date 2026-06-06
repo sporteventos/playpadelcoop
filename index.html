@@ -487,7 +487,7 @@
       if (s.s2eq1 != null) parts.push(s.s2eq1 + '-' + s.s2eq2);
       if (s.s3eq1 != null) parts.push(s.s3eq1 + '-' + s.s3eq2);
       var partial = parts.join(' ');
-      statusHtml = '<div class="jogo-status" style="color:#FF9A3C;border-color:rgba(255,154,60,.3);background:rgba(255,154,60,.08)"><i class="ph ph-pause-circle"></i> Interrompido' + (partial ? ' <span style="font-family:monospace;font-size:.7rem">' + partial + '</span>' : '') + '</div>';
+      statusHtml = '<div class="jogo-status" style="color:#FF9A3C;border-color:rgba(255,154,60,.3);background:rgba(255,154,60,.08);flex-direction:column;align-items:flex-end;gap:.15rem"><span><i class="ph ph-pause-circle"></i> Interrompido</span>' + (partial ? '<span style="font-family:monospace;font-size:.75rem;letter-spacing:.03em">&thinsp;' + partial + '</span>' : '') + '</div>';
       cardStyle = 'border-color:rgba(255,154,60,.25);';
     } else if (j._overdue) {
       statusHtml = '<div class="jogo-status" style="color:var(--vermelho);border-color:rgba(255,74,74,.3);background:rgba(255,74,74,.06)"><i class="ph ph-warning-circle"></i> Sem resultado</div>';
