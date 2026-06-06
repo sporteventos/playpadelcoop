@@ -2663,7 +2663,20 @@
       "grupo": "M4-B",
       "eq1": "Andrea & Mikel Álvarez",
       "eq2": "Alao Almeida & Ayaan Mussa",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 6,
+        "s1eq2": 1,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 6,
+        "s2eq2": 4,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": null,
+        "s3eq2": null,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 50,
@@ -3598,6 +3611,16 @@
     }
   ],
   "auditlog": [
+    {
+      "id": "mq2sgm5qovt1jr2",
+      "userId": "mpzxoo1v8l1za3r",
+      "username": "djanasse",
+      "role": "operator",
+      "action": "SAVE_RESULT",
+      "target": "resultados",
+      "detail": "Resultado guardado: jogo #49",
+      "ts": "2026-06-06T20:11:27.662Z"
+    },
     {
       "id": "mq2rzz9bmlvzrb8",
       "userId": "mpzxoo1v8l1za3r",
@@ -8399,5 +8422,5 @@
       "ts": "2026-06-03T06:06:37.211Z"
     }
   ],
-  "_updated": "2026-06-06T19:58:53.512Z"
+  "_updated": "2026-06-06T20:11:52.439Z"
 }
