@@ -2274,7 +2274,21 @@
       "grupo": "F1-A",
       "eq1": "Caironice & Carmen",
       "eq2": "Cynthia Cavalcanti & Kátia Sousa",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 7,
+        "s1eq2": 6,
+        "tb1eq1": 7,
+        "tb1eq2": 5,
+        "s2eq1": 4,
+        "s2eq2": 6,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": 6,
+        "s3eq2": 4,
+        "tb3eq1": null,
+        "tb3eq2": null
+      },
+      "suspenso": null
     },
     {
       "id": 34,
@@ -3518,6 +3532,16 @@
     }
   ],
   "auditlog": [
+    {
+      "id": "mq2nq1yg3avm964",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "SAVE_RESULT",
+      "target": "resultados",
+      "detail": "Resultado guardado: jogo #32",
+      "ts": "2026-06-06T17:58:49.960Z"
+    },
     {
       "id": "mq2njwj3g94kc11",
       "userId": "mpz8aq9sg983ubo",
@@ -8209,5 +8233,5 @@
       "ts": "2026-06-03T06:06:37.211Z"
     }
   ],
-  "_updated": "2026-06-06T17:54:37.926Z"
+  "_updated": "2026-06-06T17:59:29.461Z"
 }
