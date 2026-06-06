@@ -23,6 +23,74 @@
       padding: .05rem .35rem; border-radius: 4px; margin-left: .35rem;
       vertical-align: middle;
     }
+    /* ---- View toggle ---- */
+    .view-toggle {
+      display: flex; gap: 0; border: 1px solid var(--preto-borda, #1C2620);
+      border-radius: 7px; overflow: hidden; flex-shrink: 0;
+    }
+    .view-toggle-btn {
+      background: transparent; border: none; cursor: pointer;
+      padding: .38rem .7rem; color: #8AA396; font-size: .8rem;
+      display: flex; align-items: center; gap: .3rem;
+      transition: background .15s, color .15s;
+    }
+    .view-toggle-btn.active {
+      background: var(--verde, #00C37B); color: #0A0F0D; font-weight: 700;
+    }
+    .view-toggle-btn:not(.active):hover { background: rgba(255,255,255,.05); }
+    /* ---- Schedule grid (grade view) ---- */
+    .sched-wrap { overflow-x: auto; padding-bottom: 1rem; }
+    .sched-day-label {
+      font-size: .78rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .07em; color: var(--verde, #00C37B);
+      padding: 1.1rem 0 .45rem; display: flex; align-items: center; gap: .5rem;
+    }
+    .sched-table {
+      width: 100%; border-collapse: separate; border-spacing: 4px;
+      min-width: 480px;
+    }
+    .sched-th {
+      background: var(--preto-card, #111815); border: 1px solid var(--preto-borda, #1C2620);
+      border-radius: 6px; padding: .4rem .6rem; font-size: .72rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .06em; text-align: center;
+      white-space: nowrap; position: sticky; top: 0; z-index: 2;
+    }
+    .sched-th-time { color: #4A6058; min-width: 54px; }
+    .sched-time-cell {
+      color: #4A6058; font-size: .75rem; font-weight: 700; font-family: monospace;
+      text-align: center; vertical-align: middle; padding: 2px 4px; white-space: nowrap;
+    }
+    .sched-cell {
+      border-radius: 7px; border: 1px solid var(--preto-borda, #1C2620);
+      vertical-align: top; padding: 5px 7px; min-width: 130px;
+      background: var(--preto-card, #111815); transition: border-color .15s;
+    }
+    .sched-cell:hover { border-color: rgba(0,195,123,.35); }
+    .sched-cell-empty {
+      background: transparent; border-color: rgba(255,255,255,.04);
+    }
+    .sched-cell-done  { border-left: 3px solid #00C37B; }
+    .sched-cell-wo    { border-left: 3px solid #FF4A4A; }
+    .sched-cell-susp  { border-left: 3px solid #FF9A3C; }
+    .sched-cell-pend  { border-left: 3px solid rgba(245,197,24,.5); }
+    .sched-grupo {
+      display: inline-block; font-size: .62rem; font-weight: 700;
+      padding: .08rem .32rem; border-radius: 3px; margin-bottom: 4px;
+    }
+    .sched-teams {
+      font-size: .72rem; line-height: 1.35; color: #F0F7F3;
+    }
+    .sched-teams .w { color: #39FF8F; font-weight: 600; }
+    .sched-teams .l { color: #8AA396; }
+    .sched-score {
+      font-size: .68rem; margin-top: 3px; font-weight: 700;
+      font-family: monospace;
+    }
+    .sched-score-done  { color: #00C37B; }
+    .sched-score-pend  { color: #8AA396; font-weight: 400; }
+    .sched-score-susp  { color: #FF9A3C; }
+    .sched-score-wo    { color: #FF4A4A; }
+    .sched-vs { color: #4A6058; font-size: .62rem; }
   </style>
 </head>
 <body>
@@ -106,6 +174,11 @@
         <i class="ph ph-magnifying-glass"></i>
         <input type="search" id="searchJogador" class="search-input" placeholder="Pesquisar jogador…"/>
       </div>
+      <!-- View toggle -->
+      <div class="view-toggle" role="group" aria-label="Vista">
+        <button class="view-toggle-btn active" id="btnViewLista" onclick="setView('lista')" title="Vista em lista"><i class="ph ph-list"></i> Lista</button>
+        <button class="view-toggle-btn" id="btnViewGrade" onclick="setView('grade')" title="Vista em grade de horário"><i class="ph ph-table"></i> Grade</button>
+      </div>
     </div>
 
   </div>
@@ -151,6 +224,16 @@ document.addEventListener('DOMContentLoaded', () => {
   let activeGrupo  = 'todos';
   let activeEstado = 'todos';
   let activeSearch = '';
+  let activeView   = 'lista';
+
+  window.setView = function(v) {
+    activeView = v;
+    document.getElementById('btnViewLista').classList.toggle('active', v === 'lista');
+    document.getElementById('btnViewGrade').classList.toggle('active', v === 'grade');
+    // Hide search & grupo filter (not meaningful in grid)
+    document.querySelector('.search-wrap').style.display = v === 'grade' ? 'none' : '';
+    render();
+  };
 
   // ---- Construir tabs de dias ----
   const jogos = ppGet('jogos');
@@ -257,6 +340,8 @@ document.addEventListener('DOMContentLoaded', () => {
     empty.classList.add('hidden');
     summary.textContent = `${list.length} jogo${list.length !== 1 ? 's' : ''} encontrado${list.length !== 1 ? 's' : ''}`;
 
+    if (activeView === 'grade') { container.innerHTML = renderGrid(list); return; }
+
     // Agrupar por data → campo → hora
     const byDate = {};
     list.forEach(j => {
@@ -352,8 +437,102 @@ document.addEventListener('DOMContentLoaded', () => {
     </div>`;
   }
 
-  function setsCount(r) {
-    if (r.wo) return r.wo === 'eq1' ? { w1: 0, w2: 2 } : { w1: 2, w2: 0 };
+  // ---- Grid (grade) render ----
+  const CAMPO_ORDER = ['Play Padel', 'TVCabo', 'Stella Artois', 'Fase Final'];
+  const CAMPO_CLR   = { 'Play Padel':'#00C37B', 'TVCabo':'#4A9EFF', 'Stella Artois':'#F5C518', 'Fase Final':'#C97BFF' };
+  const CAT_CLR_G   = { M1:'#4A9EFF', M2:'#00C37B', M3:'#39FF8F', M4:'#F5C518', M5:'#FF9A3C', F1:'#FF6BB0', F2:'#C97BFF' };
+
+  function renderGrid(list) {
+    // Group by date
+    const dates = [...new Set(list.map(j => j.data).filter(Boolean))].sort();
+    if (!dates.length) return '';
+
+    let html = '<div class="sched-wrap">';
+
+    dates.forEach(data => {
+      const dayList = list.filter(j => j.data === data);
+      // Campos present (respect filter)
+      const camposPresent = activeCampo !== 'todos'
+        ? [activeCampo]
+        : [...new Set(dayList.map(j => j.campo))].sort((a,b) =>
+            (CAMPO_ORDER.indexOf(a) + 1 || 99) - (CAMPO_ORDER.indexOf(b) + 1 || 99));
+      // Hours present
+      const hours = [...new Set(dayList.map(j => j.hora).filter(Boolean))].sort();
+
+      // Index: hora -> campo -> jogo
+      const idx = {};
+      dayList.forEach(j => { (idx[j.hora] = idx[j.hora] || {})[j.campo] = j; });
+
+      // Day label
+      const wday = typeof ppWeekday === 'function' ? ppWeekday(data) : data;
+      const dstr = typeof ppFormatDate === 'function' ? ppFormatDate(data) : data;
+      html += `<div class="sched-day-label"><i class="ph ph-calendar-blank"></i>${wday}, ${dstr}</div>`;
+
+      html += '<table class="sched-table"><thead><tr>';
+      html += `<th class="sched-th sched-th-time">Hora</th>`;
+      camposPresent.forEach(c => {
+        const clr = CAMPO_CLR[c] || '#8AA396';
+        html += `<th class="sched-th" style="color:${clr}">${c}</th>`;
+      });
+      html += '</tr></thead><tbody>';
+
+      hours.forEach(hora => {
+        html += '<tr>';
+        html += `<td class="sched-time-cell">${hora}</td>`;
+        camposPresent.forEach(campo => {
+          const j = idx[hora]?.[campo];
+          if (!j) { html += '<td class="sched-cell sched-cell-empty"></td>'; return; }
+
+          const temRes  = !!j.resultado;
+          const isWo    = temRes && !!j.resultado.wo;
+          const isSusp  = !temRes && !!j.suspenso;
+          const cat     = j.grupo.split('-')[0];
+          const catClr  = CAT_CLR_G[cat] || '#8AA396';
+
+          let stateClass = 'sched-cell-pend';
+          let scoreHtml  = '<span class="sched-score sched-score-pend">Pendente</span>';
+
+          if (isWo) {
+            stateClass = 'sched-cell-wo';
+            scoreHtml  = '<span class="sched-score sched-score-wo">W.O.</span>';
+          } else if (isSusp) {
+            stateClass = 'sched-cell-susp';
+            const s = j.suspenso;
+            const p = [s.s1eq1!=null?`${s.s1eq1}-${s.s1eq2}`:null,s.s2eq1!=null?`${s.s2eq1}-${s.s2eq2}`:null].filter(Boolean).join(' / ');
+            scoreHtml  = `<span class="sched-score sched-score-susp">⏸${p?' '+p:''}</span>`;
+          } else if (temRes) {
+            stateClass = 'sched-cell-done';
+            const sc = setsCount(j.resultado);
+            const win = winnerIs(j);
+            scoreHtml = `<span class="sched-score sched-score-done">${sc.w1}–${sc.w2}</span>`;
+          }
+
+          const win = winnerIs(j);
+          const e1cls = temRes ? (win===1?'w':'l') : '';
+          const e2cls = temRes ? (win===2?'w':'l') : '';
+          const e1 = j.eq1.split(' & ');
+          const e2 = j.eq2.split(' & ');
+          const teamHtml = (parts, cls) => parts.map(p => `<span class="${cls}">${p}</span>`).join('<br>');
+
+          html += `<td class="sched-cell ${stateClass}">`;
+          html += `<div><span class="sched-grupo" style="background:${catClr}22;color:${catClr}">${j.grupo}</span></div>`;
+          html += `<div class="sched-teams">${teamHtml(e1,e1cls)}</div>`;
+          html += `<div class="sched-vs">vs</div>`;
+          html += `<div class="sched-teams">${teamHtml(e2,e2cls)}</div>`;
+          html += scoreHtml;
+          html += '</td>';
+        });
+        html += '</tr>';
+      });
+
+      html += '</tbody></table>';
+    });
+
+    html += '</div>';
+    return html;
+  }
+
+  function setsCount(r) {    if (r.wo) return r.wo === 'eq1' ? { w1: 0, w2: 2 } : { w1: 2, w2: 0 };
     let w1 = 0, w2 = 0;
     if (r.s1eq1 > r.s1eq2) w1++; else w2++;
     if (r.s2eq1 !== null) { if (r.s2eq1 > r.s2eq2) w1++; else w2++; }
