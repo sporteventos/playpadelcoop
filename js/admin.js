@@ -2069,8 +2069,44 @@ function updateAlertBanner() {
   const banner = document.getElementById('alertBanner');
   const msg    = document.getElementById('alertBannerMsg');
   if (!banner || !msg) return;
-  if (pending > 20) {
+
+  // Detect scheduling conflicts across all dates
+  const playerDays = {}; // key: "player|date" → [hours]
+  const campoSlots = {}; // key: "campo|date|hora" → count
+  jogos.forEach(j => {
+    if (!j.data) return;
+    if (j.hora && j.campo) {
+      const ck = `${j.campo}|${j.data}|${j.hora}`;
+      campoSlots[ck] = (campoSlots[ck] || 0) + 1;
+    }
+    [j.eq1, j.eq2].forEach(pair => {
+      if (!pair) return;
+      pair.split(' & ').forEach(p => {
+        const k = `${p.trim().toLowerCase()}|${j.data}`;
+        if (!playerDays[k]) playerDays[k] = [];
+        if (j.hora) playerDays[k].push(j.hora);
+      });
+    });
+  });
+  const playerConflicts = Object.entries(playerDays).filter(([,h]) => h.length > 1).length;
+  const campoConflicts  = Object.values(campoSlots).filter(n => n > 1).length;
+  const totalConflicts  = playerConflicts + campoConflicts;
+
+  if (totalConflicts > 0) {
+    const parts = [];
+    if (playerConflicts) parts.push(`${playerConflicts} jogador${playerConflicts>1?'es':''} com jogos duplicados no mesmo dia`);
+    if (campoConflicts)  parts.push(`${campoConflicts} campo${campoConflicts>1?'s':''} duplamente reservado${campoConflicts>1?'s':''}`);
+    msg.innerHTML = `<i class="ph ph-warning" style="margin-right:.3rem"></i> ${parts.join(' · ')} — verifique o Construtor de Horário`;
+    banner.style.background = 'rgba(255,74,74,.12)';
+    banner.style.borderBottomColor = 'rgba(255,74,74,.3)';
+    msg.style.color = 'var(--vermelho)';
+    banner.querySelector('button')?.style.setProperty('background','rgba(255,74,74,.2)');
+    banner.style.display = 'flex';
+  } else if (pending > 20) {
     msg.textContent = `${pending} jogos ainda sem resultado.`;
+    banner.style.background = '';
+    banner.style.borderBottomColor = '';
+    msg.style.color = 'var(--amarelo)';
     banner.style.display = 'flex';
   } else {
     banner.style.display = 'none';
@@ -5499,25 +5535,85 @@ function renderHorario() {
     .filter(([,slots]) => slots.length > 1)
     .map(([k]) => k));
 
+  // Back-to-back: player with games in consecutive hours (≤ 60 min apart)
+  const backToBackPlayers = new Set(Object.entries(playerSlots)
+    .filter(([,slots]) => {
+      if (slots.length < 2) return false;
+      const sorted = [...new Set(slots)].sort();
+      for (let i = 0; i < sorted.length - 1; i++) {
+        const [h1,m1] = sorted[i].split(':').map(Number);
+        const [h2,m2] = sorted[i+1].split(':').map(Number);
+        if ((h2*60+m2) - (h1*60+m1) <= 60) return true;
+      }
+      return false;
+    })
+    .map(([k]) => k));
+
+  // Campo double-booked: same court + same hour → more than 1 game
+  const campoSlotMap = {};
+  dayJogos.forEach(j => {
+    if (!j.hora || !j.campo) return;
+    const key = `${j.campo}|${j.hora}`;
+    campoSlotMap[key] = (campoSlotMap[key] || 0) + 1;
+  });
+  const campoConflicts = new Set(Object.entries(campoSlotMap).filter(([,n]) => n > 1).map(([k]) => k));
+
+  // Games with missing campo or hora
+  const incompleteJogos = dayJogos.filter(j => !j._isFaseFinal && (!j.campo || !j.hora));
+
   function hasConflict(j) {
-    return [j.eq1, j.eq2].some(pair => pair?.split(' / ').some(p => conflictPlayers.has(p.trim().toLowerCase())));
+    return [j.eq1, j.eq2].some(pair => pair?.split(' & ').some(p => conflictPlayers.has(p.trim().toLowerCase())))
+      || (j.hora && j.campo && campoConflicts.has(`${j.campo}|${j.hora}`));
+  }
+  function hasBackToBack(j) {
+    return [j.eq1, j.eq2].some(pair => pair?.split(' & ').some(p => backToBackPlayers.has(p.trim().toLowerCase())));
   }
 
-  // Conflict summary banner
-  const conflictSummary = conflictPlayers.size > 0 ? (() => {
-    const pairs = Object.entries(playerSlots)
-      .filter(([k]) => conflictPlayers.has(k))
-      .map(([k, slots]) => {
-        // Find the pair name (original case)
-        let parName = k;
-        dayJogos.forEach(j => [j.eq1, j.eq2].forEach(pair => { if (pair) pair.split(' & ').forEach(p => { if (p.trim().toLowerCase() === k) parName = p.trim(); }); }));
-        return `<span style="font-weight:700;color:var(--branco)">${escHtml(parName)}</span> (${slots.join(', ')})`;
-      });
-    return `<div style="background:rgba(255,74,74,.1);border:1px solid rgba(255,74,74,.35);border-radius:8px;padding:.65rem 1rem;margin-bottom:1rem;font-size:.82rem;color:var(--vermelho);display:flex;align-items:flex-start;gap:.6rem">
-      <i class="ph ph-warning" style="font-size:1.1rem;flex-shrink:0;margin-top:.05rem"></i>
-      <div><strong>⚠ Conflito de horário detectado:</strong> ${pairs.join(' &nbsp;|&nbsp; ')}</div>
-    </div>`;
-  })() : '';
+  // Helper: resolve display name from key
+  function playerDisplayName(k) {
+    let name = k;
+    dayJogos.forEach(j => [j.eq1, j.eq2].forEach(pair => { if (pair) pair.split(' & ').forEach(p => { if (p.trim().toLowerCase() === k) name = p.trim(); }); }));
+    return name;
+  }
+
+  // Build conflict summary banner sections
+  const bannerParts = [];
+
+  if (conflictPlayers.size > 0) {
+    const items = [...conflictPlayers].map(k => {
+      const slots = playerSlots[k];
+      return `<span style="font-weight:700;color:var(--branco)">${escHtml(playerDisplayName(k))}</span> (${slots.join(', ')})`;
+    });
+    bannerParts.push({ color: '#FF4A4A', icon: 'ph-warning', title: '⚠ Jogador com 2+ jogos no mesmo dia', items });
+  }
+
+  if (backToBackPlayers.size > 0) {
+    const items = [...backToBackPlayers].map(k => {
+      const sorted = [...new Set(playerSlots[k])].sort();
+      return `<span style="font-weight:700;color:var(--branco)">${escHtml(playerDisplayName(k))}</span> (${sorted.join(' → ')})`;
+    });
+    bannerParts.push({ color: '#FF9A3C', icon: 'ph-clock-countdown', title: '⏱ Jogos consecutivos (≤1h de descanso)', items });
+  }
+
+  if (campoConflicts.size > 0) {
+    const items = [...campoConflicts].map(k => {
+      const [campo, hora] = k.split('|');
+      return `<span style="font-weight:700;color:var(--branco)">${escHtml(campo)}</span> às ${hora}`;
+    });
+    bannerParts.push({ color: '#FF4A4A', icon: 'ph-warning-diamond', title: '🏟 Campo duplamente reservado', items });
+  }
+
+  if (incompleteJogos.length > 0) {
+    const items = incompleteJogos.map(j => `<span style="font-weight:700;color:var(--branco)">#${j.id} ${escHtml(j.grupo)}</span> sem ${!j.hora?'hora':''}${!j.hora&&!j.campo?' e ':''}${!j.campo?'campo':''}`);
+    bannerParts.push({ color: '#F5C518', icon: 'ph-clock', title: '📋 Jogos sem campo/hora', items });
+  }
+
+  const conflictSummary = bannerParts.length > 0
+    ? bannerParts.map(b => `<div style="background:${b.color}18;border:1px solid ${b.color}55;border-radius:8px;padding:.65rem 1rem;margin-bottom:.6rem;font-size:.82rem;color:${b.color};display:flex;align-items:flex-start;gap:.6rem">
+        <i class="ph ${b.icon}" style="font-size:1.1rem;flex-shrink:0;margin-top:.05rem"></i>
+        <div><strong>${b.title}:</strong>&nbsp; ${b.items.join(' &nbsp;·&nbsp; ')}</div>
+      </div>`).join('')
+    : '';
 
   el.innerHTML = conflictSummary + `
     <div class="schedule-grid" style="grid-template-columns:80px ${activeCampos.map(()=>'1fr').join(' ')}">
@@ -5530,16 +5626,21 @@ function renderHorario() {
           const slotAttr = `ondragover="horarioDragOver(event)" ondragleave="horarioDragLeave(event)" ondrop="horarioDrop(event,'${t}','${escHtml(campo)}')"`;
           if (!j) return `<div class="schedule-slot" ${slotAttr}></div>`;
           const conflict = hasConflict(j);
+          const btb = !conflict && hasBackToBack(j);
           const conflictTip = conflict ? (() => {
             const offenders = [j.eq1, j.eq2].flatMap(pair => (pair||'').split(' & ').filter(p => conflictPlayers.has(p.trim().toLowerCase())));
             return offenders.map(p => `${escHtml(p.trim())}: ${playerSlots[p.trim().toLowerCase()].join(', ')}`).join(' | ');
-          })() : '';
+          })() : (btb ? (() => {
+            const offenders = [j.eq1, j.eq2].flatMap(pair => (pair||'').split(' & ').filter(p => backToBackPlayers.has(p.trim().toLowerCase())));
+            return 'Jogo consecutivo: ' + offenders.map(p => `${escHtml(p.trim())} (${[...new Set(playerSlots[p.trim().toLowerCase()])].sort().join(' → ')})`).join(' | ');
+          })() : '');
+          const conflictClass = conflict ? ' has-conflict' : btb ? ' has-btb' : '';
           const e1 = j.eq1 || 'A definir';
           const e2 = j.eq2 || 'A definir';
           const dragAttr = j._isFaseFinal ? '' : `draggable="true" ondragstart="horarioStartDrag(event,'${j.id}')" ondragend="horarioDragEnd(event)"`;
           const moverBtn = j._isFaseFinal ? '' : `<button onclick="event.stopPropagation();horarioMoverDia('${j.id}')" style="margin-top:.35rem;width:100%;background:transparent;border:1px solid var(--preto-borda);border-radius:4px;color:var(--cinza-texto);font-size:.62rem;padding:.15rem .3rem;cursor:pointer;text-align:center" title="Mover para outro dia">↗ outro dia</button>`;
-          return `<div class="schedule-slot has-game${j.resultado?' has-result':''}${conflict?' has-conflict':''}" ${dragAttr} ${slotAttr}>
-            ${conflict ? `<span class="conflict-badge" title="${conflictTip}">⚠ CONFLITO</span>` : ''}
+          return `<div class="schedule-slot has-game${j.resultado?' has-result':''}${conflictClass}" ${dragAttr} ${slotAttr}>
+            ${conflict ? `<span class="conflict-badge" title="${conflictTip}">⚠ CONFLITO</span>` : btb ? `<span class="conflict-badge" style="background:#FF9A3C" title="${conflictTip}">⏱ SEGUIDO</span>` : ''}
             <div style="font-size:.7rem;color:var(--cinza-texto);margin-bottom:.2rem;display:flex;justify-content:space-between;align-items:center">
               <span>${j.grupo} <span style="color:var(--verde);font-weight:700">${t}</span></span>
               ${j._isFaseFinal ? '' : `<span style="font-family:monospace;font-size:.62rem;color:var(--cinza-texto);opacity:.7">#${j.id}</span>`}

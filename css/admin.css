@@ -707,6 +707,7 @@ tbody tr:hover { background: var(--cinza-escuro); }
 .schedule-slot.has-game { background: rgba(245,197,24,.07); border-color: rgba(245,197,24,.3); }
 .schedule-slot.has-game.has-result { background: rgba(0,195,123,.10); border-color: rgba(0,195,123,.35); }
 .schedule-slot.has-conflict { background: rgba(255,74,74,.08); border-color: rgba(255,74,74,.35); }
+.schedule-slot.has-btb { background: rgba(255,154,60,.07); border-color: rgba(255,154,60,.3); }
 .schedule-time { font-size: .68rem; color: var(--cinza-texto); font-weight: 600; }
 .schedule-slot.has-game[draggable] { cursor: grab; }
 .schedule-slot.has-game[draggable]:active { cursor: grabbing; }
