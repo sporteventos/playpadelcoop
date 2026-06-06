@@ -2115,7 +2115,21 @@
       "grupo": "M2-A",
       "eq1": "Rui Lourenço & Francisco Pegado",
       "eq2": "Shezane Arif & Razeen",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 6,
+        "s1eq2": 2,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 6,
+        "s2eq2": 4,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": null,
+        "s3eq2": null,
+        "tb3eq1": null,
+        "tb3eq2": null
+      },
+      "suspenso": null
     },
     {
       "id": 25,
@@ -2328,7 +2342,21 @@
       "grupo": "F1-A",
       "eq1": "Stacey & Marlou Mulder",
       "eq2": "Helen Khumalo & Narcisa Nhamitambo",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 0,
+        "s1eq2": 6,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 2,
+        "s2eq2": 6,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": null,
+        "s3eq2": null,
+        "tb3eq1": null,
+        "tb3eq2": null
+      },
+      "suspenso": null
     },
     {
       "id": 38,
@@ -3490,6 +3518,46 @@
     }
   ],
   "auditlog": [
+    {
+      "id": "mq2njwj3g94kc11",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "SAVE_RESULT",
+      "target": "resultados",
+      "detail": "Resultado guardado: jogo #24",
+      "ts": "2026-06-06T17:54:02.991Z"
+    },
+    {
+      "id": "mq2ni0i0iq12ltm",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "SAVE_RESULT",
+      "target": "resultados",
+      "detail": "Resultado guardado: jogo #37",
+      "ts": "2026-06-06T17:52:34.824Z"
+    },
+    {
+      "id": "mq2ne3mxpaa10c5",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "LOGIN",
+      "target": "auth",
+      "detail": "Login: euamusse (admin)",
+      "ts": "2026-06-06T17:49:32.265Z"
+    },
+    {
+      "id": "mq2ndz2e9tsgkzt",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "LOGOUT",
+      "target": "auth",
+      "detail": "Logout: euamusse",
+      "ts": "2026-06-06T17:49:26.342Z"
+    },
     {
       "id": "mq2leoqnxmqtq1s",
       "userId": "mpz8aq9sg983ubo",
@@ -8141,5 +8209,5 @@
       "ts": "2026-06-03T06:06:37.211Z"
     }
   ],
-  "_updated": "2026-06-06T16:54:55.114Z"
+  "_updated": "2026-06-06T17:54:37.926Z"
 }
