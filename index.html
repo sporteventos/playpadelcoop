@@ -44,6 +44,7 @@
     .top-par-names { font-size: .88rem; color: var(--branco, #F0F7F3); font-weight: 600; line-height: 1.4; }
     .top-par-names span { display: block; }
     .top-par-names span + span { color: #8AA396; font-weight: 400; font-size: .82rem; }
+    .top-par-grupo { display: inline-block; font-size: .6rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; border-radius: 4px; padding: .1rem .35rem; margin-left: .4rem; vertical-align: middle; opacity: .85; }
     .top-par-stats { display: flex; gap: .6rem; align-items: center; }
     .top-par-stat { text-align: center; min-width: 2.4rem; }
     .top-par-stat-val { font-size: 1rem; font-weight: 800; line-height: 1; }
@@ -404,11 +405,13 @@
 
 // ---- Top Pares leaderboard ----
 (function() {
+  const catClr = { M1:'#4A9EFF', M2:'#00C37B', M3:'#39FF8F', M4:'#F5C518', M5:'#FF9A3C', F1:'#FF6BB0', F2:'#C97BFF' };
+  function grupoClr(g) { const k = g ? g.replace(/-.*$/,'') : ''; const c = catClr[k]; return c ? `background:${c}22;color:${c};border:1px solid ${c}55` : 'background:#1C2620;color:#8AA396'; }
   const jogos = ppGet('jogos').filter(j => j.resultado && !j.resultado.wo);
   const stats = {};
-  function add(par, win, sw, sl) {
+  function add(par, win, sw, sl, grupo) {
     if (!par) return;
-    if (!stats[par]) stats[par] = { par, pj:0, v:0, d:0, sw:0, sl:0 };
+    if (!stats[par]) stats[par] = { par, pj:0, v:0, d:0, sw:0, sl:0, grupo: grupo || '' };
     stats[par].pj++;
     if (win) stats[par].v++; else stats[par].d++;
     stats[par].sw += sw; stats[par].sl += sl;
@@ -418,8 +421,8 @@
     const allSets = [[r.s1eq1,r.s1eq2],[r.s2eq1,r.s2eq2],[r.s3eq1,r.s3eq2]].filter(([a]) => a != null);
     let v1=0, v2=0, sw1=0, sl1=0;
     allSets.forEach(([a,b]) => { if(a>b) v1++; else v2++; sw1+=a; sl1+=b; });
-    add(j.eq1, v1>v2, sw1, sl1);
-    add(j.eq2, v2>v1, sl1, sw1);
+    add(j.eq1, v1>v2, sw1, sl1, j.grupo);
+    add(j.eq2, v2>v1, sl1, sw1, j.grupo);
   });
 
   const top5 = Object.values(stats)
@@ -441,7 +444,7 @@
     const rate = s.pj ? Math.round(s.v/s.pj*100) : 0;
     return `<div class="top-par-card">
       <div class="top-par-rank ${rCls}">${rank}</div>
-      <div class="top-par-names"><span>${parts[0]}</span>${parts[1]?`<span>${parts[1]}</span>`:''}</div>
+      <div class="top-par-names"><span>${parts[0]}${s.grupo?`<span class="top-par-grupo" style="${grupoClr(s.grupo)}">${s.grupo}</span>`:''}</span>${parts[1]?`<span>${parts[1]}</span>`:''}</div>
       <div class="top-par-stats">
         <div class="top-par-stat"><div class="top-par-stat-val top-par-stat-val--v">${s.v}</div><div class="top-par-stat-lbl">V</div></div>
         <div class="top-par-stat"><div class="top-par-stat-val top-par-stat-val--d">${s.d}</div><div class="top-par-stat-lbl">D</div></div>
