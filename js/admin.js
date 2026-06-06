@@ -5482,27 +5482,44 @@ function renderHorario() {
   const campoOrder = Object.fromEntries(getData('campos').map((c,i) => [c.nome, c.id ?? i]));
   const activeCampos = selCampo ? [selCampo] : [...new Set(dayJogos.map(j => j.campo))].sort((a,b) => (campoOrder[a]??99) - (campoOrder[b]??99));
 
-  // Build player slots map to detect conflicts (skip TBD slots)
+  // Build player slots map to detect conflicts — any player with 2+ games on the same day
   const playerSlots = {};
   dayJogos.forEach(j => {
     [j.eq1, j.eq2].forEach(pair => {
       if (!pair) return;
-      pair.split(' / ').forEach(player => {
+      pair.split(' & ').forEach(player => {
         const key = player.trim().toLowerCase();
         if (!playerSlots[key]) playerSlots[key] = [];
-        playerSlots[key].push(j.hora);
+        playerSlots[key].push(j.hora || '?');
       });
     });
   });
+  // Flag any player who appears in more than 1 game (same-time OR different-time)
   const conflictPlayers = new Set(Object.entries(playerSlots)
-    .filter(([,slots]) => slots.length !== [...new Set(slots)].length)
+    .filter(([,slots]) => slots.length > 1)
     .map(([k]) => k));
 
   function hasConflict(j) {
     return [j.eq1, j.eq2].some(pair => pair?.split(' / ').some(p => conflictPlayers.has(p.trim().toLowerCase())));
   }
 
-  el.innerHTML = `
+  // Conflict summary banner
+  const conflictSummary = conflictPlayers.size > 0 ? (() => {
+    const pairs = Object.entries(playerSlots)
+      .filter(([k]) => conflictPlayers.has(k))
+      .map(([k, slots]) => {
+        // Find the pair name (original case)
+        let parName = k;
+        dayJogos.forEach(j => [j.eq1, j.eq2].forEach(pair => { if (pair) pair.split(' & ').forEach(p => { if (p.trim().toLowerCase() === k) parName = p.trim(); }); }));
+        return `<span style="font-weight:700;color:var(--branco)">${escHtml(parName)}</span> (${slots.join(', ')})`;
+      });
+    return `<div style="background:rgba(255,74,74,.1);border:1px solid rgba(255,74,74,.35);border-radius:8px;padding:.65rem 1rem;margin-bottom:1rem;font-size:.82rem;color:var(--vermelho);display:flex;align-items:flex-start;gap:.6rem">
+      <i class="ph ph-warning" style="font-size:1.1rem;flex-shrink:0;margin-top:.05rem"></i>
+      <div><strong>⚠ Conflito de horário detectado:</strong> ${pairs.join(' &nbsp;|&nbsp; ')}</div>
+    </div>`;
+  })() : '';
+
+  el.innerHTML = conflictSummary + `
     <div class="schedule-grid" style="grid-template-columns:80px ${activeCampos.map(()=>'1fr').join(' ')}">
       <div class="schedule-grid-header">Hora</div>
       ${activeCampos.map(c => `<div class="schedule-grid-header">${c}</div>`).join('')}
@@ -5513,12 +5530,16 @@ function renderHorario() {
           const slotAttr = `ondragover="horarioDragOver(event)" ondragleave="horarioDragLeave(event)" ondrop="horarioDrop(event,'${t}','${escHtml(campo)}')"`;
           if (!j) return `<div class="schedule-slot" ${slotAttr}></div>`;
           const conflict = hasConflict(j);
+          const conflictTip = conflict ? (() => {
+            const offenders = [j.eq1, j.eq2].flatMap(pair => (pair||'').split(' & ').filter(p => conflictPlayers.has(p.trim().toLowerCase())));
+            return offenders.map(p => `${escHtml(p.trim())}: ${playerSlots[p.trim().toLowerCase()].join(', ')}`).join(' | ');
+          })() : '';
           const e1 = j.eq1 || 'A definir';
           const e2 = j.eq2 || 'A definir';
           const dragAttr = j._isFaseFinal ? '' : `draggable="true" ondragstart="horarioStartDrag(event,'${j.id}')" ondragend="horarioDragEnd(event)"`;
           const moverBtn = j._isFaseFinal ? '' : `<button onclick="event.stopPropagation();horarioMoverDia('${j.id}')" style="margin-top:.35rem;width:100%;background:transparent;border:1px solid var(--preto-borda);border-radius:4px;color:var(--cinza-texto);font-size:.62rem;padding:.15rem .3rem;cursor:pointer;text-align:center" title="Mover para outro dia">↗ outro dia</button>`;
           return `<div class="schedule-slot has-game${j.resultado?' has-result':''}${conflict?' has-conflict':''}" ${dragAttr} ${slotAttr}>
-            ${conflict ? '<span class="conflict-badge">CONFLITO</span>' : ''}
+            ${conflict ? `<span class="conflict-badge" title="${conflictTip}">⚠ CONFLITO</span>` : ''}
             <div style="font-size:.7rem;color:var(--cinza-texto);margin-bottom:.2rem;display:flex;justify-content:space-between;align-items:center">
               <span>${j.grupo} <span style="color:var(--verde);font-weight:700">${t}</span></span>
               ${j._isFaseFinal ? '' : `<span style="font-family:monospace;font-size:.62rem;color:var(--cinza-texto);opacity:.7">#${j.id}</span>`}
