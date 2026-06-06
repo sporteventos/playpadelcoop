@@ -2063,6 +2063,24 @@ function _timeAgo(iso) {
   return `${Math.floor(h/24)}d`;
 }
 
+// ── Conflict acknowledgement helpers ──────────────────────────
+function _conflictAcks() {
+  try { return new Set(JSON.parse(localStorage.getItem('ppConflictAck') || '[]')); } catch { return new Set(); }
+}
+function _saveConflictAcks(set) {
+  localStorage.setItem('ppConflictAck', JSON.stringify([...set]));
+}
+window.ackConflict = function(key) {
+  const acks = _conflictAcks();
+  acks.add(key);
+  _saveConflictAcks(acks);
+  updateAlertBanner();
+};
+window.clearConflictAcks = function() {
+  localStorage.removeItem('ppConflictAck');
+  updateAlertBanner();
+};
+
 function updateAlertBanner() {
   const jogos = getData('jogos');
   const pending = jogos.filter(j => !j.resultado).length;
@@ -2074,8 +2092,10 @@ function updateAlertBanner() {
   const conflitosBody  = document.getElementById('dashConflitosBody');
   if (!banner || !msg) return;
 
+  const acks = _conflictAcks();
+
   // ── Detect scheduling conflicts across all dates ──
-  const playerDays = {}; // key: "player_lower|date" → { name, hours[] }
+  const playerDays = {}; // key: "player_lower|date" → { name, date, hours[] }
   const campoSlots = {}; // key: "campo|date|hora" → count
   jogos.forEach(j => {
     if (!j.data) return;
@@ -2087,46 +2107,75 @@ function updateAlertBanner() {
       if (!pair) return;
       pair.split(' & ').forEach(p => {
         const k = `${p.trim().toLowerCase()}|${j.data}`;
-        if (!playerDays[k]) playerDays[k] = { name: p.trim(), date: j.data, hours: [] };
+        if (!playerDays[k]) playerDays[k] = { key: k, name: p.trim(), date: j.data, hours: [] };
         if (j.hora) playerDays[k].hours.push(j.hora);
       });
     });
   });
 
-  const playerConflictEntries = Object.values(playerDays).filter(v => v.hours.length > 1);
-  const campoConflictEntries  = Object.entries(campoSlots).filter(([,n]) => n > 1).map(([k]) => { const [campo, date, hora] = k.split('|'); return { campo, date, hora }; });
-  const totalConflicts = playerConflictEntries.length + campoConflictEntries.length;
+  const allPlayerConflicts = Object.values(playerDays).filter(v => v.hours.length > 1);
+  const allCampoConflicts  = Object.entries(campoSlots).filter(([,n]) => n > 1)
+    .map(([k]) => { const [campo, date, hora] = k.split('|'); return { key: k, campo, date, hora }; });
+
+  // Split into acknowledged vs active
+  const activePlayer = allPlayerConflicts.filter(v => !acks.has(v.key));
+  const ackedPlayer  = allPlayerConflicts.filter(v =>  acks.has(v.key));
+  const activeCampo  = allCampoConflicts.filter(v => !acks.has(v.key));
+  const ackedCampo   = allCampoConflicts.filter(v =>  acks.has(v.key));
+  const totalActive  = activePlayer.length + activeCampo.length;
+  const totalAcked   = ackedPlayer.length  + ackedCampo.length;
 
   // ── Dashboard conflict details panel ──
   if (conflitosPanel && conflitosBody) {
-    if (totalConflicts > 0) {
+    const totalAll = allPlayerConflicts.length + allCampoConflicts.length;
+    if (totalAll > 0) {
+      const ackBtnStyle = `background:rgba(57,255,143,.12);border:1px solid rgba(57,255,143,.3);color:#39FF8F;border-radius:5px;padding:.15rem .5rem;font-size:.68rem;font-weight:700;cursor:pointer;white-space:nowrap`;
+      const ackedStyle  = `background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:7px;padding:.35rem .75rem;opacity:.45`;
+
+      function playerRow(v, acked) {
+        const ackBtn = acked
+          ? `<span style="font-size:.65rem;color:#39FF8F">✓ Aceite</span>`
+          : `<button style="${ackBtnStyle}" onclick="ackConflict('${v.key.replace(/'/g,"\\'")}')">✓ Aceitar</button>`;
+        return `<div style="display:flex;align-items:center;gap:.6rem;font-size:.8rem;${acked ? ackedStyle : 'background:rgba(255,74,74,.06);border:1px solid rgba(255,74,74,.2);border-radius:7px;padding:.4rem .75rem'}">
+          <i class="ph ph-user" style="color:${acked?'#4A6058':'var(--vermelho)'};flex-shrink:0"></i>
+          <span style="font-weight:700;color:${acked?'var(--cinza-texto)':'var(--branco)'};flex:1">${escHtml(v.name)}</span>
+          <span style="color:var(--cinza-texto);font-size:.72rem">${ppFormatDate(v.date)}</span>
+          <span style="color:${acked?'#4A6058':'var(--vermelho)'};font-family:monospace;font-size:.75rem">${v.hours.sort().join(' · ')}</span>
+          ${ackBtn}
+        </div>`;
+      }
+
+      function campoRow(v, acked) {
+        const ackBtn = acked
+          ? `<span style="font-size:.65rem;color:#39FF8F">✓ Aceite</span>`
+          : `<button style="${ackBtnStyle}" onclick="ackConflict('${v.key.replace(/'/g,"\\'")}')">✓ Aceitar</button>`;
+        return `<div style="display:flex;align-items:center;gap:.6rem;font-size:.8rem;${acked ? ackedStyle : 'background:rgba(255,74,74,.06);border:1px solid rgba(255,74,74,.2);border-radius:7px;padding:.4rem .75rem'}">
+          <i class="ph ph-map-pin" style="color:${acked?'#4A6058':'var(--vermelho)'};flex-shrink:0"></i>
+          <span style="font-weight:700;color:${acked?'var(--cinza-texto)':'var(--branco)'};flex:1">${escHtml(v.campo)}</span>
+          <span style="color:var(--cinza-texto);font-size:.72rem">${ppFormatDate(v.date)}</span>
+          <span style="color:${acked?'#4A6058':'var(--vermelho)'};font-family:monospace;font-size:.75rem">${v.hora}</span>
+          ${ackBtn}
+        </div>`;
+      }
+
       let html = '';
-      if (playerConflictEntries.length) {
-        html += `<div style="font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--vermelho);margin-bottom:.5rem;margin-top:.25rem"><i class="ph ph-user-x"></i> Jogador com 2+ jogos no mesmo dia</div>`;
-        html += `<div style="display:flex;flex-direction:column;gap:.35rem;margin-bottom:.85rem">`;
-        playerConflictEntries.forEach(v => {
-          html += `<div style="display:flex;align-items:center;gap:.6rem;font-size:.8rem;background:rgba(255,74,74,.06);border:1px solid rgba(255,74,74,.2);border-radius:7px;padding:.4rem .75rem">
-            <i class="ph ph-user" style="color:var(--vermelho);flex-shrink:0"></i>
-            <span style="font-weight:700;color:var(--branco);flex:1">${escHtml(v.name)}</span>
-            <span style="color:var(--cinza-texto);font-size:.72rem">${ppFormatDate(v.date)}</span>
-            <span style="color:var(--vermelho);font-family:monospace;font-size:.75rem">${v.hours.sort().join(' · ')}</span>
-          </div>`;
-        });
+      const allRows = [...allPlayerConflicts.map(v=>({...v,type:'player'})), ...allCampoConflicts.map(v=>({...v,type:'campo'}))];
+      const activeRows = allRows.filter(v => !acks.has(v.key));
+      const ackedRows  = allRows.filter(v =>  acks.has(v.key));
+
+      if (activeRows.length) {
+        html += `<div style="display:flex;flex-direction:column;gap:.35rem;margin-bottom:${ackedRows.length?'.85rem':'.25rem'}">`;
+        activeRows.forEach(v => { html += v.type === 'player' ? playerRow(v, false) : campoRow(v, false); });
         html += `</div>`;
       }
-      if (campoConflictEntries.length) {
-        html += `<div style="font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--vermelho);margin-bottom:.5rem"><i class="ph ph-warning-diamond"></i> Campo duplamente reservado</div>`;
-        html += `<div style="display:flex;flex-direction:column;gap:.35rem">`;
-        campoConflictEntries.forEach(v => {
-          html += `<div style="display:flex;align-items:center;gap:.6rem;font-size:.8rem;background:rgba(255,74,74,.06);border:1px solid rgba(255,74,74,.2);border-radius:7px;padding:.4rem .75rem">
-            <i class="ph ph-map-pin" style="color:var(--vermelho);flex-shrink:0"></i>
-            <span style="font-weight:700;color:var(--branco);flex:1">${escHtml(v.campo)}</span>
-            <span style="color:var(--cinza-texto);font-size:.72rem">${ppFormatDate(v.date)}</span>
-            <span style="color:var(--vermelho);font-family:monospace;font-size:.75rem">${v.hora}</span>
-          </div>`;
-        });
-        html += `</div>`;
+
+      if (ackedRows.length) {
+        html += `<details style="margin-top:.25rem"><summary style="font-size:.7rem;color:#4A6058;cursor:pointer;user-select:none;list-style:none;display:flex;align-items:center;gap:.35rem"><i class="ph ph-check-circle" style="color:#39FF8F"></i> ${ackedRows.length} conflito${ackedRows.length>1?'s':''} aceite${ackedRows.length>1?'s':''} <span style="margin-left:auto;font-size:.65rem;color:var(--cinza-texto)" onclick="event.stopPropagation();clearConflictAcks()">Limpar todos</span></summary>
+          <div style="display:flex;flex-direction:column;gap:.3rem;margin-top:.4rem">`;
+        ackedRows.forEach(v => { html += v.type === 'player' ? playerRow(v, true) : campoRow(v, true); });
+        html += `</div></details>`;
       }
+
       conflitosBody.innerHTML = html;
       conflitosPanel.style.display = '';
     } else {
@@ -2134,11 +2183,11 @@ function updateAlertBanner() {
     }
   }
 
-  // ── Alert top banner ──
-  if (totalConflicts > 0) {
+  // ── Alert top banner — only count unacknowledged ──
+  if (totalActive > 0) {
     const parts = [];
-    if (playerConflictEntries.length) parts.push(`${playerConflictEntries.length} jogador${playerConflictEntries.length>1?'es':''} com jogos em conflito`);
-    if (campoConflictEntries.length)  parts.push(`${campoConflictEntries.length} campo${campoConflictEntries.length>1?'s':''} duplamente reservado${campoConflictEntries.length>1?'s':''}`);
+    if (activePlayer.length) parts.push(`${activePlayer.length} jogador${activePlayer.length>1?'es':''} com jogos em conflito`);
+    if (activeCampo.length)  parts.push(`${activeCampo.length} campo${activeCampo.length>1?'s':''} duplamente reservado${activeCampo.length>1?'s':''}`);
     msg.innerHTML = `<strong>${parts.join(' · ')}</strong> — verifique o Construtor de Horário`;
     msg.style.color = 'var(--vermelho)';
     if (icon) { icon.className = 'ph ph-warning'; icon.style.color = 'var(--vermelho)'; }
