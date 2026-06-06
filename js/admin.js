@@ -776,24 +776,58 @@ window.gerarPanfleto = function(periodo) {
     ctx.textAlign = 'left';
 
     if (j.resultado) {
-      const { w1, w2 } = matchSetsScore(j.resultado);
-      const winner = w1 > w2 ? 1 : 2;
-      const r = j.resultado;
-      const setsStr = [[r.s1eq1,r.s1eq2],[r.s2eq1,r.s2eq2],[r.s3eq1,r.s3eq2]]
-        .filter(([a]) => a != null).map(([a, b]) => `${a}-${b}`).join(' ');
-      // Re-draw eq1 with winner colour
-      ctx.fillStyle = winner === 1 ? '#39FF8F' : '#8AA396';
+      if (j.resultado.wo) {
+        // WO: highlight winner green, loser red, show W.O. badge on right
+        const woTeam = j.resultado.wo; // 'eq1' | 'eq2'
+        ctx.fillStyle = woTeam === 'eq2' ? '#39FF8F' : '#FF4A4A';
+        drawTeamName(j.eq1, CX.eq1r, y, 228, 'right');
+        ctx.fillStyle = woTeam === 'eq1' ? '#39FF8F' : '#FF4A4A';
+        drawTeamName(j.eq2, CX.eq2, y, 220, 'left');
+        // W.O. badge
+        const woBW = 62, woBH = 26, woBX = W - PAD - woBW, woBY = y + (ROW_H - woBH) / 2;
+        ctx.fillStyle = 'rgba(255,74,74,0.15)';
+        ctx.beginPath(); ctx.roundRect(woBX, woBY, woBW, woBH, 5); ctx.fill();
+        ctx.fillStyle = '#FF4A4A'; ctx.textAlign = 'right';
+        ctx.font = 'bold 15px Arial, sans-serif';
+        ctx.fillText('W.O.', W - PAD - 6, woBY + woBH * 0.72);
+        ctx.textAlign = 'left';
+      } else {
+        const { w1, w2 } = matchSetsScore(j.resultado);
+        const winner = w1 > w2 ? 1 : 2;
+        const r = j.resultado;
+        const setsStr = [[r.s1eq1,r.s1eq2],[r.s2eq1,r.s2eq2],[r.s3eq1,r.s3eq2]]
+          .filter(([a]) => a != null).map(([a, b]) => `${a}-${b}`).join(' ');
+        // Re-draw eq1 with winner colour
+        ctx.fillStyle = winner === 1 ? '#39FF8F' : '#8AA396';
+        drawTeamName(j.eq1, CX.eq1r, y, 228, 'right');
+        ctx.fillStyle = winner === 2 ? '#39FF8F' : '#8AA396';
+        drawTeamName(j.eq2, CX.eq2, y, 220, 'left');
+        // Match score (big) + sets (small) at right edge
+        ctx.textAlign = 'right';
+        ctx.font = 'bold 18px "Courier New", monospace';
+        ctx.fillStyle = '#39FF8F';
+        ctx.fillText(`${w1}-${w2}`, W - PAD, cy - 8);
+        ctx.font = '13px Arial, sans-serif';
+        ctx.fillStyle = '#4A6058';
+        ctx.fillText(setsStr, W - PAD, cy + 10);
+        ctx.textAlign = 'left';
+      }
+    } else if (j.suspenso) {
+      // Suspended: teams in white, show ⏸ + partial sets on right
+      ctx.fillStyle = '#F0F7F3';
       drawTeamName(j.eq1, CX.eq1r, y, 228, 'right');
-      ctx.fillStyle = winner === 2 ? '#39FF8F' : '#8AA396';
       drawTeamName(j.eq2, CX.eq2, y, 220, 'left');
-      // Match score (big) + sets (small) at right edge
+      const s = j.suspenso;
+      const partial = [s.s1eq1!=null?`${s.s1eq1}-${s.s1eq2}`:null, s.s2eq1!=null?`${s.s2eq1}-${s.s2eq2}`:null, s.s3eq1!=null?`${s.s3eq1}-${s.s3eq2}`:null].filter(Boolean).join(' ');
       ctx.textAlign = 'right';
-      ctx.font = 'bold 18px "Courier New", monospace';
-      ctx.fillStyle = '#39FF8F';
-      ctx.fillText(`${w1}-${w2}`, W - PAD, cy - 8);
-      ctx.font = '13px Arial, sans-serif';
-      ctx.fillStyle = '#4A6058';
-      ctx.fillText(setsStr, W - PAD, cy + 10);
+      ctx.font = 'bold 15px Arial, sans-serif';
+      ctx.fillStyle = '#FF9A3C';
+      ctx.fillText('\u23f8 Interrompido', W - PAD, cy - (partial ? 8 : 0));
+      if (partial) {
+        ctx.font = '13px "Courier New", monospace';
+        ctx.fillStyle = '#FF9A3C';
+        ctx.fillText(partial, W - PAD, cy + 10);
+      }
       ctx.textAlign = 'left';
     } else {
       drawTeamName(j.eq2, CX.eq2, y, 250, 'left');
