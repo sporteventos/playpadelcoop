@@ -2336,7 +2336,20 @@
       "grupo": "M5-B",
       "eq1": "Mizzy & Zayan Imitiaz",
       "eq2": "Filipe Ferreira & Paulo Baldaia",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 5,
+        "s1eq2": 7,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 3,
+        "s2eq2": 6,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": null,
+        "s3eq2": null,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 36,
@@ -3546,6 +3559,36 @@
     }
   ],
   "auditlog": [
+    {
+      "id": "mq2q741e6cw73m3",
+      "userId": "mpzxoo1v8l1za3r",
+      "username": "djanasse",
+      "role": "operator",
+      "action": "SAVE_RESULT",
+      "target": "resultados",
+      "detail": "Resultado guardado: jogo #35",
+      "ts": "2026-06-06T19:08:05.044Z"
+    },
+    {
+      "id": "mq2pqj9zcsrnhi0",
+      "userId": "mpzxoo1v8l1za3r",
+      "username": "djanasse",
+      "role": "operator",
+      "action": "LOGIN",
+      "target": "auth",
+      "detail": "Login: djanasse (operator)",
+      "ts": "2026-06-06T18:55:11.639Z"
+    },
+    {
+      "id": "mq2pqg2cnl6uk62",
+      "userId": "mpzxoo1v8l1za3r",
+      "username": "djanasse",
+      "role": "operator",
+      "action": "LOGOUT",
+      "target": "auth",
+      "detail": "Logout: djanasse",
+      "ts": "2026-06-06T18:55:07.477Z"
+    },
     {
       "id": "mq2o3bxvg86p423",
       "userId": "mpz8aq9sg983ubo",
@@ -8257,5 +8300,5 @@
       "ts": "2026-06-03T06:06:37.211Z"
     }
   ],
-  "_updated": "2026-06-06T18:10:00.658Z"
+  "_updated": "2026-06-06T19:09:06.868Z"
 }
