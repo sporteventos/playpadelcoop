@@ -2309,7 +2309,21 @@
       "grupo": "M3-B",
       "eq1": "Shueb & Sahad",
       "eq2": "Edson Uamusse & Salomão",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 7,
+        "s1eq2": 6,
+        "tb1eq1": 7,
+        "tb1eq2": 5,
+        "s2eq1": 6,
+        "s2eq2": 1,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": null,
+        "s3eq2": null,
+        "tb3eq1": null,
+        "tb3eq2": null
+      },
+      "suspenso": null
     },
     {
       "id": 39,
@@ -3433,6 +3447,36 @@
     }
   ],
   "auditlog": [
+    {
+      "id": "mq2kcqov3lflpqr",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "SAVE_RESULT",
+      "target": "resultados",
+      "detail": "Resultado guardado: jogo #38",
+      "ts": "2026-06-06T16:24:29.983Z"
+    },
+    {
+      "id": "mq2kbjtm99io7d5",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "LOGIN",
+      "target": "auth",
+      "detail": "Login: euamusse (admin)",
+      "ts": "2026-06-06T16:23:34.426Z"
+    },
+    {
+      "id": "mq2kbffv7w1umfr",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "LOGOUT",
+      "target": "auth",
+      "detail": "Logout: euamusse",
+      "ts": "2026-06-06T16:23:28.747Z"
+    },
     {
       "id": "mq2k6gnr93x1tq9",
       "userId": "mpzxoo1v8l1za3r",
@@ -8014,5 +8058,5 @@
       "ts": "2026-06-03T06:06:37.211Z"
     }
   ],
-  "_updated": "2026-06-06T16:21:39.764Z"
+  "_updated": "2026-06-06T16:24:36.385Z"
 }
