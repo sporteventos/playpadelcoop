@@ -831,7 +831,7 @@ window.gerarPanfleto = function(periodo) {
       }
       ctx.textAlign = 'left';
     } else {
-      ctx.fillStyle = '#8AA396';
+      ctx.fillStyle = '#F0F7F3';
       drawTeamName(j.eq2, CX.eq2, y, 250, 'left');
     }
   });
