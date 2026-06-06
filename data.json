@@ -2171,7 +2171,20 @@
       "grupo": "M3-D",
       "eq1": "Alexandre Salazar & Pedro Gonzalez",
       "eq2": "Gonçalo Marques & Pedro Gonçalves",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 6,
+        "s1eq2": 1,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 4,
+        "s2eq2": 6,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": 2,
+        "s3eq2": 6,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 41,
@@ -3196,6 +3209,16 @@
     }
   ],
   "auditlog": [
+    {
+      "id": "mq1z0v57tzdy9rr",
+      "userId": "mpzxoo1v8l1za3r",
+      "username": "djanasse",
+      "role": "operator",
+      "action": "SAVE_RESULT",
+      "target": "resultados",
+      "detail": "Resultado guardado: jogo #40",
+      "ts": "2026-06-06T06:27:23.947Z"
+    },
     {
       "id": "mq1ylrwdifeqy1z",
       "userId": "mpzxoo1v8l1za3r",
@@ -7227,5 +7250,5 @@
       "ts": "2026-06-03T06:06:37.211Z"
     }
   ],
-  "_updated": "2026-06-06T06:16:02.119Z"
+  "_updated": "2026-06-06T06:28:13.923Z"
 }
