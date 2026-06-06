@@ -1882,7 +1882,21 @@
       "grupo": "M3-C",
       "eq1": "Rui Veríssimo & Pedro Martins",
       "eq2": "Sharik Omar & Muhamad Mussagy",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 6,
+        "s1eq2": 7,
+        "tb1eq1": 4,
+        "tb1eq2": 7,
+        "s2eq1": 7,
+        "s2eq2": 5,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": 3,
+        "s3eq2": 6,
+        "tb3eq1": null,
+        "tb3eq2": null
+      },
+      "suspenso": null
     },
     {
       "id": 15,
@@ -3301,6 +3315,26 @@
   ],
   "auditlog": [
     {
+      "id": "mq24kmszkb3hneq",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "SAVE_RESULT",
+      "target": "resultados",
+      "detail": "Resultado guardado: jogo #14",
+      "ts": "2026-06-06T09:02:44.339Z"
+    },
+    {
+      "id": "mq2488onhmpf5mf",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "LOGIN",
+      "target": "auth",
+      "detail": "Login: euamusse (admin)",
+      "ts": "2026-06-06T08:53:06.167Z"
+    },
+    {
       "id": "mq24736uglzsy3s",
       "userId": "mpzxoo1v8l1za3r",
       "username": "djanasse",
@@ -3331,6 +3365,16 @@
       "ts": "2026-06-06T08:50:03.131Z"
     },
     {
+      "id": "mq241bo77yj6txf",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "SAVE_RESULT",
+      "target": "resultados",
+      "detail": "Resultado guardado: jogo #14",
+      "ts": "2026-06-06T08:47:43.447Z"
+    },
+    {
       "id": "mq23xj5xzpvro5j",
       "userId": "mpzxoo1v8l1za3r",
       "username": "djanasse",
@@ -3349,6 +3393,26 @@
       "target": "auth",
       "detail": "Login: djanasse (operator)",
       "ts": "2026-06-06T08:43:46.927Z"
+    },
+    {
+      "id": "mq23ug01yufwgjr",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "LOGIN",
+      "target": "auth",
+      "detail": "Login: euamusse (admin)",
+      "ts": "2026-06-06T08:42:22.465Z"
+    },
+    {
+      "id": "mq23khr7ucoe1mi",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "LOGOUT",
+      "target": "auth",
+      "detail": "Logout: euamusse",
+      "ts": "2026-06-06T08:34:38.179Z"
     },
     {
       "id": "mq2392p0a20coyn",
@@ -3411,6 +3475,36 @@
       "ts": "2026-06-06T08:07:11.694Z"
     },
     {
+      "id": "mq22jty3qunf9q7",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "LOGOUT",
+      "target": "auth",
+      "detail": "Logout: euamusse",
+      "ts": "2026-06-06T08:06:07.707Z"
+    },
+    {
+      "id": "mq21ymdlsgx7l90",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "LOGIN",
+      "target": "auth",
+      "detail": "Login: euamusse (admin)",
+      "ts": "2026-06-06T07:49:38.121Z"
+    },
+    {
+      "id": "mq21xyjvt229qki",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "LOGOUT",
+      "target": "auth",
+      "detail": "Logout: euamusse",
+      "ts": "2026-06-06T07:49:07.243Z"
+    },
+    {
       "id": "mq21vyhqn0vgmnr",
       "userId": "mpzxoo1v8l1za3r",
       "username": "djanasse",
@@ -3451,6 +3545,46 @@
       "ts": "2026-06-06T07:35:37.481Z"
     },
     {
+      "id": "mq20tnuteipsbg0",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "LOGIN",
+      "target": "auth",
+      "detail": "Login: euamusse (admin)",
+      "ts": "2026-06-06T07:17:47.141Z"
+    },
+    {
+      "id": "mq204a3ymhchgvs",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "LOGIN",
+      "target": "auth",
+      "detail": "Login: euamusse (admin)",
+      "ts": "2026-06-06T06:58:02.926Z"
+    },
+    {
+      "id": "mq201bbzb11o25d",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "LOGOUT",
+      "target": "auth",
+      "detail": "Logout: euamusse",
+      "ts": "2026-06-06T06:55:44.543Z"
+    },
+    {
+      "id": "mq1zz6utmtk6uym",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "LOGIN",
+      "target": "auth",
+      "detail": "Login: euamusse (admin)",
+      "ts": "2026-06-06T06:54:05.429Z"
+    },
+    {
       "id": "mq1z0v57tzdy9rr",
       "userId": "mpzxoo1v8l1za3r",
       "username": "djanasse",
@@ -3461,6 +3595,26 @@
       "ts": "2026-06-06T06:27:23.947Z"
     },
     {
+      "id": "mq1ywiyqm4zq1po",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "LOGOUT",
+      "target": "auth",
+      "detail": "Logout: euamusse",
+      "ts": "2026-06-06T06:24:01.538Z"
+    },
+    {
+      "id": "mq1yu7nz5q9wc2m",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "LOGIN",
+      "target": "auth",
+      "detail": "Login: euamusse (admin)",
+      "ts": "2026-06-06T06:22:13.583Z"
+    },
+    {
       "id": "mq1ylrwdifeqy1z",
       "userId": "mpzxoo1v8l1za3r",
       "username": "djanasse",
@@ -3469,6 +3623,16 @@
       "target": "resultados",
       "detail": "Resultado guardado: jogo #28",
       "ts": "2026-06-06T06:15:39.901Z"
+    },
+    {
+      "id": "mq1yffre3pymnbo",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "LOGIN",
+      "target": "auth",
+      "detail": "Login: euamusse (admin)",
+      "ts": "2026-06-06T06:10:44.234Z"
     },
     {
       "id": "mq1yahlw6fiau21",
@@ -7491,5 +7655,5 @@
       "ts": "2026-06-03T06:06:37.211Z"
     }
   ],
-  "_updated": "2026-06-06T08:53:24.400Z"
+  "_updated": "2026-06-06T09:02:51.075Z"
 }
