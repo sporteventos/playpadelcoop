@@ -2795,13 +2795,17 @@ window.abrirResultado = function(jogoId) {
   const _suspNota   = document.getElementById('resSuspensoNota');
   APP._suspensoServe = null;
   if (_suspNota) _suspNota.value = '';
-  // Update serve button labels with actual team names
-  const _sbt1 = document.getElementById('resSuspensoServeEq1');
-  const _sbt2 = document.getElementById('resSuspensoServeEq2');
-  const _st1 = (j.eq1 || 'Equipa 1').substring(0, 24);
-  const _st2 = (j.eq2 || 'Equipa 2').substring(0, 24);
-  if (_sbt1) { _sbt1.textContent = _st1; _sbt1.style.cssText = 'flex:1;font-size:.72rem;padding:.28rem .5rem'; }
-  if (_sbt2) { _sbt2.textContent = _st2; _sbt2.style.cssText = 'flex:1;font-size:.72rem;padding:.28rem .5rem'; }
+  // Build per-player serve buttons from actual team names
+  const _serveBtnsWrap = document.getElementById('resSuspensoServeBtns');
+  if (_serveBtnsWrap) {
+    const _allPlayers = [
+      ...(j.eq1 || 'Equipa 1').split(' & ').map(p => p.trim()),
+      ...(j.eq2 || 'Equipa 2').split(' & ').map(p => p.trim()),
+    ];
+    _serveBtnsWrap.innerHTML = _allPlayers.map(p =>
+      `<button type="button" class="btn btn-ghost" data-serve="${escHtml(p)}" style="font-size:.72rem;padding:.28rem .6rem" onclick="selectSuspensoServe(this.dataset.serve)">${escHtml(p)}</button>`
+    ).join('');
+  }
 
   const r = j.resultado;
   const s = j.suspenso; // partial data when game was suspended
@@ -2833,7 +2837,13 @@ window.abrirResultado = function(jogoId) {
   } else if (s) {
     // Load suspended partial state — no validation needed
     if (_suspNota && s.nota)  _suspNota.value = s.nota;
-    if (s.serve) selectSuspensoServe(s.serve);
+    if (s.serve) {
+      // Backward compat: old format stored 'eq1'/'eq2', new stores player name
+      let _servePlayer = s.serve;
+      if (_servePlayer === 'eq1') _servePlayer = (j.eq1 || '').split(' & ')[0].trim();
+      else if (_servePlayer === 'eq2') _servePlayer = (j.eq2 || '').split(' & ')[0].trim();
+      selectSuspensoServe(_servePlayer);
+    }
     function loadSetRaw(n, eq1, eq2) {
       if (eq1 == null || eq2 == null) return;
       document.getElementById(`resS${n}E1`).value = eq1;
@@ -2902,22 +2912,16 @@ window.selectResWo = function(eq) {
 };
 
 // ── Suspender jogo (estado parcial) ─────────────────────────────
-window.selectSuspensoServe = function(eq) {
-  APP._suspensoServe = eq;
-  ['eq1', 'eq2'].forEach(e => {
-    const btn = document.getElementById('resSuspensoServe' + (e === 'eq1' ? 'Eq1' : 'Eq2'));
-    if (!btn) return;
-    if (e === eq) {
-      btn.style.background = 'rgba(255,154,60,.25)';
-      btn.style.color = '#FF9A3C';
-      btn.style.borderColor = 'rgba(255,154,60,.6)';
-      btn.style.fontWeight = '700';
-    } else {
-      btn.style.background = '';
-      btn.style.color = '';
-      btn.style.borderColor = '';
-      btn.style.fontWeight = '';
-    }
+window.selectSuspensoServe = function(playerName) {
+  APP._suspensoServe = playerName;
+  const wrap = document.getElementById('resSuspensoServeBtns');
+  if (!wrap) return;
+  wrap.querySelectorAll('button').forEach(btn => {
+    const active = btn.dataset.serve === playerName;
+    btn.style.background   = active ? 'rgba(255,154,60,.25)' : '';
+    btn.style.color        = active ? '#FF9A3C' : '';
+    btn.style.borderColor  = active ? 'rgba(255,154,60,.6)' : '';
+    btn.style.fontWeight   = active ? '700' : '';
   });
 };
 
