@@ -809,7 +809,7 @@ window.gerarPanfleto = function(periodo) {
         ctx.fillStyle = '#39FF8F';
         ctx.fillText(`${w1}-${w2}`, W - PAD, cy - 8);
         ctx.font = '13px Arial, sans-serif';
-        ctx.fillStyle = '#4A6058';
+        ctx.fillStyle = '#8AA396';
         ctx.fillText(setsStr, W - PAD, cy + 10);
         ctx.textAlign = 'left';
       }
