@@ -795,8 +795,9 @@ window.gerarPanfleto = function(periodo) {
         const { w1, w2 } = matchSetsScore(j.resultado);
         const winner = w1 > w2 ? 1 : 2;
         const r = j.resultado;
+        const _tbS = [[r.tb1eq1,r.tb1eq2],[r.tb2eq1,r.tb2eq2],[r.tb3eq1,r.tb3eq2]];
         const setsStr = [[r.s1eq1,r.s1eq2],[r.s2eq1,r.s2eq2],[r.s3eq1,r.s3eq2]]
-          .filter(([a]) => a != null).map(([a, b]) => `${a}-${b}`).join(' ');
+          .filter(([a]) => a != null).map(([a, b], i) => { const [ta,tb] = _tbS[i]; return `${a}-${b}${ta != null ? ` (${ta}-${tb})` : ''}`; }).join(' ');
         // Re-draw eq1 with winner colour
         ctx.fillStyle = winner === 1 ? '#39FF8F' : '#8AA396';
         drawTeamName(j.eq1, CX.eq1r, y, 228, 'right');
@@ -875,8 +876,9 @@ window.abrirPanfletoFoto = function(jogoId, isFF, catId) {
 
   const { w1, w2 } = matchSetsScore(jogo.resultado);
   const r = jogo.resultado;
+  const _tbSI = [[r.tb1eq1,r.tb1eq2],[r.tb2eq1,r.tb2eq2],[r.tb3eq1,r.tb3eq2]];
   const sets = r.wo ? 'W.O.' : [[r.s1eq1,r.s1eq2],[r.s2eq1,r.s2eq2],[r.s3eq1,r.s3eq2]]
-    .filter(([a]) => a !== null).map(([a, b]) => `${a}-${b}`).join('  /  ');
+    .filter(([a]) => a !== null).map(([a, b], i) => { const [ta,tb] = _tbSI[i]; return `${a}-${b}${ta != null ? ` (${ta}-${tb})` : ''}`; }).join('  /  ');
   const eq1Won = w1 > w2;
 
   document.getElementById('fotoFlyerInfo').innerHTML =
@@ -1237,8 +1239,11 @@ function _buildFotoFlyer(img) {
 
     const { w1, w2 } = matchSetsScore(jogo.resultado);
     const r = jogo.resultado;
+    const _tbScores = [[r.tb1eq1,r.tb1eq2],[r.tb2eq1,r.tb2eq2],[r.tb3eq1,r.tb3eq2]];
     const sets = r.wo ? 'Walkover (W.O.)' : [[r.s1eq1,r.s1eq2],[r.s2eq1,r.s2eq2],[r.s3eq1,r.s3eq2]]
-      .filter(([a]) => a !== null).map(([a, b]) => `${a}-${b}`).join('  /  ');
+      .filter(([a]) => a !== null)
+      .map(([a, b], i) => { const [ta,tb] = _tbScores[i]; return `${a}-${b}${ta != null ? ` (${ta}-${tb})` : ''}`; })
+      .join('  /  ');
     const eq1Won = w1 > w2;
 
     // Branding line
@@ -1354,8 +1359,9 @@ window._shareWhatsapp = async function() {
       // Fallback: open WhatsApp web with text result
       const { w1, w2 } = matchSetsScore(jogo.resultado);
       const r = jogo.resultado;
+      const _tbSW = [[r.tb1eq1,r.tb1eq2],[r.tb2eq1,r.tb2eq2],[r.tb3eq1,r.tb3eq2]];
       const sets = r.wo ? 'W.O.' : [[r.s1eq1,r.s1eq2],[r.s2eq1,r.s2eq2],[r.s3eq1,r.s3eq2]]
-        .filter(([a]) => a !== null).map(([a, b]) => `${a}-${b}`).join(' / ');
+        .filter(([a]) => a !== null).map(([a, b], i) => { const [ta,tb] = _tbSW[i]; return `${a}-${b}${ta != null ? ` (${ta}-${tb})` : ''}`; }).join(' / ');
       const winner = w1 > w2 ? jogo.eq1 : jogo.eq2;
       const texto = `\u{1F3BE} *Play Padel Coop \u00B7 Torneio Anivers\u00E1rio*\n\n` +
         `\u{1F3C6} *${escHtml(jogo.grupo)}*\n` +
