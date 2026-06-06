@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="pt-PT">
 <head>
   <meta charset="UTF-8"/>
@@ -246,233 +246,47 @@
     </div>
   </div>
 </section>
-
-<!-- ===================== PRÓXIMOS JOGOS ===================== -->
-<section class="proximos-section" id="proximos">
-  <div class="main-container">
-    <div class="proximos-header">
-      <div>
-        <p class="section-tag">AGENDA</p>
-        <h2 class="section-title">PRÓXIMOS <span>JOGOS</span></h2>
-      </div>
-      <a href="calendario.html" class="proximos-link">Ver todos <i class="ph ph-arrow-right"></i></a>
-    </div>
-
-    <div id="jogosList"></div>
-  </div>
-</section>
-
-<!-- ===================== TOP PARES ===================== -->
-<section class="top-pares-section">
-  <div class="top-pares-inner">
-    <div class="top-pares-header">
-      <div>
-        <p class="section-tag">LEADERBOARD</p>
-        <h2 class="section-title">TOP <span>PARES</span></h2>
-      </div>
-      <a href="jogadores.html" class="top-pares-link">Ver todos <i class="ph ph-arrow-right"></i></a>
-    </div>
-    <div class="top-pares-list" id="topParesList"></div>
-  </div>
-</section>
-
-<!-- ===================== PATROCINADORES ===================== -->
-<section class="patrocinadores-section">
-  <p class="patrocinadores-label">Patrocinadores Oficiais</p>
-  <div class="patrocinadores-grid">
-    <div class="patrocinador-item">
-      <img src="patrocinadores/jetour.png" alt="Jetour" class="patrocinador-logo"/>
-      <span class="patrocinador-nome">Jetour</span>
-    </div>
-    <div class="patrocinador-item">
-      <img src="patrocinadores/stellaartois.png" alt="Stella Artois" class="patrocinador-logo"/>
-      <span class="patrocinador-nome">Stella Artois</span>
-    </div>
-    <div class="patrocinador-item">
-      <img src="patrocinadores/bonaqua.png" alt="Bona Aqua" class="patrocinador-logo"/>
-      <span class="patrocinador-nome">Bona Aqua</span>
-    </div>
-    <div class="patrocinador-item">
-      <img src="patrocinadores/tvcabo.png" alt="TV Cabo" class="patrocinador-logo"/>
-      <span class="patrocinador-nome">TV Cabo</span>
-    </div>
-    <div class="patrocinador-item">
-      <img src="patrocinadores/alcanceeditores.png" alt="Alcance Editores" class="patrocinador-logo"/>
-      <span class="patrocinador-nome">Alcance Editores</span>
-    </div>
-    <div class="patrocinador-item">
-      <img src="patrocinadores/Eclipse.png" alt="Eclipse" class="patrocinador-logo"/>
-      <span class="patrocinador-nome">Eclipse</span>
-    </div>
-  </div>
-</section>
-
-<!-- ===================== PARCEIROS ===================== -->
-<section class="patrocinadores-section parceiros-section">
-  <p class="patrocinadores-label">Parceiros Oficiais</p>
-  <div class="patrocinadores-grid">
-    <div class="patrocinador-item">
-      <img src="parceiros/fisiolab.png" alt="Fisiolab" class="patrocinador-logo"/>
-      <span class="patrocinador-nome">Fisiolab</span>
-    </div>
-    <div class="patrocinador-item">
-      <img src="parceiros/montebelo hoteis.png" alt="Montebelo Hot&#233;is" class="patrocinador-logo"/>
-      <span class="patrocinador-nome">Montebelo Hot&#233;is</span>
-    </div>
-    <div class="patrocinador-item">
-      <img src="parceiros/tempo.png" alt="Tempo" class="patrocinador-logo"/>
-      <span class="patrocinador-nome">Tempo</span>
-    </div>
-    <div class="patrocinador-item">
-      <img src="parceiros/matchpoint.JPG" alt="Match Point" class="patrocinador-logo"/>
-      <span class="patrocinador-nome">Match Point</span>
-    </div>
-    <div class="patrocinador-item">
-      <img src="parceiros/fitclo.JPG" alt="Fitclo" class="patrocinador-logo"/>
-      <span class="patrocinador-nome">Fitclo</span>
-    </div>
-    <div class="patrocinador-item">
-      <img src="parceiros/babycity.JPG" alt="Baby City" class="patrocinador-logo"/>
-      <span class="patrocinador-nome">Baby City</span>
-    </div>
-    <div class="patrocinador-item">
-      <img src="parceiros/makimono.JPG" alt="Makimono" class="patrocinador-logo"/>
-      <span class="patrocinador-nome">Makimono</span>
-    </div>
-  </div>
-</section>
-
-<!-- ===================== FOOTER ===================== -->
-<footer class="footer">
-  <div class="footer-inner">
-    <div class="footer-brand">
-      <div class="footer-logo">
-        <img src="playpadellogo.jpg" alt="Play Padel" style="height:42px;width:42px;border-radius:9px;object-fit:cover"/>
-        <div>
-          <p class="footer-logo-title">Play Padel</p>
-        </div>
-      </div>
-      <p class="footer-desc">O padel que une Moçambique.<br/>5 a 14 de Junho 2026 · Maputo</p>
-    </div>
-
-    <nav class="footer-links">
-      <a href="calendario.html"><i class="ph ph-calendar"></i> Calendário</a>
-      <a href="classificacoes.html"><i class="ph ph-trophy"></i> Classificações</a>
-      <a href="jogadores.html"><i class="ph ph-users"></i> Jogadores</a>
-    </nav>
-  </div>
-
-  <div class="footer-bottom">
-    <p class="footer-copy">© 2026 <span>Play Padel</span> · Torneio 2.º Aniversário · Maputo, Moçambique</p>
-  </div>
-</footer>
-
-<script src="js/data.js"></script>
-<script src="js/app.js"></script>
-<script>
-// ---- Live stats counters ----
-(function() {
-  const jogos = ppGet('jogos');
-  const total = jogos.length;
-  const disputados = jogos.filter(j => !!j.resultado).length;
-  const pct = total ? Math.round(disputados / total * 100) : 0;
-
-  // Count sets played across all finished games
-  let sets = 0;
-  jogos.forEach(j => {
-    if (!j.resultado) return;
-    const r = j.resultado;
-    if (r.wo) return; // WO counts as a result but 0 sets
-    if (r.s1eq1 != null) sets++;
-    if (r.s2eq1 != null) sets++;
-    if (r.s3eq1 != null) sets++;
-  });
-
-  // Games today
-  const today = new Date().toISOString().slice(0, 10);
-  const hoje = jogos.filter(j => j.data === today);
-  const hojeDisputados = hoje.filter(j => !!j.resultado).length;
-
-  document.getElementById('lsDisputados').textContent = disputados;
-  document.getElementById('lsProgressFill').style.width = pct + '%';
-  document.getElementById('lsProgressSub').textContent = total ? disputados + ' de ' + total + ' jogos' : '';
-  document.getElementById('lsSets').textContent = sets;
-  document.getElementById('lsPct').textContent = pct + '%';
-  document.getElementById('lsHoje').textContent = hoje.length;
-  document.getElementById('lsHojeSub').textContent = hoje.length ? hojeDisputados + ' conclu\u00eddos' : 'sem jogos hoje';
-})();
-
-// ---- Top Pares leaderboard ----
-(function() {
-  const jogos = ppGet('jogos').filter(j => j.resultado && !j.resultado.wo);
-  const stats = {};
-  function add(par, win, sw, sl) {
-    if (!par) return;
-    if (!stats[par]) stats[par] = { par, pj:0, v:0, d:0, sw:0, sl:0 };
-    stats[par].pj++;
-    if (win) stats[par].v++; else stats[par].d++;
-    stats[par].sw += sw; stats[par].sl += sl;
-  }
-  jogos.forEach(j => {
-    const r = j.resultado;
-    const allSets = [[r.s1eq1,r.s1eq2],[r.s2eq1,r.s2eq2],[r.s3eq1,r.s3eq2]].filter(([a]) => a != null);
-    let v1=0, v2=0, sw1=0, sl1=0;
-    allSets.forEach(([a,b]) => { if(a>b) v1++; else v2++; sw1+=a; sl1+=b; });
-    add(j.eq1, v1>v2, sw1, sl1);
-    add(j.eq2, v2>v1, sl1, sw1);
-  });
-
-  const top5 = Object.values(stats)
-    .filter(s => s.pj > 0)
-    .sort((a,b) => b.v-a.v || a.d-b.d || (b.sw-b.sl)-(a.sw-a.sl))
-    .slice(0, 5);
-
-  const medals = ['\uD83E\uDD47','\uD83E\uDD48','\uD83E\uDD49'];
-  const rankClass = ['top-par-rank--1','top-par-rank--2','top-par-rank--3'];
-
-  const el = document.getElementById('topParesList');
-  if (!el) return;
-  if (!top5.length) { el.innerHTML = '<p style="color:#8AA396;font-size:.85rem">Nenhum resultado lan\u00e7ado ainda.</p>'; return; }
-
-  el.innerHTML = top5.map((s, i) => {
-    const rank = i < 3 ? medals[i] : (i+1);
-    const rCls = i < 3 ? rankClass[i] : '';
-    const parts = s.par.split(' & ');
-    const rate = s.pj ? Math.round(s.v/s.pj*100) : 0;
-    return `<div class="top-par-card">
-      <div class="top-par-rank ${rCls}">${rank}</div>
-      <div class="top-par-names"><span>${parts[0]}</span>${parts[1]?`<span>${parts[1]}</span>`:''}</div>
-      <div class="top-par-stats">
-        <div class="top-par-stat"><div class="top-par-stat-val top-par-stat-val--v">${s.v}</div><div class="top-par-stat-lbl">V</div></div>
-        <div class="top-par-stat"><div class="top-par-stat-val top-par-stat-val--d">${s.d}</div><div class="top-par-stat-lbl">D</div></div>
-        <div class="top-par-stat"><div class="top-par-stat-val" style="color:#8AA396">${s.sw}-${s.sl}</div><div class="top-par-stat-lbl">Sets</div></div>
-        <div class="top-par-rate">${rate}%</div>
-      </div>
-    </div>`;
-  }).join('');
-})();
-</script>
 <script>
 // ---- Próximos jogos ----
 (function () {
   const jogos = ppGet('jogos');
+  const nowStr = new Date().toISOString().slice(0, 16);
   const pending = jogos
     .filter(j => !j.resultado)
-    .sort((a, b) => (a.data + a.hora).localeCompare(b.data + b.hora))
+    .map(j => {
+      const dt = j.data && j.hora ? j.data + 'T' + j.hora : null;
+      return Object.assign({}, j, { _overdue: !!(dt && dt < nowStr), _suspenso: !!j.suspenso });
+    })
+    .sort((a, b) => {
+      const aU = (a._overdue || a._suspenso) ? 0 : 1;
+      const bU = (b._overdue || b._suspenso) ? 0 : 1;
+      if (aU !== bU) return aU - bU;
+      return (a.data + a.hora).localeCompare(b.data + b.hora);
+    })
     .slice(0, 6);
-
   const list = document.getElementById('jogosList');
   if (!list) return;
-
   if (pending.length === 0) {
     list.innerHTML = '<div class="jogo-card" style="justify-content:center;color:var(--cinza-texto)"><i class="ph ph-check-circle" style="margin-right:.4rem;color:var(--verde)"></i> Todos os jogos foram disputados.</div>';
     return;
   }
-
-  list.innerHTML = pending.map(j => `
-    <div class="jogo-card">
+  list.innerHTML = pending.map(j => {
+    let statusHtml, cardStyle = '';
+    if (j._suspenso) {
+      const s = j.suspenso;
+      const p = [s.s1eq1!=null?s.s1eq1+'-'+s.s1eq2:null,s.s2eq1!=null?s.s2eq1+'-'+s.s2eq2:null,s.s3eq1!=null?s.s3eq1+'-'+s.s3eq2:null].filter(Boolean).join(' ');
+      statusHtml = `<div class="jogo-status" style="color:#FF9A3C;border-color:rgba(255,154,60,.3);background:rgba(255,154,60,.08)"><i class="ph ph-pause-circle"></i> Interrompido${p ? ' <span style="font-family:monospace;font-size:.7rem">' + p + '</span>' : ''}</div>`;
+      cardStyle = 'border-color:rgba(255,154,60,.25);';
+    } else if (j._overdue) {
+      statusHtml = '<div class="jogo-status" style="color:var(--vermelho);border-color:rgba(255,74,74,.3);background:rgba(255,74,74,.06)"><i class="ph ph-warning-circle"></i> Sem resultado</div>';
+      cardStyle = 'border-color:rgba(255,74,74,.25);';
+    } else {
+      statusHtml = '<div class="jogo-status status-pendente"><i class="ph ph-clock"></i> Pendente</div>';
+    }
+    const horaStyle = j._overdue && !j._suspenso ? 'color:var(--vermelho)' : j._suspenso ? 'color:#FF9A3C' : '';
+    return `<div class="jogo-card" style="${cardStyle}">
       <div class="jogo-meta">
-        <span class="jogo-hora">${j.hora}</span>
+        <span class="jogo-hora" style="${horaStyle}">${j.hora}</span>
         <span class="jogo-campo">${j.campo}</span>
         <span class="jogo-grupo-badge">${j.grupo}</span>
         <span style="font-size:.65rem;color:var(--cinza-texto);margin-left:.2rem">${ppFormatDate(j.data)}</span>
@@ -480,22 +294,8 @@
       <div class="jogo-equipa"><span class="jogo-equipa-nomes">${j.eq1.split(' & ').join('<br>')}</span></div>
       <div class="jogo-vs">VS</div>
       <div class="jogo-equipa"><span class="jogo-equipa-nomes">${j.eq2.split(' & ').join('<br>')}</span></div>
-      <div class="jogo-status status-pendente"><i class="ph ph-clock"></i> Pendente</div>
-    </div>`).join('');
+      ${statusHtml}
+    </div>`;
+  }).join('');
 })();
 </script>
-<script>
-  /* Reload once when remote data.json is fetched — gives all visitors live results */
-  (function() {
-    var key = '_pp_synced';
-    if (!sessionStorage.getItem(key)) {
-      window.addEventListener('pp:datasynced', function() {
-        sessionStorage.setItem(key, '1');
-        location.reload();
-      }, { once: true });
-    }
-  }());
-</script>
-<script>if("serviceWorker"in navigator){navigator.serviceWorker.register("/playpadelcoop/sw.js").catch(function(){});}</script>
-</body>
-</html>
