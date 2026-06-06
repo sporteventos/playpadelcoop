@@ -3516,7 +3516,12 @@
       "grupo": "M2-C",
       "eq1": "Feizan Omar & Filipe Lobo",
       "eq2": "Faheem Adamo & Yann Trivellin",
-      "resultado": null
+      "resultado": null,
+      "adiado": {
+        "motivo": "",
+        "ts": 1780777416314
+      },
+      "suspenso": null
     }
   ],
   "fasefinal": {},
@@ -3612,6 +3617,16 @@
   ],
   "auditlog": [
     {
+      "id": "mq2sw8e7p7oab92",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "ADIAR_JOGO",
+      "target": "jogos",
+      "detail": "Jogo #133 adiado",
+      "ts": "2026-06-06T20:23:36.319Z"
+    },
+    {
       "id": "mq2sv69nqgxk6xu",
       "userId": "mpz8aq9sg983ubo",
       "username": "euamusse",
@@ -3622,5 +3637,5 @@
       "ts": "2026-06-06T20:22:46.907Z"
     }
   ],
-  "_updated": "2026-06-06T20:23:24.743Z"
+  "_updated": "2026-06-06T20:23:41.095Z"
 }
