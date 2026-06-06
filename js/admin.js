@@ -2849,12 +2849,24 @@ function getAllJogosNormalized() {
     .sort((a, b) => (a.data + a.hora).localeCompare(b.data + b.hora) || String(a.id).localeCompare(String(b.id)));
 }
 
-function renderJogos(filtroData = 'todos', filtroCampo = 'todos', filtroGrupo = 'todos') {
+function renderJogos(filtroData = 'todos', filtroCampo = 'todos', filtroGrupo = 'todos', filtroResultado = 'todos') {
   let jogos = getAllJogosNormalized();
 
   if (filtroData !== 'todos')   jogos = jogos.filter(j => j.data === filtroData);
   if (filtroCampo !== 'todos')  jogos = jogos.filter(j => j.campo === filtroCampo);
   if (filtroGrupo !== 'todos')  jogos = jogos.filter(j => j.grupo === filtroGrupo);
+  if (filtroResultado !== 'todos') {
+    jogos = jogos.filter(j => {
+      if (filtroResultado === 'pendente')      return !j.resultado && !j.suspenso;
+      if (filtroResultado === 'suspenso')     return !!j.suspenso && !j.resultado;
+      if (filtroResultado === 'com_resultado') return !!j.resultado;
+      if (filtroResultado === 'wo')           return j.resultado?.wo;
+      // score filters like '2-0', '1-2' etc.
+      if (!j.resultado || j.resultado.wo) return false;
+      const { w1, w2 } = matchSetsScore(j.resultado);
+      return `${w1}-${w2}` === filtroResultado;
+    });
+  }
 
   const tbody = document.getElementById('jogosBody');
   tbody.innerHTML = jogos.map(j => {
@@ -3794,17 +3806,26 @@ function initAdmin() {
     const d = e.target.value;
     const c = document.getElementById('filtroCampoJogos')?.value || 'todos';
     const g = document.getElementById('filtroGrupoJogos')?.value || 'todos';
-    renderJogos(d, c, g);
+    const r = document.getElementById('filtroResultadoJogos')?.value || 'todos';
+    renderJogos(d, c, g, r);
   });
   document.getElementById('filtroCampoJogos')?.addEventListener('change', e => {
     const d = document.getElementById('filtroDataJogos')?.value || 'todos';
     const g = document.getElementById('filtroGrupoJogos')?.value || 'todos';
-    renderJogos(d, e.target.value, g);
+    const r = document.getElementById('filtroResultadoJogos')?.value || 'todos';
+    renderJogos(d, e.target.value, g, r);
   });
   document.getElementById('filtroGrupoJogos')?.addEventListener('change', e => {
     const d = document.getElementById('filtroDataJogos')?.value || 'todos';
     const c = document.getElementById('filtroCampoJogos')?.value || 'todos';
-    renderJogos(d, c, e.target.value);
+    const r = document.getElementById('filtroResultadoJogos')?.value || 'todos';
+    renderJogos(d, c, e.target.value, r);
+  });
+  document.getElementById('filtroResultadoJogos')?.addEventListener('change', e => {
+    const d = document.getElementById('filtroDataJogos')?.value || 'todos';
+    const c = document.getElementById('filtroCampoJogos')?.value || 'todos';
+    const g = document.getElementById('filtroGrupoJogos')?.value || 'todos';
+    renderJogos(d, c, g, e.target.value);
   });
 
   // Resultados filter
