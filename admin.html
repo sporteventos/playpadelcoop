@@ -179,6 +179,10 @@
           <i class="ph ph-sign-out"></i>
         </button>
       </div>
+      <button class="danger-toggle" id="dangerToggleBtn" onclick="toggleDangerBtns()" title="Activar/desactivar botões perigosos (Resultados Aleatórios, Limpar Todos)">
+        <i class="ph ph-lock" id="dangerToggleIcon"></i>
+        <span id="dangerToggleLabel">Modo Avançado: OFF</span>
+      </button>
     </div>
   </aside>
 
@@ -473,10 +477,10 @@
             <p class="page-desc">Todos os jogos do torneio por data, campo e grupo</p>
           </div>
           <div class="page-actions">
-            <button id="btnGerarAleatorios" class="btn btn-ghost" onclick="gerarResultadosAleatorios()" title="Apenas para testes" style="border-color:rgba(245,197,24,.3);color:var(--amarelo);font-size:.75rem">
+            <button id="btnGerarAleatorios" class="btn btn-ghost danger-btn" onclick="gerarResultadosAleatorios()" title="Apenas para testes" style="border-color:rgba(245,197,24,.3);color:var(--amarelo);font-size:.75rem">
               <i class="ph ph-shuffle"></i> Resultados Aleatórios
             </button>
-            <button id="btnLimparTodosResultados" class="btn btn-ghost" onclick="limparTodosResultados()" title="Limpar todos os resultados" style="border-color:rgba(255,74,74,.3);color:var(--vermelho);font-size:.75rem">
+            <button id="btnLimparTodosResultados" class="btn btn-ghost danger-btn" onclick="limparTodosResultados()" title="Limpar todos os resultados" style="border-color:rgba(255,74,74,.3);color:var(--vermelho);font-size:.75rem">
               <i class="ph ph-eraser"></i> Limpar Todos
             </button>
             <button class="btn btn-primary" onclick="abrirNovoJogo()">

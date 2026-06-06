@@ -2832,6 +2832,16 @@ window.gerarResultadosAleatorios = function() {
   toast(`${count} resultados aleatórios gerados.`);
 };
 
+window.toggleDangerBtns = function() {
+  const unlocked = document.body.classList.toggle('danger-unlocked');
+  localStorage.setItem('ppDangerMode', unlocked ? '1' : '0');
+  const icon = document.getElementById('dangerToggleIcon');
+  const lbl  = document.getElementById('dangerToggleLabel');
+  if (icon) icon.className = unlocked ? 'ph ph-lock-open' : 'ph ph-lock';
+  if (lbl)  lbl.textContent = unlocked ? 'Modo Avançado: ON' : 'Modo Avançado: OFF';
+  toast(unlocked ? '⚠ Botões perigosos activados. Cuidado!' : '🔒 Botões perigosos desactivados.', unlocked ? 'warn' : 'ok');
+};
+
 window.limparTodosResultados = function() {
   if (!confirm('Limpar TODOS os resultados do torneio?\nEsta acção não pode ser desfeita.')) return;
   const jogos = getData('jogos').map(j => ({ ...j, resultado: null }));
@@ -3721,6 +3731,16 @@ function initAdmin() {
     document.getElementById('btnSidebarConstrutorGrupos')?.remove();
     document.getElementById('btnSidebarConstrutorJogos')?.remove();
     document.getElementById('btnDashVerLogs')?.remove();
+    document.getElementById('dangerToggleBtn')?.remove();
+  }
+
+  // Restore danger-mode state
+  if (localStorage.getItem('ppDangerMode') === '1') {
+    document.body.classList.add('danger-unlocked');
+    const icon = document.getElementById('dangerToggleIcon');
+    const lbl  = document.getElementById('dangerToggleLabel');
+    if (icon) icon.className = 'ph ph-lock-open';
+    if (lbl)  lbl.textContent = 'Modo Avançado: ON';
   }
 
   // Ir para view inicial — restaurar da hash se disponível
@@ -3979,16 +3999,16 @@ function renderFaseFinal() {
       ${ffChampionColHtml(ffCurrentCat)}
     </div>
     ${Auth.isAdmin() ? `<div style="margin-top:1.25rem;display:flex;gap:.5rem;flex-wrap:wrap">
-      <button class="btn btn-ghost btn-sm" style="color:var(--amarelo);border-color:rgba(245,197,24,.3)" onclick="ffGerarAleatorios('${ffCurrentCat}')">
+      <button class="btn btn-ghost btn-sm danger-btn" style="color:var(--amarelo);border-color:rgba(245,197,24,.3)" onclick="ffGerarAleatorios('${ffCurrentCat}')">
         <i class="ph ph-shuffle"></i> Resultados Aleatórios
       </button>
-      <button class="btn btn-ghost btn-sm" style="color:var(--amarelo);border-color:rgba(245,197,24,.3)" onclick="ffGerarAleatoriosTodos()">
+      <button class="btn btn-ghost btn-sm danger-btn" style="color:var(--amarelo);border-color:rgba(245,197,24,.3)" onclick="ffGerarAleatoriosTodos()">
         <i class="ph ph-shuffle"></i> Aleatórios — Todos
       </button>
-      <button class="btn btn-ghost btn-sm" style="color:var(--cinza-texto)" onclick="ffLimparResultados('${ffCurrentCat}')">
+      <button class="btn btn-ghost btn-sm danger-btn" style="color:var(--cinza-texto)" onclick="ffLimparResultados('${ffCurrentCat}')">
         <i class="ph ph-eraser"></i> Limpar Resultados
       </button>
-      <button class="btn btn-ghost btn-sm" style="color:var(--vermelho);border-color:rgba(255,74,74,.3)" onclick="ffReset('${ffCurrentCat}')">
+      <button class="btn btn-ghost btn-sm danger-btn" style="color:var(--vermelho);border-color:rgba(255,74,74,.3)" onclick="ffReset('${ffCurrentCat}')">
         <i class="ph ph-arrow-counter-clockwise"></i> Resetar Bracket
       </button>
     </div>` : ''}` ;

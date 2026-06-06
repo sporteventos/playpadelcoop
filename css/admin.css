@@ -222,6 +222,27 @@ body {
 }
 .sidebar-logout:hover { color: var(--vermelho); background: var(--vermelho-bg); }
 
+/* Danger-zone buttons — hidden by default, visible only when unlocked */
+.danger-btn { display: none !important; }
+body.danger-unlocked .danger-btn { display: inline-flex !important; }
+
+/* Danger unlock toggle in sidebar footer */
+.danger-toggle {
+  width: 100%; margin-top: .45rem;
+  display: flex; align-items: center; gap: .5rem;
+  padding: .4rem .65rem; border-radius: var(--radius);
+  background: none; border: 1px solid var(--preto-borda);
+  color: var(--cinza-texto); font-size: .72rem; font-weight: 600;
+  cursor: pointer; transition: var(--transition); text-align: left;
+  letter-spacing: .03em;
+}
+.danger-toggle:hover { border-color: rgba(255,74,74,.4); color: var(--vermelho); }
+body.danger-unlocked .danger-toggle {
+  border-color: rgba(255,74,74,.5);
+  color: var(--vermelho);
+  background: rgba(255,74,74,.06);
+}
+
 /* ---- Main area ---- */
 .admin-main {
   margin-left: var(--sidebar-w);
