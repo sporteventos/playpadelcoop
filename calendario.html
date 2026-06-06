@@ -64,7 +64,7 @@
   <div class="page-hero-content">
     <p class="page-hero-tag"><i class="ph ph-calendar"></i> Calendário Oficial</p>
     <h1 class="page-hero-title">Calendário de <span>Jogos</span></h1>
-    <p class="page-hero-sub">Todos os jogos do torneio · filtre por dia, campo ou grupo</p>
+    <p class="page-hero-sub">Todos os jogos do torneio · filtre por dia, campo, grupo ou estado</p>
   </div>
 </div>
 
@@ -90,6 +90,15 @@
         <i class="ph ph-tag"></i>
         <select id="filtroGrupo" class="filter-select" aria-label="Filtrar por grupo">
           <option value="todos">Todos os grupos</option>
+        </select>
+      </div>
+      <div class="filter-select-wrap">
+        <i class="ph ph-funnel"></i>
+        <select id="filtroEstado" class="filter-select" aria-label="Filtrar por estado">
+          <option value="todos">Todos os estados</option>
+          <option value="pendente">Pendente</option>
+          <option value="terminado">Terminado</option>
+          <option value="wo">Walkover (WO)</option>
         </select>
       </div>
       <div class="search-wrap">
@@ -136,9 +145,10 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // ---- Estado dos filtros ----
-  let activeDia   = 'todos';
-  let activeCampo = 'todos';
-  let activeGrupo = 'todos';
+  let activeDia    = 'todos';
+  let activeCampo  = 'todos';
+  let activeGrupo  = 'todos';
+  let activeEstado = 'todos';
   let activeSearch = '';
 
   // ---- Construir tabs de dias ----
@@ -211,15 +221,21 @@ document.addEventListener('DOMContentLoaded', () => {
   // ---- Event listeners filtros ----
   document.getElementById('filtroCampo').addEventListener('change', e => { activeCampo = e.target.value; render(); });
   grupoSelect.addEventListener('change', e => { activeGrupo = e.target.value; render(); });
+  document.getElementById('filtroEstado').addEventListener('change', e => { activeEstado = e.target.value; render(); });
   document.getElementById('searchJogador').addEventListener('input', e => { activeSearch = e.target.value.trim(); render(); });
 
   // ---- Render principal ----
   function render() {
     let list = [...ppGet('jogos'), ...buildFFJogos()];
 
-    if (activeDia   !== 'todos') list = list.filter(j => j.data === activeDia);
-    if (activeCampo !== 'todos') list = list.filter(j => j.campo === activeCampo);
-    if (activeGrupo !== 'todos') list = list.filter(j => j.grupo === activeGrupo);
+    if (activeDia    !== 'todos') list = list.filter(j => j.data === activeDia);
+    if (activeCampo  !== 'todos') list = list.filter(j => j.campo === activeCampo);
+    if (activeGrupo  !== 'todos') list = list.filter(j => j.grupo === activeGrupo);
+    if (activeEstado !== 'todos') {
+      if (activeEstado === 'pendente')  list = list.filter(j => !j.resultado);
+      if (activeEstado === 'terminado') list = list.filter(j => j.resultado && !j.resultado.wo);
+      if (activeEstado === 'wo')        list = list.filter(j => j.resultado && !!j.resultado.wo);
+    }
     if (activeSearch) {
       const q = activeSearch.toLowerCase();
       list = list.filter(j => j.eq1.toLowerCase().includes(q) || j.eq2.toLowerCase().includes(q));
