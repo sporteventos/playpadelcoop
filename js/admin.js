@@ -2489,7 +2489,9 @@ function renderJogos(filtroData = 'todos', filtroCampo = 'todos', filtroGrupo = 
             <span style="font-size:.65rem;color:var(--cinza-texto);letter-spacing:.05em">sets</span>
           </span>`;
         })()
-      : `<span class="badge badge-amarelo">Pendente</span>`;
+      : j.suspenso
+        ? `<span style="background:rgba(255,154,60,.15);color:#FF9A3C;font-size:.7rem;font-weight:700;padding:.1rem .35rem;border-radius:4px">⏸ Suspenso</span>`
+        : `<span class="badge badge-amarelo">Pendente</span>`;
 
     const waBtns = j.resultado
       ? ''
@@ -2788,7 +2790,15 @@ window.abrirResultado = function(jogoId) {
   [2, 3].forEach(n => { document.getElementById(`setBlock${n}`).style.display = 'none'; });
   document.getElementById('matchResultBar').style.display = 'none';
 
+  // Reset suspenso note banner
+  const _suspBanner = document.getElementById('resSuspensoBanner');
+  const _suspNota   = document.getElementById('resSuspensoNota');
+  if (_suspBanner) _suspBanner.style.display = 'none';
+  if (_suspNota)   _suspNota.value = '';
+
   const r = j.resultado;
+  const s = j.suspenso; // partial data when game was suspended
+  const loadData = r || s; // prefer resultado, fall back to suspenso
   if (r) {
     if (r.wo) {
       if (_woChk) { _woChk.checked = true; if (_woPk) _woPk.style.display = ''; }
@@ -2807,13 +2817,29 @@ window.abrirResultado = function(jogoId) {
       if (r.s2eq1 !== null) loadSet(2, r.s2eq1, r.s2eq2, r.tb2eq1, r.tb2eq2);
       if (r.s3eq1 !== null) loadSet(3, r.s3eq1, r.s3eq2, r.tb3eq1, r.tb3eq2);
     }
+  } else if (s) {
+    // Load suspended partial state — no validation needed
+    if (_suspBanner) _suspBanner.style.display = '';
+    if (_suspNota && s.nota)  _suspNota.value = s.nota;
+    function loadSetRaw(n, eq1, eq2) {
+      if (eq1 == null || eq2 == null) return;
+      document.getElementById(`resS${n}E1`).value = eq1;
+      document.getElementById(`resS${n}E2`).value = eq2;
+      document.getElementById(`setBlock${n}`).style.display = '';
+      onSetInput(n);
+    }
+    if (s.s1eq1 != null) loadSetRaw(1, s.s1eq1, s.s1eq2);
+    if (s.s2eq1 != null) loadSetRaw(2, s.s2eq1, s.s2eq2);
+    if (s.s3eq1 != null) loadSetRaw(3, s.s3eq1, s.s3eq2);
   }
 
-  // Trigger UI cascade (only when no WO)
-  if (!r?.wo) {
+  // Trigger UI cascade (only when no WO and no suspenso raw load)
+  if (!r?.wo && !s) {
     onSetInput(1);
     if (r?.s2eq1 !== null) onSetInput(2);
     if (r?.s3eq1 !== null) onSetInput(3);
+  } else if (!r?.wo && !s) {
+    onSetInput(1);
   }
 
   // Histórico de edições deste jogo
@@ -2860,6 +2886,56 @@ window.selectResWo = function(eq) {
   if (btn1) btn1.style.cssText = eq === 'eq1' ? aStyle : iStyle;
   if (btn2) btn2.style.cssText = eq === 'eq2' ? aStyle : iStyle;
   [1,2,3].forEach(n => { const b = document.getElementById(`setBlock${n}`); if (b) b.style.opacity = '0.25'; });
+};
+
+// ── Suspender jogo (estado parcial) ─────────────────────────────
+window.suspenderJogo = function() {
+  if (APP.ffEditing) return toast('Suspensão não disponível para jogos de Fase Final.', 'error');
+  if (!APP.editingId) return;
+
+  // Collect whatever scores are in the inputs (no validation)
+  function readRaw(n) {
+    const v1 = document.getElementById(`resS${n}E1`)?.value;
+    const v2 = document.getElementById(`resS${n}E2`)?.value;
+    if (v1 === '' || v1 == null || v2 === '' || v2 == null) return null;
+    return { eq1: parseInt(v1) || 0, eq2: parseInt(v2) || 0 };
+  }
+  const r1 = readRaw(1), r2 = readRaw(2), r3 = readRaw(3);
+  if (!r1) return toast('Introduza pelo menos o score parcial do 1.º set antes de suspender.', 'error');
+
+  const nota = document.getElementById('resSuspensoNota')?.value?.trim() || '';
+  const suspenso = {
+    s1eq1: r1.eq1, s1eq2: r1.eq2,
+    s2eq1: r2 ? r2.eq1 : null, s2eq2: r2 ? r2.eq2 : null,
+    s3eq1: r3 ? r3.eq1 : null, s3eq2: r3 ? r3.eq2 : null,
+    nota,
+    ts: new Date().toISOString(),
+  };
+
+  const jogos = getData('jogos');
+  const idx = jogos.findIndex(j => j.id === APP.editingId);
+  if (idx < 0) return;
+
+  // Save schedule edits if visible
+  const resEditFields = document.getElementById('resEditFields');
+  if (resEditFields && resEditFields.style.display !== 'none') {
+    const newData  = document.getElementById('resData')?.value;
+    const newHora  = document.getElementById('resHora')?.value;
+    const newCampo = document.getElementById('resCampo')?.value;
+    if (newData)  jogos[idx].data  = newData;
+    if (newHora)  jogos[idx].hora  = newHora;
+    if (newCampo) jogos[idx].campo = newCampo;
+  }
+
+  jogos[idx].suspenso  = suspenso;
+  jogos[idx].resultado = null; // still no final result
+  setData('jogos', jogos);
+  closeModal('modalResultado');
+  renderView(APP.currentView);
+  const notaStr = nota ? ` — "${nota}"` : '';
+  Auth.log('SUSPEND_GAME', 'resultados', `Jogo #${APP.editingId} suspenso${notaStr}`);
+  toast(`Jogo #${APP.editingId} suspenso — retomará noutra data.`, 'success');
+  APP.editingId = null;
 };
 
 function salvarResultado() {
@@ -2997,6 +3073,7 @@ function salvarResultado() {
   const jogos = getData('jogos');
   const idx = jogos.findIndex(j => j.id === APP.editingId);
   if (idx < 0) return;
+  jogos[idx].suspenso  = null; // clear suspenso too when saving final result
   jogos[idx].resultado = resultado;
   // Save schedule + duplas edits (edit fields are shown for group games)
   const resEditFields = document.getElementById('resEditFields');
@@ -3047,7 +3124,7 @@ function limparResultado() {
   if (!confirm('Limpar o resultado deste jogo?')) return;
   const jogos = getData('jogos');
   const idx = jogos.findIndex(j => j.id === APP.editingId);
-  if (idx >= 0) { jogos[idx].resultado = null; setData('jogos', jogos); }
+  if (idx >= 0) { jogos[idx].resultado = null; jogos[idx].suspenso = null; setData('jogos', jogos); }
   closeModal('modalResultado');
   renderView(APP.currentView);
   Auth.log('CLEAR_RESULT', 'resultados', `Resultado removido: jogo #${APP.editingId}`);
@@ -5622,7 +5699,8 @@ function renderRelatorioJogos() {
   let filtered = allJogos;
   if (selData   !== 'todos') filtered = filtered.filter(j => j.data  === selData);
   if (selGrupo  !== 'todos') filtered = filtered.filter(j => j.grupo === selGrupo);
-  if (selEstado === 'pendente')  filtered = filtered.filter(j => !j.resultado);
+  if (selEstado === 'pendente')  filtered = filtered.filter(j => !j.resultado && !j.suspenso);
+  if (selEstado === 'suspenso')  filtered = filtered.filter(j => !j.resultado &&  !!j.suspenso);
   if (selEstado === 'concluido') filtered = filtered.filter(j =>  j.resultado);
   filtered = [...filtered].sort((a, b) =>
     (a.data + (a.hora||'') + a.grupo).localeCompare(b.data + (b.hora||'') + b.grupo)
@@ -5701,8 +5779,12 @@ function renderRelatorioJogos() {
             <td style="padding:.45rem .75rem;${e2style}">${escHtml(j.eq2 || 'A definir')}</td>
             <td style="padding:.45rem .75rem;text-align:center">
               ${j.resultado
-                ? '<span style="color:var(--verde);font-size:.7rem;background:rgba(0,195,123,.12);padding:.1rem .45rem;border-radius:4px">✓ Concluído</span>'
-                : '<span style="color:var(--amarelo);font-size:.7rem;background:rgba(245,197,24,.12);padding:.1rem .45rem;border-radius:4px">⏳ Pendente</span>'}
+                ? (j.resultado.wo
+                    ? '<span style="color:var(--vermelho);font-size:.7rem;background:rgba(255,74,74,.12);padding:.1rem .45rem;border-radius:4px">WO</span>'
+                    : '<span style="color:var(--verde);font-size:.7rem;background:rgba(0,195,123,.12);padding:.1rem .45rem;border-radius:4px">✓ Concluído</span>')
+                : j.suspenso
+                  ? `<span style="color:#FF9A3C;font-size:.7rem;background:rgba(255,154,60,.12);padding:.1rem .45rem;border-radius:4px">⏸ Suspenso${j.suspenso.nota ? ' — '+j.suspenso.nota.substring(0,30) : ''}</span>`
+                  : '<span style="color:var(--amarelo);font-size:.7rem;background:rgba(245,197,24,.12);padding:.1rem .45rem;border-radius:4px">⏳ Pendente</span>'}
             </td>
             <td style="padding:.45rem .75rem;text-align:center">
               ${j.resultado ? (() => {
