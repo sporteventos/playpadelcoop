@@ -1091,18 +1091,21 @@ window._gerarPanfletoSuspenso = function(jogo) {
     // Serve indicator
     let serveY = setLines.length ? SCRY + setLines.length * 36 + 38 : SCRY + 20;
     if (s.serve && s.serve !== 'eq1' && s.serve !== 'eq2') {
-      ctx.fillStyle = '#8AA396'; ctx.font = '20px Arial, sans-serif'; ctx.textAlign = 'center';
-      ctx.fillText('⚡ A servir: ', W/2, serveY);
-      const tw = ctx.measureText('⚡ A servir: ').width;
-      ctx.fillStyle = ORANGE; ctx.font = 'bold 20px Arial, sans-serif';
+      const label = '\u26a1 A servir: ';
+      const name  = s.serve;
+      // Measure both parts at their respective fonts so we can center the combined string
+      ctx.font = '20px Arial, sans-serif';
+      const labelW = ctx.measureText(label).width;
+      ctx.font = 'bold 20px Arial, sans-serif';
+      const nameW  = ctx.measureText(name).width;
+      const totalW = labelW + nameW;
+      const startX = W/2 - totalW/2;
       ctx.textAlign = 'left';
-      ctx.fillText(s.serve, W/2 + tw/2 - ctx.measureText(s.serve).width/2, serveY);
-      // Redraw properly centered
-      ctx.textAlign = 'center';
       ctx.fillStyle = '#8AA396'; ctx.font = '20px Arial, sans-serif';
-      ctx.fillText(`⚡ A servir: `, W/2 - ctx.measureText(s.serve).width/2, serveY);
+      ctx.fillText(label, startX, serveY);
       ctx.fillStyle = ORANGE; ctx.font = 'bold 20px Arial, sans-serif';
-      ctx.fillText(s.serve, W/2 + ctx.measureText('⚡ A servir: ').width/2, serveY);
+      ctx.fillText(name, startX + labelW, serveY);
+      ctx.textAlign = 'center';
       serveY += 36;
     }
 
