@@ -2828,7 +2828,22 @@
       "grupo": "M1-B",
       "eq1": "Rehan Fayaz & Abdur Rehmane",
       "eq2": "Gonçalo Nascimento & João Catela",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 2,
+        "s1eq2": 6,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 1,
+        "s2eq2": 6,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": null,
+        "s3eq2": null,
+        "tb3eq1": null,
+        "tb3eq2": null
+      },
+      "suspenso": null,
+      "adiado": null
     },
     {
       "id": 57,
@@ -3843,6 +3858,26 @@
     }
   ],
   "auditlog": [
+    {
+      "id": "mq3riz9yya1j317",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "SAVE_RESULT",
+      "target": "resultados",
+      "detail": "Resultado guardado: jogo #56",
+      "ts": "2026-06-07T12:33:04.534Z"
+    },
+    {
+      "id": "mq3rigib20eu0ye",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "LOGIN",
+      "target": "auth",
+      "detail": "Login: euamusse (admin)",
+      "ts": "2026-06-07T12:32:40.211Z"
+    },
     {
       "id": "mq3qvpt7k4pbsaa",
       "userId": "mpz8aq9sg983ubo",
@@ -9334,5 +9369,5 @@
       "ts": "2026-06-03T06:06:37.211Z"
     }
   ],
-  "_updated": "2026-06-07T12:16:31.171Z"
+  "_updated": "2026-06-07T12:33:09.450Z"
 }
