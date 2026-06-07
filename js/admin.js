@@ -6190,7 +6190,7 @@ function renderConstrutorGrupos() {
           <i class="ph ph-arrows-clockwise"></i> Actualizar grupos
         </button>
       </div>
-      <button class="btn btn-ghost btn-sm" style="color:var(--amarelo);border-color:rgba(245,197,24,.3)"
+      <button class="btn btn-ghost btn-sm danger-btn" style="color:var(--amarelo);border-color:rgba(245,197,24,.3)"
         onclick="cgAutoDistribuir()">
         <i class="ph ph-magic-wand"></i> Auto-distribuir
       </button>
@@ -6381,10 +6381,10 @@ function renderConstrutorJogos() {
           </div>
         </div>
         <div style="display:flex;gap:.6rem">
-          <button class="btn btn-primary" onclick="cjGerarJogos()">
+          <button class="btn btn-primary danger-btn" onclick="cjGerarJogos()">
             <i class="ph ph-play"></i> Gerar jogos
           </button>
-          ${totalExiste > 0 ? `<button class="btn btn-ghost" style="color:var(--vermelho);border-color:rgba(255,74,74,.3)" onclick="cjLimparJogos('${catId}')">
+          ${totalExiste > 0 ? `<button class="btn btn-ghost danger-btn" style="color:var(--vermelho);border-color:rgba(255,74,74,.3)" onclick="cjLimparJogos('${catId}')">
             <i class="ph ph-trash"></i> Limpar jogos de ${catId}
           </button>` : ''}
         </div>
