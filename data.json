@@ -2686,7 +2686,22 @@
       "grupo": "F1-B",
       "eq1": "Érica Capela & Sarah Taillon",
       "eq2": "Inês Pires & Daniela Duarte",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 6,
+        "s1eq2": 3,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 6,
+        "s2eq2": 2,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": null,
+        "s3eq2": null,
+        "tb3eq1": null,
+        "tb3eq2": null
+      },
+      "suspenso": null,
+      "adiado": null
     },
     {
       "id": 51,
@@ -2765,7 +2780,22 @@
       "grupo": "F1-C",
       "eq1": "Omar Fernandes & Claudia Sumaya",
       "eq2": "Diana Carvalho & Ilga João",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 6,
+        "s1eq2": 0,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 6,
+        "s2eq2": 2,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": null,
+        "s3eq2": null,
+        "tb3eq1": null,
+        "tb3eq2": null
+      },
+      "suspenso": null,
+      "adiado": null
     },
     {
       "id": 55,
@@ -2942,7 +2972,22 @@
       "grupo": "F1-A",
       "eq1": "Helen Khumalo & Narcisa Nhamitambo",
       "eq2": "Caironice & Carmen",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 6,
+        "s1eq2": 0,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 6,
+        "s2eq2": 0,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": null,
+        "s3eq2": null,
+        "tb3eq1": null,
+        "tb3eq2": null
+      },
+      "suspenso": null,
+      "adiado": null
     },
     {
       "id": 66,
@@ -3078,7 +3123,22 @@
       "grupo": "M2-B",
       "eq1": "João Henriques & Bruno Morais",
       "eq2": "Dej Cruz & Nuno Correa Mendes",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 6,
+        "s1eq2": 3,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 6,
+        "s2eq2": 7,
+        "tb2eq1": 4,
+        "tb2eq2": 7,
+        "s3eq1": 5,
+        "s3eq2": 7,
+        "tb3eq1": null,
+        "tb3eq2": null
+      },
+      "suspenso": null,
+      "adiado": null
     },
     {
       "id": 77,
@@ -3754,6 +3814,66 @@
   ],
   "auditlog": [
     {
+      "id": "mq3qtjxfk9a1ji3",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "SAVE_RESULT",
+      "target": "resultados",
+      "detail": "Resultado guardado: jogo #54",
+      "ts": "2026-06-07T12:13:18.243Z"
+    },
+    {
+      "id": "mq3qt61ztmw5mx5",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "SAVE_RESULT",
+      "target": "resultados",
+      "detail": "Resultado guardado: jogo #50",
+      "ts": "2026-06-07T12:13:00.263Z"
+    },
+    {
+      "id": "mq3qspuj5cn4d42",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "SAVE_RESULT",
+      "target": "resultados",
+      "detail": "Resultado guardado: jogo #76",
+      "ts": "2026-06-07T12:12:39.259Z"
+    },
+    {
+      "id": "mq3qrvdq0i2poru",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "SAVE_RESULT",
+      "target": "resultados",
+      "detail": "Resultado guardado: jogo #65",
+      "ts": "2026-06-07T12:11:59.774Z"
+    },
+    {
+      "id": "mq3qqm4ya4wqid4",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "LOGIN",
+      "target": "auth",
+      "detail": "Login: euamusse (admin)",
+      "ts": "2026-06-07T12:11:01.138Z"
+    },
+    {
+      "id": "mq3qqfvvt5kbp9w",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "LOGOUT",
+      "target": "auth",
+      "detail": "Logout: euamusse",
+      "ts": "2026-06-07T12:10:53.035Z"
+    },
+    {
       "id": "mq3pxomvm6mjbhq",
       "userId": "mpzxoo1v8l1za3r",
       "username": "djanasse",
@@ -3784,6 +3904,56 @@
       "ts": "2026-06-07T11:38:15.945Z"
     },
     {
+      "id": "mq3ojmlwetg6rlg",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "SAVE_RESULT",
+      "target": "resultados",
+      "detail": "Resultado guardado: jogo #77",
+      "ts": "2026-06-07T11:09:35.924Z"
+    },
+    {
+      "id": "mq3ns3ce4z94xk9",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "SAVE_RESULT",
+      "target": "resultados",
+      "detail": "Resultado guardado: jogo #76",
+      "ts": "2026-06-07T10:48:11.246Z"
+    },
+    {
+      "id": "mq3npodtsd3b5fb",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "SAVE_RESULT",
+      "target": "resultados",
+      "detail": "Resultado guardado: jogo #54",
+      "ts": "2026-06-07T10:46:18.545Z"
+    },
+    {
+      "id": "mq3nlce54bh1ixt",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "SAVE_RESULT",
+      "target": "resultados",
+      "detail": "Resultado guardado: jogo #65",
+      "ts": "2026-06-07T10:42:56.381Z"
+    },
+    {
+      "id": "mq3niyexnfovchm",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "SAVE_RESULT",
+      "target": "resultados",
+      "detail": "Resultado guardado: jogo #50",
+      "ts": "2026-06-07T10:41:04.953Z"
+    },
+    {
       "id": "mq3ndiykktf55ys",
       "userId": "mpzxoo1v8l1za3r",
       "username": "djanasse",
@@ -3802,6 +3972,26 @@
       "target": "auth",
       "detail": "Login: djanasse (operator)",
       "ts": "2026-06-07T10:35:41.519Z"
+    },
+    {
+      "id": "mq3nb14zssoqlhu",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "SAVE_RESULT",
+      "target": "resultados",
+      "detail": "Resultado guardado: jogo #53",
+      "ts": "2026-06-07T10:34:55.235Z"
+    },
+    {
+      "id": "mq3n7p9l5ppulz8",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "LOGIN",
+      "target": "auth",
+      "detail": "Login: euamusse (admin)",
+      "ts": "2026-06-07T10:32:19.881Z"
     },
     {
       "id": "mq3n00470a2enzn",
@@ -3882,6 +4072,26 @@
       "target": "auth",
       "detail": "Login: euamusse (admin)",
       "ts": "2026-06-07T08:53:01.257Z"
+    },
+    {
+      "id": "mq3jhhehxxrdg7g",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "LOGIN",
+      "target": "auth",
+      "detail": "Login: euamusse (admin)",
+      "ts": "2026-06-07T08:47:57.785Z"
+    },
+    {
+      "id": "mq3jhcdfrquo6i8",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "LOGOUT",
+      "target": "auth",
+      "detail": "Logout: euamusse",
+      "ts": "2026-06-07T08:47:51.267Z"
     },
     {
       "id": "mq3j4biu53a67db",
@@ -9074,5 +9284,5 @@
       "ts": "2026-06-03T06:06:37.211Z"
     }
   ],
-  "_updated": "2026-06-07T11:54:57.198Z"
+  "_updated": "2026-06-07T12:13:26.643Z"
 }
