@@ -312,11 +312,61 @@
 
     <p style="font-size:.8rem;color:var(--cinza-texto);margin-bottom:.85rem;text-transform:uppercase;letter-spacing:.07em;font-weight:600;">Critérios de Desempate</p>
     <ul class="reg-list reg-desempate">
-      <li>Confronto direto</li>
-      <li>Diferença de sets</li>
-      <li>Diferença de jogos</li>
-      <li>Maior número de jogos ganhos</li>
+      <li>Maior número de <strong>vitórias</strong></li>
+      <li>Melhor <strong>diferença de sets</strong> (sets ganhos &minus; sets perdidos)</li>
+      <li>Melhor <strong>diferença de games</strong> (games ganhos &minus; games perdidos)</li>
+      <li>Maior <strong>total de games ganhos</strong></li>
     </ul>
+    <p style="font-size:.78rem;color:var(--cinza-texto);margin-top:.6rem;padding:.5rem .75rem;border-radius:6px;background:rgba(74,158,255,.06);border:1px solid rgba(74,158,255,.2);line-height:1.5">
+      <i class="ph ph-info" style="color:#4A9EFF"></i>&nbsp;
+      O confronto directo <strong>não é utilizado</strong> como critério de desempate, uma vez que as duplas podem vir de grupos diferentes.
+    </p>
+  </div>
+
+  <!-- Apuramento e Fase Final -->
+  <div class="reg-section">
+    <div class="reg-section-header">
+      <div class="reg-section-icon amarelo">🏆</div>
+      <div>
+        <div class="reg-section-title">Apuramento e Fase Final</div>
+        <small>Quem passa e como se formam os emparelhamentos</small>
+      </div>
+    </div>
+
+    <p style="font-size:.8rem;color:var(--cinza-texto);margin-bottom:.85rem;text-transform:uppercase;letter-spacing:.07em;font-weight:600;">Quem apura</p>
+    <ul class="reg-list">
+      <li>Os <strong>1.º e 2.º classificados</strong> de cada grupo apuram directamente para a Fase Final.</li>
+      <li>Nas categorias com 3 grupos, os <strong>2 melhores 3.ºs classificados</strong> (wildcards) também apuram.</li>
+      <li>Os wildcards são ordenados pelos mesmos critérios de desempate da fase de grupos.</li>
+    </ul>
+
+    <p style="font-size:.8rem;color:var(--cinza-texto);margin:.85rem 0;text-transform:uppercase;letter-spacing:.07em;font-weight:600;">Seeding nos Quartos-de-Final</p>
+    <p style="font-size:.875rem;color:var(--cinza-texto);margin-bottom:.75rem;line-height:1.6">
+      Os 8 apurados são ordenados de S1 (melhor) a S8 (pior), com base nos critérios de desempate acima.
+      Os emparelhamentos são definidos da seguinte forma:
+    </p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem .75rem;margin-bottom:.85rem">
+      <div style="padding:.5rem .75rem;background:rgba(0,195,123,.07);border:1px solid rgba(0,195,123,.2);border-radius:8px;font-size:.85rem">
+        <span style="font-weight:700;color:var(--verde)">QF 1</span> &nbsp; S1 <span style="color:var(--cinza-texto)">vs</span> S8
+        <span style="font-size:.7rem;color:var(--cinza-texto);display:block;margin-top:.15rem">Melhor 1.º vs pior apurado</span>
+      </div>
+      <div style="padding:.5rem .75rem;background:rgba(0,195,123,.07);border:1px solid rgba(0,195,123,.2);border-radius:8px;font-size:.85rem">
+        <span style="font-weight:700;color:var(--verde)">QF 2</span> &nbsp; S2 <span style="color:var(--cinza-texto)">vs</span> S7
+        <span style="font-size:.7rem;color:var(--cinza-texto);display:block;margin-top:.15rem">2.º melhor 1.º vs melhor wildcard</span>
+      </div>
+      <div style="padding:.5rem .75rem;background:rgba(0,195,123,.07);border:1px solid rgba(0,195,123,.2);border-radius:8px;font-size:.85rem">
+        <span style="font-weight:700;color:var(--verde)">QF 3</span> &nbsp; S3 <span style="color:var(--cinza-texto)">vs</span> S6
+        <span style="font-size:.7rem;color:var(--cinza-texto);display:block;margin-top:.15rem">3.º melhor 1.º vs 2.º melhor 2.º</span>
+      </div>
+      <div style="padding:.5rem .75rem;background:rgba(0,195,123,.07);border:1px solid rgba(0,195,123,.2);border-radius:8px;font-size:.85rem">
+        <span style="font-weight:700;color:var(--verde)">QF 4</span> &nbsp; S4 <span style="color:var(--cinza-texto)">vs</span> S5
+        <span style="font-size:.7rem;color:var(--cinza-texto);display:block;margin-top:.15rem">Melhor 2.º vs 2.º melhor wildcard</span>
+      </div>
+    </div>
+    <p style="font-size:.78rem;color:var(--cinza-texto);padding:.5rem .75rem;border-radius:6px;background:rgba(245,197,24,.06);border:1px solid rgba(245,197,24,.2);line-height:1.5">
+      <i class="ph ph-warning" style="color:var(--amarelo)"></i>&nbsp;
+      <strong>Regra anti-colisão:</strong> duplas do mesmo grupo <strong>não se podem cruzar</strong> nos Quartos-de-Final. O sistema ajusta automaticamente o seeding para evitar estes cruzamentos.
+    </p>
   </div>
 
   <!-- Pontualidade -->
