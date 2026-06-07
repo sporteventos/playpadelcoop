@@ -3399,7 +3399,22 @@
       "grupo": "M5-A",
       "eq1": "Tito Ferrinho & Valdir Jetha",
       "eq2": "Faizan Ravat & Ranim Ahmad",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 1,
+        "s1eq2": 6,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 1,
+        "s2eq2": 6,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": null,
+        "s3eq2": null,
+        "tb3eq1": null,
+        "tb3eq2": null
+      },
+      "suspenso": null,
+      "adiado": null
     },
     {
       "id": 84,
@@ -4004,6 +4019,16 @@
     }
   ],
   "auditlog": [
+    {
+      "id": "mq40sua70ygw470",
+      "userId": "mpzxoo1v8l1za3r",
+      "username": "djanasse",
+      "role": "operator",
+      "action": "SAVE_RESULT",
+      "target": "resultados",
+      "detail": "Resultado guardado: jogo #83",
+      "ts": "2026-06-07T16:52:41.167Z"
+    },
     {
       "id": "mq40m8bm9aroue5",
       "userId": "mpzxoo1v8l1za3r",
@@ -9775,5 +9800,5 @@
       "ts": "2026-06-03T06:06:37.211Z"
     }
   ],
-  "_updated": "2026-06-07T16:47:57.687Z"
+  "_updated": "2026-06-07T16:53:05.701Z"
 }
