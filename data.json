@@ -3479,7 +3479,22 @@
       "grupo": "M5-B",
       "eq1": "Filipe Ferreira & Paulo Baldaia",
       "eq2": "Faheem Aboobakar & Mikaeel Taibo",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 6,
+        "s1eq2": 3,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 6,
+        "s2eq2": 1,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": null,
+        "s3eq2": null,
+        "tb3eq1": null,
+        "tb3eq2": null
+      },
+      "suspenso": null,
+      "adiado": null
     },
     {
       "id": 86,
@@ -4079,6 +4094,16 @@
     }
   ],
   "auditlog": [
+    {
+      "id": "mq45eez3pjoqg74",
+      "userId": "mpzxoo1v8l1za3r",
+      "username": "djanasse",
+      "role": "operator",
+      "action": "SAVE_RESULT",
+      "target": "resultados",
+      "detail": "Resultado guardado: jogo #85",
+      "ts": "2026-06-07T19:01:26.225Z"
+    },
     {
       "id": "mq45965dfq9in34",
       "userId": "mpzxoo1v8l1za3r",
@@ -10010,5 +10035,5 @@
       "ts": "2026-06-03T06:06:37.211Z"
     }
   ],
-  "_updated": "2026-06-07T18:58:52.764Z"
+  "_updated": "2026-06-07T19:01:26.229Z"
 }
