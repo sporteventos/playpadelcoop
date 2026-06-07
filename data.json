@@ -3173,7 +3173,22 @@
       "grupo": "F2-B",
       "eq1": "Glória Baltazar & Luciana Lauriano",
       "eq2": "Karina Darsan & Bethany",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 0,
+        "s1eq2": 6,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 4,
+        "s2eq2": 6,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": null,
+        "s3eq2": null,
+        "tb3eq1": null,
+        "tb3eq2": null
+      },
+      "suspenso": null,
+      "adiado": null
     },
     {
       "id": 79,
@@ -3828,6 +3843,16 @@
     }
   ],
   "auditlog": [
+    {
+      "id": "mq3qvpt7k4pbsaa",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "SAVE_RESULT",
+      "target": "resultados",
+      "detail": "Resultado guardado: jogo #78",
+      "ts": "2026-06-07T12:14:59.180Z"
+    },
     {
       "id": "mq3quh3eygdxsuc",
       "userId": "mpz8aq9sg983ubo",
@@ -9309,5 +9334,5 @@
       "ts": "2026-06-03T06:06:37.211Z"
     }
   ],
-  "_updated": "2026-06-07T12:14:08.955Z"
+  "_updated": "2026-06-07T12:15:20.426Z"
 }
