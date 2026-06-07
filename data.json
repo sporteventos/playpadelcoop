@@ -2853,7 +2853,22 @@
       "grupo": "M2-A",
       "eq1": "Frederico Jonet & Francisco Ferreira",
       "eq2": "Shezane Arif & Razeen",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 6,
+        "s1eq2": 3,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 7,
+        "s2eq2": 5,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": null,
+        "s3eq2": null,
+        "tb3eq1": null,
+        "tb3eq2": null
+      },
+      "suspenso": null,
+      "adiado": null
     },
     {
       "id": 58,
@@ -3888,6 +3903,16 @@
     }
   ],
   "auditlog": [
+    {
+      "id": "mq3tzn92ur3t6er",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "SAVE_RESULT",
+      "target": "resultados",
+      "detail": "Resultado guardado: jogo #57",
+      "ts": "2026-06-07T13:42:01.334Z"
+    },
     {
       "id": "mq3tygorrj5lz2s",
       "userId": "mpz8aq9sg983ubo",
@@ -9419,5 +9444,5 @@
       "ts": "2026-06-03T06:06:37.211Z"
     }
   ],
-  "_updated": "2026-06-07T13:41:17.719Z"
+  "_updated": "2026-06-07T13:42:04.070Z"
 }
