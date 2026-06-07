@@ -3180,11 +3180,11 @@
         "tb1eq2": null,
         "s2eq1": 6,
         "s2eq2": 7,
-        "tb2eq1": 5,
+        "tb2eq1": 4,
         "tb2eq2": 7,
         "s3eq1": 6,
         "s3eq2": 7,
-        "tb3eq1": 5,
+        "tb3eq1": 3,
         "tb3eq2": 7
       },
       "suspenso": null,
@@ -3296,7 +3296,22 @@
       "grupo": "M4-D",
       "eq1": "Jason & Bosch",
       "eq2": "Muhammad Chona & Ibrahim Bilal",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 5,
+        "s1eq2": 7,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 7,
+        "s2eq2": 6,
+        "tb2eq1": 7,
+        "tb2eq2": 3,
+        "s3eq1": 6,
+        "s3eq2": 4,
+        "tb3eq1": null,
+        "tb3eq2": null
+      },
+      "suspenso": null,
+      "adiado": null
     },
     {
       "id": 81,
@@ -3944,6 +3959,26 @@
     }
   ],
   "auditlog": [
+    {
+      "id": "mq3yf558up6ini4",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "SAVE_RESULT",
+      "target": "resultados",
+      "detail": "Resultado guardado: jogo #80",
+      "ts": "2026-06-07T15:46:02.828Z"
+    },
+    {
+      "id": "mq3yd6mvols637i",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "SAVE_RESULT",
+      "target": "resultados",
+      "detail": "Resultado guardado: jogo #75",
+      "ts": "2026-06-07T15:44:31.447Z"
+    },
     {
       "id": "mq3y9l0grb0rav9",
       "userId": "mpz8aq9sg983ubo",
@@ -9645,5 +9680,5 @@
       "ts": "2026-06-03T06:06:37.211Z"
     }
   ],
-  "_updated": "2026-06-07T15:42:04.978Z"
+  "_updated": "2026-06-07T15:46:12.877Z"
 }
