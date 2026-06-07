@@ -3012,7 +3012,22 @@
       "grupo": "M3-D",
       "eq1": "Sueil & Ahmed Riaze",
       "eq2": "Alexandre Salazar & Pedro Gonzalez",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 6,
+        "s1eq2": 2,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 5,
+        "s2eq2": 7,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": 6,
+        "s3eq2": 2,
+        "tb3eq1": null,
+        "tb3eq2": null
+      },
+      "suspenso": null,
+      "adiado": null
     },
     {
       "id": 67,
@@ -3858,6 +3873,16 @@
     }
   ],
   "auditlog": [
+    {
+      "id": "mq3rkd32yo2b38m",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "SAVE_RESULT",
+      "target": "resultados",
+      "detail": "Resultado guardado: jogo #66",
+      "ts": "2026-06-07T12:34:09.086Z"
+    },
     {
       "id": "mq3riz9yya1j317",
       "userId": "mpz8aq9sg983ubo",
@@ -9369,5 +9394,5 @@
       "ts": "2026-06-03T06:06:37.211Z"
     }
   ],
-  "_updated": "2026-06-07T12:33:09.450Z"
+  "_updated": "2026-06-07T12:34:22.733Z"
 }
