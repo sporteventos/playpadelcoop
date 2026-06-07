@@ -3173,7 +3173,22 @@
       "grupo": "M2-B",
       "eq1": "José Moreira & Nuno L. Pereira",
       "eq2": "Jameel Abdula & Tahir",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 6,
+        "s1eq2": 1,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 6,
+        "s2eq2": 7,
+        "tb2eq1": 5,
+        "tb2eq2": 7,
+        "s3eq1": 6,
+        "s3eq2": 7,
+        "tb3eq1": 5,
+        "tb3eq2": 7
+      },
+      "suspenso": null,
+      "adiado": null
     },
     {
       "id": 76,
@@ -3929,6 +3944,16 @@
     }
   ],
   "auditlog": [
+    {
+      "id": "mq3y9l0grb0rav9",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "SAVE_RESULT",
+      "target": "resultados",
+      "detail": "Resultado guardado: jogo #75",
+      "ts": "2026-06-07T15:41:43.456Z"
+    },
     {
       "id": "mq3y5arck0lf0fn",
       "userId": "mpz8aq9sg983ubo",
@@ -9620,5 +9645,5 @@
       "ts": "2026-06-03T06:06:37.211Z"
     }
   ],
-  "_updated": "2026-06-07T15:38:31.510Z"
+  "_updated": "2026-06-07T15:41:47.889Z"
 }
