@@ -2686,7 +2686,22 @@
       "grupo": "F1-B",
       "eq1": "Érica Capela & Sarah Taillon",
       "eq2": "Inês Pires & Daniela Duarte",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 6,
+        "s1eq2": 3,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 6,
+        "s2eq2": 2,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": null,
+        "s3eq2": null,
+        "tb3eq1": null,
+        "tb3eq2": null
+      },
+      "suspenso": null,
+      "adiado": null
     },
     {
       "id": 51,
@@ -2765,7 +2780,22 @@
       "grupo": "F1-C",
       "eq1": "Omar Fernandes & Claudia Sumaya",
       "eq2": "Diana Carvalho & Ilga João",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 6,
+        "s1eq2": 0,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 6,
+        "s2eq2": 2,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": null,
+        "s3eq2": null,
+        "tb3eq1": null,
+        "tb3eq2": null
+      },
+      "suspenso": null,
+      "adiado": null
     },
     {
       "id": 55,
@@ -2972,7 +3002,22 @@
       "grupo": "F1-A",
       "eq1": "Helen Khumalo & Narcisa Nhamitambo",
       "eq2": "Caironice & Carmen",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 6,
+        "s1eq2": 0,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 6,
+        "s2eq2": 0,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": null,
+        "s3eq2": null,
+        "tb3eq1": null,
+        "tb3eq2": null
+      },
+      "suspenso": null,
+      "adiado": null
     },
     {
       "id": 66,
@@ -3884,6 +3929,36 @@
     }
   ],
   "auditlog": [
+    {
+      "id": "mq3y5arck0lf0fn",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "SAVE_RESULT",
+      "target": "resultados",
+      "detail": "Resultado guardado: jogo #54",
+      "ts": "2026-06-07T15:38:23.544Z"
+    },
+    {
+      "id": "mq3y4y3f3k9yd9u",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "SAVE_RESULT",
+      "target": "resultados",
+      "detail": "Resultado guardado: jogo #50",
+      "ts": "2026-06-07T15:38:07.131Z"
+    },
+    {
+      "id": "mq3y4g9go8p4h1e",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "SAVE_RESULT",
+      "target": "resultados",
+      "detail": "Resultado guardado: jogo #65",
+      "ts": "2026-06-07T15:37:44.020Z"
+    },
     {
       "id": "mq3y407uvvcfyxh",
       "userId": "mpz8aq9sg983ubo",
@@ -9545,5 +9620,5 @@
       "ts": "2026-06-03T06:06:37.211Z"
     }
   ],
-  "_updated": "2026-06-07T15:37:26.657Z"
+  "_updated": "2026-06-07T15:38:31.510Z"
 }
