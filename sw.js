@@ -1,5 +1,5 @@
 // Play Padel · Service Worker
-const CACHE = 'playpadel-v4';
+const CACHE = 'playpadel-v5';
 const PRECACHE = [
   '/playpadelcoop/',
   '/playpadelcoop/index.html',
@@ -19,6 +19,9 @@ const PRECACHE = [
   '/playpadelcoop/playpadellogo.jpg',
 ];
 
+// Assets that rarely change — cache-first is fine
+const STATIC_EXTS = ['.png', '.jpg', '.jpeg', '.webp', '.ico', '.woff', '.woff2', '.ttf'];
+
 // Install: pre-cache shell
 self.addEventListener('install', e => {
   e.waitUntil(
@@ -28,7 +31,7 @@ self.addEventListener('install', e => {
   );
 });
 
-// Activate: clean old caches
+// Activate: clean old caches + claim all clients immediately
 self.addEventListener('activate', e => {
   e.waitUntil(
     caches.keys().then(keys =>
@@ -37,17 +40,33 @@ self.addEventListener('activate', e => {
   );
 });
 
-// Fetch: network-first for data.json (live results), cache-first for everything else
+// Fetch strategy:
+//   • data.json          → network-first (live results, no stale)
+//   • HTML / CSS / JS    → network-first with cache fallback (always latest code)
+//   • images/fonts       → cache-first (stable assets)
 self.addEventListener('fetch', e => {
   const url = new URL(e.request.url);
+  const path = url.pathname;
+  const ext  = path.substring(path.lastIndexOf('.'));
 
-  // Always fetch data.json live (tournament results)
-  if (url.pathname.endsWith('data.json')) {
+  // Skip non-GET and cross-origin requests
+  if (e.request.method !== 'GET' || url.origin !== self.location.origin) return;
+
+  // Network-first: data.json + HTML + CSS + JS
+  const isNetworkFirst =
+    path.endsWith('data.json') ||
+    path.endsWith('.html') || path === '/playpadelcoop/' ||
+    path.endsWith('.css') ||
+    path.endsWith('.js');
+
+  if (isNetworkFirst) {
     e.respondWith(
       fetch(e.request)
         .then(res => {
-          const clone = res.clone();
-          caches.open(CACHE).then(c => c.put(e.request, clone));
+          if (res.ok) {
+            const clone = res.clone();
+            caches.open(CACHE).then(c => c.put(e.request, clone));
+          }
           return res;
         })
         .catch(() => caches.match(e.request))
@@ -55,12 +74,12 @@ self.addEventListener('fetch', e => {
     return;
   }
 
-  // Cache-first for everything else
+  // Cache-first: images, fonts, other static assets
   e.respondWith(
     caches.match(e.request).then(cached => {
       if (cached) return cached;
       return fetch(e.request).then(res => {
-        if (res.ok && e.request.method === 'GET') {
+        if (res.ok) {
           const clone = res.clone();
           caches.open(CACHE).then(c => c.put(e.request, clone));
         }
