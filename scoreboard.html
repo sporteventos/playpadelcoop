@@ -151,21 +151,35 @@
   function computeStandings(grupo, jogos) {
     const gJogos = jogos.filter(j => j.grupo === grupo.id);
     const table  = {};
-    grupo.pares.forEach(p => { table[p] = { par: p, pj:0, v:0, d:0, sw:0, sl:0, pts:0 }; });
+    // Derive pairs from games (grupos don't store pares)
+    gJogos.forEach(j => {
+      if (!table[j.eq1]) table[j.eq1] = { par: j.eq1, pj:0, v:0, d:0, sv:0, sl:0, gv:0, gl:0 };
+      if (!table[j.eq2]) table[j.eq2] = { par: j.eq2, pj:0, v:0, d:0, sv:0, sl:0, gv:0, gl:0 };
+    });
     gJogos.forEach(j => {
       if (!j.resultado) return;
       const r = j.resultado;
-      const allSets = [[r.s1eq1,r.s1eq2],[r.s2eq1,r.s2eq2],[r.s3eq1,r.s3eq2]].filter(([a]) => a != null);
-      let vEq1=0, vEq2=0, sw1=0, sl1=0, sw2=0, sl2=0;
+      if (r.wo) {
+        const winner = r.wo === 'eq1' ? j.eq1 : j.eq2;
+        const loser  = r.wo === 'eq1' ? j.eq2 : j.eq1;
+        if (table[winner]) { table[winner].pj++; table[winner].v++; }
+        if (table[loser])  { table[loser].pj++;  table[loser].d++;  }
+        return;
+      }
+      const allSets = [[r.s1eq1,r.s1eq2],[r.s2eq1,r.s2eq2],[r.s3eq1,r.s3eq2]].filter(([a,b]) => a != null && b != null);
+      let vEq1=0, vEq2=0, gv1=0, gl1=0, gv2=0, gl2=0, sv1=0, sl1=0, sv2=0, sl2=0;
       allSets.forEach(([a,b]) => {
-        if (a>b) vEq1++; else vEq2++;
-        sw1+=a; sl1+=b; sw2+=b; sl2+=a;
+        if (a>b) { vEq1++; sv1++; sl2++; } else { vEq2++; sv2++; sl1++; }
+        gv1+=a; gl1+=b; gv2+=b; gl2+=a;
       });
       const w1 = vEq1 > vEq2;
-      if (table[j.eq1]) { table[j.eq1].pj++; table[j.eq1].sw+=sw1; table[j.eq1].sl+=sl1; if(w1){table[j.eq1].v++;table[j.eq1].pts+=3;}else table[j.eq1].d++; }
-      if (table[j.eq2]) { table[j.eq2].pj++; table[j.eq2].sw+=sw2; table[j.eq2].sl+=sl2; if(!w1){table[j.eq2].v++;table[j.eq2].pts+=3;}else table[j.eq2].d++; }
+      if (table[j.eq1]) { table[j.eq1].pj++; table[j.eq1].sv+=sv1; table[j.eq1].sl+=sl1; table[j.eq1].gv+=gv1; table[j.eq1].gl+=gl1; if(w1) table[j.eq1].v++; else table[j.eq1].d++; }
+      if (table[j.eq2]) { table[j.eq2].pj++; table[j.eq2].sv+=sv2; table[j.eq2].sl+=sl2; table[j.eq2].gv+=gv2; table[j.eq2].gl+=gl2; if(!w1) table[j.eq2].v++; else table[j.eq2].d++; }
     });
-    return Object.values(table).sort((a,b) => b.pts - a.pts || (b.sw-b.sl)-(a.sw-a.sl) || b.sw - a.sw);
+    // Sort: V -> DeltaSets -> DeltaGames -> total games ganhos
+    return Object.values(table).sort((a,b) =>
+      b.v - a.v || (b.sv-b.sl)-(a.sv-a.sl) || (b.gv-b.gl)-(a.gv-a.gl) || b.gv - a.gv
+    );
   }
 
   function escHtml(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
@@ -185,7 +199,7 @@
 
     // Build all sections
     contentEl.innerHTML = CATS.map((cat, i) => {
-      const catGrupos = grupos.filter(g => g.categoria === cat);
+      const catGrupos = grupos.filter(g => g.cat === cat);
       const html = catGrupos.map(g => {
         const rows  = computeStandings(g, jogos);
         const gJogos= jogos.filter(j => j.grupo === g.id);
@@ -197,7 +211,7 @@
             <span class="group-progress">${done}/${total} jogos</span>
           </div>
           <table class="std-table">
-            <thead><tr><th>#</th><th>Par</th><th>PJ</th><th>V</th><th>D</th><th>Sets</th><th>Pts</th></tr></thead>
+            <thead><tr><th>#</th><th>Par</th><th>PJ</th><th>V</th><th>D</th><th>Sets</th><th>G</th></tr></thead>
             <tbody>${rows.map((r, idx) => `
               <tr class="${idx===0?'std-q1':idx===1?'std-q2':''}">
                 <td>${idx+1}</td>
@@ -205,8 +219,8 @@
                 <td>${r.pj}</td>
                 <td style="color:var(--verde);font-weight:700">${r.v}</td>
                 <td style="color:var(--vermelho)">${r.d}</td>
-                <td>${r.sw}-${r.sl}</td>
-                <td style="font-weight:700;color:var(--branco)">${r.pts}</td>
+                <td>${r.sv}-${r.sl}</td>
+                <td style="font-weight:700;color:var(--branco)">${r.gv}</td>
               </tr>`).join('')}
             </tbody>
           </table>
@@ -244,6 +258,9 @@
   // ΓöÇΓöÇ Init ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
   renderAll();
   setTimeout(tick, 1000);
+
+  // Re-render when data.js finishes fetching data.json (first visit has empty localStorage)
+  window.addEventListener('pp:datasynced', function() { countdown = 30; renderAll(); }, { once: true });
 </script>
 <script>if("serviceWorker"in navigator){navigator.serviceWorker.register("/playpadelcoop/sw.js").catch(function(){});}</script>
 </body>
