@@ -813,6 +813,22 @@ window.gerarPanfleto = function(periodo) {
         ctx.fillText(setsStr, W - PAD, cy + 10);
         ctx.textAlign = 'left';
       }
+    } else if (j.adiado) {
+      // Adiado: teams in muted blue, show 📅 + motivo on right
+      ctx.fillStyle = '#6B9CF7';
+      drawTeamName(j.eq1, CX.eq1r, y, 228, 'right');
+      drawTeamName(j.eq2, CX.eq2, y, 220, 'left');
+      ctx.textAlign = 'right';
+      ctx.font = 'bold 15px Arial, sans-serif';
+      ctx.fillStyle = '#6B9CF7';
+      ctx.fillText('\uD83D\uDCC5 Adiado', W - PAD, cy - (j.adiado.motivo ? 8 : 0));
+      if (j.adiado.motivo) {
+        ctx.font = '12px Arial, sans-serif';
+        ctx.fillStyle = '#8AA396';
+        const mot = j.adiado.motivo.length > 28 ? j.adiado.motivo.substring(0, 28) + '\u2026' : j.adiado.motivo;
+        ctx.fillText(mot, W - PAD, cy + 10);
+      }
+      ctx.textAlign = 'left';
     } else if (j.suspenso) {
       // Suspended: teams in white, show ⏸ + partial sets on right
       ctx.fillStyle = '#F0F7F3';
@@ -2018,8 +2034,9 @@ function renderDashboard() {
   // Jogos em atraso: pendentes cuja data+hora já passou
   const nowStr = new Date().toISOString().slice(0, 16); // "YYYY-MM-DDTHH:mm"
   const emAtraso   = jogos.filter(j => !j.resultado && j.data && j.hora && (j.data + 'T' + j.hora) < nowStr);
-  const suspensos  = emAtraso.filter(j => !!j.suspenso);
-  const emFalta    = emAtraso.filter(j => !j.suspenso);
+  const adiados    = jogos.filter(j => !j.resultado && !!j.adiado);
+  const suspensos  = emAtraso.filter(j => !!j.suspenso && !j.adiado);
+  const emFalta    = emAtraso.filter(j => !j.suspenso && !j.adiado);
 
   // Badge shows only truly missing games (not suspended)
   const dashAtraso = document.getElementById('dashEmAtraso');
@@ -2029,7 +2046,7 @@ function renderDashboard() {
 
   const dashAtrasoPanel = document.getElementById('dashAtrasoPanel');
   if (dashAtrasoPanel) {
-    const hasAny = emAtraso.length > 0;
+    const hasAny = emAtraso.length > 0 || adiados.length > 0;
     dashAtrasoPanel.style.display = hasAny ? '' : 'none';
 
     // Panel border/bg: red if there are missing games, orange if only suspended
@@ -2052,7 +2069,28 @@ function renderDashboard() {
       const parts = [];
       if (emFalta.length)   parts.push(`${emFalta.length} jogo${emFalta.length > 1 ? 's' : ''} sem resultado`);
       if (suspensos.length) parts.push(`${suspensos.length} interrompido${suspensos.length > 1 ? 's' : ''}`);
+      if (adiados.length)   parts.push(`${adiados.length} adiado${adiados.length > 1 ? 's' : ''}`);
       countEl.textContent = parts.join('  ·  ');
+    }
+
+    // Adiado sub-section
+    const adiadoSection = document.getElementById('dashAdiadoSection');
+    const adiadoBody    = document.getElementById('dashAdiadoBody');
+    if (adiadoSection) adiadoSection.style.display = adiados.length ? '' : 'none';
+    if (adiadoBody) {
+      adiadoBody.innerHTML = adiados.slice(0, 5).map(j =>
+        `<tr style="background:rgba(107,156,247,.04)">
+          <td><span class="td-mono" style="color:#6B9CF7">${formatDate(j.data)}</span></td>
+          <td style="color:#6B9CF7;font-weight:700">${j.hora}</td>
+          <td><span class="badge badge-cinza">${j.campo}</span></td>
+          <td><span class="cat-pill cat-${j.grupo.split('-')[0]}">${j.grupo}</span></td>
+          <td style="text-align:right">${j.eq1.split(' & ').join('<br>')}</td>
+          <td style="color:var(--cinza-texto);padding:0 .4rem">VS</td>
+          <td>${j.eq2.split(' & ').join('<br>')}</td>
+          <td style="font-size:.75rem;color:var(--cinza-texto)">${escHtml(j.adiado?.motivo || '—')}</td>
+          <td><button class="btn btn-sm" style="font-size:.65rem;padding:.2rem .5rem;background:rgba(107,156,247,.15);color:#6B9CF7;border:1px solid rgba(107,156,247,.4)" onclick="abrirResultado(${j.id})"><i class="ph ph-calendar-check"></i> Reagendar</button></td>
+        </tr>`
+      ).join('');
     }
 
     // Suspended sub-section
@@ -2099,7 +2137,7 @@ function renderDashboard() {
   }
 
   // Próximos jogos pendentes: group stage first, then FF (only where both teams known)
-  const proximosGrupos = jogos.filter(j => !j.resultado).slice(0, 6);
+  const proximosGrupos = jogos.filter(j => !j.resultado && !j.adiado).slice(0, 6);
   const proximosFF     = ffJogos.filter(j => !j.resultado && j.eq1 && j.eq2);
   const proximos       = [...proximosGrupos, ...proximosFF].slice(0, 6);
 
@@ -2117,10 +2155,10 @@ function renderDashboard() {
           <td style="text-align:right">${j.eq1 ? j.eq1.split(' & ').join('<br>') : '—'}</td>
           <td style="color:var(--cinza-texto);padding:0 0.4rem">VS</td>
           <td>${j.eq2 ? j.eq2.split(' & ').join('<br>') : '—'}</td>
-          <td><span class="badge badge-amarelo">Pendente</span></td>
-        </tr>`;
-    }
-    return `
+          <td>${j.adiado ? '<span style="color:#6B9CF7;font-size:.7rem;background:rgba(107,156,247,.12);padding:.1rem .35rem;border-radius:4px">&#x1F4C5; Adiado</span>' : '<span class="badge badge-amarelo">Pendente</span>'}</td>
+      </tr>`;
+  }
+  return `
       <tr>
         <td><span class="td-mono">${formatDate(j.data)}</span></td>
         <td>${j.hora}</td>
@@ -2129,7 +2167,7 @@ function renderDashboard() {
         <td style="text-align:right">${j.eq1.split(' & ').join('<br>')}</td>
         <td style="color:var(--cinza-texto);padding:0 0.4rem">VS</td>
         <td>${j.eq2.split(' & ').join('<br>')}</td>
-        <td><span class="badge badge-amarelo">Pendente</span></td>
+        <td>${j.adiado ? '<span style="color:#6B9CF7;font-size:.7rem;background:rgba(107,156,247,.12);padding:.1rem .35rem;border-radius:4px">&#x1F4C5; Adiado</span>' : '<span class="badge badge-amarelo">Pendente</span>'}</td>
       </tr>`;
   }).join('');
 

@@ -471,11 +471,11 @@
     .filter(function(j){ return !j.resultado; })
     .map(function(j){
       var dt = (j.data && j.hora) ? j.data + 'T' + j.hora : null;
-      return Object.assign({}, j, { _overdue: !!(dt && dt < nowStr), _suspenso: !!j.suspenso });
+      return Object.assign({}, j, { _overdue: !!(dt && dt < nowStr && !j.adiado), _suspenso: !!j.suspenso, _adiado: !!j.adiado });
     })
     .sort(function(a, b){
-      var aU = (a._overdue || a._suspenso) ? 0 : 1;
-      var bU = (b._overdue || b._suspenso) ? 0 : 1;
+      var aU = (a._overdue || a._suspenso) ? 0 : (a._adiado ? 1 : 2);
+      var bU = (b._overdue || b._suspenso) ? 0 : (b._adiado ? 1 : 2);
       if (aU !== bU) return aU - bU;
       return (a.data + a.hora).localeCompare(b.data + b.hora);
     })
@@ -491,7 +491,11 @@
 
   list.innerHTML = pending.map(function(j) {
     var statusHtml, cardStyle = '';
-    if (j._suspenso) {
+    if (j._adiado) {
+      var motivo = (j.adiado && j.adiado.motivo) ? j.adiado.motivo : '';
+      statusHtml = '<div class="jogo-status" style="color:#6B9CF7;border-color:rgba(107,156,247,.3);background:rgba(107,156,247,.08);flex-direction:column;align-items:flex-end;gap:.15rem"><span>&#x1F4C5; Adiado</span>' + (motivo ? '<span style="font-size:.7rem;color:var(--cinza-texto)">' + motivo + '</span>' : '') + '</div>';
+      cardStyle = 'border-color:rgba(107,156,247,.25);opacity:.85;';
+    } else if (j._suspenso) {
       var s = j.suspenso, parts = [];
       if (s.s1eq1 != null) parts.push(s.s1eq1 + '-' + s.s1eq2);
       if (s.s2eq1 != null) parts.push(s.s2eq1 + '-' + s.s2eq2);

@@ -293,6 +293,14 @@
             <span class="panel-title" id="dashAtrasoTitle" style="color:var(--vermelho)"><i class="ph ph-warning-circle"></i> <span id="dashAtrasoCount">Jogos em atraso</span></span>
             <button class="panel-action" onclick="navigate('resultados')">Ver resultados →</button>
           </div>
+          <!-- Sub-section: adiados -->
+          <div id="dashAdiadoSection" style="display:none;padding:.4rem 1rem .2rem;border-bottom:1px solid rgba(107,156,247,.2)">
+            <div style="font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#6B9CF7;margin-bottom:.35rem">&#x1F4C5; Jogos Adiados &mdash; aguardam nova data</div>
+            <div class="table-wrap">
+              <table><thead><tr><th>Data orig.</th><th>Hora</th><th>Campo</th><th>Grupo</th><th style="text-align:right">Equipa 1</th><th></th><th>Equipa 2</th><th>Motivo</th><th></th></tr></thead>
+              <tbody id="dashAdiadoBody"></tbody></table>
+            </div>
+          </div>
           <!-- Sub-section: suspensos -->
           <div id="dashSuspensoSection" style="display:none;padding:.4rem 1rem .2rem;border-bottom:1px solid rgba(255,154,60,.2)">
             <div style="font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#FF9A3C;margin-bottom:.35rem">⏸ Jogos Interrompidos — aguardam retoma</div>
