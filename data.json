@@ -4035,6 +4035,16 @@
   ],
   "auditlog": [
     {
+      "id": "mq42bmeyk50nz5k",
+      "userId": "mpz46x5c2zupza0",
+      "username": "bgaspar",
+      "role": "operator",
+      "action": "LOGIN",
+      "target": "auth",
+      "detail": "Login: bgaspar (operator)",
+      "ts": "2026-06-07T17:35:17.050Z"
+    },
+    {
       "id": "mq41imu094t133c",
       "userId": "mpzxoo1v8l1za3r",
       "username": "djanasse",
@@ -5075,6 +5085,16 @@
       "ts": "2026-06-06T18:55:07.477Z"
     },
     {
+      "id": "mq2og5mubka1l04",
+      "userId": "mpz46x5c2zupza0",
+      "username": "bgaspar",
+      "role": "operator",
+      "action": "LOGIN",
+      "target": "auth",
+      "detail": "Login: bgaspar (operator)",
+      "ts": "2026-06-06T18:19:07.782Z"
+    },
+    {
       "id": "mq2o3bxvg86p423",
       "userId": "mpz8aq9sg983ubo",
       "username": "euamusse",
@@ -5143,6 +5163,26 @@
       "target": "resultados",
       "detail": "Resultado guardado: jogo #36",
       "ts": "2026-06-06T16:54:00.383Z"
+    },
+    {
+      "id": "mq2l2lpf80oyiqh",
+      "userId": "mpz46x5c2zupza0",
+      "username": "bgaspar",
+      "role": "operator",
+      "action": "LOGIN",
+      "target": "auth",
+      "detail": "Login: bgaspar (operator)",
+      "ts": "2026-06-06T16:44:36.579Z"
+    },
+    {
+      "id": "mq2l2jkwsvt6w85",
+      "userId": "mpz46x5c2zupza0",
+      "username": "bgaspar",
+      "role": "operator",
+      "action": "LOGOUT",
+      "target": "auth",
+      "detail": "Logout: bgaspar",
+      "ts": "2026-06-06T16:44:33.825Z"
     },
     {
       "id": "mq2kjzdzd5sat56",
@@ -5733,6 +5773,16 @@
       "target": "auth",
       "detail": "Login: djanasse (operator)",
       "ts": "2026-06-06T07:46:03.757Z"
+    },
+    {
+      "id": "mq21rbbd5i9tqd5",
+      "userId": "mpz46x5c2zupza0",
+      "username": "bgaspar",
+      "role": "operator",
+      "action": "LOGIN",
+      "target": "auth",
+      "detail": "Login: bgaspar (operator)",
+      "ts": "2026-06-06T07:43:57.193Z"
     },
     {
       "id": "mq21glqhj0io7tc",
@@ -9855,5 +9905,5 @@
       "ts": "2026-06-03T06:06:37.211Z"
     }
   ],
-  "_updated": "2026-06-07T17:13:06.114Z"
+  "_updated": "2026-06-07T17:35:21.015Z"
 }
