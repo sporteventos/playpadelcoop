@@ -2782,7 +2782,22 @@
       "grupo": "F1-C",
       "eq1": "Omar Fernandes & Claudia Sumaya",
       "eq2": "Diana Carvalho & Ilga João",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 6,
+        "s1eq2": 0,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 6,
+        "s2eq2": 2,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": null,
+        "s3eq2": null,
+        "tb3eq1": null,
+        "tb3eq2": null
+      },
+      "suspenso": null,
+      "adiado": null
     },
     {
       "id": 55,
@@ -3772,6 +3787,16 @@
     }
   ],
   "auditlog": [
+    {
+      "id": "mq3npodtsd3b5fb",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "SAVE_RESULT",
+      "target": "resultados",
+      "detail": "Resultado guardado: jogo #54",
+      "ts": "2026-06-07T10:46:18.545Z"
+    },
     {
       "id": "mq3nlce54bh1ixt",
       "userId": "mpz8aq9sg983ubo",
@@ -9073,5 +9098,5 @@
       "ts": "2026-06-03T06:06:37.211Z"
     }
   ],
-  "_updated": "2026-06-07T10:43:34.050Z"
+  "_updated": "2026-06-07T10:47:01.736Z"
 }
