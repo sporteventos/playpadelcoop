@@ -3543,6 +3543,7 @@ window.adiarJogo = function() {
   updateAlertBanner();
   Auth.log('ADIAR_JOGO', 'jogos', `Jogo #${APP.editingId} adiado${motivo ? ': '+motivo : ''}`);
   toast(motivo ? `Jogo adiado — ${motivo}` : 'Jogo marcado como adiado.');
+  _autoSync();
 };
 
 window.suspenderJogo = function() {
@@ -3593,8 +3594,20 @@ window.suspenderJogo = function() {
   const serveStr = suspenso.serve ? ` [serve:${suspenso.serve}]` : '';
   Auth.log('SUSPEND_GAME', 'resultados', `Jogo #${APP.editingId} suspenso${serveStr}${notaStr}`);
   toast(`Jogo #${APP.editingId} suspenso — retomará noutra data.`, 'success');
+  _autoSync();
   APP.editingId = null;
 };
+
+// Auto-sync silencioso após guardar dados críticos (resultados, adiados, suspensos)
+// Tenta push para GitHub sem bloquear o utilizador; mostra toast só se falhar.
+function _autoSync() {
+  if (typeof GHSync === 'undefined' || !GHSync.isConfigured()) return;
+  GHSync.push(GHSync.getAllData()).then(() => {
+    // success — silent
+  }).catch(err => {
+    toast('⚠ Auto-sync falhou — carregue em Sincronizar manualmente. (' + (err?.message || err) + ')', 'error');
+  });
+}
 
 function salvarResultado() {
   // WO (Walkover) handling — bypasses set entry
@@ -3631,6 +3644,7 @@ function salvarResultado() {
     renderView(APP.currentView);
     Auth.log('SAVE_RESULT', 'resultados', `WO registado: jogo #${APP.editingId} \u2014 ${APP._woSelection}`);
     toast(`WO registado para o jogo #${APP.editingId}.`);
+    _autoSync();
     const savedId = APP.editingId;
     APP.editingId = null; APP._woSelection = null;
     setTimeout(() => _ofereceNotificacao(savedId, false, null), 350);
@@ -3721,6 +3735,7 @@ function salvarResultado() {
     renderView(APP.currentView);
     Auth.log('SAVE_RESULT_FF', 'fasefinal', `Resultado FF: ${catId} jogo ${jogoId}`);
     toast('Resultado guardado.');
+    _autoSync();
     const savedFF = ff[catId]?.jogos[jIdx];
     if (savedFF) setTimeout(() => _ofereceNotificacao(jogoId, true, catId), 350);
     APP.ffEditing = null;
@@ -3753,6 +3768,7 @@ function salvarResultado() {
   renderView(APP.currentView);
   Auth.log('SAVE_RESULT', 'resultados', `Resultado guardado: jogo #${APP.editingId}`);
   toast(`Resultado guardado para o jogo #${APP.editingId}.`);
+  _autoSync();
   const savedId = APP.editingId;
   setTimeout(() => _ofereceNotificacao(savedId, false, null), 350);
   APP.editingId = null;
