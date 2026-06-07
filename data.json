@@ -2958,12 +2958,12 @@
       "eq1": "Jason & Bosch",
       "eq2": "Luis Trigo Morais & Pedro Mandlate",
       "resultado": {
-        "s1eq1": 4,
-        "s1eq2": 6,
+        "s1eq1": 6,
+        "s1eq2": 4,
         "tb1eq1": null,
         "tb1eq2": null,
-        "s2eq1": 5,
-        "s2eq2": 7,
+        "s2eq1": 7,
+        "s2eq2": 5,
         "tb2eq1": null,
         "tb2eq2": null,
         "s3eq1": null,
@@ -3670,6 +3670,16 @@
     }
   ],
   "auditlog": [
+    {
+      "id": "mq3g6mir0ni4g06",
+      "userId": "mpzxoo1v8l1za3r",
+      "username": "djanasse",
+      "role": "operator",
+      "action": "SAVE_RESULT",
+      "target": "resultados",
+      "detail": "Resultado guardado: jogo #73",
+      "ts": "2026-06-07T07:15:32.355Z"
+    },
     {
       "id": "mq3g33o0zn6kblf",
       "userId": "mpzxoo1v8l1za3r",
@@ -8621,5 +8631,5 @@
       "ts": "2026-06-03T06:06:37.211Z"
     }
   ],
-  "_updated": "2026-06-07T07:14:41.343Z"
+  "_updated": "2026-06-07T07:15:55.711Z"
 }
