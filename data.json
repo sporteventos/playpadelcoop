@@ -3138,7 +3138,22 @@
       "grupo": "M2-B",
       "eq1": "João Henriques & Bruno Morais",
       "eq2": "Dej Cruz & Nuno Correa Mendes",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 6,
+        "s1eq2": 3,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 6,
+        "s2eq2": 7,
+        "tb2eq1": 4,
+        "tb2eq2": 7,
+        "s3eq1": 5,
+        "s3eq2": 7,
+        "tb3eq1": null,
+        "tb3eq2": null
+      },
+      "suspenso": null,
+      "adiado": null
     },
     {
       "id": 77,
@@ -3148,7 +3163,22 @@
       "grupo": "M4-C",
       "eq1": "Paul & Xander",
       "eq2": "Fádhil Khan & Kelyo",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 4,
+        "s1eq2": 6,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 3,
+        "s2eq2": 6,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": null,
+        "s3eq2": null,
+        "tb3eq1": null,
+        "tb3eq2": null
+      },
+      "suspenso": null,
+      "adiado": null
     },
     {
       "id": 78,
@@ -3854,6 +3884,26 @@
     }
   ],
   "auditlog": [
+    {
+      "id": "mq3y407uvvcfyxh",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "SAVE_RESULT",
+      "target": "resultados",
+      "detail": "Resultado guardado: jogo #76",
+      "ts": "2026-06-07T15:37:23.226Z"
+    },
+    {
+      "id": "mq3y35ccsjhk6w2",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "SAVE_RESULT",
+      "target": "resultados",
+      "detail": "Resultado guardado: jogo #77",
+      "ts": "2026-06-07T15:36:43.212Z"
+    },
     {
       "id": "mq3y2h352fj074g",
       "userId": "mpz8aq9sg983ubo",
@@ -9495,5 +9545,5 @@
       "ts": "2026-06-03T06:06:37.211Z"
     }
   ],
-  "_updated": "2026-06-07T15:36:15.844Z"
+  "_updated": "2026-06-07T15:37:26.657Z"
 }
