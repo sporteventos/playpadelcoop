@@ -7,7 +7,7 @@
   <meta name="theme-color" content="#00C37B">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="Play Padel">
-  <title>Scoreboard ao Vivo ΓÇö Play Padel 2026</title>
+  <title>Scoreboard ao Vivo — Play Padel 2026</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/@phosphor-icons/web@2.1.1/src/index.js"></script>
@@ -20,8 +20,6 @@
     }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: 'Inter', sans-serif; background: var(--preto); color: var(--branco); min-height: 100vh; }
-
-    /* TOP BAR */
     .top-bar {
       display: flex; align-items: center; justify-content: space-between;
       padding: .75rem 1.5rem; background: var(--preto-card);
@@ -33,8 +31,6 @@
     .refresh-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--verde); animation: pulse 2s infinite; }
     @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
     .refresh-countdown { font-weight: 700; color: var(--verde); min-width: 2rem; text-align: right; }
-
-    /* TABS */
     .cat-tabs { display: flex; gap: .4rem; padding: .75rem 1.5rem; flex-wrap: wrap; border-bottom: 1px solid var(--preto-borda); background: var(--preto-card); }
     .cat-tab {
       padding: .35rem .85rem; border-radius: 6px; font-size: .78rem; font-weight: 700;
@@ -43,22 +39,12 @@
     }
     .cat-tab:hover { color: var(--branco); background: rgba(0,195,123,.15); }
     .cat-tab.active { background: var(--verde); color: #000; }
-
-    /* CONTENT */
     .content { padding: 1.25rem 1.5rem; }
     .cat-section { display: none; }
     .cat-section.active { display: block; }
     .groups-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1rem; }
-
-    /* GROUP CARD */
-    .group-card {
-      background: var(--preto-card); border: 1px solid var(--preto-borda);
-      border-radius: var(--radius); overflow: hidden;
-    }
-    .group-card-header {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: .6rem 1rem; border-bottom: 1px solid var(--preto-borda);
-    }
+    .group-card { background: var(--preto-card); border: 1px solid var(--preto-borda); border-radius: var(--radius); overflow: hidden; }
+    .group-card-header { display: flex; align-items: center; justify-content: space-between; padding: .6rem 1rem; border-bottom: 1px solid var(--preto-borda); }
     .group-card-title { font-family: 'Barlow Condensed', sans-serif; font-size: 1.05rem; font-weight: 700; letter-spacing: .04em; }
     .group-progress { font-size: .68rem; color: var(--cinza-texto); }
     .std-table { width: 100%; border-collapse: collapse; font-size: .75rem; }
@@ -70,24 +56,16 @@
     .std-q1 td:first-child { border-left: 3px solid var(--verde); }
     .std-q2 td:first-child { border-left: 3px solid var(--amarelo); }
     .pair-name { max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; display: block; }
-
-    /* LIVE BADGE */
     .live-badge {
       font-size: .6rem; font-weight: 900; text-transform: uppercase; letter-spacing: .1em;
       background: var(--vermelho); color: #fff; padding: .15rem .45rem; border-radius: 4px; margin-left: .4rem;
       animation: livepulse 1.5s infinite;
     }
     @keyframes livepulse { 0%,100%{opacity:1} 50%{opacity:.5} }
-
-    /* LEGEND */
     .legend { display: flex; gap: 1.2rem; padding: .65rem 1.5rem; font-size: .72rem; color: var(--cinza-texto); border-bottom: 1px solid var(--preto-borda); background: var(--preto-card); }
     .legend-item { display: flex; align-items: center; gap: .35rem; }
     .legend-dot { width: 10px; height: 10px; border-radius: 2px; }
-
-    /* LAST UPDATE */
     .last-update { text-align: center; padding: .75rem; font-size: .72rem; color: var(--cinza-texto); }
-
-    /* ---- Mobile ---- */
     @media (max-width: 600px) {
       .top-bar { padding: .6rem 1rem; gap: .5rem; }
       .top-bar-logo { font-size: 1.1rem; }
@@ -105,11 +83,10 @@
 </head>
 <body>
 
-<!-- TOP BAR -->
 <div class="top-bar">
   <div>
     <div class="top-bar-logo">PLAY PADEL <span style="color:var(--branco);font-weight:400">2026</span></div>
-    <div class="top-bar-title">Scoreboard ao Vivo ┬╖ Maputo</div>
+    <div class="top-bar-title">Scoreboard ao Vivo · Maputo</div>
   </div>
   <div class="refresh-indicator">
     <div class="refresh-dot"></div>
@@ -118,27 +95,20 @@
   </div>
 </div>
 
-<!-- LEGEND -->
 <div class="legend">
   <div class="legend-item"><div class="legend-dot" style="background:var(--verde)"></div> Qualifica directo</div>
-  <div class="legend-item"><div class="legend-dot" style="background:var(--amarelo)"></div> Poss├¡vel wildcard</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--amarelo)"></div> Possível wildcard</div>
   <div class="legend-item"><div class="legend-dot" style="background:var(--cinza-escuro)"></div> Eliminado</div>
   <span style="margin-left:auto"><span class="live-badge">LIVE</span></span>
 </div>
 
-<!-- CATEGORY TABS -->
 <div class="cat-tabs" id="catTabs"></div>
-
-<!-- STANDINGS CONTENT -->
 <div class="content" id="mainContent"></div>
-
-<div class="last-update">├Ültima actualiza├º├úo: <span id="lastUpdate">ΓÇö</span></div>
+<div class="last-update">Última actualização: <span id="lastUpdate">—</span></div>
 
 <script src="js/data.js"></script>
 <script>
-  // ΓöÇΓöÇ Helpers ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
   function ppLoad(key) { try { return JSON.parse(localStorage.getItem('pp_' + key)); } catch(e) { return null; } }
-
   function getData(key) {
     const stored = ppLoad(key);
     if (stored !== null) return stored;
@@ -147,11 +117,9 @@
 
   const CATS = ['M1','M2','M3','M4','M5','F1','F2'];
 
-  // ΓöÇΓöÇ Standings Calculation ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
   function computeStandings(grupo, jogos) {
     const gJogos = jogos.filter(j => j.grupo === grupo.id);
     const table  = {};
-    // Derive pairs from games (grupos don't store pares)
     gJogos.forEach(j => {
       if (!table[j.eq1]) table[j.eq1] = { par: j.eq1, pj:0, v:0, d:0, sv:0, sl:0, gv:0, gl:0 };
       if (!table[j.eq2]) table[j.eq2] = { par: j.eq2, pj:0, v:0, d:0, sv:0, sl:0, gv:0, gl:0 };
@@ -176,7 +144,6 @@
       if (table[j.eq1]) { table[j.eq1].pj++; table[j.eq1].sv+=sv1; table[j.eq1].sl+=sl1; table[j.eq1].gv+=gv1; table[j.eq1].gl+=gl1; if(w1) table[j.eq1].v++; else table[j.eq1].d++; }
       if (table[j.eq2]) { table[j.eq2].pj++; table[j.eq2].sv+=sv2; table[j.eq2].sl+=sl2; table[j.eq2].gv+=gv2; table[j.eq2].gl+=gl2; if(!w1) table[j.eq2].v++; else table[j.eq2].d++; }
     });
-    // Sort: V -> DeltaSets -> DeltaGames -> total games ganhos
     return Object.values(table).sort((a,b) =>
       b.v - a.v || (b.sv-b.sl)-(a.sv-a.sl) || (b.gv-b.gl)-(a.gv-a.gl) || b.gv - a.gv
     );
@@ -184,7 +151,33 @@
 
   function escHtml(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
-  // ΓöÇΓöÇ Render ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+  function buildGroupCard(g, jogos) {
+    const rows  = computeStandings(g, jogos);
+    const gJogos= jogos.filter(j => j.grupo === g.id);
+    const done  = gJogos.filter(j => j.resultado).length;
+    const total = gJogos.length;
+    return `<div class="group-card">
+      <div class="group-card-header">
+        <span class="group-card-title">${g.id}</span>
+        <span class="group-progress">${done}/${total} jogos</span>
+      </div>
+      <table class="std-table">
+        <thead><tr><th>#</th><th>Par</th><th>PJ</th><th>V</th><th>D</th><th>Sets</th><th>G</th></tr></thead>
+        <tbody>${rows.map((r, idx) => `
+          <tr class="${idx===0?'std-q1':idx===1?'std-q2':''}">
+            <td>${idx+1}</td>
+            <td><span class="pair-name" title="${escHtml(r.par)}">${escHtml(r.par)}</span></td>
+            <td>${r.pj}</td>
+            <td style="color:var(--verde);font-weight:700">${r.v}</td>
+            <td style="color:var(--vermelho)">${r.d}</td>
+            <td>${r.sv}-${r.sl}</td>
+            <td style="font-weight:700;color:var(--branco)">${r.gv}</td>
+          </tr>`).join('')}
+        </tbody>
+      </table>
+    </div>`;
+  }
+
   function renderAll() {
     const jogos  = getData('jogos');
     const grupos = getData('grupos');
@@ -192,45 +185,24 @@
     const tabsEl    = document.getElementById('catTabs');
     const contentEl = document.getElementById('mainContent');
 
-    // Build tabs
-    tabsEl.innerHTML = CATS.map((c, i) => `
-      <button class="cat-tab${i===0?' active':''}" onclick="switchCat('${c}',this)">${c}</button>
-    `).join('');
+    // Tabs: Todos + per-category
+    tabsEl.innerHTML =
+      ['<button class="cat-tab active" onclick="switchCat(\'TODOS\',this)">Todos</button>']
+      .concat(CATS.map(c => `<button class="cat-tab" onclick="switchCat('${c}',this)">${c}</button>`))
+      .join('');
 
-    // Build all sections
-    contentEl.innerHTML = CATS.map((cat, i) => {
+    // Todos section (all groups)
+    const todosHtml = grupos.map(g => buildGroupCard(g, jogos)).join('');
+    const todosSec  = `<div class="cat-section active" id="cat-TODOS"><div class="groups-grid">${todosHtml}</div></div>`;
+
+    // Per-category sections
+    const catSecs = CATS.map(cat => {
       const catGrupos = grupos.filter(g => g.cat === cat);
-      const html = catGrupos.map(g => {
-        const rows  = computeStandings(g, jogos);
-        const gJogos= jogos.filter(j => j.grupo === g.id);
-        const done  = gJogos.filter(j => j.resultado).length;
-        const total = gJogos.length;
-        return `<div class="group-card">
-          <div class="group-card-header">
-            <span class="group-card-title">${g.id}</span>
-            <span class="group-progress">${done}/${total} jogos</span>
-          </div>
-          <table class="std-table">
-            <thead><tr><th>#</th><th>Par</th><th>PJ</th><th>V</th><th>D</th><th>Sets</th><th>G</th></tr></thead>
-            <tbody>${rows.map((r, idx) => `
-              <tr class="${idx===0?'std-q1':idx===1?'std-q2':''}">
-                <td>${idx+1}</td>
-                <td><span class="pair-name" title="${escHtml(r.par)}">${escHtml(r.par)}</span></td>
-                <td>${r.pj}</td>
-                <td style="color:var(--verde);font-weight:700">${r.v}</td>
-                <td style="color:var(--vermelho)">${r.d}</td>
-                <td>${r.sv}-${r.sl}</td>
-                <td style="font-weight:700;color:var(--branco)">${r.gv}</td>
-              </tr>`).join('')}
-            </tbody>
-          </table>
-        </div>`;
-      }).join('');
-      return `<div class="cat-section${i===0?' active':''}" id="cat-${cat}">
-        <div class="groups-grid">${html}</div>
-      </div>`;
+      const html = catGrupos.map(g => buildGroupCard(g, jogos)).join('');
+      return `<div class="cat-section" id="cat-${cat}"><div class="groups-grid">${html}</div></div>`;
     }).join('');
 
+    contentEl.innerHTML = todosSec + catSecs;
     document.getElementById('lastUpdate').textContent = new Date().toLocaleTimeString('pt-PT');
   }
 
@@ -241,25 +213,17 @@
     document.getElementById('cat-' + cat)?.classList.add('active');
   }
 
-  // ΓöÇΓöÇ Auto-refresh countdown ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
   let countdown = 30;
   const countEl = document.getElementById('refreshCountdown');
-
   function tick() {
     countdown--;
     countEl.textContent = countdown;
-    if (countdown <= 0) {
-      countdown = 30;
-      renderAll();
-    }
+    if (countdown <= 0) { countdown = 30; renderAll(); }
     setTimeout(tick, 1000);
   }
 
-  // ΓöÇΓöÇ Init ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
   renderAll();
   setTimeout(tick, 1000);
-
-  // Re-render when data.js finishes fetching data.json (first visit has empty localStorage)
   window.addEventListener('pp:datasynced', function() { countdown = 30; renderAll(); }, { once: true });
 </script>
 <script>if("serviceWorker"in navigator){navigator.serviceWorker.register("/playpadelcoop/sw.js").catch(function(){});}</script>
