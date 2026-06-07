@@ -59,27 +59,35 @@
     .section-heading.sh-red   { color:var(--vermelho); }
     .section-heading.sh-green { color:var(--verde); }
 
-    .qualified-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:.5rem; margin-bottom:1.25rem; }
-    .qual-card { background:var(--preto-card); border:1px solid var(--preto-borda); border-radius:8px; padding:.55rem .85rem; display:flex; align-items:center; gap:.6rem; }
+    .qualified-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:.5rem; margin-bottom:1.25rem; }
+    .qual-card { background:var(--preto-card); border:1px solid var(--preto-borda); border-radius:8px; padding:.6rem .85rem; display:flex; align-items:flex-start; gap:.6rem; }
     .qual-card.q-apurado   { border-left:3px solid var(--verde); }
     .qual-card.q-eliminado { border-left:3px solid var(--vermelho); opacity:.8; }
-    .qual-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
-    .qual-name { font-size:.78rem; font-weight:600; color:var(--branco); flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .qual-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; margin-top:.25rem; }
+    .qual-info { flex:1; min-width:0; }
+    .qual-name { font-size:.78rem; font-weight:600; color:var(--branco); display:block; word-break:break-word; line-height:1.35; }
     .qual-name.elim { color:var(--cinza-texto); text-decoration:line-through; }
-    .qual-from { font-size:.65rem; color:var(--cinza-texto); flex-shrink:0; }
+    .qual-meta { display:flex; align-items:center; gap:.4rem; margin-top:.2rem; }
+    .qual-from { font-size:.65rem; color:var(--cinza-texto); }
     .qual-badge-sm { font-size:.58rem; font-weight:700; padding:.1rem .35rem; border-radius:4px; flex-shrink:0; }
     .badge-ap  { background:rgba(0,195,123,.2);  color:var(--verde); }
     .badge-el  { background:rgba(255,74,74,.2);   color:var(--vermelho); }
     .qual-empty { color:var(--cinza-texto); font-size:.82rem; padding:.5rem 0 .75rem; }
 
     .results-list { display:flex; flex-direction:column; gap:.4rem; margin-bottom:1.5rem; }
-    .result-row { background:var(--preto-card); border:1px solid var(--preto-borda); border-radius:8px; padding:.5rem .85rem; display:grid; grid-template-columns:auto 1fr auto 1fr; align-items:center; gap:.5rem; font-size:.75rem; }
-    .result-team { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .result-row { background:var(--preto-card); border:1px solid var(--preto-borda); border-radius:8px; padding:.55rem 1rem; display:grid; grid-template-columns:1fr auto 1fr; align-items:center; gap:.75rem; font-size:.78rem; }
+    .result-left  { display:flex; align-items:center; justify-content:flex-end; gap:.5rem; overflow:hidden; }
+    .result-right { display:flex; align-items:center; justify-content:flex-start; gap:.5rem; overflow:hidden; }
+    .result-team { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; flex:1; }
     .result-team.winner { color:var(--branco); font-weight:600; }
     .result-team.loser  { color:var(--cinza-texto); }
     .result-team.right  { text-align:right; }
-    .result-score { font-family:'Barlow Condensed',sans-serif; font-size:.9rem; font-weight:700; color:var(--verde); white-space:nowrap; text-align:center; min-width:60px; }
-    .result-group-lbl { font-size:.6rem; color:var(--cinza-texto); background:var(--cinza-escuro); padding:.1rem .35rem; border-radius:4px; white-space:nowrap; }
+    .result-center { display:flex; flex-direction:column; align-items:center; gap:.15rem; flex-shrink:0; }
+    .result-sets { display:flex; gap:.35rem; align-items:center; }
+    .result-set-score { font-family:'Barlow Condensed',sans-serif; font-size:1rem; font-weight:700; color:var(--verde); white-space:nowrap; }
+    .result-set-score.losing { color:var(--cinza-texto); font-weight:400; }
+    .result-set-sep { color:var(--cinza-escuro); font-size:.7rem; }
+    .result-group-lbl { font-size:.6rem; color:var(--cinza-texto); background:var(--cinza-escuro); padding:.1rem .35rem; border-radius:4px; white-space:nowrap; letter-spacing:.03em; }
 
     .decisive-list { display:flex; flex-direction:column; gap:.4rem; margin-bottom:1.5rem; }
     .decisive-row { background:var(--preto-card); border:1px solid rgba(245,197,24,.25); border-radius:8px; padding:.55rem .85rem; display:flex; align-items:center; gap:.65rem; font-size:.75rem; }
@@ -350,9 +358,13 @@
       const cards = apurados.map(([par, v]) =>
         `<div class="qual-card q-apurado">
           <span class="qual-dot" style="background:var(--verde)"></span>
-          <span class="qual-name" title="${escHtml(par)}">${escHtml(par)}</span>
-          <span class="qual-from">${v.group}</span>
-          <span class="qual-badge-sm badge-ap">Apurado</span>
+          <div class="qual-info">
+            <span class="qual-name" title="${escHtml(par)}">${escHtml(par)}</span>
+            <div class="qual-meta">
+              <span class="qual-from">${v.group}</span>
+              <span class="qual-badge-sm badge-ap">Apurado</span>
+            </div>
+          </div>
         </div>`
       ).join('');
       html += `<div class="section-heading sh-green"><i class="ph ph-trophy"></i> Já Apurados</div>
@@ -365,9 +377,15 @@
       const cards = eliminados.map(([par, v]) =>
         `<div class="qual-card q-eliminado">
           <span class="qual-dot" style="background:var(--vermelho)"></span>
-          <span class="qual-name elim" title="${escHtml(par)}">${escHtml(par)}</span>
-          <span class="qual-from">${v.group}</span>
-          <span class="qual-badge-sm badge-el">Eliminado</span>
+          <div class="qual-info">
+            <span class="qual-name elim" title="${escHtml(par)}">${escHtml(par)}</span>
+            <div class="qual-meta">
+              <span class="qual-from">${v.group}</span>
+              <span class="qual-badge-sm badge-el">Eliminado</span>
+            </div>
+          </div>
+        </div>`
+      ).join('');
         </div>`
       ).join('');
       html += `<div class="section-heading sh-red" style="margin-top:1rem"><i class="ph ph-x-circle"></i> Já Eliminados</div>
@@ -427,18 +445,34 @@
       const recentHtml = recent.length > 0
         ? recent.map(j => {
             const r = j.resultado;
-            const score = fmtScore(r);
             let w1 = true;
-            if (r.wo) { w1 = r.wo !== 'eq1'; }
-            else {
-              const s = [[r.s1eq1,r.s1eq2],[r.s2eq1,r.s2eq2],[r.s3eq1,r.s3eq2]].filter(([a,b])=>a!=null&&b!=null);
-              w1 = s.filter(([a,b])=>a>b).length > s.filter(([a,b])=>b>a).length;
+            let setsHtml = '';
+            if (r.wo) {
+              w1 = r.wo !== 'eq1';
+              setsHtml = `<span class="result-set-score">W/O</span>`;
+            } else {
+              const sets = [[r.s1eq1,r.s1eq2],[r.s2eq1,r.s2eq2],[r.s3eq1,r.s3eq2]].filter(([a,b])=>a!=null&&b!=null);
+              const sv1 = sets.filter(([a,b])=>a>b).length, sv2 = sets.filter(([a,b])=>b>a).length;
+              w1 = sv1 > sv2;
+              setsHtml = sets.map(([a,b], si) => {
+                const aw1 = a > b;
+                return (si > 0 ? `<span class="result-set-sep">·</span>` : '') +
+                  `<span class="result-set-score ${aw1?'':'losing'}">${a}</span>` +
+                  `<span class="result-set-sep">-</span>` +
+                  `<span class="result-set-score ${aw1?'losing':''}">${b}</span>`;
+              }).join('');
             }
             return `<div class="result-row">
-              <span class="result-team ${w1?'winner':'loser'} right">${escHtml(j.eq1)}</span>
-              <span class="result-score">${escHtml(score)}</span>
-              <span class="result-team ${!w1?'winner':'loser'}">${escHtml(j.eq2)}</span>
-              <span class="result-group-lbl">${escHtml(j.grupo)}</span>
+              <div class="result-left">
+                <span class="result-team ${w1?'winner':'loser'} right">${escHtml(j.eq1)}</span>
+              </div>
+              <div class="result-center">
+                <div class="result-sets">${setsHtml}</div>
+                <span class="result-group-lbl">${escHtml(j.grupo)}</span>
+              </div>
+              <div class="result-right">
+                <span class="result-team ${!w1?'winner':'loser'}">${escHtml(j.eq2)}</span>
+              </div>
             </div>`;
           }).join('')
         : '';
