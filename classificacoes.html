@@ -264,12 +264,10 @@ document.addEventListener('DOMContentLoaded', () => {
     else        { return s2 > s1 ? -1 : s1 > s2 ? 1 : 0; }
   }
 
-  // Ordenação: Pts → Confronto directo → ΔSets → ΔJogos → Jogos ganhos
-  function sortRows(rows, gJogos) {
+  // Ordenação: V → ΔSets → ΔGames → Total games ganhos
+  function sortRows(rows) {
     return [...rows].sort((a, b) => {
       if (b.v !== a.v) return b.v - a.v;
-      const hh = h2h(a.par, b.par, gJogos);
-      if (hh !== 0) return hh;
       const ds = (b.sv - b.sd) - (a.sv - a.sd);
       if (ds !== 0) return ds;
       const dg = (b.gv - b.gd) - (a.gv - a.gd);
@@ -295,7 +293,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const allGroupData = grupos.map(g => {
       const gJogos = jogos.filter(j => j.grupo === g.id);
       const st     = computeStandings(gJogos);
-      const rows   = sortRows(Object.values(st), gJogos);
+      const rows   = sortRows(Object.values(st));
       return { group: g, gJogos, rows };
     });
 
@@ -464,8 +462,8 @@ document.addEventListener('DOMContentLoaded', () => {
         html += `</tbody></table></div>`;
       }
       html += `<p class="apuramento-note"><i class="ph ph-info"></i>
-        Em caso de empate, o desempate aplica-se apenas entre as duplas empatadas.
-        A equipa não empatada não entra nas contas do desempate.
+        Critérios de desempate (por ordem): V &rarr; &Delta;Sets &rarr; &Delta;Games &rarr; Total games ganhos.
+        As duplas vêm de grupos diferentes, pelo que não se aplica o confronto directo.
       </p></div>`;
     }
 

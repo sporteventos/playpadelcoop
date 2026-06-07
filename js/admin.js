@@ -4205,10 +4205,9 @@ function ffH2H(parA, parB, gJogos) {
   return aIsEq1 ? (s1 > s2 ? -1 : s2 > s1 ? 1 : 0) : (s2 > s1 ? -1 : s1 > s2 ? 1 : 0);
 }
 
-function ffSortRows(rows, gJogos) {
+function ffSortRows(rows) {
   return [...rows].sort((a, b) => {
     if (b.v !== a.v) return b.v - a.v;
-    const hh = ffH2H(a.par, b.par, gJogos); if (hh !== 0) return hh;
     const ds = (b.sv - b.sd) - (a.sv - a.sd); if (ds !== 0) return ds;
     const dg = (b.gv - b.gd) - (a.gv - a.gd); if (dg !== 0) return dg;
     return b.gv - a.gv;
@@ -4218,7 +4217,8 @@ function ffSortRows(rows, gJogos) {
 function ffSortByPerf(a, b) {
   if (b.v !== a.v) return b.v - a.v;
   const ds = (b.sv - b.sd) - (a.sv - a.sd); if (ds !== 0) return ds;
-  return (b.gv - b.gd) - (a.gv - a.gd);
+  const dg = (b.gv - b.gd) - (a.gv - a.gd); if (dg !== 0) return dg;
+  return b.gv - a.gv;
 }
 
 function ffGetQualified(catId) {
@@ -4227,7 +4227,7 @@ function ffGetQualified(catId) {
   const firsts = [], seconds = [], thirds = [];
   grupos.forEach(g => {
     const gJogos = allJogos.filter(j => j.grupo === g.id);
-    const sorted = ffSortRows(Object.values(ffStandings(gJogos)), gJogos);
+    const sorted = ffSortRows(Object.values(ffStandings(gJogos)));
     sorted.forEach((r, i) => {
       const e = { ...r, grupo: g.id, pos: i + 1 };
       if (i === 0) firsts.push(e);
@@ -4277,28 +4277,36 @@ function ffGenerateBracket(catId) {
     jogos.push(ffMakeJogo(catId, 'F',  1, null, null, [`${catId}-SF1`, `${catId}-SF2`], FF_F_DATE, FF_F_SLOT));
 
   } else if (FF_4G.includes(catId)) {
-    const bg = {};
-    q.forEach(t => { (bg[t.grupo] = bg[t.grupo] || []).push(t); });
-    const gs = Object.keys(bg).sort().map(gId => ({ f: bg[gId][0], s: bg[gId][1] }));
-    // QF1: 1A vs 2D, QF2: 1B vs 2C, QF3: 1C vs 2B, QF4: 1D vs 2A
-    jogos.push(ffMakeJogo(catId, 'QF', 1, gs[0].f, gs[3].s, null, FF_QF_DATE, FF_QF_SLOTS[0]));
-    jogos.push(ffMakeJogo(catId, 'QF', 2, gs[1].f, gs[2].s, null, FF_QF_DATE, FF_QF_SLOTS[1]));
-    jogos.push(ffMakeJogo(catId, 'QF', 3, gs[2].f, gs[1].s, null, FF_QF_DATE, FF_QF_SLOTS[2]));
-    jogos.push(ffMakeJogo(catId, 'QF', 4, gs[3].f, gs[0].s, null, FF_QF_DATE, FF_QF_SLOTS[3]));
+    // Seeding por performance: S1vS8, S2vS7, S3vS6, S4vS5 — evitar duplas do mesmo grupo
+    let pairs4 = [[q[0],q[7]], [q[1],q[6]], [q[2],q[5]], [q[3],q[4]]];
+    for (let i = 0; i < pairs4.length; i++) {
+      if (pairs4[i][0]?.grupo && pairs4[i][0].grupo === pairs4[i][1]?.grupo) {
+        for (let j = i + 1; j < pairs4.length; j++) {
+          if (pairs4[i][0]?.grupo !== pairs4[j][1]?.grupo && pairs4[j][0]?.grupo !== pairs4[i][1]?.grupo) {
+            [pairs4[i][1], pairs4[j][1]] = [pairs4[j][1], pairs4[i][1]];
+            break;
+          }
+        }
+      }
+    }
+    jogos.push(ffMakeJogo(catId, 'QF', 1, pairs4[0][0], pairs4[0][1], null, FF_QF_DATE, FF_QF_SLOTS[0]));
+    jogos.push(ffMakeJogo(catId, 'QF', 2, pairs4[1][0], pairs4[1][1], null, FF_QF_DATE, FF_QF_SLOTS[1]));
+    jogos.push(ffMakeJogo(catId, 'QF', 3, pairs4[2][0], pairs4[2][1], null, FF_QF_DATE, FF_QF_SLOTS[2]));
+    jogos.push(ffMakeJogo(catId, 'QF', 4, pairs4[3][0], pairs4[3][1], null, FF_QF_DATE, FF_QF_SLOTS[3]));
     jogos.push(ffMakeJogo(catId, 'SF', 1, null, null, [`${catId}-QF1`, `${catId}-QF2`], FF_SF_DATE, FF_SF_SLOTS[0]));
     jogos.push(ffMakeJogo(catId, 'SF', 2, null, null, [`${catId}-QF3`, `${catId}-QF4`], FF_SF_DATE, FF_SF_SLOTS[1]));
     jogos.push(ffMakeJogo(catId, 'F',  1, null, null, [`${catId}-SF1`, `${catId}-SF2`], FF_F_DATE, FF_F_SLOT));
 
   } else {
-    // 3 groups + 2 best 3rds = 8 → QF1=S1vS8, QF2=S4vS5, QF3=S3vS6, QF4=S2vS7
+    // QF seeding: S1vS8, S2vS7, S3vS6, S4vS5 — evitar duplas do mesmo grupo
     const s = q; // already in seed order
-    let pairs = [[s[0],s[7]], [s[3],s[4]], [s[2],s[5]], [s[1],s[6]]];
-    // Fix same-group collisions: swap 3rds (S7/S8) if needed
-    if (pairs[0][0]?.grupo === pairs[0][1]?.grupo || pairs[3][0]?.grupo === pairs[3][1]?.grupo)
-      { [pairs[0][1], pairs[3][1]] = [pairs[3][1], pairs[0][1]]; }
-    // Fix same-group collisions: swap 2nds (S5/S6) if needed
-    if (pairs[2][0]?.grupo === pairs[2][1]?.grupo || pairs[1][0]?.grupo === pairs[1][1]?.grupo)
-      { [pairs[1][1], pairs[2][1]] = [pairs[2][1], pairs[1][1]]; }
+    let pairs = [[s[0],s[7]], [s[1],s[6]], [s[2],s[5]], [s[3],s[4]]];
+    // Fix: wildcards em QF1/QF2 — trocar S7 e S8 se colisão
+    if (pairs[0][0]?.grupo === pairs[0][1]?.grupo || pairs[1][0]?.grupo === pairs[1][1]?.grupo)
+      { [pairs[0][1], pairs[1][1]] = [pairs[1][1], pairs[0][1]]; }
+    // Fix: segundos em QF3/QF4 — trocar S5 e S6 se colisão
+    if (pairs[2][0]?.grupo === pairs[2][1]?.grupo)
+      { [pairs[2][1], pairs[3][1]] = [pairs[3][1], pairs[2][1]]; }
     pairs.forEach(([e1, e2], i) => jogos.push(ffMakeJogo(catId, 'QF', i + 1, e1, e2, null, FF_QF_DATE, FF_QF_SLOTS[i])));
     jogos.push(ffMakeJogo(catId, 'SF', 1, null, null, [`${catId}-QF1`, `${catId}-QF2`], FF_SF_DATE, FF_SF_SLOTS[0]));
     jogos.push(ffMakeJogo(catId, 'SF', 2, null, null, [`${catId}-QF3`, `${catId}-QF4`], FF_SF_DATE, FF_SF_SLOTS[1]));
