@@ -2942,7 +2942,22 @@
       "grupo": "F1-A",
       "eq1": "Helen Khumalo & Narcisa Nhamitambo",
       "eq2": "Caironice & Carmen",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 6,
+        "s1eq2": 0,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 6,
+        "s2eq2": 0,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": null,
+        "s3eq2": null,
+        "tb3eq1": null,
+        "tb3eq2": null
+      },
+      "suspenso": null,
+      "adiado": null
     },
     {
       "id": 66,
@@ -3088,7 +3103,22 @@
       "grupo": "M4-C",
       "eq1": "Paul & Xander",
       "eq2": "Fádhil Khan & Kelyo",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 4,
+        "s1eq2": 6,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 3,
+        "s2eq2": 6,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": null,
+        "s3eq2": null,
+        "tb3eq1": null,
+        "tb3eq2": null
+      },
+      "suspenso": null,
+      "adiado": null
     },
     {
       "id": 78,
@@ -3767,6 +3797,46 @@
   ],
   "auditlog": [
     {
+      "id": "mq3umyfm8bstmls",
+      "userId": "mpzxoo1v8l1za3r",
+      "username": "djanasse",
+      "role": "operator",
+      "action": "SAVE_RESULT",
+      "target": "resultados",
+      "detail": "Resultado guardado: jogo #77",
+      "ts": "2026-06-07T14:00:08.914Z"
+    },
+    {
+      "id": "mq3umf4tto8afcx",
+      "userId": "mpzxoo1v8l1za3r",
+      "username": "djanasse",
+      "role": "operator",
+      "action": "SAVE_RESULT",
+      "target": "resultados",
+      "detail": "Resultado guardado: jogo #65",
+      "ts": "2026-06-07T13:59:43.901Z"
+    },
+    {
+      "id": "mq3ujtrut8suhja",
+      "userId": "mpzxoo1v8l1za3r",
+      "username": "djanasse",
+      "role": "operator",
+      "action": "LOGIN",
+      "target": "auth",
+      "detail": "Login: djanasse (operator)",
+      "ts": "2026-06-07T13:57:42.906Z"
+    },
+    {
+      "id": "mq3uhqfqdvjq4ce",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "LOGOUT",
+      "target": "auth",
+      "detail": "Logout: euamusse",
+      "ts": "2026-06-07T13:56:05.270Z"
+    },
+    {
       "id": "mq3uewqs0220jnl",
       "userId": "mpzxoo1v8l1za3r",
       "username": "djanasse",
@@ -3787,6 +3857,26 @@
       "ts": "2026-06-07T13:52:35.120Z"
     },
     {
+      "id": "mq3tzn92ur3t6er",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "SAVE_RESULT",
+      "target": "resultados",
+      "detail": "Resultado guardado: jogo #57",
+      "ts": "2026-06-07T13:42:01.334Z"
+    },
+    {
+      "id": "mq3tygorrj5lz2s",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "SAVE_RESULT",
+      "target": "resultados",
+      "detail": "Resultado guardado: jogo #67",
+      "ts": "2026-06-07T13:41:06.171Z"
+    },
+    {
       "id": "mq3tag4inmv7i1r",
       "userId": "mpzxoo1v8l1za3r",
       "username": "djanasse",
@@ -3795,6 +3885,116 @@
       "target": "auth",
       "detail": "Logout: djanasse",
       "ts": "2026-06-07T13:22:25.700Z"
+    },
+    {
+      "id": "mq3rkd32yo2b38m",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "SAVE_RESULT",
+      "target": "resultados",
+      "detail": "Resultado guardado: jogo #66",
+      "ts": "2026-06-07T12:34:09.086Z"
+    },
+    {
+      "id": "mq3riz9yya1j317",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "SAVE_RESULT",
+      "target": "resultados",
+      "detail": "Resultado guardado: jogo #56",
+      "ts": "2026-06-07T12:33:04.534Z"
+    },
+    {
+      "id": "mq3rigib20eu0ye",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "LOGIN",
+      "target": "auth",
+      "detail": "Login: euamusse (admin)",
+      "ts": "2026-06-07T12:32:40.211Z"
+    },
+    {
+      "id": "mq3qvpt7k4pbsaa",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "SAVE_RESULT",
+      "target": "resultados",
+      "detail": "Resultado guardado: jogo #78",
+      "ts": "2026-06-07T12:14:59.180Z"
+    },
+    {
+      "id": "mq3quh3eygdxsuc",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "SAVE_RESULT",
+      "target": "resultados",
+      "detail": "Resultado guardado: jogo #77",
+      "ts": "2026-06-07T12:14:01.226Z"
+    },
+    {
+      "id": "mq3qtjxfk9a1ji3",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "SAVE_RESULT",
+      "target": "resultados",
+      "detail": "Resultado guardado: jogo #54",
+      "ts": "2026-06-07T12:13:18.243Z"
+    },
+    {
+      "id": "mq3qt61ztmw5mx5",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "SAVE_RESULT",
+      "target": "resultados",
+      "detail": "Resultado guardado: jogo #50",
+      "ts": "2026-06-07T12:13:00.263Z"
+    },
+    {
+      "id": "mq3qspuj5cn4d42",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "SAVE_RESULT",
+      "target": "resultados",
+      "detail": "Resultado guardado: jogo #76",
+      "ts": "2026-06-07T12:12:39.259Z"
+    },
+    {
+      "id": "mq3qrvdq0i2poru",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "SAVE_RESULT",
+      "target": "resultados",
+      "detail": "Resultado guardado: jogo #65",
+      "ts": "2026-06-07T12:11:59.774Z"
+    },
+    {
+      "id": "mq3qqm4ya4wqid4",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "LOGIN",
+      "target": "auth",
+      "detail": "Login: euamusse (admin)",
+      "ts": "2026-06-07T12:11:01.138Z"
+    },
+    {
+      "id": "mq3qqfvvt5kbp9w",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "LOGOUT",
+      "target": "auth",
+      "detail": "Logout: euamusse",
+      "ts": "2026-06-07T12:10:53.035Z"
     },
     {
       "id": "mq3pxomvm6mjbhq",
@@ -3827,6 +4027,56 @@
       "ts": "2026-06-07T11:38:15.945Z"
     },
     {
+      "id": "mq3ojmlwetg6rlg",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "SAVE_RESULT",
+      "target": "resultados",
+      "detail": "Resultado guardado: jogo #77",
+      "ts": "2026-06-07T11:09:35.924Z"
+    },
+    {
+      "id": "mq3ns3ce4z94xk9",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "SAVE_RESULT",
+      "target": "resultados",
+      "detail": "Resultado guardado: jogo #76",
+      "ts": "2026-06-07T10:48:11.246Z"
+    },
+    {
+      "id": "mq3npodtsd3b5fb",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "SAVE_RESULT",
+      "target": "resultados",
+      "detail": "Resultado guardado: jogo #54",
+      "ts": "2026-06-07T10:46:18.545Z"
+    },
+    {
+      "id": "mq3nlce54bh1ixt",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "SAVE_RESULT",
+      "target": "resultados",
+      "detail": "Resultado guardado: jogo #65",
+      "ts": "2026-06-07T10:42:56.381Z"
+    },
+    {
+      "id": "mq3niyexnfovchm",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "SAVE_RESULT",
+      "target": "resultados",
+      "detail": "Resultado guardado: jogo #50",
+      "ts": "2026-06-07T10:41:04.953Z"
+    },
+    {
       "id": "mq3ndiykktf55ys",
       "userId": "mpzxoo1v8l1za3r",
       "username": "djanasse",
@@ -3845,6 +4095,26 @@
       "target": "auth",
       "detail": "Login: djanasse (operator)",
       "ts": "2026-06-07T10:35:41.519Z"
+    },
+    {
+      "id": "mq3nb14zssoqlhu",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "SAVE_RESULT",
+      "target": "resultados",
+      "detail": "Resultado guardado: jogo #53",
+      "ts": "2026-06-07T10:34:55.235Z"
+    },
+    {
+      "id": "mq3n7p9l5ppulz8",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "LOGIN",
+      "target": "auth",
+      "detail": "Login: euamusse (admin)",
+      "ts": "2026-06-07T10:32:19.881Z"
     },
     {
       "id": "mq3n00470a2enzn",
@@ -3925,6 +4195,26 @@
       "target": "auth",
       "detail": "Login: euamusse (admin)",
       "ts": "2026-06-07T08:53:01.257Z"
+    },
+    {
+      "id": "mq3jhhehxxrdg7g",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "LOGIN",
+      "target": "auth",
+      "detail": "Login: euamusse (admin)",
+      "ts": "2026-06-07T08:47:57.785Z"
+    },
+    {
+      "id": "mq3jhcdfrquo6i8",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "LOGOUT",
+      "target": "auth",
+      "detail": "Logout: euamusse",
+      "ts": "2026-06-07T08:47:51.267Z"
     },
     {
       "id": "mq3j4biu53a67db",
@@ -9117,5 +9407,5 @@
       "ts": "2026-06-03T06:06:37.211Z"
     }
   ],
-  "_updated": "2026-06-07T13:54:22.969Z"
+  "_updated": "2026-06-07T14:00:14.949Z"
 }
