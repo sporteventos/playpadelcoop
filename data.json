@@ -2857,7 +2857,20 @@
       "grupo": "F2-A",
       "eq1": "Florence & Jinane",
       "eq2": "Donatella Detto & Julianna",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 6,
+        "s1eq2": 1,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 6,
+        "s2eq2": 0,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": null,
+        "s3eq2": null,
+        "tb3eq1": null,
+        "tb3eq2": null
+      }
     },
     {
       "id": 64,
@@ -3670,6 +3683,16 @@
     }
   ],
   "auditlog": [
+    {
+      "id": "mq3h2khuxs9rxlg",
+      "userId": "mpzxoo1v8l1za3r",
+      "username": "djanasse",
+      "role": "operator",
+      "action": "SAVE_RESULT",
+      "target": "resultados",
+      "detail": "Resultado guardado: jogo #63",
+      "ts": "2026-06-07T07:40:22.722Z"
+    },
     {
       "id": "mq3g8aybbwu971b",
       "userId": "mpzxoo1v8l1za3r",
@@ -8641,5 +8664,5 @@
       "ts": "2026-06-03T06:06:37.211Z"
     }
   ],
-  "_updated": "2026-06-07T07:17:28.814Z"
+  "_updated": "2026-06-07T07:41:39.185Z"
 }
