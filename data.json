@@ -3037,7 +3037,22 @@
       "grupo": "M3-D",
       "eq1": "Gonçalo Marques & Pedro Gonçalves",
       "eq2": "Elves Poeira & Uweizy",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 4,
+        "s1eq2": 6,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 3,
+        "s2eq2": 6,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": null,
+        "s3eq2": null,
+        "tb3eq1": null,
+        "tb3eq2": null
+      },
+      "suspenso": null,
+      "adiado": null
     },
     {
       "id": 68,
@@ -3873,6 +3888,16 @@
     }
   ],
   "auditlog": [
+    {
+      "id": "mq3tygorrj5lz2s",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "SAVE_RESULT",
+      "target": "resultados",
+      "detail": "Resultado guardado: jogo #67",
+      "ts": "2026-06-07T13:41:06.171Z"
+    },
     {
       "id": "mq3rkd32yo2b38m",
       "userId": "mpz8aq9sg983ubo",
@@ -9394,5 +9419,5 @@
       "ts": "2026-06-03T06:06:37.211Z"
     }
   ],
-  "_updated": "2026-06-07T12:36:05.819Z"
+  "_updated": "2026-06-07T13:41:17.719Z"
 }
