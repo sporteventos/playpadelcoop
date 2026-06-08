@@ -481,7 +481,7 @@
         const s1 = allConfirmed.get(j.eq1)?.status;
         const s2 = allConfirmed.get(j.eq2)?.status;
         return s1 !== 'qualified' || s2 !== 'qualified';
-      }).slice(0, 6);
+      });
 
       const decisiveHtml = decisive.length > 0
         ? decisive.map(j => {
@@ -549,7 +549,7 @@
         const s1 = confirmedMap.get(j.eq1)?.status;
         const s2 = confirmedMap.get(j.eq2)?.status;
         return s1 !== 'qualified' || s2 !== 'qualified';
-      }).slice(0, 4);
+      });
 
       const decisiveHtml = catDecisive.length > 0
         ? `<div class="section-heading"><i class="ph ph-fire"></i> Jogos Decisivos</div>
