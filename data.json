@@ -1682,8 +1682,8 @@
     },
     {
       "id": 5,
-      "data": "2026-06-05",
-      "hora": "21:30",
+      "data": "2026-06-09",
+      "hora": "16:30",
       "campo": "Play Padel",
       "grupo": "M2-C",
       "eq1": "Feizan Omar & Filipe Lobo",
@@ -3550,8 +3550,8 @@
     },
     {
       "id": 86,
-      "data": "2026-06-07",
-      "hora": "15:00",
+      "data": "2026-06-09",
+      "hora": "22:30",
       "campo": "TVCabo",
       "grupo": "M5-B",
       "eq1": "Mizzy & Zayan Imitiaz",
@@ -4149,6 +4149,26 @@
     }
   ],
   "auditlog": [
+    {
+      "id": "mq50gadg91edib6",
+      "userId": "mpz46x5c2zupza0",
+      "username": "bgaspar",
+      "role": "operator",
+      "action": "HORARIO_MOVER_DIA",
+      "target": "jogos",
+      "detail": "Jogo #86 de 2026-06-07 15:00 TVCabo → 2026-06-09 22:30 TVCabo",
+      "ts": "2026-06-08T09:30:41.668Z"
+    },
+    {
+      "id": "mq50e9opszusuaa",
+      "userId": "mpz46x5c2zupza0",
+      "username": "bgaspar",
+      "role": "operator",
+      "action": "HORARIO_MOVER_DIA",
+      "target": "jogos",
+      "detail": "Jogo #5 de 2026-06-05 21:30 Play Padel → 2026-06-09 16:30 Play Padel",
+      "ts": "2026-06-08T09:29:07.465Z"
+    },
     {
       "id": "mq5047m44n1wnrn",
       "userId": "mpz46x5c2zupza0",
@@ -10370,5 +10390,5 @@
       "ts": "2026-06-03T06:06:37.211Z"
     }
   ],
-  "_updated": "2026-06-08T09:21:20.605Z"
+  "_updated": "2026-06-08T09:30:45.464Z"
 }
