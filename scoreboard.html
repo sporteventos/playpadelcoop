@@ -74,7 +74,7 @@
     .badge-el  { background:rgba(255,74,74,.2);   color:var(--vermelho); }
     .qual-empty { color:var(--cinza-texto); font-size:.82rem; padding:.5rem 0 .75rem; }
 
-    .results-list { display:flex; flex-direction:column; gap:.4rem; margin-bottom:1.5rem; }
+    .results-list { display:grid; grid-template-columns:repeat(2,1fr); gap:.4rem; margin-bottom:1.5rem; }
     .result-row { background:var(--preto-card); border:1px solid var(--preto-borda); border-radius:8px; padding:.55rem 1rem; display:grid; grid-template-columns:1fr auto 1fr; align-items:center; gap:.75rem; font-size:.78rem; }
     .result-left  { display:flex; align-items:center; justify-content:flex-end; gap:.5rem; overflow:hidden; }
     .result-right { display:flex; align-items:center; justify-content:flex-start; gap:.5rem; overflow:hidden; }
@@ -434,11 +434,11 @@
         cMap.forEach((v, k) => allConfirmed.set(k, { ...v, cat }));
       });
 
-      // Recent results (last 8 by date+time)
+      // Recent results (last 16 by date+time)
       const recent = [...groupJogos]
         .filter(j => j.resultado)
         .sort((a,b) => ((b.data||'')+(b.hora||'')).localeCompare((a.data||'')+(a.hora||'')))
-        .slice(0, 8);
+        .slice(0, 16);
 
       const recentHtml = recent.length > 0
         ? recent.map(j => {
