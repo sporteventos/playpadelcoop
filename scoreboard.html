@@ -95,6 +95,7 @@
     .decisive-tag  { font-size:.6rem; font-weight:700; padding:.1rem .3rem; border-radius:4px; background:rgba(245,197,24,.15); color:var(--amarelo); white-space:nowrap; flex-shrink:0; }
     .decisive-match { flex:1; display:flex; align-items:center; gap:.35rem; min-width:0; overflow:hidden; }
     .decisive-eq { flex:1; color:var(--branco); font-weight:500; font-size:.73rem; line-height:1.3; min-width:0; overflow:hidden; }
+    .decisive-eq.right { text-align:right; }
     .decisive-vs { font-size:.6rem; color:var(--cinza-texto); font-weight:700; flex-shrink:0; }
     .decisive-time  { font-size:.65rem; color:var(--cinza-texto); white-space:nowrap; flex-shrink:0; }
     .decisive-field { font-size:.62rem; color:var(--cinza-texto); flex-shrink:0; }
@@ -491,7 +492,7 @@
             return `<div class="decisive-row">
               <span class="decisive-tag">${escHtml(j.grupo)}</span>
               <div class="decisive-match">
-                <span class="decisive-eq">${escHtml(j.eq1).replace(' &amp; ','<br>')}</span>
+                <span class="decisive-eq right">${escHtml(j.eq1).replace(' &amp; ','<br>')}</span>
                 <span class="decisive-vs">vs</span>
                 <span class="decisive-eq">${escHtml(j.eq2).replace(' &amp; ','<br>')}</span>
               </div>
@@ -564,7 +565,7 @@
               return `<div class="decisive-row">
                 <span class="decisive-tag">${escHtml(j.grupo)}</span>
                 <div class="decisive-match">
-                  <span class="decisive-eq">${escHtml(j.eq1).replace(' &amp; ','<br>')}</span>
+                  <span class="decisive-eq right">${escHtml(j.eq1).replace(' &amp; ','<br>')}</span>
                   <span class="decisive-vs">vs</span>
                   <span class="decisive-eq">${escHtml(j.eq2).replace(' &amp; ','<br>')}</span>
                 </div>
