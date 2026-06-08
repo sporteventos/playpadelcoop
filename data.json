@@ -4042,8 +4042,8 @@
     },
     {
       "id": 133,
-      "data": "2026-06-06",
-      "hora": "14:00",
+      "data": "2026-06-10",
+      "hora": "21:30",
       "campo": "TVCabo",
       "grupo": "M2-C",
       "eq1": "Feizan Omar & Filipe Lobo",
@@ -4149,6 +4149,16 @@
     }
   ],
   "auditlog": [
+    {
+      "id": "mq503apoa7xbu1o",
+      "userId": "mpz46x5c2zupza0",
+      "username": "bgaspar",
+      "role": "operator",
+      "action": "HORARIO_MOVER_DIA",
+      "target": "jogos",
+      "detail": "Jogo #133 de 2026-06-06 14:00 TVCabo → 2026-06-10 21:30 TVCabo",
+      "ts": "2026-06-08T09:20:35.580Z"
+    },
     {
       "id": "mq502d9mjhw8apa",
       "userId": "mpz46x5c2zupza0",
@@ -10350,5 +10360,5 @@
       "ts": "2026-06-03T06:06:37.211Z"
     }
   ],
-  "_updated": "2026-06-08T09:19:59.338Z"
+  "_updated": "2026-06-08T09:20:58.671Z"
 }
