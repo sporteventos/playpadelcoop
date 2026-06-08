@@ -118,7 +118,7 @@
     </p>
 
     <div class="hero-cta">
-      <a href="scoreboard.html" class="btn btn-primary" target="_blank">
+      <a href="scoreboard.html" class="btn btn-primary" target="_blank" id="btnScoreboard" style="display:none">
         <i class="ph ph-monitor-play"></i> Quadro de Apuramento
       </a>
       <a href="calendario.html" class="btn btn-secondary">
@@ -526,6 +526,21 @@
       statusHtml + '</div>';
   }).join('');
 })();
+</script>
+<script>
+  /* Quadro de Apuramento — visível apenas se config.scoreboardVisible !== false */
+  (function() {
+    function applyScoreboardVisibility() {
+      try {
+        var cfg = JSON.parse(localStorage.getItem('pp_config') || 'null');
+        var visible = !cfg || cfg.scoreboardVisible !== false;
+        var btn = document.getElementById('btnScoreboard');
+        if (btn) btn.style.display = visible ? '' : 'none';
+      } catch(e) {}
+    }
+    applyScoreboardVisibility();
+    window.addEventListener('pp:datasynced', applyScoreboardVisibility);
+  }());
 </script>
 <script>
   /* Reload once when remote data.json is fetched — gives all visitors live results */

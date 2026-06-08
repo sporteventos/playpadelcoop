@@ -2216,6 +2216,38 @@ function renderDashboard() {
       }).join('');
     }
   }
+  renderConfigPanel();
+}
+
+function renderConfigPanel() {
+  const el = document.getElementById('configPanelBody');
+  if (!el) return;
+  const cfg = getData('config') || {};
+  const items = [
+    { key: 'scoreboardVisible', label: 'Mostrar "Quadro de Apuramento" na página principal', icon: 'ph-monitor-play', default: true }
+  ];
+  el.innerHTML = items.map(item => {
+    const val = cfg[item.key] !== undefined ? cfg[item.key] : item.default;
+    return `<div style="display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:.4rem 0;border-bottom:1px solid var(--preto-borda)">
+      <span style="display:flex;align-items:center;gap:.5rem;font-size:.83rem;color:var(--branco)">
+        <i class="ph ${item.icon}" style="color:var(--cinza-texto)"></i> ${item.label}
+      </span>
+      <button onclick="saveConfigToggle('${item.key}', ${!val})"
+        style="flex-shrink:0;border:none;cursor:pointer;border-radius:999px;padding:.2rem .5rem;font-size:.72rem;font-weight:700;transition:background .2s;
+               background:${val ? 'rgba(0,195,123,.2)' : 'rgba(255,74,74,.15)'};
+               color:${val ? 'var(--verde)' : 'var(--vermelho)'}">
+        <i class="ph ${val ? 'ph-eye' : 'ph-eye-slash'}"></i> ${val ? 'Visível' : 'Oculto'}
+      </button>
+    </div>`;
+  }).join('');
+}
+
+function saveConfigToggle(key, val) {
+  const cfg = getData('config') || {};
+  cfg[key] = val;
+  setData('config', cfg);
+  _autoSync();
+  renderConfigPanel();
 }
 
 function _timeAgo(iso) {

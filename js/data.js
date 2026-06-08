@@ -197,7 +197,7 @@ function ppFormatDate(d) {
 (function () {
   if (typeof window === 'undefined') return;
   if (window.location.protocol === 'file:') return; // skip when opened locally
-  var KEYS = ['campos', 'categorias', 'grupos', 'jogadores', 'duplas', 'jogos', 'fasefinal', 'telefones', 'users'];
+  var KEYS = ['campos', 'categorias', 'grupos', 'jogadores', 'duplas', 'jogos', 'fasefinal', 'telefones', 'users', 'config'];
 
   // On admin: always fetch, but only overwrite local data if remote _updated is newer.
   // Exception: 'users' is always updated from remote to ensure synced users are available on login.
