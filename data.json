@@ -3615,7 +3615,18 @@
       "grupo": "M1-C",
       "eq1": "Ahmad & Uzeir",
       "eq2": "Fernando & Rui Rocha",
-      "resultado": null
+      "resultado": null,
+      "suspenso": {
+        "s1eq1": 3,
+        "s1eq2": 6,
+        "s2eq1": 6,
+        "s2eq2": 6,
+        "s3eq1": null,
+        "s3eq2": null,
+        "serve": null,
+        "nota": "",
+        "ts": "2026-06-08T19:30:04.006Z"
+      }
     },
     {
       "id": 90,
@@ -4231,24 +4242,34 @@
   ],
   "auditlog": [
     {
-      "id": "mq5klf44p0y31v1",
-      "userId": "mpz8aq9sg983ubo",
-      "username": "euamusse",
-      "role": "admin",
-      "action": "LOGIN",
-      "target": "auth",
-      "detail": "Login: euamusse (admin)",
-      "ts": "2026-06-08T18:54:33.412Z"
+      "id": "mq5lv33n1xjg7cm",
+      "userId": "mpzxoo1v8l1za3r",
+      "username": "djanasse",
+      "role": "operator",
+      "action": "SUSPEND_GAME",
+      "target": "resultados",
+      "detail": "Jogo #89 suspenso",
+      "ts": "2026-06-08T19:30:04.019Z"
     },
     {
-      "id": "mq5kcba1yp58uz7",
-      "userId": "mpz8aq9sg983ubo",
-      "username": "euamusse",
-      "role": "admin",
+      "id": "mq5juj8vtirjj3v",
+      "userId": "mpzxoo1v8l1za3r",
+      "username": "djanasse",
+      "role": "operator",
+      "action": "LOGIN",
+      "target": "auth",
+      "detail": "Login: djanasse (operator)",
+      "ts": "2026-06-08T18:33:39.055Z"
+    },
+    {
+      "id": "mq5jud51q5txucu",
+      "userId": "mpzxoo1v8l1za3r",
+      "username": "djanasse",
+      "role": "operator",
       "action": "LOGOUT",
       "target": "auth",
-      "detail": "Logout: euamusse",
-      "ts": "2026-06-08T18:47:28.537Z"
+      "detail": "Logout: djanasse",
+      "ts": "2026-06-08T18:33:31.144Z"
     },
     {
       "id": "mq5ja1io0t6r3k4",
@@ -4379,46 +4400,6 @@
       "target": "auth",
       "detail": "Login: euamusse (admin)",
       "ts": "2026-06-08T11:01:25.249Z"
-    },
-    {
-      "id": "mq53is0fqc336sc",
-      "userId": "mpz8aq9sg983ubo",
-      "username": "euamusse",
-      "role": "admin",
-      "action": "LOGIN",
-      "target": "auth",
-      "detail": "Login: euamusse (admin)",
-      "ts": "2026-06-08T10:56:36.687Z"
-    },
-    {
-      "id": "mq53insv0nv6b26",
-      "userId": "mpz8aq9sg983ubo",
-      "username": "euamusse",
-      "role": "admin",
-      "action": "LOGOUT",
-      "target": "auth",
-      "detail": "Logout: euamusse",
-      "ts": "2026-06-08T10:56:31.231Z"
-    },
-    {
-      "id": "mq51vojrrvxl5jp",
-      "userId": "mpz8aq9sg983ubo",
-      "username": "euamusse",
-      "role": "admin",
-      "action": "LOGIN",
-      "target": "auth",
-      "detail": "Login: euamusse (admin)",
-      "ts": "2026-06-08T10:10:39.495Z"
-    },
-    {
-      "id": "mq51vgjxmupr37c",
-      "userId": "mpz8aq9sg983ubo",
-      "username": "euamusse",
-      "role": "admin",
-      "action": "LOGOUT",
-      "target": "auth",
-      "detail": "Logout: euamusse",
-      "ts": "2026-06-08T10:10:29.133Z"
     },
     {
       "id": "mq51sq32ljxifk2",
@@ -4641,26 +4622,6 @@
       "ts": "2026-06-08T09:00:04.011Z"
     },
     {
-      "id": "mq4w7b0o665isxv",
-      "userId": "mpz8aq9sg983ubo",
-      "username": "euamusse",
-      "role": "admin",
-      "action": "LOGIN",
-      "target": "auth",
-      "detail": "Login: euamusse (admin)",
-      "ts": "2026-06-08T07:31:44.136Z"
-    },
-    {
-      "id": "mq4w75yxdfl9e2a",
-      "userId": "mpz8aq9sg983ubo",
-      "username": "euamusse",
-      "role": "admin",
-      "action": "LOGOUT",
-      "target": "auth",
-      "detail": "Logout: euamusse",
-      "ts": "2026-06-08T07:31:37.593Z"
-    },
-    {
       "id": "mq4ta995tspiwc0",
       "userId": "mpz46x5c2zupza0",
       "username": "bgaspar",
@@ -4871,16 +4832,6 @@
       "ts": "2026-06-07T18:08:14.083Z"
     },
     {
-      "id": "mq43d3731jpjv0q",
-      "userId": "mpz8aq9sg983ubo",
-      "username": "euamusse",
-      "role": "admin",
-      "action": "LOGIN",
-      "target": "auth",
-      "detail": "Login: euamusse (admin)",
-      "ts": "2026-06-07T18:04:25.071Z"
-    },
-    {
       "id": "mq42oadwej3m1xd",
       "userId": "mpzxoo1v8l1za3r",
       "username": "djanasse",
@@ -4929,16 +4880,6 @@
       "target": "auth",
       "detail": "Login: bgaspar (operator)",
       "ts": "2026-06-07T17:35:17.050Z"
-    },
-    {
-      "id": "mq41n01bvy1dayw",
-      "userId": "mpz8aq9sg983ubo",
-      "username": "euamusse",
-      "role": "admin",
-      "action": "LOGIN",
-      "target": "auth",
-      "detail": "Login: euamusse (admin)",
-      "ts": "2026-06-07T17:16:08.303Z"
     },
     {
       "id": "mq41imu094t133c",
@@ -5019,16 +4960,6 @@
       "target": "auth",
       "detail": "Login: euamusse (admin)",
       "ts": "2026-06-07T16:20:05.614Z"
-    },
-    {
-      "id": "mq3zk5j2mgrpx3q",
-      "userId": "mpz8aq9sg983ubo",
-      "username": "euamusse",
-      "role": "admin",
-      "action": "LOGOUT",
-      "target": "auth",
-      "detail": "Logout: euamusse",
-      "ts": "2026-06-07T16:17:56.222Z"
     },
     {
       "id": "mq3zjm8yl8e6bp6",
@@ -10851,5 +10782,5 @@
       "ts": "2026-06-03T06:06:37.211Z"
     }
   ],
-  "_updated": "2026-06-08T18:54:49.263Z"
+  "_updated": "2026-06-08T19:30:04.029Z"
 }
