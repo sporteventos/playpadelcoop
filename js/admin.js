@@ -2090,7 +2090,7 @@ function renderDashboard() {
           <td style="color:var(--cinza-texto);padding:0 .4rem">VS</td>
           <td>${j.eq2.split(' & ').join('<br>')}</td>
           <td style="font-size:.75rem;color:var(--cinza-texto)">${escHtml(j.adiado?.motivo || '—')}</td>
-          <td><button class="btn btn-sm" style="font-size:.65rem;padding:.2rem .5rem;background:rgba(107,156,247,.15);color:#6B9CF7;border:1px solid rgba(107,156,247,.4)" onclick="abrirResultado(${j.id})"><i class="ph ph-calendar-check"></i> Reagendar</button></td>
+          <td><button class="btn btn-sm" style="font-size:.65rem;padding:.2rem .5rem;background:rgba(107,156,247,.15);color:#6B9CF7;border:1px solid rgba(107,156,247,.4)" onclick="reagendarAdiado(${j.id})"><i class="ph ph-calendar-check"></i> Reagendar</button></td>
         </tr>`
       ).join('');
     }
@@ -3650,6 +3650,25 @@ window.adiarJogo = function() {
   updateAlertBanner();
   Auth.log('ADIAR_JOGO', 'jogos', `Jogo #${APP.editingId} adiado${motivo ? ': '+motivo : ''}`);
   toast(motivo ? `Jogo adiado — ${motivo}` : 'Jogo marcado como adiado.');
+  _autoSync();
+};
+
+window.reagendarAdiado = function(jogoId) {
+  const jogos = getData('jogos');
+  const j = jogos.find(x => x.id === jogoId);
+  if (!j) return;
+  const novaData = prompt(`Reagendar "${j.eq1} vs ${j.eq2}"\nNova data (AAAA-MM-DD):`, j.data || '');
+  if (!novaData) return;
+  const novaHora = prompt('Nova hora (HH:MM):', j.hora || '');
+  if (!novaHora) return;
+  const idx = jogos.findIndex(x => x.id === jogoId);
+  jogos[idx].data   = novaData;
+  jogos[idx].hora   = novaHora;
+  jogos[idx].adiado = null;
+  setData('jogos', jogos);
+  renderDashboard();
+  Auth.log('REAGENDAR_JOGO', 'jogos', `Jogo #${jogoId} reagendado para ${novaData} ${novaHora}`);
+  toast(`Jogo reagendado para ${formatDate(novaData)} às ${novaHora}.`);
   _autoSync();
 };
 
