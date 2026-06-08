@@ -3750,7 +3750,22 @@
       "grupo": "M1-A",
       "eq1": "Faizal & Sherial",
       "eq2": "João Alberty & Manel Alberty",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 2,
+        "s1eq2": 6,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 3,
+        "s2eq2": 6,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": null,
+        "s3eq2": null,
+        "tb3eq1": null,
+        "tb3eq2": null
+      },
+      "suspenso": null,
+      "adiado": null
     },
     {
       "id": 96,
@@ -4305,6 +4320,16 @@
     }
   ],
   "auditlog": [
+    {
+      "id": "mq5oshboy0pimol",
+      "userId": "mpzxoo1v8l1za3r",
+      "username": "djanasse",
+      "role": "operator",
+      "action": "SAVE_RESULT",
+      "target": "resultados",
+      "detail": "Resultado guardado: jogo #95",
+      "ts": "2026-06-08T20:52:01.332Z"
+    },
     {
       "id": "mq5oqwojzb4q067",
       "userId": "mpzxoo1v8l1za3r",
@@ -11196,5 +11221,5 @@
       "ts": "2026-06-03T06:06:37.211Z"
     }
   ],
-  "_updated": "2026-06-08T20:51:11.351Z"
+  "_updated": "2026-06-08T20:52:01.337Z"
 }
