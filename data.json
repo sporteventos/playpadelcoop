@@ -4246,6 +4246,16 @@
   ],
   "auditlog": [
     {
+      "id": "mq5mbxymyjzk7xx",
+      "userId": "mpzxoo1v8l1za3r",
+      "username": "djanasse",
+      "role": "operator",
+      "action": "SAVE_RESULT",
+      "target": "resultados",
+      "detail": "Resultado guardado: jogo #89",
+      "ts": "2026-06-08T19:43:10.510Z"
+    },
+    {
       "id": "mq5m9nrvdctfc66",
       "userId": "mpzxoo1v8l1za3r",
       "username": "djanasse",
@@ -10986,5 +10996,5 @@
       "ts": "2026-06-03T06:06:37.211Z"
     }
   ],
-  "_updated": "2026-06-08T19:41:23.999Z"
+  "_updated": "2026-06-08T19:43:10.516Z"
 }
