@@ -3551,7 +3551,7 @@
     {
       "id": 86,
       "data": "2026-06-09",
-      "hora": "22:30",
+      "hora": "18:30",
       "campo": "TVCabo",
       "grupo": "M5-B",
       "eq1": "Mizzy & Zayan Imitiaz",
@@ -4023,8 +4023,8 @@
     {
       "id": 131,
       "data": "2026-06-09",
-      "hora": "18:30",
-      "campo": "TVCabo",
+      "hora": "17:30",
+      "campo": "Play Padel",
       "grupo": "M2-C",
       "eq1": "Felipe Moniz & José Cossa",
       "eq2": "Ricardo Oliveira & Vasco Silva",
@@ -4149,6 +4149,26 @@
     }
   ],
   "auditlog": [
+    {
+      "id": "mq51sq32ljxifk2",
+      "userId": "mpz46x5c2zupza0",
+      "username": "bgaspar",
+      "role": "operator",
+      "action": "HORARIO_DRAG",
+      "target": "jogos",
+      "detail": "Jogo #86 movido para 18:30 @ TVCabo",
+      "ts": "2026-06-08T10:08:21.518Z"
+    },
+    {
+      "id": "mq51sl8eoqto8fu",
+      "userId": "mpz46x5c2zupza0",
+      "username": "bgaspar",
+      "role": "operator",
+      "action": "HORARIO_DRAG",
+      "target": "jogos",
+      "detail": "Jogo #131 movido para 17:30 @ Play Padel",
+      "ts": "2026-06-08T10:08:15.230Z"
+    },
     {
       "id": "mq51dmghaxzx00y",
       "userId": "mpz46x5c2zupza0",
@@ -10500,5 +10520,5 @@
       "ts": "2026-06-03T06:06:37.211Z"
     }
   ],
-  "_updated": "2026-06-08T10:01:37.190Z"
+  "_updated": "2026-06-08T10:08:23.941Z"
 }
