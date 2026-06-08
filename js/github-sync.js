@@ -34,6 +34,7 @@ const GHSync = (() => {
       jogos:      getData('jogos'),
       fasefinal:  getData('fasefinal'),
       telefones:  getData('telefones'),
+      config:     getData('config'),
       users:      Auth.getUsers(),
       auditlog:   Auth.getLogs(),
       _updated:   new Date().toISOString()
