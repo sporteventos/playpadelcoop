@@ -430,11 +430,13 @@
         cMap.forEach((v, k) => allConfirmed.set(k, { ...v, cat }));
       });
 
-      // Recent results (last 16 by date+time)
+      // Recent results — count from config
+      const _sbCfg = (function(){ try{ return JSON.parse(localStorage.getItem('pp_config')||'null')||{}; }catch(e){return{};} })();
+      const _recentCount = parseInt(_sbCfg.sbRecentCount)||16;
       const recent = [...groupJogos]
         .filter(j => j.resultado)
         .sort((a,b) => ((b.data||'')+(b.hora||'')).localeCompare((a.data||'')+(a.hora||'')))
-        .slice(0, 16);
+        .slice(0, _recentCount);
 
       const recentHtml = recent.length > 0
         ? recent.map(j => {
@@ -584,7 +586,8 @@
   }
 
   // â”€â”€ 15-min auto-refresh â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-  const REFRESH_SECS = 15 * 60;
+  const _sbRefreshCfg = (function(){ try{ return JSON.parse(localStorage.getItem('pp_config')||'null')||{}; }catch(e){return{};} })();
+  const REFRESH_SECS = (parseInt(_sbRefreshCfg.sbRefreshMins)||15) * 60;
   let countdown = REFRESH_SECS;
   const countEl = document.getElementById('refreshCountdown');
   function fmtCD(s) { const m=Math.floor(s/60); return m+':'+String(s%60).padStart(2,'0'); }

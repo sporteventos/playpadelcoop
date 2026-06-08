@@ -2224,23 +2224,90 @@ function renderConfigPanel() {
   const el = document.getElementById('configPanelBody');
   if (!el) return;
   const cfg = getData('config') || {};
-  const items = [
-    { key: 'scoreboardVisible', label: 'Mostrar "Quadro de Apuramento" na página principal', icon: 'ph-monitor-play', default: true }
-  ];
-  el.innerHTML = items.map(item => {
-    const val = cfg[item.key] !== undefined ? cfg[item.key] : item.default;
-    return `<div style="display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:.4rem 0;border-bottom:1px solid var(--preto-borda)">
+
+  const v = k => cfg[k];
+  const str = (k, def) => v(k) !== undefined ? v(k) : def;
+  const bool = (k, def) => v(k) !== undefined ? v(k) : def;
+
+  const section = (title, icon) =>
+    `<div style="font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:var(--cinza-texto);padding:.6rem 0 .3rem;margin-top:.5rem;border-bottom:1px solid var(--preto-borda)">${title}</div>`;
+
+  const fieldText = (key, label, placeholder, def) => {
+    const val = str(key, def);
+    return `<div style="display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:.45rem 0;border-bottom:1px solid rgba(255,255,255,.04)">
+      <label style="font-size:.82rem;color:var(--branco);min-width:200px">${label}</label>
+      <input type="text" value="${escHtml(val)}" placeholder="${escHtml(placeholder)}"
+        onchange="saveConfigField('${key}', this.value)"
+        style="flex:1;background:var(--cinza-escuro);border:1px solid var(--preto-borda);border-radius:6px;padding:.3rem .6rem;font-size:.8rem;color:var(--branco);min-width:0;max-width:320px"/>
+    </div>`;
+  };
+
+  const fieldToggle = (key, label, icon, def) => {
+    const val = bool(key, def);
+    return `<div style="display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:.4rem 0;border-bottom:1px solid rgba(255,255,255,.04)">
       <span style="display:flex;align-items:center;gap:.5rem;font-size:.83rem;color:var(--branco)">
-        <i class="ph ${item.icon}" style="color:var(--cinza-texto)"></i> ${item.label}
+        <i class="ph ${icon}" style="color:var(--cinza-texto)"></i> ${label}
       </span>
-      <button onclick="saveConfigToggle('${item.key}', ${!val})"
-        style="flex-shrink:0;border:none;cursor:pointer;border-radius:999px;padding:.2rem .5rem;font-size:.72rem;font-weight:700;transition:background .2s;
+      <button onclick="saveConfigToggle('${key}', ${!val})"
+        style="flex-shrink:0;border:none;cursor:pointer;border-radius:999px;padding:.2rem .65rem;font-size:.72rem;font-weight:700;
                background:${val ? 'rgba(0,195,123,.2)' : 'rgba(255,74,74,.15)'};
                color:${val ? 'var(--verde)' : 'var(--vermelho)'}">
         <i class="ph ${val ? 'ph-eye' : 'ph-eye-slash'}"></i> ${val ? 'Visível' : 'Oculto'}
       </button>
     </div>`;
-  }).join('');
+  };
+
+  const fieldSelect = (key, label, options, def) => {
+    const val = str(key, def);
+    const opts = options.map(([v2, l]) => `<option value="${v2}" ${val==v2?'selected':''}>${l}</option>`).join('');
+    return `<div style="display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:.45rem 0;border-bottom:1px solid rgba(255,255,255,.04)">
+      <label style="font-size:.82rem;color:var(--branco);min-width:200px">${label}</label>
+      <select onchange="saveConfigField('${key}', this.value)"
+        style="flex:1;max-width:180px;background:var(--cinza-escuro);border:1px solid var(--preto-borda);border-radius:6px;padding:.3rem .6rem;font-size:.8rem;color:var(--branco)">${opts}</select>
+    </div>`;
+  };
+
+  const bannerVal = str('bannerMsg', '');
+  const bannerOn  = bool('bannerVisible', false);
+
+  el.innerHTML = `
+    ${section('Identidade do Torneio')}
+    ${fieldText('tornNome',      'Nome do Torneio',     'ex: Play Padel 2026',              'Play Padel 2026')}
+    ${fieldText('tornSubtitulo', 'Subtítulo',           'ex: Torneio 2.º Aniversário',      'Torneio 2.º Aniversário')}
+    ${fieldText('tornClube',     'Clube / Organização', 'ex: Sport Eventos',                'Sport Eventos')}
+    ${fieldText('tornLocal',     'Localidade',          'ex: Maputo',                       'Maputo')}
+    ${fieldText('tornDatas',     'Datas',               'ex: 05 a 14 de Junho 2026',        '05 a 14 de Junho 2026')}
+    ${fieldText('tornDescFooter','Frase do Rodapé',     'ex: O padel que une Moçambique.',  'O padel que une Moçambique.')}
+
+    ${section('Visibilidade de Páginas')}
+    ${fieldToggle('scoreboardVisible',    'Quadro de Apuramento',     'ph-monitor-play',      true)}
+    ${fieldToggle('classificacoesVisible','Classificações',           'ph-trophy',            true)}
+    ${fieldToggle('fasefinalVisible',     'Fase Final',               'ph-brackets-round',    true)}
+    ${fieldToggle('estatisticasVisible',  'Estatísticas',             'ph-chart-bar',         true)}
+
+    ${section('Quadro de Apuramento')}
+    ${fieldSelect('sbRefreshMins', 'Auto-refresh (minutos)', [['5','5 min'],['10','10 min'],['15','15 min'],['30','30 min']], '15')}
+    ${fieldSelect('sbRecentCount', 'Últimos resultados a mostrar', [['8','8'],['12','12'],['16','16'],['24','24']], '16')}
+
+    ${section('Aviso Global no Site')}
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:.4rem 0;border-bottom:1px solid rgba(255,255,255,.04)">
+      <span style="font-size:.83rem;color:var(--branco)"><i class="ph ph-megaphone" style="color:var(--cinza-texto)"></i> Mostrar banner de aviso</span>
+      <button onclick="saveConfigToggle('bannerVisible', ${!bannerOn})"
+        style="flex-shrink:0;border:none;cursor:pointer;border-radius:999px;padding:.2rem .65rem;font-size:.72rem;font-weight:700;
+               background:${bannerOn ? 'rgba(245,197,24,.2)' : 'rgba(255,255,255,.07)'};color:${bannerOn ? 'var(--amarelo)' : 'var(--cinza-texto)'}">
+        ${bannerOn ? 'Activo' : 'Inactivo'}
+      </button>
+    </div>
+    <div style="padding:.4rem 0;border-bottom:1px solid rgba(255,255,255,.04)">
+      <label style="font-size:.82rem;color:var(--branco);display:block;margin-bottom:.35rem"><i class="ph ph-chat-text" style="color:var(--cinza-texto)"></i> Texto do aviso</label>
+      <textarea onchange="saveConfigField('bannerMsg', this.value)"
+        placeholder="ex: Jogo suspenso por chuva — retoma às 15h"
+        style="width:100%;background:var(--cinza-escuro);border:1px solid var(--preto-borda);border-radius:6px;padding:.4rem .6rem;font-size:.8rem;color:var(--branco);resize:vertical;min-height:56px;box-sizing:border-box">${escHtml(bannerVal)}</textarea>
+    </div>
+
+    ${section('Estado do Torneio')}
+    ${fieldToggle('tornActivo', 'Torneio activo (ocultar lançamento quando encerrado)', 'ph-flag', true)}
+  `;
 }
 
 function saveConfigToggle(key, val) {
@@ -2249,6 +2316,13 @@ function saveConfigToggle(key, val) {
   setData('config', cfg);
   _autoSync();
   renderConfigPanel();
+}
+
+function saveConfigField(key, val) {
+  const cfg = getData('config') || {};
+  cfg[key] = val;
+  setData('config', cfg);
+  _autoSync();
 }
 
 function _timeAgo(iso) {

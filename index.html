@@ -62,18 +62,18 @@
   <a class="nav-logo" href="#inicio">
     <img src="playpadellogo.jpg" alt="Play Padel" style="height:34px;width:34px;border-radius:7px;object-fit:cover;flex-shrink:0"/>
     <div class="nav-logo-text">
-      <span class="nav-logo-title">Play Padel</span>
-      <span class="nav-logo-sub">Torneio 2.º Aniversário</span>
+      <span class="nav-logo-title" id="cfgNomeTorneio">Play Padel</span>
+      <span class="nav-logo-sub" id="cfgSubtituloNav">Torneio 2.º Aniléritário</span>
     </div>
   </a>
 
   <ul class="nav-links">
     <li><a href="#inicio" class="active"><i class="ph ph-house nav-icon"></i> Início</a></li>
     <li><a href="calendario.html"><i class="ph ph-calendar nav-icon"></i> Calendário</a></li>
-    <li><a href="classificacoes.html"><i class="ph ph-trophy nav-icon"></i> Classificações</a></li>
-    <li><a href="fasefinal.html"><i class="ph ph-brackets-round nav-icon"></i> Fase Final</a></li>
+    <li id="navLiClassificacoes"><a href="classificacoes.html"><i class="ph ph-trophy nav-icon"></i> Classificações</a></li>
+    <li id="navLiFasefinal"><a href="fasefinal.html"><i class="ph ph-brackets-round nav-icon"></i> Fase Final</a></li>
     <li><a href="jogadores.html"><i class="ph ph-users nav-icon"></i> Jogadores</a></li>
-    <li><a href="estatisticas.html"><i class="ph ph-chart-bar nav-icon"></i> Estatísticas</a></li>
+    <li id="navLiEstatisticas"><a href="estatisticas.html"><i class="ph ph-chart-bar nav-icon"></i> Estatísticas</a></li>
     <li><a href="regulamento.html"><i class="ph ph-book-open nav-icon"></i> Regulamento</a></li>
   </ul>
 
@@ -87,13 +87,16 @@
   <ul>
     <li><a href="#inicio" class="active"><i class="ph ph-house"></i> Início</a></li>
     <li><a href="calendario.html"><i class="ph ph-calendar"></i> Calendário</a></li>
-    <li><a href="classificacoes.html"><i class="ph ph-trophy"></i> Classificações</a></li>
-    <li><a href="fasefinal.html"><i class="ph ph-brackets-round"></i> Fase Final</a></li>
+    <li id="drawerLiClassificacoes"><a href="classificacoes.html"><i class="ph ph-trophy"></i> Classificações</a></li>
+    <li id="drawerLiFasefinal"><a href="fasefinal.html"><i class="ph ph-brackets-round"></i> Fase Final</a></li>
     <li><a href="jogadores.html"><i class="ph ph-users"></i> Jogadores</a></li>
-    <li><a href="estatisticas.html"><i class="ph ph-chart-bar"></i> Estatísticas</a></li>
+    <li id="drawerLiEstatisticas"><a href="estatisticas.html"><i class="ph ph-chart-bar"></i> Estatísticas</a></li>
     <li><a href="regulamento.html"><i class="ph ph-book-open"></i> Regulamento</a></li>
   </ul>
 </div>
+
+<!-- Banner global de aviso -->
+<div id="globalBanner" style="display:none;background:rgba(245,197,24,.15);border-bottom:1px solid rgba(245,197,24,.3);padding:.55rem 1.5rem;font-size:.85rem;color:var(--amarelo);text-align:center"></div>
 
 <!-- ===================== HERO ===================== -->
 <section class="hero" id="inicio">
@@ -104,16 +107,16 @@
 
     <div class="hero-badge">
       <span class="hero-badge-dot"></span>
-      <i class="ph ph-map-pin"></i>&nbsp;Maputo &nbsp;·&nbsp; 05 a 14 de Junho 2026
+      <i class="ph ph-map-pin"></i>&nbsp;<span id="cfgLocal">Maputo</span> &nbsp;·&nbsp; <span id="cfgDatas">05 a 14 de Junho 2026</span>
     </div>
 
     <h1 class="hero-title">
-      <span class="line-2">Play Padel Coop</span><br/>
-      <span class="line-3">Torneio Aniversário</span>
+      <span class="line-2" id="cfgNomeHero">Play Padel Coop</span><br/>
+      <span class="line-3" id="cfgSubtituloHero">Torneio Aniversário</span>
     </h1>
 
     <p class="hero-subtitle">
-      Organizado por <strong>Sport Eventos</strong><br/>
+      Organizado por <strong id="cfgClube">Sport Eventos</strong><br/>
       <strong>7 categorias · 22 grupos · 177 jogos</strong>
     </p>
 
@@ -215,7 +218,7 @@
         <div class="nav-card-arrow">→</div>
       </a>
 
-      <a href="classificacoes.html" class="nav-card nav-card--classificacoes">
+      <a href="classificacoes.html" class="nav-card nav-card--classificacoes" id="cardClassificacoes">
         <div class="nav-card-glow"></div>
         <div class="nav-card-icon">🏆</div>
         <h3 class="nav-card-title">Classificações</h3>
@@ -225,7 +228,7 @@
         <div class="nav-card-arrow">→</div>
       </a>
 
-      <a href="fasefinal.html" class="nav-card nav-card--classificacoes">
+      <a href="fasefinal.html" class="nav-card nav-card--classificacoes" id="cardFasefinal">
         <div class="nav-card-glow"></div>
         <div class="nav-card-icon">🥊</div>
         <h3 class="nav-card-title">Fase Final</h3>
@@ -358,7 +361,7 @@
           <p class="footer-logo-title">Play Padel</p>
         </div>
       </div>
-      <p class="footer-desc">O padel que une Moçambique.<br/>5 a 14 de Junho 2026 · Maputo</p>
+      <p class="footer-desc" id="cfgFooterDesc">O padel que une Moçambique.<br/>5 a 14 de Junho 2026 · Maputo</p>
     </div>
 
     <nav class="footer-links">
@@ -369,7 +372,7 @@
   </div>
 
   <div class="footer-bottom">
-    <p class="footer-copy">© 2026 <span>Play Padel</span> · Torneio 2.º Aniversário · Maputo, Moçambique</p>
+    <p class="footer-copy" id="cfgFooterCopy">© 2026 <span>Play Padel</span> · Torneio 2.º Aniversário · Maputo, Moçambique</p>
   </div>
 </footer>
 
@@ -530,16 +533,58 @@
 <script>
   /* Quadro de Apuramento — visível apenas se config.scoreboardVisible !== false */
   (function() {
-    function applyScoreboardVisibility() {
+    function applyConfig() {
       try {
-        var cfg = JSON.parse(localStorage.getItem('pp_config') || 'null');
-        var visible = !cfg || cfg.scoreboardVisible !== false;
-        var btn = document.getElementById('btnScoreboard');
-        if (btn) btn.style.display = visible ? '' : 'none';
+        var cfg = JSON.parse(localStorage.getItem('pp_config') || 'null') || {};
+
+        // Helper
+        var s = function(id, val) { var el = document.getElementById(id); if (el && val) el.textContent = val; };
+        var show = function(id, vis) { var el = document.getElementById(id); if (el) el.style.display = vis ? '' : 'none'; };
+
+        // Identidade
+        s('cfgNomeTorneio',    cfg.tornNome);
+        s('cfgSubtituloNav',   cfg.tornSubtitulo);
+        s('cfgNomeHero',       cfg.tornNome);
+        s('cfgSubtituloHero',  cfg.tornSubtitulo);
+        s('cfgClube',          cfg.tornClube);
+        s('cfgLocal',          cfg.tornLocal);
+        s('cfgDatas',          cfg.tornDatas);
+        if (cfg.tornDescFooter) {
+          var fd = document.getElementById('cfgFooterDesc');
+          if (fd) fd.innerHTML = cfg.tornDescFooter.replace(/\n/g,'<br/>');
+        }
+        if (cfg.tornNome || cfg.tornDatas || cfg.tornLocal) {
+          var fc = document.getElementById('cfgFooterCopy');
+          if (fc) fc.textContent = '\u00a9 2026 ' + (cfg.tornNome||'Play Padel') + ' \u00b7 ' + (cfg.tornDatas||'') + ' \u00b7 ' + (cfg.tornLocal||'') + ', Mo\u00e7ambique';
+        }
+
+        // Visibilidade botão scoreboard
+        show('btnScoreboard', cfg.scoreboardVisible !== false);
+
+        // Visibilidade páginas
+        show('navLiClassificacoes',  cfg.classificacoesVisible !== false);
+        show('drawerLiClassificacoes', cfg.classificacoesVisible !== false);
+        show('cardClassificacoes',   cfg.classificacoesVisible !== false);
+        show('navLiFasefinal',       cfg.fasefinalVisible !== false);
+        show('drawerLiFasefinal',    cfg.fasefinalVisible !== false);
+        show('cardFasefinal',        cfg.fasefinalVisible !== false);
+        show('navLiEstatisticas',    cfg.estatisticasVisible !== false);
+        show('drawerLiEstatisticas', cfg.estatisticasVisible !== false);
+
+        // Banner global
+        var banner = document.getElementById('globalBanner');
+        if (banner) {
+          if (cfg.bannerVisible && cfg.bannerMsg) {
+            banner.innerHTML = '<i class="ph ph-megaphone"></i> ' + cfg.bannerMsg.replace(/</g,'&lt;');
+            banner.style.display = '';
+          } else {
+            banner.style.display = 'none';
+          }
+        }
       } catch(e) {}
     }
-    applyScoreboardVisibility();
-    window.addEventListener('pp:datasynced', applyScoreboardVisibility);
+    applyConfig();
+    window.addEventListener('pp:datasynced', applyConfig);
   }());
 </script>
 <script>
