@@ -2938,7 +2938,7 @@
     {
       "id": 60,
       "data": "2026-06-08",
-      "hora": "22:30",
+      "hora": "16:30",
       "campo": "Play Padel",
       "grupo": "M3-C",
       "eq1": "Rui Veríssimo & Pedro Martins",
@@ -4149,6 +4149,16 @@
     }
   ],
   "auditlog": [
+    {
+      "id": "mq502d9mjhw8apa",
+      "userId": "mpz46x5c2zupza0",
+      "username": "bgaspar",
+      "role": "operator",
+      "action": "HORARIO_DRAG",
+      "target": "jogos",
+      "detail": "Jogo #60 movido para 16:30 @ Play Padel",
+      "ts": "2026-06-08T09:19:52.234Z"
+    },
     {
       "id": "mq50119jd0uf0qa",
       "userId": "mpz46x5c2zupza0",
@@ -10340,5 +10350,5 @@
       "ts": "2026-06-03T06:06:37.211Z"
     }
   ],
-  "_updated": "2026-06-08T09:19:09.745Z"
+  "_updated": "2026-06-08T09:19:59.338Z"
 }
