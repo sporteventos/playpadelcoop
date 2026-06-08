@@ -133,6 +133,8 @@
       .groups-grid { grid-template-columns:1fr; }
       .qualified-grid { grid-template-columns:1fr 1fr; }
       .progress-bar-wrap { padding:.5rem 1rem; }
+      .decisive-list { grid-template-columns:repeat(2,1fr); }
+      .results-list { grid-template-columns:1fr; }
     }
   </style>
 </head>
@@ -158,7 +160,15 @@
 
 <div class="cat-tabs" id="catTabs"></div>
 <div class="content" id="mainContent"></div>
-<div class="footer-bar">Última actualização: <span id="lastUpdate">—</span></div>
+<div class="footer-bar">
+  <div style="display:flex;justify-content:center;gap:1.25rem;flex-wrap:wrap;margin-bottom:.6rem;font-size:.7rem;">
+    <span style="display:flex;align-items:center;gap:.35rem"><span style="width:8px;height:8px;border-radius:50%;background:var(--verde);display:inline-block"></span> Apurado</span>
+    <span style="display:flex;align-items:center;gap:.35rem"><span style="width:8px;height:8px;border-radius:50%;background:var(--amarelo);display:inline-block"></span> Em disputa (wildcard)</span>
+    <span style="display:flex;align-items:center;gap:.35rem"><span style="width:8px;height:8px;border-radius:50%;background:var(--azul);display:inline-block"></span> Em disputa</span>
+    <span style="display:flex;align-items:center;gap:.35rem"><span style="width:8px;height:8px;border-radius:50%;background:var(--vermelho);display:inline-block"></span> Eliminado</span>
+  </div>
+  Última actualização: <span id="lastUpdate">—</span>
+</div>
 
 <script src="js/data.js"></script>
 <script>
@@ -320,6 +330,7 @@
       return `<tr class="${rowClass}">
         <td class="status-col"><span class="status-dot ${dotCls}"></span></td>
         <td><span class="pair-name" title="${escHtml(r.par)}">${escHtml(r.par)}</span></td>
+        <td style="font-weight:700;color:var(--branco)">${r.v*2}</td>
         <td>${r.pj}</td>
         <td style="color:var(--verde);font-weight:700">${r.v}</td>
         <td style="color:var(--vermelho)">${r.d}</td>
@@ -337,7 +348,7 @@
         </div>
       </div>
       <table class="std-table">
-        <thead><tr><th></th><th>Par</th><th>PJ</th><th>V</th><th>D</th><th>Sets</th><th>G</th></tr></thead>
+        <thead><tr><th></th><th>Par</th><th title="Pontos">PTS</th><th>PJ</th><th>V</th><th>D</th><th>Sets</th><th>G</th></tr></thead>
         <tbody>${rowsHtml}</tbody>
       </table>
     </div>`;
