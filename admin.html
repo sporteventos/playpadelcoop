@@ -145,6 +145,10 @@
           <i class="ph ph-monitor sl-icon"></i>
           Sessões Activas
         </button>
+        <button class="sidebar-link" data-view="configuracoes">
+          <i class="ph ph-sliders sl-icon"></i>
+          Configurações
+        </button>
       </div>
 
       <div class="sidebar-group">
@@ -328,13 +332,7 @@
           <div id="dashCatProgress" style="padding:.75rem 1rem"></div>
         </div>
 
-        <!-- Configurações do Portal -->
-        <div class="panel" style="margin-bottom:1.5rem">
-          <div class="panel-header">
-            <span class="panel-title"><i class="ph ph-sliders"></i> Configurações do Portal</span>
-          </div>
-          <div id="configPanelBody" style="padding:.75rem 1rem;display:flex;flex-direction:column;gap:.75rem"></div>
-        </div>
+
 
         <!-- Activity feed + next games -->
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.25rem">
@@ -658,6 +656,20 @@
           </button>
         </div>
         <div id="tblUtilizadores"></div>
+      </section>
+
+      <!-- ── CONFIGURAÇÕES ──────────────────────────────── -->
+      <section class="view" id="view-configuracoes">
+        <div class="page-header" style="margin-bottom:1.5rem">
+          <div>
+            <p class="page-tag">Sistema</p>
+            <h1 class="page-title">Configurações do Portal</h1>
+            <p class="page-desc">Visibilidade e opções do site público</p>
+          </div>
+        </div>
+        <div class="panel">
+          <div id="configPanelBody" style="padding:.75rem 1rem;display:flex;flex-direction:column;gap:.75rem"></div>
+        </div>
       </section>
 
       <!-- ── LOGS ─────────────────────────────────────── -->

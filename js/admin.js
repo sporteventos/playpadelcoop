@@ -1961,6 +1961,7 @@ function navigate(view) {
     utilizadores:  ['Utilizadores', 'Gestão de Acessos'],
     logs:          ['Logs de Auditoria', 'Auditoria'],
     sessoes:       ['Sessões Activas', 'Utilizadores Ligados'],
+    configuracoes: ['Configurações', 'Portal Público'],
     classificacoes:['Classificações', 'Standings ao Vivo'],
     estatisticas:  ['Estatísticas', 'Resumo do Torneio'],
     importar:      ['Importar Resultados', 'Import em Lote'],
@@ -1991,7 +1992,8 @@ function renderView(view) {
     case 'fasefinal':    renderFaseFinal();    break;
     case 'utilizadores': renderUtilizadores(); break;
     case 'logs':         renderLogs();         break;
-    case 'sessoes':      renderSessoes();      break;
+    case 'sessoes':      renderSessoes();       break;
+    case 'configuracoes': renderConfigPanel();  break;
     case 'classificacoes': renderAdminClassificacoes(); break;
     case 'estatisticas': renderEstatisticas(); break;
     case 'importar':     renderImportar();     break;
@@ -2216,7 +2218,6 @@ function renderDashboard() {
       }).join('');
     }
   }
-  renderConfigPanel();
 }
 
 function renderConfigPanel() {
