@@ -3625,7 +3625,7 @@
         "tb2eq1": 8,
         "tb2eq2": 4,
         "s3eq1": 6,
-        "s3eq2": 0,
+        "s3eq2": 2,
         "tb3eq1": null,
         "tb3eq2": null
       },
@@ -4245,6 +4245,16 @@
     }
   ],
   "auditlog": [
+    {
+      "id": "mq5mevyiaais97x",
+      "userId": "mpzxp3c19ypz2xd",
+      "username": "smonjane",
+      "role": "operator",
+      "action": "SAVE_RESULT",
+      "target": "resultados",
+      "detail": "Resultado guardado: jogo #89",
+      "ts": "2026-06-08T19:45:27.882Z"
+    },
     {
       "id": "mq5mdtxqrw46m0s",
       "userId": "mpzxp3c19ypz2xd",
@@ -10926,5 +10936,5 @@
       "ts": "2026-06-03T06:06:37.211Z"
     }
   ],
-  "_updated": "2026-06-08T19:44:38.617Z"
+  "_updated": "2026-06-08T19:45:27.884Z"
 }
