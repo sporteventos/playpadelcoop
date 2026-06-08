@@ -205,7 +205,8 @@
       if (!j.resultado) return;
       const r = j.resultado;
       if (r.wo) {
-        const win = r.wo==='eq1'?j.eq1:j.eq2, los = r.wo==='eq1'?j.eq2:j.eq1;
+        // wo: 'eq1' means eq1 gave the WO (forfeited) → eq2 wins
+        const win = r.wo==='eq1'?j.eq2:j.eq1, los = r.wo==='eq1'?j.eq1:j.eq2;
         if (table[win]) { table[win].pj++; table[win].v++; }
         if (table[los]) { table[los].pj++;  table[los].d++; }
         return;
