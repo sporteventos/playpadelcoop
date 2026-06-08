@@ -3554,10 +3554,7 @@
       "eq1": "Mizzy & Zayan Imitiaz",
       "eq2": "Rayhan & Arsheel",
       "resultado": null,
-      "adiado": {
-        "motivo": "",
-        "ts": 1780823234114
-      },
+      "adiado": null,
       "suspenso": null
     },
     {
@@ -4046,10 +4043,7 @@
       "eq1": "Feizan Omar & Filipe Lobo",
       "eq2": "Faheem Adamo & Yann Trivellin",
       "resultado": null,
-      "adiado": {
-        "motivo": "",
-        "ts": 1780777416314
-      },
+      "adiado": null,
       "suspenso": null
     }
   ],
@@ -4146,6 +4140,26 @@
     }
   ],
   "auditlog": [
+    {
+      "id": "mq56kep21zmrqay",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "REAGENDAR_JOGO",
+      "target": "jogos",
+      "detail": "Jogo #133 reagendado para 2026-06-10 21:30",
+      "ts": "2026-06-08T12:21:51.590Z"
+    },
+    {
+      "id": "mq56kchryyaehaf",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "REAGENDAR_JOGO",
+      "target": "jogos",
+      "detail": "Jogo #86 reagendado para 2026-06-09 18:30",
+      "ts": "2026-06-08T12:21:48.735Z"
+    },
     {
       "id": "mq56kadiso4tm7j",
       "userId": "mpz8aq9sg983ubo",
@@ -10567,5 +10581,5 @@
       "ts": "2026-06-03T06:06:37.211Z"
     }
   ],
-  "_updated": "2026-06-08T12:21:45.994Z"
+  "_updated": "2026-06-08T12:21:51.592Z"
 }
