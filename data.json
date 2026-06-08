@@ -3623,9 +3623,9 @@
         "s2eq1": 7,
         "s2eq2": 6,
         "tb2eq1": 8,
-        "tb2eq2": 6,
+        "tb2eq2": 4,
         "s3eq1": 6,
-        "s3eq2": 2,
+        "s3eq2": 0,
         "tb3eq1": null,
         "tb3eq2": null
       },
@@ -4246,54 +4246,14 @@
   ],
   "auditlog": [
     {
-      "id": "mq5mbxymyjzk7xx",
-      "userId": "mpzxoo1v8l1za3r",
-      "username": "djanasse",
+      "id": "mq5mdtxqrw46m0s",
+      "userId": "mpzxp3c19ypz2xd",
+      "username": "smonjane",
       "role": "operator",
       "action": "SAVE_RESULT",
       "target": "resultados",
       "detail": "Resultado guardado: jogo #89",
-      "ts": "2026-06-08T19:43:10.510Z"
-    },
-    {
-      "id": "mq5m9nrvdctfc66",
-      "userId": "mpzxoo1v8l1za3r",
-      "username": "djanasse",
-      "role": "operator",
-      "action": "SAVE_RESULT",
-      "target": "resultados",
-      "detail": "Resultado guardado: jogo #89",
-      "ts": "2026-06-08T19:41:23.995Z"
-    },
-    {
-      "id": "mq5m47rioo61jl5",
-      "userId": "mpzxoo1v8l1za3r",
-      "username": "djanasse",
-      "role": "operator",
-      "action": "SAVE_RESULT",
-      "target": "resultados",
-      "detail": "Resultado guardado: jogo #89",
-      "ts": "2026-06-08T19:37:09.966Z"
-    },
-    {
-      "id": "mq5m36bcvhri20d",
-      "userId": "mpzxoo1v8l1za3r",
-      "username": "djanasse",
-      "role": "operator",
-      "action": "LOGIN",
-      "target": "auth",
-      "detail": "Login: djanasse (operator)",
-      "ts": "2026-06-08T19:36:21.432Z"
-    },
-    {
-      "id": "mq5m34swe5cr0k1",
-      "userId": "mpzxoo1v8l1za3r",
-      "username": "djanasse",
-      "role": "operator",
-      "action": "LOGOUT",
-      "target": "auth",
-      "detail": "Logout: djanasse",
-      "ts": "2026-06-08T19:36:19.472Z"
+      "ts": "2026-06-08T19:44:38.606Z"
     },
     {
       "id": "mq5ly5b5s728we2",
@@ -4316,16 +4276,6 @@
       "ts": "2026-06-08T19:30:28.209Z"
     },
     {
-      "id": "mq5lv33n1xjg7cm",
-      "userId": "mpzxoo1v8l1za3r",
-      "username": "djanasse",
-      "role": "operator",
-      "action": "SUSPEND_GAME",
-      "target": "resultados",
-      "detail": "Jogo #89 suspenso",
-      "ts": "2026-06-08T19:30:04.019Z"
-    },
-    {
       "id": "mq5klf44p0y31v1",
       "userId": "mpz8aq9sg983ubo",
       "username": "euamusse",
@@ -4344,26 +4294,6 @@
       "target": "auth",
       "detail": "Logout: euamusse",
       "ts": "2026-06-08T18:47:28.537Z"
-    },
-    {
-      "id": "mq5juj8vtirjj3v",
-      "userId": "mpzxoo1v8l1za3r",
-      "username": "djanasse",
-      "role": "operator",
-      "action": "LOGIN",
-      "target": "auth",
-      "detail": "Login: djanasse (operator)",
-      "ts": "2026-06-08T18:33:39.055Z"
-    },
-    {
-      "id": "mq5jud51q5txucu",
-      "userId": "mpzxoo1v8l1za3r",
-      "username": "djanasse",
-      "role": "operator",
-      "action": "LOGOUT",
-      "target": "auth",
-      "detail": "Logout: djanasse",
-      "ts": "2026-06-08T18:33:31.144Z"
     },
     {
       "id": "mq5ja1io0t6r3k4",
@@ -10996,5 +10926,5 @@
       "ts": "2026-06-03T06:06:37.211Z"
     }
   ],
-  "_updated": "2026-06-08T19:43:10.516Z"
+  "_updated": "2026-06-08T19:44:38.617Z"
 }
