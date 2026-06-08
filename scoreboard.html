@@ -89,12 +89,12 @@
     .result-set-sep { color:var(--cinza-escuro); font-size:.7rem; }
     .result-group-lbl { font-size:.6rem; color:var(--cinza-texto); background:var(--cinza-escuro); padding:.1rem .35rem; border-radius:4px; white-space:nowrap; letter-spacing:.03em; }
 
-    .decisive-list { display:flex; flex-direction:column; gap:.4rem; margin-bottom:1.5rem; }
-    .decisive-row { background:var(--preto-card); border:1px solid rgba(245,197,24,.25); border-radius:8px; padding:.55rem .85rem; display:flex; align-items:center; gap:.65rem; font-size:.75rem; }
-    .decisive-tag  { font-size:.62rem; font-weight:700; padding:.1rem .35rem; border-radius:4px; background:rgba(245,197,24,.15); color:var(--amarelo); white-space:nowrap; }
-    .decisive-teams { flex:1; color:var(--branco); font-weight:500; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-    .decisive-time  { font-size:.68rem; color:var(--cinza-texto); white-space:nowrap; }
-    .decisive-field { font-size:.65rem; color:var(--cinza-texto); }
+    .decisive-list { display:grid; grid-template-columns:repeat(3,1fr); gap:.4rem; margin-bottom:1.5rem; }
+    .decisive-row { background:var(--preto-card); border:1px solid rgba(245,197,24,.25); border-radius:8px; padding:.45rem .75rem; display:flex; align-items:center; gap:.55rem; font-size:.73rem; min-width:0; }
+    .decisive-tag  { font-size:.6rem; font-weight:700; padding:.1rem .3rem; border-radius:4px; background:rgba(245,197,24,.15); color:var(--amarelo); white-space:nowrap; flex-shrink:0; }
+    .decisive-teams { flex:1; color:var(--branco); font-weight:500; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; min-width:0; }
+    .decisive-time  { font-size:.65rem; color:var(--cinza-texto); white-space:nowrap; flex-shrink:0; }
+    .decisive-field { font-size:.62rem; color:var(--cinza-texto); flex-shrink:0; }
 
     .groups-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:1rem; }
     .group-card { background:var(--preto-card); border:1px solid var(--preto-borda); border-radius:var(--radius); overflow:hidden; }
