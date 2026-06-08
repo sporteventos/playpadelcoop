@@ -3800,7 +3800,22 @@
       "grupo": "M2-B",
       "eq1": "José Moreira & Nuno L. Pereira",
       "eq2": "Dej Cruz & Nuno Correa Mendes",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 0,
+        "s1eq2": 6,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 6,
+        "s2eq2": 7,
+        "tb2eq1": 5,
+        "tb2eq2": 7,
+        "s3eq1": null,
+        "s3eq2": null,
+        "tb3eq1": null,
+        "tb3eq2": null
+      },
+      "suspenso": null,
+      "adiado": null
     },
     {
       "id": 101,
@@ -4245,6 +4260,16 @@
     }
   ],
   "auditlog": [
+    {
+      "id": "mq5mil4sfcg88ba",
+      "userId": "mpzxoo1v8l1za3r",
+      "username": "djanasse",
+      "role": "operator",
+      "action": "SAVE_RESULT",
+      "target": "resultados",
+      "detail": "Resultado guardado: jogo #100",
+      "ts": "2026-06-08T19:48:20.476Z"
+    },
     {
       "id": "mq5mfhz54j8sbug",
       "userId": "mpzxoo1v8l1za3r",
@@ -11006,5 +11031,5 @@
       "ts": "2026-06-03T06:06:37.211Z"
     }
   ],
-  "_updated": "2026-06-08T19:45:56.421Z"
+  "_updated": "2026-06-08T19:48:20.480Z"
 }
