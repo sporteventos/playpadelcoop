@@ -3726,8 +3726,8 @@
     {
       "id": 103,
       "data": "2026-06-09",
-      "hora": "17:30",
-      "campo": "Play Padel",
+      "hora": "16:30",
+      "campo": "TVCabo",
       "grupo": "M3-C",
       "eq1": "Rui Veríssimo & Pedro Martins",
       "eq2": "Akil & Kalil",
@@ -4149,6 +4149,16 @@
     }
   ],
   "auditlog": [
+    {
+      "id": "mq5047m44n1wnrn",
+      "userId": "mpz46x5c2zupza0",
+      "username": "bgaspar",
+      "role": "operator",
+      "action": "HORARIO_DRAG",
+      "target": "jogos",
+      "detail": "Jogo #103 movido para 16:30 @ TVCabo",
+      "ts": "2026-06-08T09:21:18.220Z"
+    },
     {
       "id": "mq503apoa7xbu1o",
       "userId": "mpz46x5c2zupza0",
@@ -10360,5 +10370,5 @@
       "ts": "2026-06-03T06:06:37.211Z"
     }
   ],
-  "_updated": "2026-06-08T09:20:58.671Z"
+  "_updated": "2026-06-08T09:21:20.605Z"
 }
