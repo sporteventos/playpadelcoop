@@ -146,6 +146,7 @@
     <div class="top-bar-subtitle">Quadro de Apuramento</div>
   </div>
   <div class="top-bar-right">
+    <button class="btn-refresh" id="btnAutoScroll" onclick="toggleAutoScroll()" title="Auto-scroll para TV"><i class="ph ph-play" id="autoScrollIcon"></i> Auto-scroll</button>
     <button class="btn-refresh" onclick="forceRefresh()"><i class="ph ph-arrows-clockwise"></i> Actualizar</button>
   </div>
 </div>
@@ -603,6 +604,53 @@
   renderAll();
   setTimeout(tick, 1000);
   window.addEventListener('pp:datasynced', function() { countdown = REFRESH_SECS; renderAll(); }, { once: true });
+
+  // ── Auto-scroll para TV ────────────────────────────────────────────
+  let _scrollActive = false;
+  let _scrollRAF = null;
+  let _scrollPos = 0;
+  const _SCROLL_SPEED = 0.6;   // px por frame (~36px/s a 60fps)
+  const _PAUSE_TOP    = 3000;  // ms pausa no topo antes de recomeçar
+  const _PAUSE_BOT    = 1500;  // ms pausa no fundo antes de voltar ao topo
+
+  function _scrollStep() {
+    if (!_scrollActive) return;
+    const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+    if (_scrollPos >= maxScroll) {
+      // Chegou ao fundo — pausa, depois salta para o topo
+      _scrollActive = false;
+      setTimeout(function() {
+        window.scrollTo({ top: 0, behavior: 'instant' });
+        _scrollPos = 0;
+        setTimeout(function() {
+          _scrollActive = true;
+          _scrollRAF = requestAnimationFrame(_scrollStep);
+        }, _PAUSE_TOP);
+      }, _PAUSE_BOT);
+      return;
+    }
+    _scrollPos += _SCROLL_SPEED;
+    window.scrollTo(0, _scrollPos);
+    _scrollRAF = requestAnimationFrame(_scrollStep);
+  }
+
+  function toggleAutoScroll() {
+    const btn  = document.getElementById('btnAutoScroll');
+    const icon = document.getElementById('autoScrollIcon');
+    _scrollActive = !_scrollActive;
+    if (_scrollActive) {
+      _scrollPos = window.scrollY;
+      btn.style.color = 'var(--verde)';
+      btn.style.borderColor = 'rgba(0,195,123,.4)';
+      icon.className = 'ph ph-pause';
+      _scrollRAF = requestAnimationFrame(_scrollStep);
+    } else {
+      if (_scrollRAF) cancelAnimationFrame(_scrollRAF);
+      btn.style.color = '';
+      btn.style.borderColor = '';
+      icon.className = 'ph ph-play';
+    }
+  }
 </script>
 <script>if("serviceWorker"in navigator){navigator.serviceWorker.register("/playpadelcoop/sw.js").catch(function(){});}</script>
 </body>
