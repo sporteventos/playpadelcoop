@@ -3731,7 +3731,9 @@
       "grupo": "M3-C",
       "eq1": "Rui Veríssimo & Pedro Martins",
       "eq2": "Akil & Kalil",
-      "resultado": null
+      "resultado": {
+        "wo": "eq1"
+      }
     },
     {
       "id": 104,
@@ -4147,6 +4149,16 @@
     }
   ],
   "auditlog": [
+    {
+      "id": "mq50119jd0uf0qa",
+      "userId": "mpz46x5c2zupza0",
+      "username": "bgaspar",
+      "role": "operator",
+      "action": "SAVE_RESULT",
+      "target": "resultados",
+      "detail": "WO registado: jogo #103 — eq1",
+      "ts": "2026-06-08T09:18:50.023Z"
+    },
     {
       "id": "mq4zwxih8bx2dnm",
       "userId": "mpz46x5c2zupza0",
@@ -10328,5 +10340,5 @@
       "ts": "2026-06-03T06:06:37.211Z"
     }
   ],
-  "_updated": "2026-06-08T09:15:38.540Z"
+  "_updated": "2026-06-08T09:18:50.028Z"
 }
