@@ -65,9 +65,9 @@
     .qual-card.q-eliminado { border-left:3px solid var(--vermelho); opacity:.8; }
     .qual-row { display:flex; align-items:baseline; justify-content:space-between; gap:.5rem; line-height:1.5; }
     .qual-p1 { font-size:.78rem; font-weight:600; color:var(--branco); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; flex:1; min-width:0; }
-    .qual-p1.elim { color:var(--cinza-texto); text-decoration:line-through; }
+    .qual-p1.elim { color:var(--cinza-texto); }
     .qual-p2 { font-size:.78rem; font-weight:600; color:var(--branco); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; flex:1; min-width:0; }
-    .qual-p2.elim { color:var(--cinza-texto); text-decoration:line-through; }
+    .qual-p2.elim { color:var(--cinza-texto); }
     .qual-from { font-size:.65rem; color:var(--cinza-texto); white-space:nowrap; flex-shrink:0; }
     .qual-badge-sm { font-size:.6rem; font-weight:700; padding:.1rem .35rem; border-radius:4px; flex-shrink:0; white-space:nowrap; }
     .badge-ap  { background:rgba(0,195,123,.2);  color:var(--verde); }
@@ -123,7 +123,7 @@
     .dot-cinza    { background:var(--cinza-escuro); }
     .pair-name { max-width:140px; overflow:hidden; display:block; line-height:1.35; }
     .row-elim td { opacity:.5; }
-    .row-elim td:nth-child(2) span { text-decoration:line-through; }
+    .row-elim td:nth-child(2) span { }
 
     .footer-bar { text-align:center; padding:1.25rem; font-size:.72rem; color:var(--cinza-texto); border-top:1px solid var(--preto-borda); margin-top:1.5rem; }
     .empty-box { text-align:center; padding:2rem; color:var(--cinza-texto); font-size:.82rem; }
@@ -146,8 +146,13 @@
 
 <div class="top-bar">
   <div class="top-bar-left">
-    <div class="top-bar-logo">PLAY PADEL <span style="color:var(--branco);font-weight:400">2026</span></div>
-    <div class="top-bar-subtitle">Quadro de Apuramento</div>
+    <a href="index.html" style="display:flex;align-items:center;gap:.6rem;text-decoration:none">
+      <img src="playpadellogo.jpg" alt="Play Padel" style="height:32px;width:32px;border-radius:7px;object-fit:cover;flex-shrink:0"/>
+      <div>
+        <div class="top-bar-logo">PLAY PADEL <span style="color:var(--branco);font-weight:400">2026</span></div>
+        <div class="top-bar-subtitle">Quadro de Apuramento</div>
+      </div>
+    </a>
   </div>
   <div class="top-bar-right">
     <button class="btn-refresh" id="btnAutoScroll" onclick="toggleAutoScroll()" title="Auto-scroll para TV"><i class="ph ph-play" id="autoScrollIcon"></i> Auto-scroll</button>
