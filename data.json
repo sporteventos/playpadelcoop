@@ -3150,10 +3150,7 @@
       "eq1": "Nuno Resende & Gonçalo Bettencourt",
       "eq2": "Alao Almeida & Ayaan Mussa",
       "resultado": null,
-      "adiado": {
-        "motivo": "",
-        "ts": 1780883601040
-      },
+      "adiado": null,
       "suspenso": null
     },
     {
@@ -4149,6 +4146,36 @@
     }
   ],
   "auditlog": [
+    {
+      "id": "mq56kadiso4tm7j",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "REAGENDAR_JOGO",
+      "target": "jogos",
+      "detail": "Jogo #69 reagendado para 2026-06-10 22:30",
+      "ts": "2026-06-08T12:21:45.990Z"
+    },
+    {
+      "id": "mq565svjufoo379",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "LOGIN",
+      "target": "auth",
+      "detail": "Login: euamusse (admin)",
+      "ts": "2026-06-08T12:10:30.127Z"
+    },
+    {
+      "id": "mq55aueruuktjub",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "LOGOUT",
+      "target": "auth",
+      "detail": "Logout: euamusse",
+      "ts": "2026-06-08T11:46:25.779Z"
+    },
     {
       "id": "mq53oyo1z7fq49f",
       "userId": "mpz8aq9sg983ubo",
@@ -10540,5 +10567,5 @@
       "ts": "2026-06-03T06:06:37.211Z"
     }
   ],
-  "_updated": "2026-06-08T11:07:33.922Z"
+  "_updated": "2026-06-08T12:21:45.994Z"
 }
