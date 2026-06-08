@@ -3665,7 +3665,22 @@
       "grupo": "M3-B",
       "eq1": "Ugo Gião & Nuno Henriques",
       "eq2": "Ivandro Remane & João Peixoto",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 5,
+        "s1eq2": 7,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 4,
+        "s2eq2": 6,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": null,
+        "s3eq2": null,
+        "tb3eq1": null,
+        "tb3eq2": null
+      },
+      "suspenso": null,
+      "adiado": null
     },
     {
       "id": 92,
@@ -4350,6 +4365,16 @@
     }
   ],
   "auditlog": [
+    {
+      "id": "mq5qhau1o44w0gg",
+      "userId": "mpzxoo1v8l1za3r",
+      "username": "djanasse",
+      "role": "operator",
+      "action": "SAVE_RESULT",
+      "target": "resultados",
+      "detail": "Resultado guardado: jogo #91",
+      "ts": "2026-06-08T21:39:18.937Z"
+    },
     {
       "id": "mq5q6s4pkohlwui",
       "userId": "mpzxoo1v8l1za3r",
@@ -11271,5 +11296,5 @@
       "ts": "2026-06-03T06:06:37.211Z"
     }
   ],
-  "_updated": "2026-06-08T21:31:31.621Z"
+  "_updated": "2026-06-08T21:39:18.948Z"
 }
