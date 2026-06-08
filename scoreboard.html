@@ -93,7 +93,9 @@
     .decisive-list { display:grid; grid-template-columns:repeat(3,1fr); gap:.4rem; margin-bottom:1.5rem; }
     .decisive-row { background:var(--preto-card); border:1px solid rgba(245,197,24,.25); border-radius:8px; padding:.45rem .75rem; display:flex; align-items:center; gap:.55rem; font-size:.73rem; min-width:0; }
     .decisive-tag  { font-size:.6rem; font-weight:700; padding:.1rem .3rem; border-radius:4px; background:rgba(245,197,24,.15); color:var(--amarelo); white-space:nowrap; flex-shrink:0; }
-    .decisive-teams { flex:1; color:var(--branco); font-weight:500; overflow:hidden; min-width:0; font-size:.73rem; line-height:1.35; }
+    .decisive-match { flex:1; display:flex; align-items:center; gap:.35rem; min-width:0; overflow:hidden; }
+    .decisive-eq { flex:1; color:var(--branco); font-weight:500; font-size:.73rem; line-height:1.3; min-width:0; overflow:hidden; }
+    .decisive-vs { font-size:.6rem; color:var(--cinza-texto); font-weight:700; flex-shrink:0; }
     .decisive-time  { font-size:.65rem; color:var(--cinza-texto); white-space:nowrap; flex-shrink:0; }
     .decisive-field { font-size:.62rem; color:var(--cinza-texto); flex-shrink:0; }
 
@@ -488,7 +490,11 @@
             const t = (j.data ? j.data.slice(5).replace('-','/') : '') + (j.hora ? ' ' + j.hora : '');
             return `<div class="decisive-row">
               <span class="decisive-tag">${escHtml(j.grupo)}</span>
-              <span class="decisive-teams">${escHtml(j.eq1).replace(' &amp; ','<br>')} <span style="color:var(--cinza-texto);font-size:.65rem">vs</span> ${escHtml(j.eq2).replace(' &amp; ','<br>')}</span>
+              <div class="decisive-match">
+                <span class="decisive-eq">${escHtml(j.eq1).replace(' &amp; ','<br>')}</span>
+                <span class="decisive-vs">vs</span>
+                <span class="decisive-eq">${escHtml(j.eq2).replace(' &amp; ','<br>')}</span>
+              </div>
               ${j.campo?`<span class="decisive-field"><i class="ph ph-map-pin"></i> ${escHtml(j.campo)}</span>`:''}
               ${t?`<span class="decisive-time">${escHtml(t)}</span>`:''}
             </div>`;
@@ -557,7 +563,11 @@
               const t = (j.data ? j.data.slice(5).replace('-','/') : '') + (j.hora ? ' ' + j.hora : '');
               return `<div class="decisive-row">
                 <span class="decisive-tag">${escHtml(j.grupo)}</span>
-                <span class="decisive-teams">${escHtml(j.eq1).replace(' &amp; ','<br>')} <span style="color:var(--cinza-texto);font-size:.65rem">vs</span> ${escHtml(j.eq2).replace(' &amp; ','<br>')}</span>
+                <div class="decisive-match">
+                  <span class="decisive-eq">${escHtml(j.eq1).replace(' &amp; ','<br>')}</span>
+                  <span class="decisive-vs">vs</span>
+                  <span class="decisive-eq">${escHtml(j.eq2).replace(' &amp; ','<br>')}</span>
+                </div>
                 ${j.campo?`<span class="decisive-field"><i class="ph ph-map-pin"></i> ${escHtml(j.campo)}</span>`:''}
                 ${t?`<span class="decisive-time">${escHtml(t)}</span>`:''}
               </div>`;
