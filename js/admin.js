@@ -836,13 +836,15 @@ window.gerarPanfleto = function(periodo) {
       drawTeamName(j.eq2, CX.eq2, y, 220, 'left');
       const s = j.suspenso;
       const partial = [s.s1eq1!=null?`${s.s1eq1}-${s.s1eq2}`:null, s.s2eq1!=null?`${s.s2eq1}-${s.s2eq2}`:null, s.s3eq1!=null?`${s.s3eq1}-${s.s3eq2}`:null].filter(Boolean).join(' ');
+      const _suspDate = s.ts ? new Date(s.ts).toISOString().slice(0,10) : null;
+      const _isCont = _suspDate && j.data && j.data > _suspDate;
       ctx.textAlign = 'right';
       ctx.font = 'bold 15px Arial, sans-serif';
-      ctx.fillStyle = '#FF9A3C';
-      ctx.fillText('\u23f8 Interrompido', W - PAD, cy - (partial ? 8 : 0));
+      ctx.fillStyle = _isCont ? '#39FF8F' : '#FF9A3C';
+      ctx.fillText(_isCont ? '\u25b6 Continuação' : '\u23f8 Interrompido', W - PAD, cy - (partial ? 8 : 0));
       if (partial) {
         ctx.font = '13px "Courier New", monospace';
-        ctx.fillStyle = '#FF9A3C';
+        ctx.fillStyle = _isCont ? '#39FF8F' : '#FF9A3C';
         ctx.fillText(partial, W - PAD, cy + 10);
       }
       ctx.textAlign = 'left';
@@ -1086,17 +1088,22 @@ window._gerarPanfletoSuspenso = function(jogo) {
 
     // ⏸ Badge circle
     const cx = W/2, cBY = sepY + 148, RR = 112;
+    const _suspDateP = s.ts ? new Date(s.ts).toISOString().slice(0,10) : null;
+    const _isContP = _suspDateP && jogo.data && jogo.data > _suspDateP;
+    const BADGE_CLR = _isContP ? '#39FF8F' : ORANGE;
+    const BADGE_RGBA_FILL = _isContP ? 'rgba(57,255,143,0.18)' : 'rgba(255,154,60,0.18)';
+    const BADGE_RGBA_BG   = _isContP ? 'rgba(57,255,143,0.10)' : 'rgba(255,154,60,0.10)';
     const radGrad = ctx.createRadialGradient(cx, cBY, 0, cx, cBY, RR + 60);
-    radGrad.addColorStop(0, 'rgba(255,154,60,0.18)'); radGrad.addColorStop(1, 'rgba(255,154,60,0)');
+    radGrad.addColorStop(0, BADGE_RGBA_FILL); radGrad.addColorStop(1, _isContP ? 'rgba(57,255,143,0)' : 'rgba(255,154,60,0)');
     ctx.fillStyle = radGrad; ctx.fillRect(cx-RR-60, cBY-RR-60, (RR+60)*2, (RR+60)*2);
     ctx.beginPath(); ctx.arc(cx, cBY, RR, 0, Math.PI*2);
-    ctx.fillStyle = 'rgba(255,154,60,0.10)'; ctx.fill();
-    ctx.strokeStyle = ORANGE; ctx.lineWidth = 3; ctx.stroke();
-    ctx.fillStyle = ORANGE; ctx.textAlign = 'center';
-    ctx.font = 'bold 82px Arial, sans-serif'; ctx.fillText('⏸', cx, cBY + 30);
-    ctx.font = 'bold 40px Arial, sans-serif'; ctx.fillText('INTERROMPIDO', cx, cBY + RR + 56);
+    ctx.fillStyle = BADGE_RGBA_BG; ctx.fill();
+    ctx.strokeStyle = BADGE_CLR; ctx.lineWidth = 3; ctx.stroke();
+    ctx.fillStyle = BADGE_CLR; ctx.textAlign = 'center';
+    ctx.font = 'bold 82px Arial, sans-serif'; ctx.fillText(_isContP ? '▶' : '⏸', cx, cBY + 30);
+    ctx.font = 'bold 40px Arial, sans-serif'; ctx.fillText(_isContP ? 'CONTINUAÇÃO' : 'INTERROMPIDO', cx, cBY + RR + 56);
     ctx.fillStyle = '#8AA396'; ctx.font = '22px Arial, sans-serif';
-    ctx.fillText('Jogo suspenso — será retomado', cx, cBY + RR + 92);
+    ctx.fillText(_isContP ? 'Jogo suspenso — retoma em nova data' : 'Jogo suspenso — será retomado', cx, cBY + RR + 92);
 
     // Match meta (grupo, data, hora, campo)
     const MIY = cBY + RR + 152;
@@ -6757,7 +6764,7 @@ function renderRelatorioJogos() {
                 : j.adiado
                   ? `<span style="color:#6B9CF7;font-size:.7rem;background:rgba(107,156,247,.12);padding:.1rem .45rem;border-radius:4px" title="${escHtml(j.adiado.motivo||'')}">📅 Adiado${j.adiado.motivo ? ' — '+escHtml(j.adiado.motivo.substring(0,40)) : ''}</span>`
                   : j.suspenso
-                  ? `<span style="color:#FF9A3C;font-size:.7rem;background:rgba(255,154,60,.12);padding:.1rem .45rem;border-radius:4px">⏸ Suspenso${j.suspenso.nota ? ' — '+j.suspenso.nota.substring(0,30) : ''}</span>`
+                  ? (() => { const _sd = j.suspenso.ts ? new Date(j.suspenso.ts).toISOString().slice(0,10) : null; const _ic = _sd && j.data && j.data > _sd; return _ic ? `<span style="color:#39FF8F;font-size:.7rem;background:rgba(57,255,143,.12);padding:.1rem .45rem;border-radius:4px">▶ Continuação</span>` : `<span style="color:#FF9A3C;font-size:.7rem;background:rgba(255,154,60,.12);padding:.1rem .45rem;border-radius:4px">⏸ Suspenso${j.suspenso.nota ? ' — '+j.suspenso.nota.substring(0,30) : ''}</span>`; })()
                   : '<span style="color:var(--amarelo);font-size:.7rem;background:rgba(245,197,24,.12);padding:.1rem .45rem;border-radius:4px">⏳ Pendente</span>'}
             </td>
             <td style="padding:.45rem .75rem;text-align:center">
