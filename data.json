@@ -1683,7 +1683,7 @@
     {
       "id": 5,
       "data": "2026-06-09",
-      "hora": "17:30",
+      "hora": "16:30",
       "campo": "Play Padel",
       "grupo": "M2-C",
       "eq1": "Feizan Omar & Filipe Lobo",
@@ -3967,7 +3967,7 @@
     {
       "id": 105,
       "data": "2026-06-09",
-      "hora": "18:30",
+      "hora": "19:30",
       "campo": "Play Padel",
       "grupo": "M4-B",
       "eq1": "Duncan & James",
@@ -4242,7 +4242,7 @@
     {
       "id": 131,
       "data": "2026-06-09",
-      "hora": "19:30",
+      "hora": "18:30",
       "campo": "Play Padel",
       "grupo": "M2-C",
       "eq1": "Felipe Moniz & José Cossa",
@@ -4365,6 +4365,46 @@
     }
   ],
   "auditlog": [
+    {
+      "id": "mq6rsh1e90krua4",
+      "userId": "mpz46x5c2zupza0",
+      "username": "bgaspar",
+      "role": "operator",
+      "action": "HORARIO_DRAG",
+      "target": "jogos",
+      "detail": "Jogo #131 movido para 18:30 @ Play Padel",
+      "ts": "2026-06-09T15:03:45.986Z"
+    },
+    {
+      "id": "mq6rs9q7p9kqb4t",
+      "userId": "mpz46x5c2zupza0",
+      "username": "bgaspar",
+      "role": "operator",
+      "action": "HORARIO_DRAG",
+      "target": "jogos",
+      "detail": "Jogo #5 movido para 16:30 @ Play Padel",
+      "ts": "2026-06-09T15:03:36.511Z"
+    },
+    {
+      "id": "mq6rrx3mftybnkv",
+      "userId": "mpz46x5c2zupza0",
+      "username": "bgaspar",
+      "role": "operator",
+      "action": "HORARIO_DRAG",
+      "target": "jogos",
+      "detail": "Jogo #5 movido para 13:30 @ Play Padel",
+      "ts": "2026-06-09T15:03:20.146Z"
+    },
+    {
+      "id": "mq6rrssc2ws1u8l",
+      "userId": "mpz46x5c2zupza0",
+      "username": "bgaspar",
+      "role": "operator",
+      "action": "HORARIO_DRAG",
+      "target": "jogos",
+      "detail": "Jogo #5 movido para 16:30 @ Play Padel",
+      "ts": "2026-06-09T15:03:14.556Z"
+    },
     {
       "id": "mq6ro4c12hbrnrd",
       "userId": "mpz46x5c2zupza0",
@@ -11486,5 +11526,5 @@
       "ts": "2026-06-03T06:06:37.211Z"
     }
   ],
-  "_updated": "2026-06-09T15:00:25.335Z"
+  "_updated": "2026-06-09T15:03:53.179Z"
 }
