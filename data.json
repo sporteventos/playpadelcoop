@@ -4339,7 +4339,22 @@
       "grupo": "M2-C",
       "eq1": "Felipe Moniz & José Cossa",
       "eq2": "Ricardo Oliveira & Vasco Silva",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 6,
+        "s1eq2": 7,
+        "tb1eq1": 6,
+        "tb1eq2": 8,
+        "s2eq1": 2,
+        "s2eq2": 6,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": null,
+        "s3eq2": null,
+        "tb3eq1": null,
+        "tb3eq2": null
+      },
+      "suspenso": null,
+      "adiado": null
     },
     {
       "id": 132,
@@ -4457,6 +4472,16 @@
     }
   ],
   "auditlog": [
+    {
+      "id": "mq711bwj7qlrfo5",
+      "userId": "mpzxoo1v8l1za3r",
+      "username": "djanasse",
+      "role": "operator",
+      "action": "SAVE_RESULT",
+      "target": "resultados",
+      "detail": "Resultado guardado: jogo #131",
+      "ts": "2026-06-09T19:22:35.779Z"
+    },
     {
       "id": "mq70z21a41qagwy",
       "userId": "mpzxoo1v8l1za3r",
@@ -11738,5 +11763,5 @@
       "ts": "2026-06-03T06:06:37.211Z"
     }
   ],
-  "_updated": "2026-06-09T19:21:31.681Z"
+  "_updated": "2026-06-09T19:22:35.786Z"
 }
