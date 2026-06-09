@@ -4124,7 +4124,22 @@
       "grupo": "F1-A",
       "eq1": "Stacey & Marlou Mulder",
       "eq2": "Cynthia Cavalcanti & Kátia Sousa",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 6,
+        "s1eq2": 4,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 6,
+        "s2eq2": 0,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": null,
+        "s3eq2": null,
+        "tb3eq1": null,
+        "tb3eq2": null
+      },
+      "suspenso": null,
+      "adiado": null
     },
     {
       "id": 115,
@@ -4442,6 +4457,16 @@
     }
   ],
   "auditlog": [
+    {
+      "id": "mq70z21a41qagwy",
+      "userId": "mpzxoo1v8l1za3r",
+      "username": "djanasse",
+      "role": "operator",
+      "action": "SAVE_RESULT",
+      "target": "resultados",
+      "detail": "Resultado guardado: jogo #114",
+      "ts": "2026-06-09T19:20:49.678Z"
+    },
     {
       "id": "mq70rktiuq0sjqs",
       "userId": "mpzxoo1v8l1za3r",
@@ -11713,5 +11738,5 @@
       "ts": "2026-06-03T06:06:37.211Z"
     }
   ],
-  "_updated": "2026-06-09T19:20:00.164Z"
+  "_updated": "2026-06-09T19:20:49.683Z"
 }
