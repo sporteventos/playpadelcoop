@@ -4014,7 +4014,22 @@
       "grupo": "M3-B",
       "eq1": "Shueb & Sahad",
       "eq2": "Ivandro Remane & João Peixoto",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 6,
+        "s1eq2": 1,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 6,
+        "s2eq2": 2,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": null,
+        "s3eq2": null,
+        "tb3eq1": null,
+        "tb3eq2": null
+      },
+      "suspenso": null,
+      "adiado": null
     },
     {
       "id": 107,
@@ -4517,6 +4532,16 @@
     }
   ],
   "auditlog": [
+    {
+      "id": "mq74joqr5ifcaxb",
+      "userId": "mpzxoo1v8l1za3r",
+      "username": "djanasse",
+      "role": "operator",
+      "action": "SAVE_RESULT",
+      "target": "resultados",
+      "detail": "Resultado guardado: jogo #106",
+      "ts": "2026-06-09T21:00:51.075Z"
+    },
     {
       "id": "mq74gsnckd34rdd",
       "userId": "mpzxoo1v8l1za3r",
@@ -11858,5 +11883,5 @@
       "ts": "2026-06-03T06:06:37.211Z"
     }
   ],
-  "_updated": "2026-06-09T20:59:04.896Z"
+  "_updated": "2026-06-09T21:00:51.080Z"
 }
