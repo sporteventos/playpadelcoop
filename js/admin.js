@@ -3163,7 +3163,13 @@ function renderJogos(filtroData = 'todos', filtroCampo = 'todos', filtroGrupo = 
       : j.adiado
         ? `<span style="background:rgba(107,156,247,.15);color:#6B9CF7;font-size:.7rem;font-weight:700;padding:.1rem .35rem;border-radius:4px" title="${escHtml(j.adiado.motivo||'')}">&#x1F4C5; Adiado${j.adiado.motivo ? ' — '+escHtml(j.adiado.motivo) : ''}</span>`
       : j.suspenso
-        ? `<span style="background:rgba(255,154,60,.15);color:#FF9A3C;font-size:.7rem;font-weight:700;padding:.1rem .35rem;border-radius:4px">⏸ Suspenso</span>`
+        ? (() => {
+            const suspDate = j.suspenso.ts ? new Date(j.suspenso.ts).toISOString().slice(0,10) : null;
+            const isContinuacao = suspDate && j.data && j.data > suspDate;
+            return isContinuacao
+              ? `<span style="background:rgba(57,255,143,.12);color:var(--verde-neon);font-size:.7rem;font-weight:700;padding:.1rem .35rem;border-radius:4px" title="Suspenso em ${suspDate} — reagendado">▶ Continuação</span>`
+              : `<span style="background:rgba(255,154,60,.15);color:#FF9A3C;font-size:.7rem;font-weight:700;padding:.1rem .35rem;border-radius:4px">⏸ Suspenso</span>`;
+          })()
         : `<span class="badge badge-amarelo">Pendente</span>`;
 
     const waBtns = j.resultado
