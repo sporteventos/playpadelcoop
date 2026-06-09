@@ -4069,7 +4069,22 @@
       "grupo": "M4-B",
       "eq1": "Andrea & Mikel Álvarez",
       "eq2": "Nuno Resende & Gonçalo Bettencourt",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 2,
+        "s1eq2": 6,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 6,
+        "s2eq2": 7,
+        "tb2eq1": 2,
+        "tb2eq2": 7,
+        "s3eq1": null,
+        "s3eq2": null,
+        "tb3eq1": null,
+        "tb3eq2": null
+      },
+      "suspenso": null,
+      "adiado": null
     },
     {
       "id": 111,
@@ -4472,6 +4487,16 @@
     }
   ],
   "auditlog": [
+    {
+      "id": "mq716la9lbnjshp",
+      "userId": "mpzxoo1v8l1za3r",
+      "username": "djanasse",
+      "role": "operator",
+      "action": "SAVE_RESULT",
+      "target": "resultados",
+      "detail": "Resultado guardado: jogo #110",
+      "ts": "2026-06-09T19:26:41.217Z"
+    },
     {
       "id": "mq711bwj7qlrfo5",
       "userId": "mpzxoo1v8l1za3r",
@@ -11763,5 +11788,5 @@
       "ts": "2026-06-03T06:06:37.211Z"
     }
   ],
-  "_updated": "2026-06-09T19:25:03.949Z"
+  "_updated": "2026-06-09T19:26:41.222Z"
 }
