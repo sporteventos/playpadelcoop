@@ -5439,7 +5439,7 @@ function _adminClassStandings(grupo, jogos) {
     if (pairs[j.eq1]) { pairs[j.eq1].pj++; if (eq1win) { pairs[j.eq1].v++; pairs[j.eq1].pts+=2; } else pairs[j.eq1].d++; }
     if (pairs[j.eq2]) { pairs[j.eq2].pj++; if (!eq1win){ pairs[j.eq2].v++; pairs[j.eq2].pts+=2; } else pairs[j.eq2].d++; }
   });
-  return Object.values(pairs).sort((a,b) => b.pts - a.pts || (b.sv-b.sl)-(a.sv-a.sl) || (b.gv-b.gl)-(a.gv-a.gl) || b.gv - a.gv);
+  return Object.values(pairs).sort((a,b) => b.pts - a.pts || _adminHeadToHead(a.par, b.par, gJogos) || (b.sv-b.sl)-(a.sv-a.sl) || (b.gv-b.gl)-(a.gv-a.gl) || b.gv - a.gv);
 }
 
 function _renderAdminClassCat(catId, grupos, jogos, el) {

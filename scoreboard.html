@@ -218,7 +218,8 @@
       if(table[j.eq1]){table[j.eq1].pj++;table[j.eq1].sv+=sv1;table[j.eq1].sl+=sl1;table[j.eq1].gv+=gv1;table[j.eq1].gl+=gl1;if(w1)table[j.eq1].v++;else table[j.eq1].d++;}
       if(table[j.eq2]){table[j.eq2].pj++;table[j.eq2].sv+=sv2;table[j.eq2].sl+=sl2;table[j.eq2].gv+=gv2;table[j.eq2].gl+=gl2;if(!w1)table[j.eq2].v++;else table[j.eq2].d++;}
     });
-    return Object.values(table).sort((a,b)=>b.v-a.v||(b.sv-b.sl)-(a.sv-a.sl)||(b.gv-b.gl)-(a.gv-a.gl)||b.gv-a.gv);
+    function hth(pA,pB){const m=gJogos.find(j=>(j.eq1===pA&&j.eq2===pB)||(j.eq1===pB&&j.eq2===pA));if(!m||!m.resultado||m.resultado.wo)return 0;const r=m.resultado;let s1=0,s2=0;[[r.s1eq1,r.s1eq2],[r.s2eq1,r.s2eq2],[r.s3eq1,r.s3eq2]].forEach(([a,b])=>{if(a!=null&&b!=null){if(a>b)s1++;else s2++;}});const aIsEq1=m.eq1===pA;return aIsEq1?(s1>s2?-1:s2>s1?1:0):(s2>s1?-1:s1>s2?1:0);}
+    return Object.values(table).sort((a,b)=>b.v-a.v||hth(a.par,b.par)||(b.sv-b.sl)-(a.sv-a.sl)||(b.gv-b.gl)-(a.gv-a.gl)||b.gv-a.gv);
   }
 
   // â”€â”€ Mathematical confirmation of status â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
