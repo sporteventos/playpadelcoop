@@ -3553,7 +3553,20 @@
       "grupo": "M5-B",
       "eq1": "Mizzy & Zayan Imitiaz",
       "eq2": "Rayhan & Arsheel",
-      "resultado": null,
+      "resultado": {
+        "s1eq1": 6,
+        "s1eq2": 4,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 6,
+        "s2eq2": 4,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": null,
+        "s3eq2": null,
+        "tb3eq1": null,
+        "tb3eq2": null
+      },
       "adiado": null,
       "suspenso": null
     },
@@ -4395,6 +4408,26 @@
     }
   ],
   "auditlog": [
+    {
+      "id": "mq6y9n9nbsuisl7",
+      "userId": "mpzxoo1v8l1za3r",
+      "username": "djanasse",
+      "role": "operator",
+      "action": "SAVE_RESULT",
+      "target": "resultados",
+      "detail": "Resultado guardado: jogo #86",
+      "ts": "2026-06-09T18:05:04.907Z"
+    },
+    {
+      "id": "mq6y935wmbw2eo5",
+      "userId": "mpzxoo1v8l1za3r",
+      "username": "djanasse",
+      "role": "operator",
+      "action": "LOGIN",
+      "target": "auth",
+      "detail": "Login: djanasse (operator)",
+      "ts": "2026-06-09T18:04:38.852Z"
+    },
     {
       "id": "mq6wye6k13xh4mf",
       "userId": "mpzxoo1v8l1za3r",
@@ -11596,5 +11629,5 @@
       "ts": "2026-06-03T06:06:37.211Z"
     }
   ],
-  "_updated": "2026-06-09T17:29:54.564Z"
+  "_updated": "2026-06-09T18:05:04.912Z"
 }
