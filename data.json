@@ -4004,7 +4004,22 @@
       "grupo": "M4-B",
       "eq1": "Duncan & James",
       "eq2": "Alao Almeida & Ayaan Mussa",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 6,
+        "s1eq2": 1,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 6,
+        "s2eq2": 4,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": null,
+        "s3eq2": null,
+        "tb3eq1": null,
+        "tb3eq2": null
+      },
+      "suspenso": null,
+      "adiado": null
     },
     {
       "id": 106,
@@ -4532,6 +4547,16 @@
     }
   ],
   "auditlog": [
+    {
+      "id": "mq74m9fus0gy5ap",
+      "userId": "mpzxoo1v8l1za3r",
+      "username": "djanasse",
+      "role": "operator",
+      "action": "SAVE_RESULT",
+      "target": "resultados",
+      "detail": "Resultado guardado: jogo #105",
+      "ts": "2026-06-09T21:02:51.210Z"
+    },
     {
       "id": "mq74joqr5ifcaxb",
       "userId": "mpzxoo1v8l1za3r",
@@ -11883,5 +11908,5 @@
       "ts": "2026-06-03T06:06:37.211Z"
     }
   ],
-  "_updated": "2026-06-09T21:01:45.227Z"
+  "_updated": "2026-06-09T21:02:51.214Z"
 }
