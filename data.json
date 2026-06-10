@@ -5245,9 +5245,9 @@
           "eq1": "Rui Lourenço & Francisco Pegado",
           "eq1grupo": "M2-A",
           "eq1seed": 1,
-          "eq2": "Dej Cruz & Nuno Correa Mendes",
+          "eq2": "José Moreira & Nuno L. Pereira",
           "eq2grupo": "M2-B",
-          "eq2seed": 6,
+          "eq2seed": 7,
           "resultado": null,
           "data": "2026-06-12",
           "hora": "19:30",
@@ -5290,12 +5290,12 @@
           "fase": "QF",
           "num": 4,
           "feedFrom": null,
-          "eq1": "Ricardo Oliveira & Vasco Silva",
-          "eq1grupo": "M2-C",
-          "eq1seed": 2,
-          "eq2": "José Moreira & Nuno L. Pereira",
-          "eq2grupo": "M2-B",
-          "eq2seed": 7,
+          "eq1": "Dej Cruz & Nuno Correa Mendes",
+          "eq1grupo": "M2-B",
+          "eq1seed": 6,
+          "eq2": "Ricardo Oliveira & Vasco Silva",
+          "eq2grupo": "M2-C",
+          "eq2seed": 2,
           "resultado": null,
           "data": "2026-06-12",
           "hora": "18:30",
@@ -5356,7 +5356,7 @@
           "hora": "15:00"
         }
       ],
-      "swapNote": "Ajuste anti-colisão: S6→QF1, S8→QF2, S5→QF3",
+      "swapNote": "Ajuste anti-colisão: S6→QF1, S8→QF2, S5→QF3; Troca manual: M2-QF1/eq2 ⇔ M2-QF4/eq2; Troca manual: M2-QF4/eq2 ⇔ M2-QF1/eq2; Troca manual: M2-QF1/eq2 ⇔ M2-QF4/eq2; Troca manual: M2-QF4/eq2 ⇔ M2-QF1/eq2; Troca manual: M2-QF1/eq2 ⇔ M2-QF4/eq1; Troca manual: M2-QF4/eq2 ⇔ M2-QF1/eq2",
       "incomplete": false
     },
     "M3": {
@@ -5370,9 +5370,9 @@
           "eq1": "Shueb & Sahad",
           "eq1grupo": "M3-B",
           "eq1seed": 1,
-          "eq2": "Abdul Ibraimo & Guilherme Godinho",
-          "eq2grupo": "M3-A",
-          "eq2seed": 8,
+          "eq2": null,
+          "eq2grupo": null,
+          "eq2seed": null,
           "resultado": null,
           "data": "2026-06-12",
           "hora": "20:30",
@@ -5708,6 +5708,26 @@
       "ts": "2026-06-10T22:57:35.743Z"
     },
     {
+      "id": "mq8nz8evia8822u",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "LOGIN",
+      "target": "auth",
+      "detail": "Login: euamusse (admin)",
+      "ts": "2026-06-10T22:52:35.287Z"
+    },
+    {
+      "id": "mq8nu7ulyc8g3a0",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "LOGOUT",
+      "target": "auth",
+      "detail": "Logout: euamusse",
+      "ts": "2026-06-10T22:48:41.277Z"
+    },
+    {
       "id": "mq8nqn11jl56fns",
       "userId": "mpz46x5c2zupza0",
       "username": "bgaspar",
@@ -5816,6 +5836,46 @@
       "target": "fasefinal",
       "detail": "Jogo M4-QF2 movido para 20:30 @ Stella Artois",
       "ts": "2026-06-10T22:26:34.652Z"
+    },
+    {
+      "id": "mq8mxyj77jcibol",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "RESET_BRACKET",
+      "target": "fasefinal",
+      "detail": "Bracket resetado: M3",
+      "ts": "2026-06-10T22:23:36.211Z"
+    },
+    {
+      "id": "mq8mxkbop2etx81",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "GENERATE_BRACKET_INCOMPLETE",
+      "target": "fasefinal",
+      "detail": "Bracket gerado (incompleto): M3",
+      "ts": "2026-06-10T22:23:17.796Z"
+    },
+    {
+      "id": "mq8mvd7xzg2ex12",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "RESET_BRACKET",
+      "target": "fasefinal",
+      "detail": "Bracket resetado: M3",
+      "ts": "2026-06-10T22:21:35.277Z"
+    },
+    {
+      "id": "mq8mur3di3220a1",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "GENERATE_BRACKET_INCOMPLETE",
+      "target": "fasefinal",
+      "detail": "Bracket gerado (incompleto): M3",
+      "ts": "2026-06-10T22:21:06.601Z"
     },
     {
       "id": "mq8mnx6vewg75t5",
@@ -13068,16 +13128,6 @@
       "ts": "2026-06-04T13:40:58.753Z"
     },
     {
-      "id": "mpzjmqyo2c278ds",
-      "userId": "mpz8aq9sg983ubo",
-      "username": "euamusse",
-      "role": "admin",
-      "action": "RESET_BRACKET",
-      "target": "fasefinal",
-      "detail": "Bracket resetado: M2",
-      "ts": "2026-06-04T13:40:58.752Z"
-    },
-    {
       "id": "mpzjmqyot1vyg5i",
       "userId": "mpz8aq9sg983ubo",
       "username": "euamusse",
@@ -13085,6 +13135,16 @@
       "action": "RESET_BRACKET",
       "target": "fasefinal",
       "detail": "Bracket resetado: F1",
+      "ts": "2026-06-04T13:40:58.752Z"
+    },
+    {
+      "id": "mpzjmqyo2c278ds",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "RESET_BRACKET",
+      "target": "fasefinal",
+      "detail": "Bracket resetado: M2",
       "ts": "2026-06-04T13:40:58.752Z"
     },
     {
@@ -13138,16 +13198,6 @@
       "ts": "2026-06-04T13:39:55.172Z"
     },
     {
-      "id": "mpzjldwhuf0drh0",
-      "userId": "mpz8aq9sg983ubo",
-      "username": "euamusse",
-      "role": "admin",
-      "action": "RESET_BRACKET",
-      "target": "fasefinal",
-      "detail": "Bracket resetado: F1",
-      "ts": "2026-06-04T13:39:55.169Z"
-    },
-    {
       "id": "mpzjldwhpi8glsx",
       "userId": "mpz8aq9sg983ubo",
       "username": "euamusse",
@@ -13155,6 +13205,16 @@
       "action": "RESET_BRACKET",
       "target": "fasefinal",
       "detail": "Bracket resetado: M2",
+      "ts": "2026-06-04T13:39:55.169Z"
+    },
+    {
+      "id": "mpzjldwhuf0drh0",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "RESET_BRACKET",
+      "target": "fasefinal",
+      "detail": "Bracket resetado: F1",
       "ts": "2026-06-04T13:39:55.169Z"
     },
     {
@@ -13188,16 +13248,6 @@
       "ts": "2026-06-04T13:34:10.179Z"
     },
     {
-      "id": "mpzjdzpb6ynjzkt",
-      "userId": "mpz8aq9sg983ubo",
-      "username": "euamusse",
-      "role": "admin",
-      "action": "RESET_BRACKET",
-      "target": "fasefinal",
-      "detail": "Bracket resetado: M4",
-      "ts": "2026-06-04T13:34:10.175Z"
-    },
-    {
       "id": "mpzjdzpbqizhxh3",
       "userId": "mpz8aq9sg983ubo",
       "username": "euamusse",
@@ -13205,6 +13255,16 @@
       "action": "RESET_BRACKET",
       "target": "fasefinal",
       "detail": "Bracket resetado: M3",
+      "ts": "2026-06-04T13:34:10.175Z"
+    },
+    {
+      "id": "mpzjdzpb6ynjzkt",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "RESET_BRACKET",
+      "target": "fasefinal",
+      "detail": "Bracket resetado: M4",
       "ts": "2026-06-04T13:34:10.175Z"
     },
     {
@@ -13218,16 +13278,6 @@
       "ts": "2026-06-04T13:34:10.174Z"
     },
     {
-      "id": "mpzjdzp9thb1man",
-      "userId": "mpz8aq9sg983ubo",
-      "username": "euamusse",
-      "role": "admin",
-      "action": "RESET_BRACKET",
-      "target": "fasefinal",
-      "detail": "Bracket resetado: F1",
-      "ts": "2026-06-04T13:34:10.173Z"
-    },
-    {
       "id": "mpzjdzp87zz5dm9",
       "userId": "mpz8aq9sg983ubo",
       "username": "euamusse",
@@ -13235,6 +13285,16 @@
       "action": "RESET_BRACKET",
       "target": "fasefinal",
       "detail": "Bracket resetado: M2",
+      "ts": "2026-06-04T13:34:10.173Z"
+    },
+    {
+      "id": "mpzjdzp9thb1man",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "RESET_BRACKET",
+      "target": "fasefinal",
+      "detail": "Bracket resetado: F1",
       "ts": "2026-06-04T13:34:10.173Z"
     },
     {
@@ -13258,16 +13318,6 @@
       "ts": "2026-06-04T13:17:28.253Z"
     },
     {
-      "id": "mpzisim4pdfcglk",
-      "userId": "mpz8aq9sg983ubo",
-      "username": "euamusse",
-      "role": "admin",
-      "action": "RESET_BRACKET",
-      "target": "fasefinal",
-      "detail": "Bracket resetado: M3",
-      "ts": "2026-06-04T13:17:28.252Z"
-    },
-    {
       "id": "mpzisim409j175g",
       "userId": "mpz8aq9sg983ubo",
       "username": "euamusse",
@@ -13275,6 +13325,16 @@
       "action": "RESET_BRACKET",
       "target": "fasefinal",
       "detail": "Bracket resetado: M4",
+      "ts": "2026-06-04T13:17:28.252Z"
+    },
+    {
+      "id": "mpzisim4pdfcglk",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "RESET_BRACKET",
+      "target": "fasefinal",
+      "detail": "Bracket resetado: M3",
       "ts": "2026-06-04T13:17:28.252Z"
     },
     {
@@ -13288,16 +13348,6 @@
       "ts": "2026-06-04T13:17:28.250Z"
     },
     {
-      "id": "mpzisilxnsvqn4k",
-      "userId": "mpz8aq9sg983ubo",
-      "username": "euamusse",
-      "role": "admin",
-      "action": "RESET_BRACKET",
-      "target": "fasefinal",
-      "detail": "Bracket resetado: M2",
-      "ts": "2026-06-04T13:17:28.245Z"
-    },
-    {
       "id": "mpzisilxxai90bg",
       "userId": "mpz8aq9sg983ubo",
       "username": "euamusse",
@@ -13305,6 +13355,16 @@
       "action": "RESET_BRACKET",
       "target": "fasefinal",
       "detail": "Bracket resetado: F1",
+      "ts": "2026-06-04T13:17:28.245Z"
+    },
+    {
+      "id": "mpzisilxnsvqn4k",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "RESET_BRACKET",
+      "target": "fasefinal",
+      "detail": "Bracket resetado: M2",
       "ts": "2026-06-04T13:17:28.245Z"
     },
     {
@@ -14978,5 +15038,5 @@
       "ts": "2026-06-03T06:06:37.211Z"
     }
   ],
-  "_updated": "2026-06-10T23:05:35.659Z"
+  "_updated": "2026-06-10T23:12:49.481Z"
 }
