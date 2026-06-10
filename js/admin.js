@@ -6287,8 +6287,8 @@ function renderHorario() {
           const conflictClass = conflict ? ' has-conflict' : btb ? ' has-btb' : '';
           const e1 = j.eq1 || 'A definir';
           const e2 = j.eq2 || 'A definir';
-          const dragAttr = j._isFaseFinal ? '' : `draggable="true" ondragstart="horarioStartDrag(event,'${j.id}')" ondragend="horarioDragEnd(event)"`;
-          const moverBtn = j._isFaseFinal ? '' : `<button onclick="event.stopPropagation();horarioMoverDia('${j.id}')" style="margin-top:.35rem;width:100%;background:transparent;border:1px solid var(--preto-borda);border-radius:4px;color:var(--cinza-texto);font-size:.62rem;padding:.15rem .3rem;cursor:pointer;text-align:center" title="Mover para outro dia">↗ outro dia</button>`;
+          const dragAttr = `draggable="true" ondragstart="horarioStartDrag(event,'${j.id}')" ondragend="horarioDragEnd(event)"`;
+          const moverBtn = `<button onclick="event.stopPropagation();horarioMoverDia('${j.id}')" style="margin-top:.35rem;width:100%;background:transparent;border:1px solid var(--preto-borda);border-radius:4px;color:var(--cinza-texto);font-size:.62rem;padding:.15rem .3rem;cursor:pointer;text-align:center" title="Mover para outro dia">↗ outro dia</button>`;
           return `<div class="schedule-slot has-game${j.resultado?' has-result':''}${conflictClass}" ${dragAttr} ${slotAttr}>
             ${conflict ? `<span class="conflict-badge" title="${conflictTip}">⚠ CONFLITO</span>` : btb ? `<span class="conflict-badge" style="background:#FF9A3C" title="${conflictTip}">⏱ SEGUIDO</span>` : ''}
             <div style="font-size:.7rem;color:var(--cinza-texto);margin-bottom:.2rem;display:flex;justify-content:space-between;align-items:center">
@@ -6339,6 +6339,17 @@ window.horarioDragLeave = function(ev) {
   ev.currentTarget.classList.remove('drag-over', 'drag-over-swap');
 };
 
+// Helper: find a fase-final jogo by ID across all categories
+function _ffFindJogoById(ff, jogoId) {
+  for (const catId of Object.keys(ff)) {
+    if (!ff[catId]?.jogos) continue;
+    for (let i = 0; i < ff[catId].jogos.length; i++) {
+      if (String(ff[catId].jogos[i].id) === String(jogoId)) return { catId, i };
+    }
+  }
+  return null;
+}
+
 window.horarioDrop = function(ev, hora, campo) {
   ev.preventDefault();
   const slot = ev.currentTarget;
@@ -6350,31 +6361,52 @@ window.horarioDrop = function(ev, hora, campo) {
 
   const selDate = document.getElementById('horarioDataFilter')?.value;
   const jogos = getData('jogos');
-  const idx = jogos.findIndex(j => String(j.id) === jogoId);
-  if (idx < 0) return;
+  const ff    = ffLoad();
+  const idx   = jogos.findIndex(j => String(j.id) === jogoId);
+  const isFf  = idx < 0;
+  const ffRef = isFf ? _ffFindJogoById(ff, jogoId) : null;
+  if (isFf && !ffRef) return;
 
-  const oldHora  = jogos[idx].hora;
-  const oldCampo = jogos[idx].campo;
-
-  // If dropping onto itself, do nothing
+  const dragged  = isFf ? ff[ffRef.catId].jogos[ffRef.i] : jogos[idx];
+  const oldHora  = dragged.hora;
+  const oldCampo = dragged.campo;
   if (oldHora === hora && oldCampo === campo) return;
 
-  // Check if target slot has a game — if so, swap
-  const targetIdx = jogos.findIndex(j =>
+  // Find game in target slot (regular first, then FF)
+  const targetRegIdx = jogos.findIndex(j =>
     j.data === selDate && j.hora === hora && j.campo === campo && String(j.id) !== jogoId
   );
-  if (targetIdx >= 0) {
-    jogos[targetIdx].hora  = oldHora;
-    jogos[targetIdx].campo = oldCampo;
+  let targetFfRef = null;
+  if (targetRegIdx < 0) {
+    for (const catId of Object.keys(ff)) {
+      if (!ff[catId]?.jogos) continue;
+      for (let i = 0; i < ff[catId].jogos.length; i++) {
+        const tj = ff[catId].jogos[i];
+        if (tj.data === selDate && tj.hora === hora && tj.campo === campo && String(tj.id) !== jogoId) {
+          targetFfRef = { catId, i }; break;
+        }
+      }
+      if (targetFfRef) break;
+    }
+  }
+
+  if (targetRegIdx >= 0) {
+    jogos[targetRegIdx].hora  = oldHora;
+    jogos[targetRegIdx].campo = oldCampo;
+    toast(`Jogos trocados: ${hora} · ${campo} ↔ ${oldHora} · ${oldCampo}`);
+  } else if (targetFfRef) {
+    ff[targetFfRef.catId].jogos[targetFfRef.i].hora  = oldHora;
+    ff[targetFfRef.catId].jogos[targetFfRef.i].campo = oldCampo;
     toast(`Jogos trocados: ${hora} · ${campo} ↔ ${oldHora} · ${oldCampo}`);
   } else {
     toast(`Jogo movido para ${hora} · ${campo}`);
   }
 
-  jogos[idx].hora  = hora;
-  jogos[idx].campo = campo;
+  dragged.hora  = hora;
+  dragged.campo = campo;
   setData('jogos', jogos);
-  Auth.log('HORARIO_DRAG', 'jogos', `Jogo #${jogoId} movido para ${hora} @ ${campo}`);
+  ffSave(ff);
+  Auth.log('HORARIO_DRAG', isFf ? 'fasefinal' : 'jogos', `Jogo ${jogoId} movido para ${hora} @ ${campo}`);
   renderHorario();
 };
 
@@ -6889,10 +6921,15 @@ function renderRelatorioJogos() {
 
 // ── Mover jogo para outro dia ─────────────────────────────────
 window.horarioMoverDia = function(jogoId) {
-  const jogos = getData('jogos');
-  const j = jogos.find(x => String(x.id) === String(jogoId));
+  jogoId = String(jogoId);
+  let j = getData('jogos').find(x => String(x.id) === jogoId);
+  if (!j) {
+    const ff = ffLoad();
+    const ref = _ffFindJogoById(ff, jogoId);
+    if (ref) j = ff[ref.catId].jogos[ref.i];
+  }
   if (!j) return;
-  APP._moverDiaJogoId = String(jogoId);
+  APP._moverDiaJogoId = jogoId;
   APP._moverDiaSlot   = null;
   const info = document.getElementById('moverDiaInfo');
   if (info) info.textContent = `${j.grupo || '#' + jogoId} — ${j.eq1 || '?'} vs ${j.eq2 || '?'}`;
@@ -6913,14 +6950,25 @@ window.horarioMoverDiaRefreshSlots = function() {
 
   const jogos   = getData('jogos');
   const campos  = getData('campos').sort((a,b) => (a.id||0)-(b.id||0)).map(c => c.nome);
-  const jogoAtual = jogos.find(x => String(x.id) === String(jogoId));
+  let jogoAtual = jogos.find(x => String(x.id) === String(jogoId));
+
+  // Include fase final games in occupancy
+  const ffAll = ffLoad();
+  const ffDayJogos = Object.values(ffAll).flatMap(cd =>
+    (cd?.jogos || []).filter(j => j.data === novaData && j.hora && j.campo && String(j.id) !== String(jogoId))
+  );
+  if (!jogoAtual) {
+    const ref = _ffFindJogoById(ffAll, jogoId);
+    if (ref) jogoAtual = ffAll[ref.catId].jogos[ref.i];
+  }
 
   // Games on target date, excluding the game being moved
   const dayJogos = jogos.filter(j => j.data === novaData && String(j.id) !== String(jogoId));
+  const allDayJogos = [...dayJogos, ...ffDayJogos];
 
   // Dominant minute offset for target day; fallback to current game's minute
   const minuteCounts = {};
-  dayJogos.forEach(j => {
+  allDayJogos.forEach(j => {
     if (!j.hora) return;
     const min = j.hora.split(':')[1];
     minuteCounts[min] = (minuteCounts[min] || 0) + 1;
@@ -6933,7 +6981,7 @@ window.horarioMoverDiaRefreshSlots = function() {
     const slot = `${String(h).padStart(2,'0')}:${dominantMin}`;
     if (slot <= '23:30') CLUB_SLOTS.push(slot);
   }
-  const times = [...new Set([...CLUB_SLOTS, ...dayJogos.map(j => j.hora).filter(Boolean)])].sort();
+  const times = [...new Set([...CLUB_SLOTS, ...allDayJogos.map(j => j.hora).filter(Boolean)])].sort();
 
   // Fallback: if no games on target day, use standard evening slots
   const DEFAULT_SLOTS = ['17:00','17:30','18:00','18:30','19:00','19:30','20:00','20:30','21:00','21:30'];
@@ -6941,7 +6989,7 @@ window.horarioMoverDiaRefreshSlots = function() {
 
   // Occupation map {hora|campo : jogo}
   const occupied = {};
-  dayJogos.forEach(j => { if (j.hora && j.campo) occupied[`${j.hora}|${j.campo}`] = j; });
+  allDayJogos.forEach(j => { if (j.hora && j.campo) occupied[`${j.hora}|${j.campo}`] = j; });
 
   const sel = APP._moverDiaSlot;
   let html = `<p style="color:var(--cinza-texto);font-size:.75rem;margin:.4rem 0 .5rem">Clique num slot <span style="color:var(--verde)">livre</span> para seleccionar:</p>`;
@@ -6997,15 +7045,31 @@ window.horarioConfirmarMoverDia = function() {
   }
   const jogos = getData('jogos');
   const idx = jogos.findIndex(x => String(x.id) === jogoId);
-  if (idx < 0) return;
-  const antigaData  = jogos[idx].data;
-  const antigaHora  = jogos[idx].hora;
-  const antigoCampo = jogos[idx].campo;
-  jogos[idx].data  = novaData;
-  jogos[idx].hora  = slot.hora;
-  jogos[idx].campo = slot.campo;
-  setData('jogos', jogos);
-  Auth.log('HORARIO_MOVER_DIA', 'jogos', `Jogo #${jogoId} de ${antigaData} ${antigaHora} ${antigoCampo} → ${novaData} ${slot.hora} ${slot.campo}`);
+  if (idx >= 0) {
+    // Regular group game
+    const antigaData  = jogos[idx].data;
+    const antigaHora  = jogos[idx].hora;
+    const antigoCampo = jogos[idx].campo;
+    jogos[idx].data  = novaData;
+    jogos[idx].hora  = slot.hora;
+    jogos[idx].campo = slot.campo;
+    setData('jogos', jogos);
+    Auth.log('HORARIO_MOVER_DIA', 'jogos', `Jogo #${jogoId} de ${antigaData} ${antigaHora} ${antigoCampo} → ${novaData} ${slot.hora} ${slot.campo}`);
+  } else {
+    // Fase Final game
+    const ff  = ffLoad();
+    const ref = _ffFindJogoById(ff, jogoId);
+    if (!ref) return;
+    const j = ff[ref.catId].jogos[ref.i];
+    const antigaData  = j.data;
+    const antigaHora  = j.hora;
+    const antigoCampo = j.campo;
+    j.data  = novaData;
+    j.hora  = slot.hora;
+    j.campo = slot.campo;
+    ffSave(ff);
+    Auth.log('HORARIO_MOVER_DIA', 'fasefinal', `Jogo ${jogoId} de ${antigaData} ${antigaHora} ${antigoCampo} → ${novaData} ${slot.hora} ${slot.campo}`);
+  }
   closeModal('modalMoverDia');
   toast(`Jogo movido para ${formatDate(novaData)} — ${slot.hora} · ${slot.campo}`);
   const df = document.getElementById('horarioDataFilter');
