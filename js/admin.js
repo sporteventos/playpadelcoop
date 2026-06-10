@@ -4555,6 +4555,8 @@ function ffRecalcBracket(catId) {
 
   // Guardar justificação da troca
   ff[catId].swapNote = swapNote || null;
+  // Clear incomplete flag if all group games are now done
+  if (allGroupGamesDone(catId)) ff[catId].incomplete = false;
 
   ffSave(ff);
   renderFaseFinal();
@@ -4630,16 +4632,26 @@ function renderFaseFinal() {
 
   if (!catData?.generated) {
     const done = allGroupGamesDone(ffCurrentCat);
+    // Count pending games for this cat
+    const catGrupos = getData('grupos').filter(g => g.cat === ffCurrentCat);
+    const catJogos  = (getData('jogos') || []).filter(j => catGrupos.some(g => g.id === j.grupo));
+    const pending   = catJogos.filter(j => !j.resultado).length;
+    const total     = catJogos.length;
     container.innerHTML = `
       <div class="ff-empty">
         <i class="ph ph-trophy" style="font-size:3rem;color:var(--cinza-texto)"></i>
         <p style="color:var(--cinza-texto);margin:.5rem 0 1rem">
           Fase de grupos <strong>${done ? 'concluída' : 'ainda em curso'}</strong>
+          ${!done ? `<span style="display:block;font-size:.75rem;margin-top:.25rem">${pending} jogo(s) por disputar de ${total}</span>` : ''}
         </p>
         <button class="btn btn-primary" onclick="ffGenerate('${ffCurrentCat}')" ${!done ? 'disabled' : ''}>
           <i class="ph ph-magic-wand"></i>&nbsp; Gerar Bracket · ${ffCurrentCat}
         </button>
-        ${!done ? `<p style="font-size:.72rem;color:var(--amarelo);margin-top:.6rem"><i class="ph ph-warning"></i> Aguarda conclusão de todos os jogos de grupo</p>` : ''}
+        ${!done && Auth.hasRole('admin','operator') ? `
+        <button class="btn btn-ghost btn-sm" style="margin-top:.5rem;color:var(--amarelo);border-color:rgba(245,197,24,.3)" onclick="ffGenerateIncomplete('${ffCurrentCat}')">
+          <i class="ph ph-warning"></i>&nbsp; Gerar mesmo assim (${pending} jogo(s) em falta)
+        </button>
+        <p style="font-size:.72rem;color:var(--cinza-texto);margin-top:.4rem;max-width:280px;text-align:center;line-height:1.5">As equipas ainda desconhecidas ficam como <em>A definir</em>. Use <strong>Recalcular Seeds</strong> após o jogo.</p>` : ''}
       </div>`;
     return;
   }
@@ -4648,6 +4660,13 @@ function renderFaseFinal() {
   const allPhases = ['QF', 'SF', 'F'];
   const phases = allPhases.filter(p => jogos.some(j => j.fase === p));
   const phaseLabel = { QF: 'Quartos de Final', SF: 'Meias-Finais', F: 'Final' };
+
+  // Incomplete-bracket warning banner
+  const incompleteWarning = catData.incomplete
+    ? `<p style="font-size:.75rem;color:var(--amarelo);display:flex;align-items:center;gap:.3rem;margin-bottom:.6rem;padding:.4rem .7rem;background:rgba(245,197,24,.06);border:1px solid rgba(245,197,24,.25);border-radius:6px">
+        <i class="ph ph-warning"></i> Bracket gerado com jogos de grupo em falta. Clique <strong>&nbsp;Recalcular Seeds&nbsp;</strong> após todos os jogos do grupo estarem concluídos.
+      </p>`
+    : '';
 
   const bracketCols = phases.map((fase, colIdx) => {
     const games = [...jogos.filter(j => j.fase === fase)].sort((a, b) => a.num - b.num);
@@ -4661,6 +4680,7 @@ function renderFaseFinal() {
   });
 
   container.innerHTML = `
+    ${incompleteWarning}
     <div class="bk-bracket">
       ${phases.map((fase, i) => `
         <div class="bk-round">
@@ -4794,6 +4814,19 @@ window.ffGenerate = function(catId) {
   renderFaseFinal();
   Auth.log('GENERATE_BRACKET', 'fasefinal', `Bracket gerado: ${catId}`);
   toast(`Bracket gerado para ${catId}.`);
+};
+
+// Generate bracket even when group phase is incomplete.
+// Missing teams show as null ("A definir") and are filled via Recalcular Seeds later.
+window.ffGenerateIncomplete = function(catId) {
+  if (!Auth.hasRole('admin', 'operator')) return toast('Acesso restrito.', 'error');
+  const ff = ffLoad();
+  ff[catId] = ffGenerateBracket(catId);
+  ff[catId].incomplete = true; // flag so UI can warn
+  ffSave(ff);
+  renderFaseFinal();
+  Auth.log('GENERATE_BRACKET_INCOMPLETE', 'fasefinal', `Bracket gerado (incompleto): ${catId}`);
+  toast(`Bracket de ${catId} gerado com equipas em falta. Use "Recalcular Seeds" após o jogo.`, 'warning');
 };
 
 window.ffReset = function(catId) {
