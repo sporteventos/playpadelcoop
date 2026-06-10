@@ -5261,9 +5261,9 @@
           "eq1": "Feizan Omar & Filipe Lobo",
           "eq1grupo": "M2-C",
           "eq1seed": 4,
-          "eq2": "Luis Trigo de Morais & Ricky Kamissa",
-          "eq2grupo": "M2-A",
-          "eq2seed": 8,
+          "eq2": "Dej Cruz & Nuno Correa Mendes",
+          "eq2grupo": "M2-B",
+          "eq2seed": 6,
           "resultado": null,
           "data": "2026-06-11",
           "hora": "18:30",
@@ -5290,9 +5290,9 @@
           "fase": "QF",
           "num": 4,
           "feedFrom": null,
-          "eq1": "Dej Cruz & Nuno Correa Mendes",
-          "eq1grupo": "M2-B",
-          "eq1seed": 6,
+          "eq1": "Luis Trigo de Morais & Ricky Kamissa",
+          "eq1grupo": "M2-A",
+          "eq1seed": 8,
           "eq2": "Ricardo Oliveira & Vasco Silva",
           "eq2grupo": "M2-C",
           "eq2seed": 2,
@@ -5356,7 +5356,7 @@
           "hora": "15:00"
         }
       ],
-      "swapNote": "Ajuste anti-colisão: S6→QF1, S8→QF2, S5→QF3; Troca manual: M2-QF1/eq2 ⇔ M2-QF4/eq2; Troca manual: M2-QF4/eq2 ⇔ M2-QF1/eq2; Troca manual: M2-QF1/eq2 ⇔ M2-QF4/eq2; Troca manual: M2-QF4/eq2 ⇔ M2-QF1/eq2; Troca manual: M2-QF1/eq2 ⇔ M2-QF4/eq1; Troca manual: M2-QF4/eq2 ⇔ M2-QF1/eq2",
+      "swapNote": "Ajuste anti-colisão: S6→QF1, S8→QF2, S5→QF3; Troca manual: M2-QF1/eq2 ⇔ M2-QF4/eq2; Troca manual: M2-QF4/eq2 ⇔ M2-QF1/eq2; Troca manual: M2-QF1/eq2 ⇔ M2-QF4/eq2; Troca manual: M2-QF4/eq2 ⇔ M2-QF1/eq2; Troca manual: M2-QF1/eq2 ⇔ M2-QF4/eq1; Troca manual: M2-QF4/eq2 ⇔ M2-QF1/eq2; Troca manual: M2-QF2/eq2 ⇔ M2-QF4/eq1",
       "incomplete": false
     },
     "M3": {
@@ -15048,5 +15048,5 @@
       "ts": "2026-06-03T06:06:37.211Z"
     }
   ],
-  "_updated": "2026-06-10T23:22:20.813Z"
+  "_updated": "2026-06-10T23:27:32.746Z"
 }
