@@ -4779,13 +4779,13 @@ function ffCardHtml(j, catId) {
 
   const teamHtml = (name, grupo, seed, isWin, side) => {
     const inner = name
-      ? `<div class="bk-card-team${isWin ? ' win' : ''}">
+      ? `<div class="bk-card-team${isWin ? ' win' : ''}"${canDrag ? ' style="pointer-events:none"' : ''}>
           ${canDrag ? '<i class="ph ph-dots-six-vertical" style="font-size:.85rem;color:var(--cinza-texto);flex-shrink:0;margin-right:.1rem"></i>' : ''}
           ${seed ? `<span class="bk-cseed">${seed}</span>` : ''}
           <span class="bk-cname">${name}</span>
           ${grupo ? `<span class="bk-cgrp">${grupo}</span>` : ''}
         </div>`
-      : `<div class="bk-card-team tbd">${canDrag ? '<i class="ph ph-dots-six-vertical" style="font-size:.85rem;color:var(--cinza-texto);flex-shrink:0;margin-right:.1rem"></i>' : ''}<span class="bk-cname">A definir…</span></div>`;
+      : `<div class="bk-card-team tbd"${canDrag ? ' style="pointer-events:none"' : ''}>${canDrag ? '<i class="ph ph-dots-six-vertical" style="font-size:.85rem;color:var(--cinza-texto);flex-shrink:0;margin-right:.1rem"></i>' : ''}<span class="bk-cname">A definir…</span></div>`;
     if (!canDrag) return inner;
     return `<div draggable="true"
       style="cursor:grab;border-radius:6px;transition:outline .1s"
