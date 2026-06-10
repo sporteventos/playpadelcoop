@@ -124,6 +124,9 @@
       <a href="scoreboard.html" class="btn btn-primary" target="_blank" id="btnScoreboard" style="display:none">
         <i class="ph ph-monitor-play"></i> Quadro de Apuramento
       </a>
+      <a href="fasefinal.html" class="btn btn-secondary" id="btnFaseFinalHero" style="display:none">
+        <i class="ph ph-brackets-round"></i> Fase Final
+      </a>
       <a href="calendario.html" class="btn btn-secondary">
         <i class="ph ph-calendar"></i> Ver Calendário
       </a>
@@ -560,6 +563,7 @@
 
         // Visibilidade botão scoreboard
         show('btnScoreboard', cfg.scoreboardVisible !== false);
+        show('btnFaseFinalHero', cfg.fasefinalVisible !== false);
 
         // Visibilidade páginas
         show('navLiClassificacoes',  cfg.classificacoesVisible !== false);
