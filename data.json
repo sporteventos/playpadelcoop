@@ -4699,8 +4699,8 @@
           "eq2grupo": "F1-B",
           "eq2seed": 8,
           "resultado": null,
-          "data": "2026-06-11",
-          "hora": "18:30",
+          "data": "2026-06-12",
+          "hora": "19:30",
           "campo": "TVCabo"
         },
         {
@@ -4747,8 +4747,8 @@
           "eq2grupo": "F1-C",
           "eq2seed": 7,
           "resultado": null,
-          "data": "2026-06-12",
-          "hora": "19:30",
+          "data": "2026-06-11",
+          "hora": "18:30",
           "campo": "TVCabo"
         },
         {
@@ -4855,7 +4855,7 @@
           "eq2grupo": "F2-B",
           "eq2seed": 6,
           "resultado": null,
-          "data": "2026-06-11",
+          "data": "2026-06-12",
           "hora": "17:30",
           "campo": "TVCabo"
         },
@@ -4871,7 +4871,7 @@
           "eq2grupo": "F2-B",
           "eq2seed": 8,
           "resultado": null,
-          "data": "2026-06-12",
+          "data": "2026-06-11",
           "hora": "17:30",
           "campo": "TVCabo"
         },
@@ -5577,6 +5577,126 @@
     }
   ],
   "auditlog": [
+    {
+      "id": "mq8pjvootv9csgd",
+      "userId": "mpz46x5c2zupza0",
+      "username": "bgaspar",
+      "role": "operator",
+      "action": "HORARIO_MOVER_DIA",
+      "target": "fasefinal",
+      "detail": "Jogo M2-QF2 de 2026-06-12 16:30 TVCabo → 2026-06-11 18:30 Play Padel",
+      "ts": "2026-06-10T23:36:38.184Z"
+    },
+    {
+      "id": "mq8pjpnwosx35tp",
+      "userId": "mpz46x5c2zupza0",
+      "username": "bgaspar",
+      "role": "operator",
+      "action": "HORARIO_DRAG",
+      "target": "fasefinal",
+      "detail": "Jogo F1-QF3 movido para 19:30 @ Stella Artois",
+      "ts": "2026-06-10T23:36:30.380Z"
+    },
+    {
+      "id": "mq8pjfysq2anf37",
+      "userId": "mpz46x5c2zupza0",
+      "username": "bgaspar",
+      "role": "operator",
+      "action": "HORARIO_MOVER_DIA",
+      "target": "fasefinal",
+      "detail": "Jogo F1-QF3 de 2026-06-11 18:30 Play Padel → 2026-06-12 16:30 TVCabo",
+      "ts": "2026-06-10T23:36:17.812Z"
+    },
+    {
+      "id": "mq8pis8hb0tufnk",
+      "userId": "mpz46x5c2zupza0",
+      "username": "bgaspar",
+      "role": "operator",
+      "action": "HORARIO_DRAG",
+      "target": "fasefinal",
+      "detail": "Jogo F1-QF3 movido para 18:30 @ Play Padel",
+      "ts": "2026-06-10T23:35:47.057Z"
+    },
+    {
+      "id": "mq8pilnvaht00l2",
+      "userId": "mpz46x5c2zupza0",
+      "username": "bgaspar",
+      "role": "operator",
+      "action": "HORARIO_MOVER_DIA",
+      "target": "fasefinal",
+      "detail": "Jogo M2-QF2 de 2026-06-11 18:30 Play Padel → 2026-06-12 19:30 Stella Artois",
+      "ts": "2026-06-10T23:35:38.539Z"
+    },
+    {
+      "id": "mq8pi2sb4rs5ixf",
+      "userId": "mpz46x5c2zupza0",
+      "username": "bgaspar",
+      "role": "operator",
+      "action": "HORARIO_MOVER_DIA",
+      "target": "fasefinal",
+      "detail": "Jogo F1-QF3 de 2026-06-12 19:30 Stella Artois → 2026-06-11 16:30 TVCabo",
+      "ts": "2026-06-10T23:35:14.075Z"
+    },
+    {
+      "id": "mq8pgb8rqllsx5o",
+      "userId": "mpz46x5c2zupza0",
+      "username": "bgaspar",
+      "role": "operator",
+      "action": "HORARIO_DRAG",
+      "target": "fasefinal",
+      "detail": "Jogo F1-QF1 movido para 19:30 @ TVCabo",
+      "ts": "2026-06-10T23:33:51.723Z"
+    },
+    {
+      "id": "mq8pg22ezpfj8v9",
+      "userId": "mpz46x5c2zupza0",
+      "username": "bgaspar",
+      "role": "operator",
+      "action": "HORARIO_MOVER_DIA",
+      "target": "fasefinal",
+      "detail": "Jogo F1-QF4 de 2026-06-12 19:30 TVCabo → 2026-06-11 18:30 TVCabo",
+      "ts": "2026-06-10T23:33:39.830Z"
+    },
+    {
+      "id": "mq8pfuxafziitj5",
+      "userId": "mpz46x5c2zupza0",
+      "username": "bgaspar",
+      "role": "operator",
+      "action": "HORARIO_MOVER_DIA",
+      "target": "fasefinal",
+      "detail": "Jogo F1-QF1 de 2026-06-11 18:30 TVCabo → 2026-06-12 16:30 TVCabo",
+      "ts": "2026-06-10T23:33:30.574Z"
+    },
+    {
+      "id": "mq8pf3d3xl6rn6o",
+      "userId": "mpz46x5c2zupza0",
+      "username": "bgaspar",
+      "role": "operator",
+      "action": "HORARIO_DRAG",
+      "target": "fasefinal",
+      "detail": "Jogo F2-QF4 movido para 17:30 @ TVCabo",
+      "ts": "2026-06-10T23:32:54.855Z"
+    },
+    {
+      "id": "mq8pexo4m4xnud8",
+      "userId": "mpz46x5c2zupza0",
+      "username": "bgaspar",
+      "role": "operator",
+      "action": "HORARIO_MOVER_DIA",
+      "target": "fasefinal",
+      "detail": "Jogo F2-QF3 de 2026-06-11 17:30 TVCabo → 2026-06-12 17:30 TVCabo",
+      "ts": "2026-06-10T23:32:47.476Z"
+    },
+    {
+      "id": "mq8peqdcqmte79q",
+      "userId": "mpz46x5c2zupza0",
+      "username": "bgaspar",
+      "role": "operator",
+      "action": "HORARIO_MOVER_DIA",
+      "target": "fasefinal",
+      "detail": "Jogo F2-QF4 de 2026-06-12 17:30 TVCabo → 2026-06-11 16:30 TVCabo",
+      "ts": "2026-06-10T23:32:38.016Z"
+    },
     {
       "id": "mq8p0uvc6ek0651",
       "userId": "mpz46x5c2zupza0",
@@ -15068,5 +15188,5 @@
       "ts": "2026-06-03T06:06:37.211Z"
     }
   ],
-  "_updated": "2026-06-10T23:31:31.078Z"
+  "_updated": "2026-06-10T23:38:13.467Z"
 }
