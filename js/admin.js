@@ -5460,18 +5460,22 @@ function _adminQualifiedMap(catId, grupos, jogos) {
   });
   if (WILDCARD_CATS.has(catId)) {
     const terceiros = allGroupData.flatMap(({ rows }) => rows[2] && rows[2].pj > 0 ? [rows[2]] : []);
-    const allDone = terceiros.length === catGroups.length && terceiros.every(t => {
-      const gJogos = jogos.filter(j => j.grupo === catGroups[allGroupData.indexOf(allGroupData.find(gd => gd.rows.includes(t)))]?.id);
-      const nPairs = catGroups.find(g => jogos.filter(j=>j.grupo===g.id).some(j=>j.eq1===t.par||j.eq2===t.par))?.id;
-      return true; // simplificado: terceiros com pj > 0
+    // Só atribui wildcards definitivamente quando TODOS os grupos têm 3.º lugar candidato
+    // E todos os jogos do grupo estão disputados
+    const allGroupsDone = terceiros.length === catGroups.length && catGroups.every(g => {
+      const gJogos = jogos.filter(j => j.grupo === g.id);
+      return gJogos.length > 0 && gJogos.every(j => j.r !== undefined || j.wo);
     });
-    terceiros.sort((a,b) => b.v-a.v || (b.sv-b.sl)-(a.sv-a.sl) || (b.gv-b.gl)-(a.gv-a.gl) || b.gv-a.gv);
-    const nWc = Math.max(0, 8 - 2*catGroups.length);
-    terceiros.forEach((t, i) => {
-      if (!qualified.has(t.par)) {
-        qualified.set(t.par, i < nWc ? 'wildcard' : 'eliminated');
-      }
-    });
+    if (allGroupsDone) {
+      terceiros.sort((a,b) => b.v-a.v || (b.sv-b.sl)-(a.sv-a.sl) || (b.gv-b.gl)-(a.gv-a.gl) || b.gv-a.gv);
+      const nWc = Math.max(0, 8 - 2*catGroups.length);
+      terceiros.forEach((t, i) => {
+        if (!qualified.has(t.par)) {
+          qualified.set(t.par, i < nWc ? 'wildcard' : 'eliminated');
+        }
+      });
+    }
+    // Se nem todos os grupos terminaram: 3.ºs mostrados sem badge WC/eliminado
   }
   return qualified;
 }
