@@ -4711,6 +4711,9 @@ function renderFaseFinal() {
     </div>
     ${catData.swapNote ? `<p style="font-size:.7rem;color:var(--amarelo);margin:.6rem 0 0;display:flex;align-items:center;gap:.3rem"><i class="ph ph-swap"></i> <em>${escHtml(catData.swapNote)}</em></p>` : ''}
     ${Auth.hasRole('admin','operator') ? `<div style="margin-top:1.25rem;display:flex;gap:.5rem;flex-wrap:wrap">
+      <button class="btn btn-ghost btn-sm" style="color:${_ffDragMode ? 'var(--verde)' : 'var(--cinza-texto)'};border-color:${_ffDragMode ? 'rgba(0,195,123,.4)' : 'var(--preto-borda)'}" onclick="ffToggleDragMode()">
+        <i class="ph ph-arrows-out-cardinal"></i> ${_ffDragMode ? 'Sair Edição' : 'Trocar Duplas'}
+      </button>
       <button class="btn btn-ghost btn-sm" style="color:var(--verde);border-color:rgba(0,195,123,.3)" onclick="ffRecalcBracket('${ffCurrentCat}')">
         <i class="ph ph-arrows-clockwise"></i> Recalcular Seeds
       </button>
@@ -4730,18 +4733,67 @@ function renderFaseFinal() {
     </div>` : ''}` ;
 }
 
+// ---- FF Team Drag-and-Swap ----
+let _ffDragMode = false;
+let _ffDragSrc  = null; // { catId, jogoId, side }
+
+window.ffToggleDragMode = function() { _ffDragMode = !_ffDragMode; renderFaseFinal(); };
+
+window.ffTeamDragStart = function(ev, catId, jogoId, side) {
+  _ffDragSrc = { catId, jogoId, side };
+  ev.dataTransfer.effectAllowed = 'move';
+  setTimeout(() => { ev.target.style.opacity = '0.35'; }, 0);
+};
+window.ffTeamDragEnd   = function(ev) { ev.target.style.opacity = ''; };
+window.ffTeamDragOver  = function(ev) {
+  ev.preventDefault(); ev.dataTransfer.dropEffect = 'move';
+  ev.currentTarget.style.outline = '2px dashed var(--verde)';
+  ev.currentTarget.style.borderRadius = '6px';
+};
+window.ffTeamDragLeave = function(ev) { ev.currentTarget.style.outline = ''; };
+window.ffTeamDrop = function(ev, catId, jogoId, side) {
+  ev.preventDefault();
+  ev.currentTarget.style.outline = '';
+  const src = _ffDragSrc; _ffDragSrc = null;
+  if (!src || (src.jogoId === jogoId && src.side === side)) return;
+  const ff = ffLoad();
+  const srcJ = ff[src.catId]?.jogos?.find(j => j.id === src.jogoId);
+  const dstJ = ff[catId]?.jogos?.find(j => j.id === jogoId);
+  if (!srcJ || !dstJ) return;
+  const sFs = [src.side, src.side + 'grupo', src.side + 'seed'];
+  const dFs = [side,     side     + 'grupo', side     + 'seed'];
+  sFs.forEach((sf, i) => { const tmp = srcJ[sf]; srcJ[sf] = dstJ[dFs[i]]; dstJ[dFs[i]] = tmp; });
+  // Persist manual swap note
+  ff[catId].swapNote = (ff[catId].swapNote ? ff[catId].swapNote + '; ' : '') +
+    `Troca manual: ${src.jogoId}/${src.side} ⇔ ${jogoId}/${side}`;
+  ffSave(ff);
+  auditLog('ff_swap_teams', { cat: catId, from: `${src.jogoId}.${src.side}`, to: `${jogoId}.${side}` });
+  renderFaseFinal();
+};
+
 function ffCardHtml(j, catId) {
   const w    = ffGetWinner(j.resultado);
   const done = !!j.resultado;
   const fLabel = j.fase === 'F' ? 'Final' : j.fase === 'SF' ? `Meia-Final ${j.num}` : `QF ${j.num}`;
+  const canDrag = _ffDragMode && j.fase === 'QF' && !done;
 
-  const teamHtml = (name, grupo, seed, isWin) => {
-    if (!name) return `<div class="bk-card-team tbd"><span class="bk-cname">A definir…</span></div>`;
-    return `<div class="bk-card-team${isWin ? ' win' : ''}">
-      ${seed ? `<span class="bk-cseed">${seed}</span>` : ''}
-      <span class="bk-cname">${name}</span>
-      ${grupo ? `<span class="bk-cgrp">${grupo}</span>` : ''}
-    </div>`;
+  const teamHtml = (name, grupo, seed, isWin, side) => {
+    const inner = name
+      ? `<div class="bk-card-team${isWin ? ' win' : ''}">
+          ${canDrag ? '<i class="ph ph-dots-six-vertical" style="font-size:.85rem;color:var(--cinza-texto);flex-shrink:0;margin-right:.1rem"></i>' : ''}
+          ${seed ? `<span class="bk-cseed">${seed}</span>` : ''}
+          <span class="bk-cname">${name}</span>
+          ${grupo ? `<span class="bk-cgrp">${grupo}</span>` : ''}
+        </div>`
+      : `<div class="bk-card-team tbd">${canDrag ? '<i class="ph ph-dots-six-vertical" style="font-size:.85rem;color:var(--cinza-texto);flex-shrink:0;margin-right:.1rem"></i>' : ''}<span class="bk-cname">A definir…</span></div>`;
+    if (!canDrag) return inner;
+    return `<div draggable="true"
+      style="cursor:grab;border-radius:6px;transition:outline .1s"
+      ondragstart="ffTeamDragStart(event,'${catId}','${j.id}','${side}')"
+      ondragend="ffTeamDragEnd(event)"
+      ondragover="ffTeamDragOver(event)"
+      ondragleave="ffTeamDragLeave(event)"
+      ondrop="ffTeamDrop(event,'${catId}','${j.id}','${side}')">${inner}</div>`;
   };
 
   let scoreHtml = '';
@@ -4778,9 +4830,9 @@ function ffCardHtml(j, catId) {
     <div class="bk-card${done ? ' done' : ''}${j.fase === 'F' ? ' is-final' : ''}">
       <div class="bk-card-lbl">${fLabel}</div>
       ${schedHtml}
-      ${teamHtml(j.eq1, j.eq1grupo, j.eq1seed, done && w === 1)}
+      ${teamHtml(j.eq1, j.eq1grupo, j.eq1seed, done && w === 1, 'eq1')}
       <div class="bk-card-vs">VS</div>
-      ${teamHtml(j.eq2, j.eq2grupo, j.eq2seed, done && w === 2)}
+      ${teamHtml(j.eq2, j.eq2grupo, j.eq2seed, done && w === 2, 'eq2')}
       ${scoreHtml}
       ${canEdit ? `<button class="btn btn-sm ${done ? 'btn-ghost' : 'btn-primary'}" style="width:100%;margin-top:.3rem;font-size:.72rem;padding:.28rem" onclick="ffAbrirResultado('${j.id}','${catId}')">
         <i class="ph ph-${done ? 'pencil-simple' : 'plus'}"></i> ${done ? 'Editar' : 'Lançar'}
