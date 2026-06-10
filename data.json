@@ -4176,18 +4176,7 @@
       "eq1": "Luis Trigo de Morais & Ricky Kamissa",
       "eq2": "Shezane Arif & Razeen",
       "resultado": {
-        "s1eq1": 4,
-        "s1eq2": 6,
-        "tb1eq1": null,
-        "tb1eq2": null,
-        "s2eq1": 6,
-        "s2eq2": 4,
-        "tb2eq1": null,
-        "tb2eq2": null,
-        "s3eq1": 6,
-        "s3eq2": 2,
-        "tb3eq1": null,
-        "tb3eq2": null
+        "wo": "eq2"
       },
       "suspenso": null,
       "adiado": null
@@ -4882,6 +4871,129 @@
           "hora": "15:00"
         }
       ]
+    },
+    "M1": {
+      "generated": true,
+      "jogos": [
+        {
+          "id": "M1-QF1",
+          "fase": "QF",
+          "num": 1,
+          "feedFrom": null,
+          "eq1": "Bruno Gaspar & Manuel Pinto Abreu",
+          "eq1grupo": "M1-A",
+          "eq1seed": 1,
+          "eq2": "Naim Hassan & Sidik",
+          "eq2grupo": "M1-B",
+          "eq2seed": 7,
+          "resultado": null,
+          "data": "2026-06-11",
+          "hora": "18:30",
+          "campo": "TVCabo"
+        },
+        {
+          "id": "M1-QF2",
+          "fase": "QF",
+          "num": 2,
+          "feedFrom": null,
+          "eq1": "Karim Kanifani & Octávio Barros",
+          "eq1grupo": "M1-B",
+          "eq1seed": 2,
+          "eq2": "João Alberty & Manel Alberty",
+          "eq2grupo": "M1-A",
+          "eq2seed": 8,
+          "resultado": null,
+          "data": "2026-06-11",
+          "hora": "19:30",
+          "campo": "Play Padel"
+        },
+        {
+          "id": "M1-QF3",
+          "fase": "QF",
+          "num": 3,
+          "feedFrom": null,
+          "eq1": "Tayab & Badru Rosa",
+          "eq1grupo": "M1-C",
+          "eq1seed": 3,
+          "eq2": "Luis Antunes & Manuel Neto",
+          "eq2grupo": "M1-A",
+          "eq2seed": 6,
+          "resultado": null,
+          "data": "2026-06-11",
+          "hora": "19:30",
+          "campo": "TVCabo"
+        },
+        {
+          "id": "M1-QF4",
+          "fase": "QF",
+          "num": 4,
+          "feedFrom": null,
+          "eq1": "Carlos Cardeano & José Santos",
+          "eq1grupo": "M1-C",
+          "eq1seed": 4,
+          "eq2": "Gonçalo Nascimento & João Catela",
+          "eq2grupo": "M1-B",
+          "eq2seed": 5,
+          "resultado": null,
+          "data": "2026-06-11",
+          "hora": "20:30",
+          "campo": "Play Padel"
+        },
+        {
+          "id": "M1-SF1",
+          "fase": "SF",
+          "num": 1,
+          "feedFrom": [
+            "M1-QF1",
+            "M1-QF2"
+          ],
+          "eq1": null,
+          "eq1grupo": null,
+          "eq1seed": null,
+          "eq2": null,
+          "eq2grupo": null,
+          "eq2seed": null,
+          "resultado": null,
+          "data": "2026-06-13",
+          "hora": "15:00"
+        },
+        {
+          "id": "M1-SF2",
+          "fase": "SF",
+          "num": 2,
+          "feedFrom": [
+            "M1-QF3",
+            "M1-QF4"
+          ],
+          "eq1": null,
+          "eq1grupo": null,
+          "eq1seed": null,
+          "eq2": null,
+          "eq2grupo": null,
+          "eq2seed": null,
+          "resultado": null,
+          "data": "2026-06-13",
+          "hora": "16:00"
+        },
+        {
+          "id": "M1-F",
+          "fase": "F",
+          "num": 1,
+          "feedFrom": [
+            "M1-SF1",
+            "M1-SF2"
+          ],
+          "eq1": null,
+          "eq1grupo": null,
+          "eq1seed": null,
+          "eq2": null,
+          "eq2grupo": null,
+          "eq2seed": null,
+          "resultado": null,
+          "data": "2026-06-14",
+          "hora": "15:00"
+        }
+      ]
     }
   },
   "telefones": {
@@ -4976,6 +5088,26 @@
     }
   ],
   "auditlog": [
+    {
+      "id": "mq8isacvgsmrp9a",
+      "userId": "mpz46x5c2zupza0",
+      "username": "bgaspar",
+      "role": "operator",
+      "action": "SAVE_RESULT",
+      "target": "resultados",
+      "detail": "WO registado: jogo #112 — eq2",
+      "ts": "2026-06-10T20:27:13.135Z"
+    },
+    {
+      "id": "mq8ilmx1keyv0i3",
+      "userId": "mpz46x5c2zupza0",
+      "username": "bgaspar",
+      "role": "operator",
+      "action": "GENERATE_BRACKET",
+      "target": "fasefinal",
+      "detail": "Bracket gerado: M1",
+      "ts": "2026-06-10T20:22:02.821Z"
+    },
     {
       "id": "mq8ih1y95ltaszb",
       "userId": "mpz46x5c2zupza0",
@@ -13037,5 +13169,5 @@
       "ts": "2026-06-03T06:06:37.211Z"
     }
   ],
-  "_updated": "2026-06-10T20:21:29.843Z"
+  "_updated": "2026-06-10T20:27:13.137Z"
 }
