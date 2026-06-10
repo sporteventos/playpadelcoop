@@ -267,7 +267,8 @@
           result.set(r.par, {
             status: hasWc ? 'eliminated_group' : 'eliminated',
             group: g.id, _maxWins: r._maxWins, _minWins: r._minWins,
-            _sv: r.sv, _sl: r.sl, _gv: r.gv, _gl: r.gl
+            _sv: r.sv, _sl: r.sl, _gv: r.gv, _gl: r.gl,
+            _guaranteedAbove: guaranteedAbove
           });
         } else {
           result.set(r.par, { status: 'contention', group: g.id });
@@ -286,9 +287,8 @@
       const bestPerGroup = new Map();
       elim3.forEach(t => {
         const ex = bestPerGroup.get(t.group);
-        if (!ex || t._maxWins > ex._maxWins ||
-            (t._maxWins === ex._maxWins && (t._sv - t._sl) > (ex._sv - ex._sl)) ||
-            (t._maxWins === ex._maxWins && (t._sv - t._sl) === (ex._sv - ex._sl) && (t._gv - t._gl) > (ex._gv - ex._gl))) {
+        // Pick the one with fewest teams above (lowest _guaranteedAbove = highest rank in group)
+        if (!ex || t._guaranteedAbove < ex._guaranteedAbove) {
           bestPerGroup.set(t.group, t);
         }
       });
