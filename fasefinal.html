@@ -229,8 +229,8 @@ document.addEventListener('DOMContentLoaded', () => {
         .map(([a,b,ta,tb]) => `${a}-${b}${ta != null ? `<sup style="font-size:.6em;color:var(--amarelo)">(${ta}-${tb})</sup>` : ''}`).join(' / ');
       scoreHtml = `<div class="bk-card-score">${sets}</div>`;
     }
-    const schedHtml = (j.data || j.hora)
-      ? `<div style="font-size:.65rem;color:var(--cinza-texto);margin-bottom:.25rem">${j.data ? ppFormatDate(j.data) : ''}${j.hora ? ' · ' + j.hora : ''}</div>`
+    const schedHtml = (j.data || j.hora || j.campo)
+      ? `<div style="font-size:.65rem;color:var(--cinza-texto);margin-bottom:.25rem">${j.data ? ppFormatDate(j.data) : ''}${j.hora ? ' · ' + j.hora : ''}${j.campo ? ' · ' + j.campo : ''}</div>`
       : '';
     return `
       <div class="bk-card${done ? ' done' : ''}${isFinal ? ' is-final' : ''}">
