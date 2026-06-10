@@ -4700,20 +4700,20 @@
           "eq2seed": 8,
           "resultado": null,
           "data": "2026-06-11",
-          "hora": "17:30",
-          "campo": "Play Padel"
+          "hora": "18:30",
+          "campo": "TVCabo"
         },
         {
           "id": "F1-QF2",
           "fase": "QF",
           "num": 2,
           "feedFrom": null,
-          "eq1": "Érica Capela & Sarah Taillon",
-          "eq1grupo": "F1-B",
-          "eq1seed": 2,
-          "eq2": "Omar Fernandes & Claudia Sumaya",
-          "eq2grupo": "F1-C",
-          "eq2seed": 7,
+          "eq1": "Marta Botelho & Ana Oliveira",
+          "eq1grupo": "F1-C",
+          "eq1seed": 4,
+          "eq2": "Stacey & Marlou Mulder",
+          "eq2grupo": "F1-A",
+          "eq2seed": 5,
           "resultado": null,
           "data": "2026-06-11",
           "hora": "18:30",
@@ -4733,19 +4733,19 @@
           "resultado": null,
           "data": "2026-06-12",
           "hora": "18:30",
-          "campo": "Stella Artois"
+          "campo": "TVCabo"
         },
         {
           "id": "F1-QF4",
           "fase": "QF",
           "num": 4,
           "feedFrom": null,
-          "eq1": "Marta Botelho & Ana Oliveira",
-          "eq1grupo": "F1-C",
-          "eq1seed": 4,
-          "eq2": "Stacey & Marlou Mulder",
-          "eq2grupo": "F1-A",
-          "eq2seed": 5,
+          "eq1": "Érica Capela & Sarah Taillon",
+          "eq1grupo": "F1-B",
+          "eq1seed": 2,
+          "eq2": "Omar Fernandes & Claudia Sumaya",
+          "eq2grupo": "F1-C",
+          "eq2seed": 7,
           "resultado": null,
           "data": "2026-06-12",
           "hora": "18:30",
@@ -4818,9 +4818,9 @@
           "eq1": "Karina Darsan & Bethany",
           "eq1grupo": "F2-B",
           "eq1seed": 1,
-          "eq2": "Dalila & Tatiana",
-          "eq2grupo": "F2-C",
-          "eq2seed": 7,
+          "eq2": "Shanel & Kaitlynn",
+          "eq2grupo": "F2-B",
+          "eq2seed": 8,
           "resultado": null,
           "data": "2026-06-11",
           "hora": "18:30",
@@ -4831,16 +4831,16 @@
           "fase": "QF",
           "num": 2,
           "feedFrom": null,
-          "eq1": "Cris Vasconcelos & Beatriz Madeira",
+          "eq1": "Florence & Jinane",
           "eq1grupo": "F2-A",
-          "eq1seed": 2,
-          "eq2": "Shanel & Kaitlynn",
-          "eq2grupo": "F2-B",
-          "eq2seed": 8,
+          "eq1seed": 4,
+          "eq2": "Saira Sale & Sónia Caravela",
+          "eq2grupo": "F2-C",
+          "eq2seed": 5,
           "resultado": null,
           "data": "2026-06-11",
           "hora": "17:30",
-          "campo": "Stella Artois"
+          "campo": "Play Padel"
         },
         {
           "id": "F2-QF3",
@@ -4863,16 +4863,16 @@
           "fase": "QF",
           "num": 4,
           "feedFrom": null,
-          "eq1": "Florence & Jinane",
+          "eq1": "Cris Vasconcelos & Beatriz Madeira",
           "eq1grupo": "F2-A",
-          "eq1seed": 4,
-          "eq2": "Saira Sale & Sónia Caravela",
+          "eq1seed": 2,
+          "eq2": "Dalila & Tatiana",
           "eq2grupo": "F2-C",
-          "eq2seed": 5,
+          "eq2seed": 7,
           "resultado": null,
           "data": "2026-06-12",
           "hora": "18:30",
-          "campo": "TVCabo"
+          "campo": "Stella Artois"
         },
         {
           "id": "F2-SF1",
@@ -4938,28 +4938,28 @@
           "fase": "QF",
           "num": 1,
           "feedFrom": null,
-          "eq1": "Bruno Gaspar & Manuel Pinto Abreu",
-          "eq1grupo": "M1-A",
+          "eq1": "Tayab & Badru Rosa",
+          "eq1grupo": "M1-C",
           "eq1seed": 1,
-          "eq2": "Naim Hassan & Sidik",
-          "eq2grupo": "M1-B",
-          "eq2seed": 7,
+          "eq2": "João Alberty & Manel Alberty",
+          "eq2grupo": "M1-A",
+          "eq2seed": 8,
           "resultado": null,
-          "data": "2026-06-11",
-          "hora": "18:30",
-          "campo": "TVCabo"
+          "data": "2026-06-12",
+          "hora": "20:30",
+          "campo": "Play Padel"
         },
         {
           "id": "M1-QF2",
           "fase": "QF",
           "num": 2,
           "feedFrom": null,
-          "eq1": "Karim Kanifani & Octávio Barros",
+          "eq1": "Gonçalo Nascimento & João Catela",
           "eq1grupo": "M1-B",
-          "eq1seed": 2,
-          "eq2": "João Alberty & Manel Alberty",
-          "eq2grupo": "M1-A",
-          "eq2seed": 8,
+          "eq1seed": 4,
+          "eq2": "Carlos Cardeano & José Santos",
+          "eq2grupo": "M1-C",
+          "eq2seed": 5,
           "resultado": null,
           "data": "2026-06-11",
           "hora": "19:30",
@@ -4970,31 +4970,31 @@
           "fase": "QF",
           "num": 3,
           "feedFrom": null,
-          "eq1": "Tayab & Badru Rosa",
-          "eq1grupo": "M1-C",
+          "eq1": "Karim Kanifani & Octávio Barros",
+          "eq1grupo": "M1-B",
           "eq1seed": 3,
-          "eq2": "Luis Antunes & Manuel Neto",
+          "eq2": "Faizal & Sherial",
           "eq2grupo": "M1-A",
           "eq2seed": 6,
           "resultado": null,
           "data": "2026-06-11",
-          "hora": "19:30",
-          "campo": "TVCabo"
+          "hora": "20:30",
+          "campo": "Play Padel"
         },
         {
           "id": "M1-QF4",
           "fase": "QF",
           "num": 4,
           "feedFrom": null,
-          "eq1": "Carlos Cardeano & José Santos",
-          "eq1grupo": "M1-C",
-          "eq1seed": 4,
-          "eq2": "Gonçalo Nascimento & João Catela",
+          "eq1": "Bruno Gaspar & Manuel Pinto Abreu",
+          "eq1grupo": "M1-A",
+          "eq1seed": 2,
+          "eq2": "Naim Hassan & Sidik",
           "eq2grupo": "M1-B",
-          "eq2seed": 5,
+          "eq2seed": 7,
           "resultado": null,
-          "data": "2026-06-11",
-          "hora": "20:30",
+          "data": "2026-06-12",
+          "hora": "17:30",
           "campo": "Play Padel"
         },
         {
@@ -5040,6 +5040,182 @@
           "feedFrom": [
             "M1-SF1",
             "M1-SF2"
+          ],
+          "eq1": null,
+          "eq1grupo": null,
+          "eq1seed": null,
+          "eq2": null,
+          "eq2grupo": null,
+          "eq2seed": null,
+          "resultado": null,
+          "data": "2026-06-14",
+          "hora": "15:00"
+        }
+      ]
+    },
+    "M5": {
+      "generated": true,
+      "jogos": [
+        {
+          "id": "M5-SF1",
+          "fase": "SF",
+          "num": 1,
+          "feedFrom": null,
+          "eq1": "Faizan Ravat & Ranim Ahmad",
+          "eq1grupo": "M5-A",
+          "eq1seed": 2,
+          "eq2": "Mizzy & Zayan Imitiaz",
+          "eq2grupo": "M5-B",
+          "eq2seed": 4,
+          "resultado": null,
+          "data": "2026-06-13",
+          "hora": "15:00"
+        },
+        {
+          "id": "M5-SF2",
+          "fase": "SF",
+          "num": 2,
+          "feedFrom": null,
+          "eq1": "Filipe Ferreira & Paulo Baldaia",
+          "eq1grupo": "M5-B",
+          "eq1seed": 1,
+          "eq2": "Hamdan & Huzeifah",
+          "eq2grupo": "M5-A",
+          "eq2seed": 3,
+          "resultado": null,
+          "data": "2026-06-13",
+          "hora": "16:00"
+        },
+        {
+          "id": "M5-F",
+          "fase": "F",
+          "num": 1,
+          "feedFrom": [
+            "M5-SF1",
+            "M5-SF2"
+          ],
+          "eq1": null,
+          "eq1grupo": null,
+          "eq1seed": null,
+          "eq2": null,
+          "eq2grupo": null,
+          "eq2seed": null,
+          "resultado": null,
+          "data": "2026-06-14",
+          "hora": "15:00"
+        }
+      ]
+    },
+    "M4": {
+      "generated": true,
+      "jogos": [
+        {
+          "id": "M4-QF1",
+          "fase": "QF",
+          "num": 1,
+          "feedFrom": null,
+          "eq1": "Shiraz & Kheizar",
+          "eq1grupo": "M4-C",
+          "eq1seed": 1,
+          "eq2": "Fádhil Khan & Kelyo",
+          "eq2grupo": "M4-C",
+          "eq2seed": 8,
+          "resultado": null,
+          "data": "2026-06-11",
+          "hora": "17:30",
+          "campo": "Stella Artois"
+        },
+        {
+          "id": "M4-QF2",
+          "fase": "QF",
+          "num": 2,
+          "feedFrom": null,
+          "eq1": "André Reves & Francisco Morais",
+          "eq1grupo": "M4-A",
+          "eq1seed": 4,
+          "eq2": "Nuno Resende & Gonçalo Bettencourt",
+          "eq2grupo": "M4-B",
+          "eq2seed": 5,
+          "resultado": null,
+          "data": "2026-06-11",
+          "hora": "19:30",
+          "campo": "TVCabo"
+        },
+        {
+          "id": "M4-QF3",
+          "fase": "QF",
+          "num": 3,
+          "feedFrom": null,
+          "eq1": "Jason & Bosch",
+          "eq1grupo": "M4-D",
+          "eq1seed": 3,
+          "eq2": "Muhammad Chona & Ibrahim Bilal",
+          "eq2grupo": "M4-D",
+          "eq2seed": 6,
+          "resultado": null,
+          "data": "2026-06-11",
+          "hora": "20:30",
+          "campo": "TVCabo"
+        },
+        {
+          "id": "M4-QF4",
+          "fase": "QF",
+          "num": 4,
+          "feedFrom": null,
+          "eq1": "Duncan & James",
+          "eq1grupo": "M4-B",
+          "eq1seed": 2,
+          "eq2": "Joshua & Noah",
+          "eq2grupo": "M4-A",
+          "eq2seed": 7,
+          "resultado": null,
+          "data": "2026-06-11",
+          "hora": "20:30",
+          "campo": "Stella Artois"
+        },
+        {
+          "id": "M4-SF1",
+          "fase": "SF",
+          "num": 1,
+          "feedFrom": [
+            "M4-QF1",
+            "M4-QF2"
+          ],
+          "eq1": null,
+          "eq1grupo": null,
+          "eq1seed": null,
+          "eq2": null,
+          "eq2grupo": null,
+          "eq2seed": null,
+          "resultado": null,
+          "data": "2026-06-13",
+          "hora": "15:00"
+        },
+        {
+          "id": "M4-SF2",
+          "fase": "SF",
+          "num": 2,
+          "feedFrom": [
+            "M4-QF3",
+            "M4-QF4"
+          ],
+          "eq1": null,
+          "eq1grupo": null,
+          "eq1seed": null,
+          "eq2": null,
+          "eq2grupo": null,
+          "eq2seed": null,
+          "resultado": null,
+          "data": "2026-06-13",
+          "hora": "16:00"
+        },
+        {
+          "id": "M4-F",
+          "fase": "F",
+          "num": 1,
+          "feedFrom": [
+            "M4-SF1",
+            "M4-SF2"
           ],
           "eq1": null,
           "eq1grupo": null,
@@ -5147,14 +5323,174 @@
   ],
   "auditlog": [
     {
-      "id": "mq8kotf50ik59q1",
-      "userId": "mpzxoo1v8l1za3r",
-      "username": "djanasse",
+      "id": "mq8kqnxjam6bdas",
+      "userId": "mpz46x5c2zupza0",
+      "username": "bgaspar",
       "role": "operator",
       "action": "SAVE_RESULT",
       "target": "resultados",
       "detail": "Resultado guardado: jogo #133",
-      "ts": "2026-06-10T21:20:30.449Z"
+      "ts": "2026-06-10T21:21:56.647Z"
+    },
+    {
+      "id": "mq8kmp495tykpw3",
+      "userId": "mpz46x5c2zupza0",
+      "username": "bgaspar",
+      "role": "operator",
+      "action": "GENERATE_BRACKET",
+      "target": "fasefinal",
+      "detail": "Bracket gerado: M4",
+      "ts": "2026-06-10T21:18:51.561Z"
+    },
+    {
+      "id": "mq8km2suf5zztdr",
+      "userId": "mpz46x5c2zupza0",
+      "username": "bgaspar",
+      "role": "operator",
+      "action": "GENERATE_BRACKET",
+      "target": "fasefinal",
+      "detail": "Bracket gerado: M5",
+      "ts": "2026-06-10T21:18:22.638Z"
+    },
+    {
+      "id": "mq8kj72rnmsgpa3",
+      "userId": "mpz46x5c2zupza0",
+      "username": "bgaspar",
+      "role": "operator",
+      "action": "HORARIO_DRAG",
+      "target": "fasefinal",
+      "detail": "Jogo F2-QF2 movido para 17:30 @ Play Padel",
+      "ts": "2026-06-10T21:16:08.211Z"
+    },
+    {
+      "id": "mq8kirjr1ahh35k",
+      "userId": "mpz46x5c2zupza0",
+      "username": "bgaspar",
+      "role": "operator",
+      "action": "HORARIO_DRAG",
+      "target": "fasefinal",
+      "detail": "Jogo F1-QF1 movido para 18:30 @ TVCabo",
+      "ts": "2026-06-10T21:15:48.087Z"
+    },
+    {
+      "id": "mq8kieuhxyw0tu2",
+      "userId": "mpz46x5c2zupza0",
+      "username": "bgaspar",
+      "role": "operator",
+      "action": "HORARIO_DRAG",
+      "target": "fasefinal",
+      "detail": "Jogo M1-QF3 movido para 20:30 @ Play Padel",
+      "ts": "2026-06-10T21:15:31.625Z"
+    },
+    {
+      "id": "mq8khcwmxnwroqa",
+      "userId": "mpz46x5c2zupza0",
+      "username": "bgaspar",
+      "role": "operator",
+      "action": "HORARIO_MOVER_DIA",
+      "target": "fasefinal",
+      "detail": "Jogo M1-QF4 de 2026-06-11 20:30 Play Padel → 2026-06-12 17:30 Play Padel",
+      "ts": "2026-06-10T21:14:42.454Z"
+    },
+    {
+      "id": "mq8kh217gb2hf05",
+      "userId": "mpz46x5c2zupza0",
+      "username": "bgaspar",
+      "role": "operator",
+      "action": "HORARIO_DRAG",
+      "target": "fasefinal",
+      "detail": "Jogo M1-QF3 movido para 20:30 @ TVCabo",
+      "ts": "2026-06-10T21:14:28.363Z"
+    },
+    {
+      "id": "mq8kgjkrjp7po8n",
+      "userId": "mpz46x5c2zupza0",
+      "username": "bgaspar",
+      "role": "operator",
+      "action": "HORARIO_DRAG",
+      "target": "fasefinal",
+      "detail": "Jogo F2-QF4 movido para 18:30 @ Stella Artois",
+      "ts": "2026-06-10T21:14:04.443Z"
+    },
+    {
+      "id": "mq8kghkmnagkopk",
+      "userId": "mpz46x5c2zupza0",
+      "username": "bgaspar",
+      "role": "operator",
+      "action": "HORARIO_DRAG",
+      "target": "fasefinal",
+      "detail": "Jogo F1-QF3 movido para 18:30 @ TVCabo",
+      "ts": "2026-06-10T21:14:01.846Z"
+    },
+    {
+      "id": "mq8kgf6xsogvi40",
+      "userId": "mpz46x5c2zupza0",
+      "username": "bgaspar",
+      "role": "operator",
+      "action": "HORARIO_DRAG",
+      "target": "fasefinal",
+      "detail": "Jogo F2-QF4 movido para 19:30 @ Stella Artois",
+      "ts": "2026-06-10T21:13:58.761Z"
+    },
+    {
+      "id": "mq8kg3gngji5s18",
+      "userId": "mpz46x5c2zupza0",
+      "username": "bgaspar",
+      "role": "operator",
+      "action": "HORARIO_DRAG",
+      "target": "fasefinal",
+      "detail": "Jogo M1-QF1 movido para 20:30 @ Play Padel",
+      "ts": "2026-06-10T21:13:43.559Z"
+    },
+    {
+      "id": "mq8ke3m50hqng9x",
+      "userId": "mpz46x5c2zupza0",
+      "username": "bgaspar",
+      "role": "operator",
+      "action": "HORARIO_MOVER_DIA",
+      "target": "fasefinal",
+      "detail": "Jogo M1-QF1 de 2026-06-11 18:30 TVCabo → 2026-06-12 17:30 Play Padel",
+      "ts": "2026-06-10T21:12:10.445Z"
+    },
+    {
+      "id": "mq8jxo5ns8csy1p",
+      "userId": "mpz46x5c2zupza0",
+      "username": "bgaspar",
+      "role": "operator",
+      "action": "GENERATE_BRACKET",
+      "target": "fasefinal",
+      "detail": "Bracket gerado: M4",
+      "ts": "2026-06-10T20:59:23.915Z"
+    },
+    {
+      "id": "mq8jwyhnr09m8h2",
+      "userId": "mpz46x5c2zupza0",
+      "username": "bgaspar",
+      "role": "operator",
+      "action": "GENERATE_BRACKET",
+      "target": "fasefinal",
+      "detail": "Bracket gerado: M5",
+      "ts": "2026-06-10T20:58:50.651Z"
+    },
+    {
+      "id": "mq8jrw97gq7hkd3",
+      "userId": "mpz46x5c2zupza0",
+      "username": "bgaspar",
+      "role": "operator",
+      "action": "LOGIN",
+      "target": "auth",
+      "detail": "Login: bgaspar (operator)",
+      "ts": "2026-06-10T20:54:54.476Z"
+    },
+    {
+      "id": "mq8jqz48nij99oz",
+      "userId": "mpz46x5c2zupza0",
+      "username": "bgaspar",
+      "role": "operator",
+      "action": "LOGOUT",
+      "target": "auth",
+      "detail": "Logout: bgaspar",
+      "ts": "2026-06-10T20:54:11.528Z"
     },
     {
       "id": "mq8jna7jxj2va24",
@@ -11387,16 +11723,6 @@
       "ts": "2026-06-04T13:40:58.753Z"
     },
     {
-      "id": "mpzjmqyot1vyg5i",
-      "userId": "mpz8aq9sg983ubo",
-      "username": "euamusse",
-      "role": "admin",
-      "action": "RESET_BRACKET",
-      "target": "fasefinal",
-      "detail": "Bracket resetado: F1",
-      "ts": "2026-06-04T13:40:58.752Z"
-    },
-    {
       "id": "mpzjmqyo2c278ds",
       "userId": "mpz8aq9sg983ubo",
       "username": "euamusse",
@@ -11404,6 +11730,16 @@
       "action": "RESET_BRACKET",
       "target": "fasefinal",
       "detail": "Bracket resetado: M2",
+      "ts": "2026-06-04T13:40:58.752Z"
+    },
+    {
+      "id": "mpzjmqyot1vyg5i",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "RESET_BRACKET",
+      "target": "fasefinal",
+      "detail": "Bracket resetado: F1",
       "ts": "2026-06-04T13:40:58.752Z"
     },
     {
@@ -11457,16 +11793,6 @@
       "ts": "2026-06-04T13:39:55.172Z"
     },
     {
-      "id": "mpzjldwhpi8glsx",
-      "userId": "mpz8aq9sg983ubo",
-      "username": "euamusse",
-      "role": "admin",
-      "action": "RESET_BRACKET",
-      "target": "fasefinal",
-      "detail": "Bracket resetado: M2",
-      "ts": "2026-06-04T13:39:55.169Z"
-    },
-    {
       "id": "mpzjldwhuf0drh0",
       "userId": "mpz8aq9sg983ubo",
       "username": "euamusse",
@@ -11474,6 +11800,16 @@
       "action": "RESET_BRACKET",
       "target": "fasefinal",
       "detail": "Bracket resetado: F1",
+      "ts": "2026-06-04T13:39:55.169Z"
+    },
+    {
+      "id": "mpzjldwhpi8glsx",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "RESET_BRACKET",
+      "target": "fasefinal",
+      "detail": "Bracket resetado: M2",
       "ts": "2026-06-04T13:39:55.169Z"
     },
     {
@@ -11507,16 +11843,6 @@
       "ts": "2026-06-04T13:34:10.179Z"
     },
     {
-      "id": "mpzjdzpbqizhxh3",
-      "userId": "mpz8aq9sg983ubo",
-      "username": "euamusse",
-      "role": "admin",
-      "action": "RESET_BRACKET",
-      "target": "fasefinal",
-      "detail": "Bracket resetado: M3",
-      "ts": "2026-06-04T13:34:10.175Z"
-    },
-    {
       "id": "mpzjdzpb6ynjzkt",
       "userId": "mpz8aq9sg983ubo",
       "username": "euamusse",
@@ -11524,6 +11850,16 @@
       "action": "RESET_BRACKET",
       "target": "fasefinal",
       "detail": "Bracket resetado: M4",
+      "ts": "2026-06-04T13:34:10.175Z"
+    },
+    {
+      "id": "mpzjdzpbqizhxh3",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "RESET_BRACKET",
+      "target": "fasefinal",
+      "detail": "Bracket resetado: M3",
       "ts": "2026-06-04T13:34:10.175Z"
     },
     {
@@ -11537,16 +11873,6 @@
       "ts": "2026-06-04T13:34:10.174Z"
     },
     {
-      "id": "mpzjdzp87zz5dm9",
-      "userId": "mpz8aq9sg983ubo",
-      "username": "euamusse",
-      "role": "admin",
-      "action": "RESET_BRACKET",
-      "target": "fasefinal",
-      "detail": "Bracket resetado: M2",
-      "ts": "2026-06-04T13:34:10.173Z"
-    },
-    {
       "id": "mpzjdzp9thb1man",
       "userId": "mpz8aq9sg983ubo",
       "username": "euamusse",
@@ -11554,6 +11880,16 @@
       "action": "RESET_BRACKET",
       "target": "fasefinal",
       "detail": "Bracket resetado: F1",
+      "ts": "2026-06-04T13:34:10.173Z"
+    },
+    {
+      "id": "mpzjdzp87zz5dm9",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "RESET_BRACKET",
+      "target": "fasefinal",
+      "detail": "Bracket resetado: M2",
       "ts": "2026-06-04T13:34:10.173Z"
     },
     {
@@ -11577,16 +11913,6 @@
       "ts": "2026-06-04T13:17:28.253Z"
     },
     {
-      "id": "mpzisim409j175g",
-      "userId": "mpz8aq9sg983ubo",
-      "username": "euamusse",
-      "role": "admin",
-      "action": "RESET_BRACKET",
-      "target": "fasefinal",
-      "detail": "Bracket resetado: M4",
-      "ts": "2026-06-04T13:17:28.252Z"
-    },
-    {
       "id": "mpzisim4pdfcglk",
       "userId": "mpz8aq9sg983ubo",
       "username": "euamusse",
@@ -11594,6 +11920,16 @@
       "action": "RESET_BRACKET",
       "target": "fasefinal",
       "detail": "Bracket resetado: M3",
+      "ts": "2026-06-04T13:17:28.252Z"
+    },
+    {
+      "id": "mpzisim409j175g",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "RESET_BRACKET",
+      "target": "fasefinal",
+      "detail": "Bracket resetado: M4",
       "ts": "2026-06-04T13:17:28.252Z"
     },
     {
@@ -11607,16 +11943,6 @@
       "ts": "2026-06-04T13:17:28.250Z"
     },
     {
-      "id": "mpzisilxxai90bg",
-      "userId": "mpz8aq9sg983ubo",
-      "username": "euamusse",
-      "role": "admin",
-      "action": "RESET_BRACKET",
-      "target": "fasefinal",
-      "detail": "Bracket resetado: F1",
-      "ts": "2026-06-04T13:17:28.245Z"
-    },
-    {
       "id": "mpzisilxnsvqn4k",
       "userId": "mpz8aq9sg983ubo",
       "username": "euamusse",
@@ -11624,6 +11950,16 @@
       "action": "RESET_BRACKET",
       "target": "fasefinal",
       "detail": "Bracket resetado: M2",
+      "ts": "2026-06-04T13:17:28.245Z"
+    },
+    {
+      "id": "mpzisilxxai90bg",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "RESET_BRACKET",
+      "target": "fasefinal",
+      "detail": "Bracket resetado: F1",
       "ts": "2026-06-04T13:17:28.245Z"
     },
     {
@@ -13297,5 +13633,5 @@
       "ts": "2026-06-03T06:06:37.211Z"
     }
   ],
-  "_updated": "2026-06-10T21:20:34.836Z"
+  "_updated": "2026-06-10T21:21:56.649Z"
 }
