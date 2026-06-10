@@ -302,8 +302,10 @@
       });
 
       const nWildcards = Math.max(0, 8 - 2 * catGrupos.length);
-      // When all groups are fully played, rank by tiebreak and assign definitively
-      const allGroupsDone = wcCandidates.length > 0 && wcCandidates.every(t => t._maxWins === t._minWins);
+      // Only assign wildcards definitively when ALL groups have a determined 3rd place candidate
+      // (if a group has no candidate yet, its 3rd is still in contention → wait)
+      const allGroupsHaveCandidate = wcCandidates.length === catGrupos.length;
+      const allGroupsDone = allGroupsHaveCandidate && wcCandidates.every(t => t._maxWins === t._minWins);
 
       if (allGroupsDone && nWildcards > 0) {
         // Rank wildcards: wins → sets diff → games diff → games won (no H2H across groups)
