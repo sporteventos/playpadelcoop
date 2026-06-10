@@ -4354,7 +4354,7 @@
         "s3eq2": null,
         "serve": "Luis Antunes",
         "nota": "",
-        "ts": "2026-06-10T13:59:48.150Z"
+        "ts": "2026-06-10T14:57:58.118Z"
       }
     },
     {
@@ -4594,6 +4594,36 @@
   ],
   "auditlog": [
     {
+      "id": "mq870vajq05gezd",
+      "userId": "mpz46x5c2zupza0",
+      "username": "bgaspar",
+      "role": "operator",
+      "action": "SUSPEND_GAME",
+      "target": "resultados",
+      "detail": "Jogo #122 suspenso [serve:Luis Antunes]",
+      "ts": "2026-06-10T14:57:58.123Z"
+    },
+    {
+      "id": "mq86s9tmei7yqic",
+      "userId": "mpz46x5c2zupza0",
+      "username": "bgaspar",
+      "role": "operator",
+      "action": "LOGIN",
+      "target": "auth",
+      "detail": "Login: bgaspar (operator)",
+      "ts": "2026-06-10T14:51:17.050Z"
+    },
+    {
+      "id": "mq86q3ml88sndyl",
+      "userId": "mpz46x5c2zupza0",
+      "username": "bgaspar",
+      "role": "operator",
+      "action": "LOGOUT",
+      "target": "auth",
+      "detail": "Logout: bgaspar",
+      "ts": "2026-06-10T14:49:35.709Z"
+    },
+    {
       "id": "mq84y2fd2vh6i3h",
       "userId": "mpz46x5c2zupza0",
       "username": "bgaspar",
@@ -4632,6 +4662,16 @@
       "target": "auth",
       "detail": "Login: bgaspar (operator)",
       "ts": "2026-06-10T13:51:17.062Z"
+    },
+    {
+      "id": "mq81vexytb0iwnr",
+      "userId": "mpz46x5c2zupza0",
+      "username": "bgaspar",
+      "role": "operator",
+      "action": "LOGIN",
+      "target": "auth",
+      "detail": "Login: bgaspar (operator)",
+      "ts": "2026-06-10T12:33:45.574Z"
     },
     {
       "id": "mq7pe3slbamftko",
@@ -9434,6 +9474,26 @@
       "ts": "2026-06-04T20:27:10.230Z"
     },
     {
+      "id": "mpzxz2rq6acmi78",
+      "userId": "mpz46x5c2zupza0",
+      "username": "bgaspar",
+      "role": "operator",
+      "action": "LOGIN",
+      "target": "auth",
+      "detail": "Login: bgaspar (operator)",
+      "ts": "2026-06-04T20:22:28.550Z"
+    },
+    {
+      "id": "mpzxywk4881hy9w",
+      "userId": "mpz46x5c2zupza0",
+      "username": "bgaspar",
+      "role": "operator",
+      "action": "LOGOUT",
+      "target": "auth",
+      "detail": "Logout: bgaspar",
+      "ts": "2026-06-04T20:22:20.500Z"
+    },
+    {
       "id": "mpzxp3c8f4fs3qx",
       "userId": "mpz8aq9sg983ubo",
       "username": "euamusse",
@@ -9452,6 +9512,16 @@
       "target": "utilizadores",
       "detail": "Criado \"djanasse\" (operator)",
       "ts": "2026-06-04T20:14:22.930Z"
+    },
+    {
+      "id": "mpzxlxrs4ltuwsb",
+      "userId": "mpz46x5c2zupza0",
+      "username": "bgaspar",
+      "role": "operator",
+      "action": "HORARIO_DRAG",
+      "target": "jogos",
+      "detail": "Jogo #127 movido para 18:00 @ Play Padel",
+      "ts": "2026-06-04T20:12:15.544Z"
     },
     {
       "id": "mpzxdeycq1qgaao",
@@ -12134,5 +12204,5 @@
       "ts": "2026-06-03T06:06:37.211Z"
     }
   ],
-  "_updated": "2026-06-10T13:59:48.175Z"
+  "_updated": "2026-06-10T14:57:58.126Z"
 }
