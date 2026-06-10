@@ -4518,12 +4518,27 @@ function ffRecalcBracket(catId) {
   const q = ffGetQualified(catId);
   let newPairs;
 
-  // Strict seeding: S1vS8, S4vS5, S3vS6, S2vS7 — sem trocar por grupo (regra de seeding pura)
+  // Strict seeding: S1vS8, S4vS5, S3vS6, S2vS7 — com collision avoidance por metade do quadro
   if (FF_4G.includes(catId)) {
     newPairs = [[q[0],q[7]], [q[3],q[4]], [q[2],q[5]], [q[1],q[6]]];
+    for (let i = 0; i < newPairs.length; i++) {
+      if (newPairs[i][0]?.grupo && newPairs[i][0].grupo === newPairs[i][1]?.grupo) {
+        for (let j = i + 1; j < newPairs.length; j++) {
+          if (newPairs[i][0]?.grupo !== newPairs[j][1]?.grupo && newPairs[j][0]?.grupo !== newPairs[i][1]?.grupo) {
+            [newPairs[i][1], newPairs[j][1]] = [newPairs[j][1], newPairs[i][1]];
+            break;
+          }
+        }
+      }
+    }
   } else {
     const s = q;
     newPairs = [[s[0],s[7]], [s[3],s[4]], [s[2],s[5]], [s[1],s[6]]];
+    // Evitar mesmo grupo: trocar oponentes dentro de cada metade (QF1+QF2 e QF3+QF4)
+    if (newPairs[0][0]?.grupo === newPairs[0][1]?.grupo || newPairs[1][0]?.grupo === newPairs[1][1]?.grupo)
+      { [newPairs[0][1], newPairs[1][1]] = [newPairs[1][1], newPairs[0][1]]; }
+    if (newPairs[2][0]?.grupo === newPairs[2][1]?.grupo || newPairs[3][0]?.grupo === newPairs[3][1]?.grupo)
+      { [newPairs[2][1], newPairs[3][1]] = [newPairs[3][1], newPairs[2][1]]; }
   }
 
   const qfJogos = ff[catId].jogos.filter(j => j.fase === 'QF').sort((a, b) => a.num - b.num);
