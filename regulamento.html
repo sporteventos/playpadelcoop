@@ -338,36 +338,84 @@
     <p style="font-size:.8rem;color:var(--cinza-texto);margin-bottom:.85rem;text-transform:uppercase;letter-spacing:.07em;font-weight:600;">Quem apura</p>
     <ul class="reg-list">
       <li>Os <strong>1.º e 2.º classificados</strong> de cada grupo apuram directamente para a Fase Final.</li>
-      <li>Nas categorias com 3 grupos, os <strong>2 melhores 3.ºs classificados</strong> (wildcards) também apuram.</li>
-      <li>Os wildcards são ordenados pelos mesmos critérios de desempate da fase de grupos.</li>
+      <li>Nas categorias com 3 grupos, os <strong>2 melhores 3.ºs classificados</strong> (wildcards) também apuram, perfazendo um total de 8 equipas.</li>
     </ul>
 
-    <p style="font-size:.8rem;color:var(--cinza-texto);margin:.85rem 0;text-transform:uppercase;letter-spacing:.07em;font-weight:600;">Seeding nos Quartos-de-Final</p>
+    <p style="font-size:.8rem;color:var(--cinza-texto);margin:.85rem 0 .6rem;text-transform:uppercase;letter-spacing:.07em;font-weight:600;">Seleção dos melhores 3.ºs classificados (Wildcards)</p>
+    <p style="font-size:.875rem;color:var(--cinza-texto);margin-bottom:.6rem;line-height:1.6">
+      Os 3.ºs classificados de grupos diferentes são comparados <em>apenas pelos seus jogos dentro do respectivo grupo</em>, pelos seguintes critérios por ordem de prioridade:
+    </p>
+    <ul class="reg-list reg-desempate">
+      <li>Maior número de <strong>vitórias / pontos somados</strong></li>
+      <li><strong>Diferença de sets</strong> (sets ganhos − sets perdidos)</li>
+      <li><strong>Diferença de games</strong> (games ganhos − games perdidos)</li>
+      <li>Maior número de <strong>sets ganhos</strong></li>
+      <li><strong>Sorteio</strong> em caso de igualdade absoluta</li>
+    </ul>
+
+    <p style="font-size:.8rem;color:var(--cinza-texto);margin:.85rem 0 .6rem;text-transform:uppercase;letter-spacing:.07em;font-weight:600;">Ranking geral S1 – S8</p>
+    <p style="font-size:.875rem;color:var(--cinza-texto);margin-bottom:.6rem;line-height:1.6">
+      As 8 equipas apuradas são ordenadas de <strong>S1</strong> (melhor) a <strong>S8</strong> (pior), usando os mesmos critérios de desempate da fase de grupos (excluindo confronto directo, pois as equipas vêm de grupos diferentes):
+    </p>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:.4rem;margin-bottom:.85rem;font-size:.8rem">
+      <div style="padding:.5rem .7rem;background:rgba(0,195,123,.07);border:1px solid rgba(0,195,123,.2);border-radius:8px;text-align:center">
+        <div style="font-weight:800;color:var(--verde);font-size:.95rem">S1 · S2 · S3</div>
+        <div style="color:var(--cinza-texto);margin-top:.2rem">Vencedores de grupo<br>ordenados por desempenho</div>
+      </div>
+      <div style="padding:.5rem .7rem;background:rgba(56,182,255,.07);border:1px solid rgba(56,182,255,.2);border-radius:8px;text-align:center">
+        <div style="font-weight:800;color:#4A9EFF;font-size:.95rem">S4 · S5 · S6</div>
+        <div style="color:var(--cinza-texto);margin-top:.2rem">Segundos classificados<br>ordenados por desempenho</div>
+      </div>
+      <div style="padding:.5rem .7rem;background:rgba(245,197,24,.07);border:1px solid rgba(245,197,24,.2);border-radius:8px;text-align:center">
+        <div style="font-weight:800;color:var(--amarelo);font-size:.95rem">S7 · S8</div>
+        <div style="color:var(--cinza-texto);margin-top:.2rem">Melhores 3.ºs classificados<br>(wildcards)</div>
+      </div>
+    </div>
+
+    <p style="font-size:.8rem;color:var(--cinza-texto);margin:.85rem 0 .6rem;text-transform:uppercase;letter-spacing:.07em;font-weight:600;">Emparelhamentos — Quartos-de-Final</p>
     <p style="font-size:.875rem;color:var(--cinza-texto);margin-bottom:.75rem;line-height:1.6">
-      Os 8 apurados são ordenados de S1 (melhor) a S8 (pior), com base nos critérios de desempate acima.
-      Os emparelhamentos são definidos da seguinte forma:
+      O quadro garante que <strong>S1 e S2 só se podem encontrar na Final</strong>. Os emparelhamentos base são:
     </p>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem .75rem;margin-bottom:.85rem">
       <div style="padding:.5rem .75rem;background:rgba(0,195,123,.07);border:1px solid rgba(0,195,123,.2);border-radius:8px;font-size:.85rem">
         <span style="font-weight:700;color:var(--verde)">QF 1</span> &nbsp; S1 <span style="color:var(--cinza-texto)">vs</span> S8
-        <span style="font-size:.7rem;color:var(--cinza-texto);display:block;margin-top:.15rem">S1 — 1.º classificado 1.º lugar &nbsp;·&nbsp; S8 — 2.º classificado 3.º lugar</span>
+        <span style="font-size:.7rem;color:var(--cinza-texto);display:block;margin-top:.15rem">S1 — Melhor 1.º colocado &nbsp;·&nbsp; S8 — 2.º melhor wildcard</span>
       </div>
       <div style="padding:.5rem .75rem;background:rgba(0,195,123,.07);border:1px solid rgba(0,195,123,.2);border-radius:8px;font-size:.85rem">
-        <span style="font-weight:700;color:var(--verde)">QF 2</span> &nbsp; S2 <span style="color:var(--cinza-texto)">vs</span> S7
-        <span style="font-size:.7rem;color:var(--cinza-texto);display:block;margin-top:.15rem">S2 — 2.º classificado 1.º lugar &nbsp;·&nbsp; S7 — 1.º classificado 3.º lugar</span>
+        <span style="font-weight:700;color:var(--verde)">QF 2</span> &nbsp; S4 <span style="color:var(--cinza-texto)">vs</span> S5
+        <span style="font-size:.7rem;color:var(--cinza-texto);display:block;margin-top:.15rem">S4 — Melhor 2.º classificado &nbsp;·&nbsp; S5 — 2.º melhor 2.º classificado</span>
       </div>
       <div style="padding:.5rem .75rem;background:rgba(0,195,123,.07);border:1px solid rgba(0,195,123,.2);border-radius:8px;font-size:.85rem">
         <span style="font-weight:700;color:var(--verde)">QF 3</span> &nbsp; S3 <span style="color:var(--cinza-texto)">vs</span> S6
-        <span style="font-size:.7rem;color:var(--cinza-texto);display:block;margin-top:.15rem">S3 — 3.º classificado 1.º lugar &nbsp;·&nbsp; S6 — 3.º classificado 2.º lugar</span>
+        <span style="font-size:.7rem;color:var(--cinza-texto);display:block;margin-top:.15rem">S3 — 3.º melhor 1.º colocado &nbsp;·&nbsp; S6 — 3.º melhor 2.º classificado</span>
       </div>
       <div style="padding:.5rem .75rem;background:rgba(0,195,123,.07);border:1px solid rgba(0,195,123,.2);border-radius:8px;font-size:.85rem">
-        <span style="font-weight:700;color:var(--verde)">QF 4</span> &nbsp; S4 <span style="color:var(--cinza-texto)">vs</span> S5
-        <span style="font-size:.7rem;color:var(--cinza-texto);display:block;margin-top:.15rem">S4 — 1.º classificado 2.º lugar &nbsp;·&nbsp; S5 — 2.º classificado 2.º lugar</span>
+        <span style="font-weight:700;color:var(--verde)">QF 4</span> &nbsp; S2 <span style="color:var(--cinza-texto)">vs</span> S7
+        <span style="font-size:.7rem;color:var(--cinza-texto);display:block;margin-top:.15rem">S2 — 2.º melhor 1.º colocado &nbsp;·&nbsp; S7 — Melhor wildcard</span>
       </div>
     </div>
+
+    <p style="font-size:.8rem;color:var(--cinza-texto);margin:.85rem 0 .6rem;text-transform:uppercase;letter-spacing:.07em;font-weight:600;">Caminho até à Final</p>
+    <div style="display:flex;flex-direction:column;gap:.4rem;margin-bottom:.85rem;font-size:.85rem">
+      <div style="display:flex;align-items:center;gap:.5rem;padding:.45rem .75rem;background:rgba(255,255,255,.03);border-radius:8px">
+        <span style="font-weight:700;color:var(--verde);min-width:4rem">Meia A</span>
+        <span style="color:var(--cinza-texto)">Vencedor QF 1 &nbsp;<strong style="color:var(--branco)">vs</strong>&nbsp; Vencedor QF 2</span>
+        <span style="font-size:.7rem;color:var(--cinza-texto);margin-left:auto">(lado de S1)</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:.5rem;padding:.45rem .75rem;background:rgba(255,255,255,.03);border-radius:8px">
+        <span style="font-weight:700;color:var(--verde);min-width:4rem">Meia B</span>
+        <span style="color:var(--cinza-texto)">Vencedor QF 3 &nbsp;<strong style="color:var(--branco)">vs</strong>&nbsp; Vencedor QF 4</span>
+        <span style="font-size:.7rem;color:var(--cinza-texto);margin-left:auto">(lado de S2)</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:.5rem;padding:.45rem .75rem;background:rgba(245,197,24,.06);border:1px solid rgba(245,197,24,.2);border-radius:8px">
+        <span style="font-weight:700;color:var(--amarelo);min-width:4rem">Final</span>
+        <span style="color:var(--cinza-texto)">Vencedor Meia A &nbsp;<strong style="color:var(--branco)">vs</strong>&nbsp; Vencedor Meia B</span>
+      </div>
+    </div>
+
     <p style="font-size:.78rem;color:var(--cinza-texto);padding:.5rem .75rem;border-radius:6px;background:rgba(245,197,24,.06);border:1px solid rgba(245,197,24,.2);line-height:1.5">
       <i class="ph ph-warning" style="color:var(--amarelo)"></i>&nbsp;
-      <strong>Regra anti-colisão:</strong> duplas do mesmo grupo <strong>não se podem cruzar</strong> nos Quartos-de-Final. O sistema ajusta automaticamente o seeding para evitar estes cruzamentos.
+      <strong>Regra anti-colisão:</strong> duplas do mesmo grupo <strong>não se podem cruzar</strong> nos Quartos-de-Final. Se tal acontecer, o sistema troca automaticamente S7↔S8 para evitar o cruzamento, registando a justificação da troca no quadro.
     </p>
   </div>
 
