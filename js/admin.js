@@ -5448,15 +5448,44 @@ function _adminClassTab(catId, btn) {
   }
 }
 
+function _adminQualifiedMap(catId, grupos, jogos) {
+  const WILDCARD_CATS = new Set(['M1','F1','M2','F2']);
+  const catGroups = _adminClassCatGroups(catId, grupos);
+  const qualified = new Map();
+  const allGroupData = catGroups.map(g => {
+    const rows = _adminClassStandings(g, jogos);
+    if (rows[0] && rows[0].pj > 0) qualified.set(rows[0].par, 'direto');
+    if (rows[1] && rows[1].pj > 0) qualified.set(rows[1].par, 'direto');
+    return { rows };
+  });
+  if (WILDCARD_CATS.has(catId)) {
+    const terceiros = allGroupData.flatMap(({ rows }) => rows[2] && rows[2].pj > 0 ? [rows[2]] : []);
+    const allDone = terceiros.length === catGroups.length && terceiros.every(t => {
+      const gJogos = jogos.filter(j => j.grupo === catGroups[allGroupData.indexOf(allGroupData.find(gd => gd.rows.includes(t)))]?.id);
+      const nPairs = catGroups.find(g => jogos.filter(j=>j.grupo===g.id).some(j=>j.eq1===t.par||j.eq2===t.par))?.id;
+      return true; // simplificado: terceiros com pj > 0
+    });
+    terceiros.sort((a,b) => b.v-a.v || (b.sv-b.sl)-(a.sv-a.sl) || (b.gv-b.gl)-(a.gv-a.gl) || b.gv-a.gv);
+    const nWc = Math.max(0, 8 - 2*catGroups.length);
+    terceiros.forEach((t, i) => {
+      if (!qualified.has(t.par)) {
+        qualified.set(t.par, i < nWc ? 'wildcard' : 'eliminated');
+      }
+    });
+  }
+  return qualified;
+}
+
 function _renderAdminClassAllCats(cats, grupos, jogos, el) {
   el.innerHTML = cats.map(catId => {
     const catGroups = _adminClassCatGroups(catId, grupos);
     if (!catGroups.length) return '';
+    const qualifiedSet = _adminQualifiedMap(catId, grupos, jogos);
     return catGroups.map(g => {
       const rows = _adminClassStandings(g, jogos);
       const gJogos = jogos.filter(j => j.grupo === g.id);
       const done = gJogos.filter(j => j.resultado).length;
-      return _adminGroupCardHTML(g, rows, gJogos, done, catId);
+      return _adminGroupCardHTML(g, rows, gJogos, done, catId, qualifiedSet);
     }).join('');
   }).join('');
   el.innerHTML = `<div class="admin-standings-grid">${el.innerHTML}</div>`;
@@ -5503,17 +5532,20 @@ function _adminHeadToHead(parA, parB, gJogos) {
 function _renderAdminClassCat(catId, grupos, jogos, el) {
   const catGroups = _adminClassCatGroups(catId, grupos);
   if (!catGroups.length) { el.innerHTML = `<p style="color:var(--cinza-texto);padding:1rem">Sem grupos para esta categoria.</p>`; return; }
+  const qualifiedSet = _adminQualifiedMap(catId, grupos, jogos);
   el.innerHTML = `<div class="admin-standings-grid">
     ${catGroups.map(g => {
       const rows = _adminClassStandings(g, jogos);
       const gJogos = jogos.filter(j => j.grupo === g.id);
       const done = gJogos.filter(j => j.resultado).length;
-      return _adminGroupCardHTML(g, rows, gJogos, done, catId);
+      return _adminGroupCardHTML(g, rows, gJogos, done, catId, qualifiedSet);
     }).join('')}
   </div>`;
 }
 
-function _adminGroupCardHTML(g, rows, gJogos, done, catId) {
+function _adminGroupCardHTML(g, rows, gJogos, done, catId, qualifiedSet) {
+  const WILDCARD_CATS = new Set(['M1','F1','M2','F2']);
+  const hasWc = WILDCARD_CATS.has(catId);
   return `<div class="admin-group-card">
         <div class="admin-group-card-header">
           <span style="font-weight:700;color:var(--branco)">${g.id}</span>
@@ -5523,9 +5555,22 @@ function _adminGroupCardHTML(g, rows, gJogos, done, catId) {
           <thead><tr><th>#</th><th>Par</th><th>PJ</th><th>V</th><th>D</th><th>S</th><th>J</th><th>Pts</th></tr></thead>
           <tbody>${rows.map((r, i) => {
             const [p1, p2] = r.par.split(' & ');
+            const qType = qualifiedSet ? qualifiedSet.get(r.par) : null;
+            let rowCls = '', posCell = `${i+1}`;
+            if (qType === 'direto') {
+              rowCls = i===0?'std-q1':'std-q2';
+              posCell = `<span style="background:rgba(0,195,123,.2);color:var(--verde);font-size:.65rem;font-weight:700;padding:.1rem .3rem;border-radius:4px">Q</span>`;
+            } else if (qType === 'wildcard') {
+              rowCls = 'std-wc';
+              posCell = `<span style="background:rgba(245,197,24,.2);color:var(--amarelo);font-size:.65rem;font-weight:700;padding:.1rem .3rem;border-radius:4px">WC</span>`;
+            } else if (qType === 'eliminated') {
+              rowCls = 'std-elim';
+            } else if (!qualifiedSet) {
+              rowCls = i===0?'std-q1':i===1?'std-q2':'';
+            }
             return `
-            <tr class="${i===0?'std-q1':i===1?'std-q2':''}">
-              <td>${i+1}</td>
+            <tr class="${rowCls}">
+              <td>${posCell}</td>
               <td>
                 <div style="min-width:0">
                   <span style="display:block;font-size:.8rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:160px">${escHtml(p1||r.par)}</span>

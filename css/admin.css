@@ -669,8 +669,10 @@ tbody tr:hover { background: var(--cinza-escuro); }
 .std-table td:first-child,
 .std-table td:nth-child(2) { text-align: left; }
 .std-table tr:last-child td { border-bottom: none; }
-.std-q1 { border-left: 3px solid var(--verde); }
-.std-q2 { border-left: 3px solid var(--amarelo); }
+.std-q1   { border-left: 3px solid var(--verde); }
+.std-q2   { border-left: 3px solid var(--verde); }
+.std-wc   { border-left: 3px solid var(--amarelo); }
+.std-elim { opacity: .5; }
 
 /* ============================================
    IMPORT / BULK
