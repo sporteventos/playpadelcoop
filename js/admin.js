@@ -4329,7 +4329,7 @@ const FF_4G       = ['M3', 'M4'];               // 4 groups, top 2 each = 8
 const FF_2G       = ['M5'];                     // 2 groups, top 2 each = 4 (no QF)
 
 function ffLoad()       { return ppLoad('fasefinal') || {}; }
-function ffSave(data)   { ppSave('fasefinal', data); }
+function ffSave(data)   { ppSave('fasefinal', data); if (typeof GHSync !== 'undefined') GHSync.markDirty(); }
 
 function ffStandings(gJogos) {
   const pairs = new Set();
