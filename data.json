@@ -4824,7 +4824,7 @@
           "eq2seed": 7,
           "resultado": null,
           "data": "2026-06-11",
-          "hora": "18:30",
+          "hora": "17:30",
           "campo": "Stella Artois"
         },
         {
@@ -5125,7 +5125,7 @@
           "eq2seed": 7,
           "resultado": null,
           "data": "2026-06-11",
-          "hora": "17:30",
+          "hora": "18:30",
           "campo": "Stella Artois"
         },
         {
@@ -5577,6 +5577,16 @@
     }
   ],
   "auditlog": [
+    {
+      "id": "mq8q30p5bzl3xkd",
+      "userId": "mpz46x5c2zupza0",
+      "username": "bgaspar",
+      "role": "operator",
+      "action": "HORARIO_DRAG",
+      "target": "fasefinal",
+      "detail": "Jogo M4-QF1 movido para 18:30 @ Stella Artois",
+      "ts": "2026-06-10T23:51:31.145Z"
+    },
     {
       "id": "mq8pvng3l0dvnx5",
       "userId": "mpz46x5c2zupza0",
@@ -15228,5 +15238,5 @@
       "ts": "2026-06-03T06:06:37.211Z"
     }
   ],
-  "_updated": "2026-06-10T23:46:01.344Z"
+  "_updated": "2026-06-10T23:51:33.459Z"
 }
