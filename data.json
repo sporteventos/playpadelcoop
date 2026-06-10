@@ -3835,18 +3835,7 @@
       "eq1": "Tayab & Badru Rosa",
       "eq2": "Carlos Cardeano & José Santos",
       "resultado": {
-        "s1eq1": 6,
-        "s1eq2": 0,
-        "tb1eq1": null,
-        "tb1eq2": null,
-        "s2eq1": 6,
-        "s2eq2": 0,
-        "tb2eq1": null,
-        "tb2eq2": null,
-        "s3eq1": null,
-        "s3eq2": null,
-        "tb3eq1": null,
-        "tb3eq2": null
+        "wo": "eq2"
       },
       "suspenso": null,
       "adiado": null
@@ -4987,6 +4976,16 @@
     }
   ],
   "auditlog": [
+    {
+      "id": "mq8i3infortvhmq",
+      "userId": "mpzxoo1v8l1za3r",
+      "username": "djanasse",
+      "role": "operator",
+      "action": "SAVE_RESULT",
+      "target": "resultados",
+      "detail": "WO registado: jogo #97 — eq2",
+      "ts": "2026-06-10T20:07:57.484Z"
+    },
     {
       "id": "mq8i2mh0c2284cr",
       "userId": "mpzxoo1v8l1za3r",
@@ -12968,5 +12967,5 @@
       "ts": "2026-06-03T06:06:37.211Z"
     }
   ],
-  "_updated": "2026-06-10T20:07:15.786Z"
+  "_updated": "2026-06-10T20:07:57.488Z"
 }
