@@ -4468,40 +4468,36 @@ function ffGenerateBracket(catId) {
     jogos.push(ffMakeJogo(catId, 'F',  1, null, null, [`${catId}-SF1`, `${catId}-SF2`], FF_F_DATE, FF_F_SLOT));
 
   } else if (FF_4G.includes(catId)) {
-    // Seeding: S1vS8, S4vS5, S3vS6, S2vS7 → S1 e S2 em meias opostas (só se encontram na final)
-    let pairs4 = [[q[0],q[7]], [q[3],q[4]], [q[2],q[5]], [q[1],q[6]]];
-    for (let i = 0; i < pairs4.length; i++) {
-      if (pairs4[i][0]?.grupo && pairs4[i][0].grupo === pairs4[i][1]?.grupo) {
-        for (let j = i + 1; j < pairs4.length; j++) {
-          if (pairs4[i][0]?.grupo !== pairs4[j][1]?.grupo && pairs4[j][0]?.grupo !== pairs4[i][1]?.grupo) {
-            [pairs4[i][1], pairs4[j][1]] = [pairs4[j][1], pairs4[i][1]];
-            break;
-          }
-        }
-      }
-    }
+    // QF1:#1vS8, QF2:#2v#7, QF3:#3v#6, QF4:#4v#5 → SF1=W(QF1)+W(QF4), SF2=W(QF2)+W(QF3)
+    let pairs4 = [[q[0],q[7]], [q[1],q[6]], [q[2],q[5]], [q[3],q[4]]];
+    // Collision avoidance: trocar oponentes dentro de cada metade
+    if (pairs4[0][0]?.grupo === pairs4[0][1]?.grupo || pairs4[1][0]?.grupo === pairs4[1][1]?.grupo)
+      { [pairs4[0][1], pairs4[1][1]] = [pairs4[1][1], pairs4[0][1]]; }
+    if (pairs4[2][0]?.grupo === pairs4[2][1]?.grupo || pairs4[3][0]?.grupo === pairs4[3][1]?.grupo)
+      { [pairs4[2][1], pairs4[3][1]] = [pairs4[3][1], pairs4[2][1]]; }
     jogos.push(ffMakeJogo(catId, 'QF', 1, pairs4[0][0], pairs4[0][1], null));
     jogos.push(ffMakeJogo(catId, 'QF', 2, pairs4[1][0], pairs4[1][1], null));
     jogos.push(ffMakeJogo(catId, 'QF', 3, pairs4[2][0], pairs4[2][1], null));
     jogos.push(ffMakeJogo(catId, 'QF', 4, pairs4[3][0], pairs4[3][1], null));
     ffAutoAllocateQF(jogos.filter(j => j.fase === 'QF'));
-    jogos.push(ffMakeJogo(catId, 'SF', 1, null, null, [`${catId}-QF1`, `${catId}-QF2`], FF_SF_DATE, FF_SF_SLOTS[0]));
-    jogos.push(ffMakeJogo(catId, 'SF', 2, null, null, [`${catId}-QF3`, `${catId}-QF4`], FF_SF_DATE, FF_SF_SLOTS[1]));
+    jogos.push(ffMakeJogo(catId, 'SF', 1, null, null, [`${catId}-QF1`, `${catId}-QF4`], FF_SF_DATE, FF_SF_SLOTS[0]));
+    jogos.push(ffMakeJogo(catId, 'SF', 2, null, null, [`${catId}-QF2`, `${catId}-QF3`], FF_SF_DATE, FF_SF_SLOTS[1]));
     jogos.push(ffMakeJogo(catId, 'F',  1, null, null, [`${catId}-SF1`, `${catId}-SF2`], FF_F_DATE, FF_F_SLOT));
 
   } else {
-    // QF seeding: S1vS8, S4vS5, S3vS6, S2vS7 → S1 e S2 em meias opostas (só se encontram na final)
-    const s = q; // already in seed order
-    let pairs = [[s[0],s[7]], [s[3],s[4]], [s[2],s[5]], [s[1],s[6]]];
-    // Evitar mesmo grupo: metade S1 (QF1+QF2), metade S2 (QF3+QF4)
+    // QF1:#1v#8, QF2:#2v#7, QF3:#3v#6, QF4:#4v#5 → SF1=W(QF1)+W(QF4), SF2=W(QF2)+W(QF3)
+    const s = q;
+    let pairs = [[s[0],s[7]], [s[1],s[6]], [s[2],s[5]], [s[3],s[4]]];
+    // Collision avoidance: se #1/#8 ou #2/#7 forem do mesmo grupo → trocar #7 e #8
     if (pairs[0][0]?.grupo === pairs[0][1]?.grupo || pairs[1][0]?.grupo === pairs[1][1]?.grupo)
       { [pairs[0][1], pairs[1][1]] = [pairs[1][1], pairs[0][1]]; }
+    // Se #3/#6 ou #4/#5 forem do mesmo grupo → trocar #5 e #6
     if (pairs[2][0]?.grupo === pairs[2][1]?.grupo || pairs[3][0]?.grupo === pairs[3][1]?.grupo)
       { [pairs[2][1], pairs[3][1]] = [pairs[3][1], pairs[2][1]]; }
     pairs.forEach(([e1, e2], i) => jogos.push(ffMakeJogo(catId, 'QF', i + 1, e1, e2, null)));
     ffAutoAllocateQF(jogos.filter(j => j.fase === 'QF'));
-    jogos.push(ffMakeJogo(catId, 'SF', 1, null, null, [`${catId}-QF1`, `${catId}-QF2`], FF_SF_DATE, FF_SF_SLOTS[0]));
-    jogos.push(ffMakeJogo(catId, 'SF', 2, null, null, [`${catId}-QF3`, `${catId}-QF4`], FF_SF_DATE, FF_SF_SLOTS[1]));
+    jogos.push(ffMakeJogo(catId, 'SF', 1, null, null, [`${catId}-QF1`, `${catId}-QF4`], FF_SF_DATE, FF_SF_SLOTS[0]));
+    jogos.push(ffMakeJogo(catId, 'SF', 2, null, null, [`${catId}-QF2`, `${catId}-QF3`], FF_SF_DATE, FF_SF_SLOTS[1]));
     jogos.push(ffMakeJogo(catId, 'F',  1, null, null, [`${catId}-SF1`, `${catId}-SF2`], FF_F_DATE, FF_F_SLOT));
   }
   return { generated: true, jogos };
@@ -4518,23 +4514,16 @@ function ffRecalcBracket(catId) {
   const q = ffGetQualified(catId);
   let newPairs;
 
-  // Strict seeding: S1vS8, S4vS5, S3vS6, S2vS7 — com collision avoidance por metade do quadro
+  // QF1:#1v#8, QF2:#2v#7, QF3:#3v#6, QF4:#4v#5 — com collision avoidance por metade
   if (FF_4G.includes(catId)) {
-    newPairs = [[q[0],q[7]], [q[3],q[4]], [q[2],q[5]], [q[1],q[6]]];
-    for (let i = 0; i < newPairs.length; i++) {
-      if (newPairs[i][0]?.grupo && newPairs[i][0].grupo === newPairs[i][1]?.grupo) {
-        for (let j = i + 1; j < newPairs.length; j++) {
-          if (newPairs[i][0]?.grupo !== newPairs[j][1]?.grupo && newPairs[j][0]?.grupo !== newPairs[i][1]?.grupo) {
-            [newPairs[i][1], newPairs[j][1]] = [newPairs[j][1], newPairs[i][1]];
-            break;
-          }
-        }
-      }
-    }
+    newPairs = [[q[0],q[7]], [q[1],q[6]], [q[2],q[5]], [q[3],q[4]]];
+    if (newPairs[0][0]?.grupo === newPairs[0][1]?.grupo || newPairs[1][0]?.grupo === newPairs[1][1]?.grupo)
+      { [newPairs[0][1], newPairs[1][1]] = [newPairs[1][1], newPairs[0][1]]; }
+    if (newPairs[2][0]?.grupo === newPairs[2][1]?.grupo || newPairs[3][0]?.grupo === newPairs[3][1]?.grupo)
+      { [newPairs[2][1], newPairs[3][1]] = [newPairs[3][1], newPairs[2][1]]; }
   } else {
     const s = q;
-    newPairs = [[s[0],s[7]], [s[3],s[4]], [s[2],s[5]], [s[1],s[6]]];
-    // Evitar mesmo grupo: trocar oponentes dentro de cada metade (QF1+QF2 e QF3+QF4)
+    newPairs = [[s[0],s[7]], [s[1],s[6]], [s[2],s[5]], [s[3],s[4]]];
     if (newPairs[0][0]?.grupo === newPairs[0][1]?.grupo || newPairs[1][0]?.grupo === newPairs[1][1]?.grupo)
       { [newPairs[0][1], newPairs[1][1]] = [newPairs[1][1], newPairs[0][1]]; }
     if (newPairs[2][0]?.grupo === newPairs[2][1]?.grupo || newPairs[3][0]?.grupo === newPairs[3][1]?.grupo)
@@ -4548,6 +4537,12 @@ function ffRecalcBracket(catId) {
     jogo.eq1 = e1?.par ?? null; jogo.eq1grupo = e1?.grupo ?? null; jogo.eq1seed = e1?.seed ?? null;
     jogo.eq2 = e2?.par ?? null; jogo.eq2grupo = e2?.grupo ?? null; jogo.eq2seed = e2?.seed ?? null;
   });
+
+  // Corrigir SF feedFrom: SF1=W(QF1)+W(QF4), SF2=W(QF2)+W(QF3)
+  const sf1 = ff[catId].jogos.find(j => j.fase === 'SF' && j.num === 1);
+  const sf2 = ff[catId].jogos.find(j => j.fase === 'SF' && j.num === 2);
+  if (sf1) sf1.feedFrom = [`${catId}-QF1`, `${catId}-QF4`];
+  if (sf2) sf2.feedFrom = [`${catId}-QF2`, `${catId}-QF3`];
 
   ffSave(ff);
   renderFaseFinal();
