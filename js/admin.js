@@ -4789,7 +4789,7 @@ window.ffTeamDrop = function(ev, catId, jogoId, side) {
     `Troca manual: ${src.jogoId}/${src.side} ⇔ ${jogoId}/${side}`;
   ffSave(ff);
   auditLog('ff_swap_teams', { cat: catId, from: `${src.jogoId}.${src.side}`, to: `${jogoId}.${side}` });
-  renderFaseFinal();
+  setTimeout(() => renderFaseFinal(), 0);
 };
 
 function ffCardHtml(j, catId) {
