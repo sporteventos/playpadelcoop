@@ -4371,7 +4371,22 @@
       "grupo": "M3-D",
       "eq1": "Alexandre Salazar & Pedro Gonzalez",
       "eq2": "Elves Poeira & Uweizy",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 6,
+        "s1eq2": 4,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 3,
+        "s2eq2": 6,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": 2,
+        "s3eq2": 6,
+        "tb3eq1": null,
+        "tb3eq2": null
+      },
+      "suspenso": null,
+      "adiado": null
     },
     {
       "id": 121,
@@ -4942,6 +4957,16 @@
     }
   ],
   "auditlog": [
+    {
+      "id": "mq8h9filf7mgi8f",
+      "userId": "mpzxoo1v8l1za3r",
+      "username": "djanasse",
+      "role": "operator",
+      "action": "SAVE_RESULT",
+      "target": "resultados",
+      "detail": "Resultado guardado: jogo #120",
+      "ts": "2026-06-10T19:44:33.741Z"
+    },
     {
       "id": "mq8h24kmxh9qusv",
       "userId": "mpzxoo1v8l1za3r",
@@ -12893,5 +12918,5 @@
       "ts": "2026-06-03T06:06:37.211Z"
     }
   ],
-  "_updated": "2026-06-10T19:39:15.231Z"
+  "_updated": "2026-06-10T19:44:33.751Z"
 }
