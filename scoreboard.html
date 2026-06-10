@@ -72,6 +72,8 @@
     .qual-badge-sm { font-size:.6rem; font-weight:700; padding:.1rem .35rem; border-radius:4px; flex-shrink:0; white-space:nowrap; }
     .badge-ap  { background:rgba(0,195,123,.2);  color:var(--verde); }
     .badge-el  { background:rgba(255,74,74,.2);   color:var(--vermelho); }
+    .badge-wc  { background:rgba(245,197,24,.2);  color:var(--amarelo); }
+    .q-wildcard { border-left:3px solid var(--amarelo) !important; }
     .qual-empty { color:var(--cinza-texto); font-size:.82rem; padding:.5rem 0 .75rem; }
 
     .results-list { display:grid; grid-template-columns:repeat(2,1fr); gap:.4rem; margin-bottom:1.5rem; }
@@ -264,7 +266,8 @@
           // 2+ guaranteed above even at their best -> out of top 2
           result.set(r.par, {
             status: hasWc ? 'eliminated_group' : 'eliminated',
-            group: g.id, _maxWins: r._maxWins, _minWins: r._minWins
+            group: g.id, _maxWins: r._maxWins, _minWins: r._minWins,
+            _sv: r.sv, _sl: r.sl, _gv: r.gv, _gl: r.gl
           });
         } else {
           result.set(r.par, { status: 'contention', group: g.id });
@@ -278,15 +281,34 @@
         .filter(([, v]) => v.status === 'eliminated_group')
         .map(([par, v]) => ({ par, ...v }));
 
-      elim3.forEach(({ par, _maxWins, group }) => {
-        // If 2+ other eliminated-from-group pairs already have guaranteed minWins > my maxWins,
-        // those 2 are definitely better 3rds -> I can't get wildcard either
-        const betterGuaranteed = elim3.filter(t => t.par !== par && t._minWins > _maxWins).length;
-        result.set(par, betterGuaranteed >= 2
-          ? { status: 'eliminated', group }
-          : { status: 'contention_wc', group }
+      const nWildcards = Math.max(0, 8 - 2 * catGrupos.length);
+      // When all groups are fully played, rank by tiebreak and assign definitively
+      const allGroupsDone = elim3.length > 0 && elim3.every(t => t._maxWins === t._minWins);
+
+      if (allGroupsDone && nWildcards > 0) {
+        // Rank wildcards: wins → sets diff → games diff → games won (no H2H across groups)
+        const ranked = [...elim3].sort((a, b) =>
+          b._maxWins - a._maxWins ||
+          (b._sv - b._sl) - (a._sv - a._sl) ||
+          (b._gv - b._gl) - (a._gv - a._gl) ||
+          b._gv - a._gv
         );
-      });
+        ranked.forEach((t, i) => {
+          result.set(t.par, {
+            status: i < nWildcards ? 'qualified' : 'eliminated',
+            group: t.group,
+            _isWildcard: i < nWildcards
+          });
+        });
+      } else {
+        elim3.forEach(({ par, _maxWins, group }) => {
+          const betterGuaranteed = elim3.filter(t => t.par !== par && t._minWins > _maxWins).length;
+          result.set(par, betterGuaranteed >= nWildcards
+            ? { status: 'eliminated', group }
+            : { status: 'contention_wc', group }
+          );
+        });
+      }
     }
 
     return result;
@@ -375,9 +397,10 @@
     if (apurados.length > 0) {
       const cards = apurados.map(([par, v]) => {
         const [p1, p2] = par.split(' & ');
-        return `<div class="qual-card q-apurado">
+        const isWc = !!v._isWildcard;
+        return `<div class="qual-card q-apurado${isWc ? ' q-wildcard' : ''}">
           <div class="qual-row"><span class="qual-p1" title="${escHtml(p1)}">${escHtml(p1)}</span><span class="qual-from">${v.group}</span></div>
-          <div class="qual-row"><span class="qual-p2" title="${escHtml(p2||'')}">${escHtml(p2||'')}</span><span class="qual-badge-sm badge-ap">Apurado</span></div>
+          <div class="qual-row"><span class="qual-p2" title="${escHtml(p2||'')}">${escHtml(p2||'')}</span><span class="qual-badge-sm ${isWc ? 'badge-wc' : 'badge-ap'}">${isWc ? 'Wildcard' : 'Apurado'}</span></div>
         </div>`;
       }).join('');
       html += `<div class="section-heading sh-green"><i class="ph ph-trophy"></i> Já Apurados</div>
