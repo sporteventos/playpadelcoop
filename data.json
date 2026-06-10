@@ -4054,7 +4054,12 @@
       "grupo": "M3-A",
       "eq1": "Burhan Hassan & Sarfaraz",
       "eq2": "Abdul Ibraimo & Guilherme Godinho",
-      "resultado": null
+      "resultado": null,
+      "adiado": {
+        "motivo": "",
+        "ts": 1781073862572
+      },
+      "suspenso": null
     },
     {
       "id": 108,
@@ -4563,6 +4568,56 @@
   ],
   "auditlog": [
     {
+      "id": "mq7pe3slbamftko",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "ADIAR_JOGO",
+      "target": "jogos",
+      "detail": "Jogo #107 adiado",
+      "ts": "2026-06-10T06:44:22.581Z"
+    },
+    {
+      "id": "mq7p9l68k8wx4rf",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "LOGIN",
+      "target": "auth",
+      "detail": "Login: euamusse (admin)",
+      "ts": "2026-06-10T06:40:51.824Z"
+    },
+    {
+      "id": "mq7p9gqe4e7uwxz",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "LOGOUT",
+      "target": "auth",
+      "detail": "Logout: euamusse",
+      "ts": "2026-06-10T06:40:46.070Z"
+    },
+    {
+      "id": "mq7ijd7r2dqcr5u",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "LOGIN",
+      "target": "auth",
+      "detail": "Login: euamusse (admin)",
+      "ts": "2026-06-10T03:32:30.759Z"
+    },
+    {
+      "id": "mq7ij92416toqdr",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "LOGOUT",
+      "target": "auth",
+      "detail": "Logout: euamusse",
+      "ts": "2026-06-10T03:32:25.372Z"
+    },
+    {
       "id": "mq74u68kv20moup",
       "userId": "mpzxoo1v8l1za3r",
       "username": "djanasse",
@@ -4631,6 +4686,26 @@
       "target": "auth",
       "detail": "Logout: djanasse",
       "ts": "2026-06-09T20:44:37.147Z"
+    },
+    {
+      "id": "mq73w3gsn5h8g2w",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "LOGIN",
+      "target": "auth",
+      "detail": "Login: euamusse (admin)",
+      "ts": "2026-06-09T20:42:30.412Z"
+    },
+    {
+      "id": "mq73vxcdmifqgki",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "LOGOUT",
+      "target": "auth",
+      "detail": "Logout: euamusse",
+      "ts": "2026-06-09T20:42:22.477Z"
     },
     {
       "id": "mq716la9lbnjshp",
@@ -4941,6 +5016,46 @@
       "target": "auth",
       "detail": "Login: bgaspar (operator)",
       "ts": "2026-06-09T07:34:37.073Z"
+    },
+    {
+      "id": "mq682ihx4jo56ep",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "LOGIN",
+      "target": "auth",
+      "detail": "Login: euamusse (admin)",
+      "ts": "2026-06-09T05:51:42.117Z"
+    },
+    {
+      "id": "mq682dwbaq5qto2",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "LOGOUT",
+      "target": "auth",
+      "detail": "Logout: euamusse",
+      "ts": "2026-06-09T05:51:36.155Z"
+    },
+    {
+      "id": "mq66d4iy6sjwr1r",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "LOGIN",
+      "target": "auth",
+      "detail": "Login: euamusse (admin)",
+      "ts": "2026-06-09T05:03:57.994Z"
+    },
+    {
+      "id": "mq66czqeznu1xzw",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "LOGOUT",
+      "target": "auth",
+      "detail": "Logout: euamusse",
+      "ts": "2026-06-09T05:03:51.782Z"
     },
     {
       "id": "mq5qixiqo2mjdla",
@@ -11933,5 +12048,5 @@
       "ts": "2026-06-03T06:06:37.211Z"
     }
   ],
-  "_updated": "2026-06-09T21:11:20.831Z"
+  "_updated": "2026-06-10T06:44:22.582Z"
 }
