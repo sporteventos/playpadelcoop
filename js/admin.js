@@ -6166,7 +6166,9 @@ function renderHorario() {
   // Always include actual game times (even if they don't match dominant minute)
   const times = [...new Set([...CLUB_SLOTS, ...dayJogos.map(j => j.hora).filter(Boolean)])].sort();
   const campoOrder = Object.fromEntries(getData('campos').map((c,i) => [c.nome, c.id ?? i]));
-  const activeCampos = selCampo ? [selCampo] : [...new Set(dayJogos.map(j => j.campo))].sort((a,b) => (campoOrder[a]??99) - (campoOrder[b]??99));
+  // Always show all registered campos; if a specific campo is filtered, show only that one
+  const allCamposNames = getData('campos').sort((a,b) => (a.id??0)-(b.id??0)).map(c => c.nome);
+  const activeCampos = selCampo ? [selCampo] : allCamposNames.length ? allCamposNames : [...new Set(dayJogos.map(j => j.campo).filter(Boolean))].sort((a,b) => (campoOrder[a]??99) - (campoOrder[b]??99));
 
   // Build player slots map to detect conflicts — any player with 2+ games on the same day
   const playerSlots = {};
