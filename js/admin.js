@@ -4714,15 +4714,21 @@ function ffRenderGlobal() {
       <button class="btn btn-primary btn-sm" onclick="ffGerarTodosBrackets()">
         <i class="ph ph-magic-wand"></i> Gerar Brackets em Falta
       </button>
-      ${Auth.isAdmin() ? `<button class="btn btn-ghost btn-sm" style="color:var(--amarelo);border-color:rgba(245,197,24,.3)" onclick="ffGerarAleatoriosTodos()">
-        <i class="ph ph-shuffle"></i> Resultados Aleatórios — Todos
-      </button>
-      <button class="btn btn-ghost btn-sm" style="color:var(--cinza-texto)" onclick="ffLimparResultadosTodos()">
-        <i class="ph ph-eraser"></i> Limpar Resultados — Todos
-      </button>
-      <button class="btn btn-ghost btn-sm" style="color:var(--vermelho);border-color:rgba(255,74,74,.3)" onclick="ffResetarTodos()">
-        <i class="ph ph-arrow-counter-clockwise"></i> Resetar Brackets — Todos
-      </button>` : ''}
+      ${Auth.isAdmin() ? `<label style="display:flex;align-items:center;gap:.4rem;cursor:pointer;font-size:.75rem;color:var(--cinza-texto);padding:.2rem .5rem;border:1px solid var(--preto-borda);border-radius:6px;user-select:none">
+        <input type="checkbox" id="ffModoAvancado" onchange="document.getElementById('ffBotoesAvancados').style.display=this.checked?'flex':'none'" style="cursor:pointer"/>
+        Modo avançado
+      </label>
+      <span id="ffBotoesAvancados" style="display:none;gap:.5rem;flex-wrap:wrap">
+        <button class="btn btn-ghost btn-sm" style="color:var(--amarelo);border-color:rgba(245,197,24,.3)" onclick="ffGerarAleatoriosTodos()">
+          <i class="ph ph-shuffle"></i> Resultados Aleatórios — Todos
+        </button>
+        <button class="btn btn-ghost btn-sm" style="color:var(--cinza-texto)" onclick="ffLimparResultadosTodos()">
+          <i class="ph ph-eraser"></i> Limpar Resultados — Todos
+        </button>
+        <button class="btn btn-ghost btn-sm" style="color:var(--vermelho);border-color:rgba(255,74,74,.3)" onclick="ffResetarTodos()">
+          <i class="ph ph-arrow-counter-clockwise"></i> Resetar Brackets — Todos
+        </button>
+      </span>` : ''}
     </div>`;
 
   const catBlocks = cats.map(catId => {
@@ -5440,6 +5446,15 @@ function _adminClassStandings(grupo, jogos) {
     if (pairs[j.eq2]) { pairs[j.eq2].pj++; if (!eq1win){ pairs[j.eq2].v++; pairs[j.eq2].pts+=2; } else pairs[j.eq2].d++; }
   });
   return Object.values(pairs).sort((a,b) => b.pts - a.pts || _adminHeadToHead(a.par, b.par, gJogos) || (b.sv-b.sl)-(a.sv-a.sl) || (b.gv-b.gl)-(a.gv-a.gl) || b.gv - a.gv);
+}
+
+function _adminHeadToHead(parA, parB, gJogos) {
+  const m = gJogos.find(j => (j.eq1===parA&&j.eq2===parB)||(j.eq1===parB&&j.eq2===parA));
+  if (!m || !m.resultado || m.resultado.wo) return 0;
+  const r = m.resultado; let s1=0, s2=0;
+  [[r.s1eq1,r.s1eq2],[r.s2eq1,r.s2eq2],[r.s3eq1,r.s3eq2]].forEach(([a,b])=>{ if(a!=null&&b!=null){if(a>b)s1++;else s2++;} });
+  const aIsEq1 = m.eq1===parA;
+  return aIsEq1 ? (s1>s2?-1:s2>s1?1:0) : (s2>s1?-1:s1>s2?1:0);
 }
 
 function _renderAdminClassCat(catId, grupos, jogos, el) {
