@@ -4401,12 +4401,47 @@ function ffGetQualified(catId) {
   return q;
 }
 
-const FF_QF_DATE = '2026-06-12'; // Sexta-feira — Quartos de Final
+const FF_QF_DATE = '2026-06-12'; // Sexta-feira — Quartos de Final (fallback)
 const FF_SF_DATE = '2026-06-13'; // Sábado — Meias-Finais
 const FF_F_DATE  = '2026-06-14'; // Domingo — Finais
-const FF_QF_SLOTS = ['17:00', '18:00', '19:00', '20:00', '21:00'];
+const FF_QF_SLOTS = ['17:30', '18:30', '19:30', '20:30', '21:30'];
 const FF_SF_SLOTS = ['15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00', '22:00'];
 const FF_F_SLOT   = '15:00';
+
+// Auto-alocação de QF nos slots livres de 5a/6a feira (11 e 12 Jun)
+function ffAutoAllocateQF(qfJogos) {
+  const QF_DAYS   = ['2026-06-11', '2026-06-12'];
+  const QF_HORAS  = ['17:30', '18:30', '19:30', '20:30', '21:30'];
+  const campos    = (getData('campos') || []).sort((a,b) => (a.id||0)-(b.id||0)).map(c => c.nome);
+  if (!campos.length) {
+    // fallback: assign all to FF_QF_DATE with sequential slots
+    qfJogos.forEach((j, i) => { j.data = FF_QF_DATE; j.hora = FF_QF_SLOTS[i % FF_QF_SLOTS.length]; });
+    return;
+  }
+  // Build occupied map from jogos (grupos) on these days
+  const allJogos = getData('jogos') || [];
+  const occupied = new Set();
+  allJogos.forEach(j => { if (j.data && j.hora && j.campo) occupied.add(`${j.data}|${j.hora}|${j.campo}`); });
+  // Also include already-placed FF QF games
+  const ff = ffLoad();
+  Object.values(ff).forEach(cd => (cd?.jogos || []).forEach(j => {
+    if (j.fase === 'QF' && j.data && j.hora && j.campo) occupied.add(`${j.data}|${j.hora}|${j.campo}`);
+  }));
+  // Generate ordered list of available slots
+  const available = [];
+  for (const d of QF_DAYS)
+    for (const h of QF_HORAS)
+      for (const c of campos)
+        if (!occupied.has(`${d}|${h}|${c}`)) available.push({ data: d, hora: h, campo: c });
+  qfJogos.forEach((j, i) => {
+    if (!available.length) {
+      j.data = FF_QF_DATE; j.hora = FF_QF_SLOTS[i % FF_QF_SLOTS.length]; j.campo = campos[0] || '';
+      return;
+    }
+    const slot = available.shift();
+    j.data = slot.data; j.hora = slot.hora; j.campo = slot.campo;
+  });
+}
 
 function ffMakeJogo(catId, fase, num, e1, e2, feedFrom = null, data = null, hora = null) {
   return {
@@ -4444,10 +4479,11 @@ function ffGenerateBracket(catId) {
         }
       }
     }
-    jogos.push(ffMakeJogo(catId, 'QF', 1, pairs4[0][0], pairs4[0][1], null, FF_QF_DATE, FF_QF_SLOTS[0]));
-    jogos.push(ffMakeJogo(catId, 'QF', 2, pairs4[1][0], pairs4[1][1], null, FF_QF_DATE, FF_QF_SLOTS[1]));
-    jogos.push(ffMakeJogo(catId, 'QF', 3, pairs4[2][0], pairs4[2][1], null, FF_QF_DATE, FF_QF_SLOTS[2]));
-    jogos.push(ffMakeJogo(catId, 'QF', 4, pairs4[3][0], pairs4[3][1], null, FF_QF_DATE, FF_QF_SLOTS[3]));
+    jogos.push(ffMakeJogo(catId, 'QF', 1, pairs4[0][0], pairs4[0][1], null));
+    jogos.push(ffMakeJogo(catId, 'QF', 2, pairs4[1][0], pairs4[1][1], null));
+    jogos.push(ffMakeJogo(catId, 'QF', 3, pairs4[2][0], pairs4[2][1], null));
+    jogos.push(ffMakeJogo(catId, 'QF', 4, pairs4[3][0], pairs4[3][1], null));
+    ffAutoAllocateQF(jogos.filter(j => j.fase === 'QF'));
     jogos.push(ffMakeJogo(catId, 'SF', 1, null, null, [`${catId}-QF1`, `${catId}-QF2`], FF_SF_DATE, FF_SF_SLOTS[0]));
     jogos.push(ffMakeJogo(catId, 'SF', 2, null, null, [`${catId}-QF3`, `${catId}-QF4`], FF_SF_DATE, FF_SF_SLOTS[1]));
     jogos.push(ffMakeJogo(catId, 'F',  1, null, null, [`${catId}-SF1`, `${catId}-SF2`], FF_F_DATE, FF_F_SLOT));
@@ -4462,7 +4498,8 @@ function ffGenerateBracket(catId) {
     // Fix: segundos em QF3/QF4 — trocar S5 e S6 se colisão
     if (pairs[2][0]?.grupo === pairs[2][1]?.grupo)
       { [pairs[2][1], pairs[3][1]] = [pairs[3][1], pairs[2][1]]; }
-    pairs.forEach(([e1, e2], i) => jogos.push(ffMakeJogo(catId, 'QF', i + 1, e1, e2, null, FF_QF_DATE, FF_QF_SLOTS[i])));
+    pairs.forEach(([e1, e2], i) => jogos.push(ffMakeJogo(catId, 'QF', i + 1, e1, e2, null)));
+    ffAutoAllocateQF(jogos.filter(j => j.fase === 'QF'));
     jogos.push(ffMakeJogo(catId, 'SF', 1, null, null, [`${catId}-QF1`, `${catId}-QF2`], FF_SF_DATE, FF_SF_SLOTS[0]));
     jogos.push(ffMakeJogo(catId, 'SF', 2, null, null, [`${catId}-QF3`, `${catId}-QF4`], FF_SF_DATE, FF_SF_SLOTS[1]));
     jogos.push(ffMakeJogo(catId, 'F',  1, null, null, [`${catId}-SF1`, `${catId}-SF2`], FF_F_DATE, FF_F_SLOT));
@@ -4617,14 +4654,12 @@ function ffCardHtml(j, catId) {
   }
 
   const canEdit = !!(j.eq1 && j.eq2);
-  const schedHtml = (j.data || j.hora)
-    ? `<div style="display:flex;align-items:center;justify-content:space-between;gap:.25rem;margin-bottom:.25rem">
-        <span style="font-size:.65rem;color:var(--cinza-texto)">${j.data ? formatDate(j.data) : ''} ${j.hora ? '· ' + j.hora : ''}</span>
-        <button style="background:none;border:none;color:var(--cinza-texto);cursor:pointer;font-size:.7rem;padding:0" title="Editar horário" onclick="ffEditSchedule('${j.id}','${catId}')">
-          <i class="ph ph-pencil-simple"></i>
-        </button>
-      </div>`
-    : '';
+  const schedHtml = `<div style="display:flex;align-items:center;justify-content:space-between;gap:.25rem;margin-bottom:.25rem">
+      <span style="font-size:.65rem;color:var(--cinza-texto)">${j.data ? formatDate(j.data) : '<em>sem data</em>'} ${j.hora ? '· ' + j.hora : ''} ${j.campo && j.campo !== 'Fase Final' ? '· ' + j.campo : ''}</span>
+      <button style="background:none;border:none;color:var(--cinza-texto);cursor:pointer;font-size:.7rem;padding:0" title="Editar horário" onclick="ffEditSchedule('${j.id}','${catId}')">
+        <i class="ph ph-pencil-simple"></i>
+      </button>
+    </div>`;
 
   // WA notify buttons — one per player who has a phone registered
   const ffWaLinks = [j.eq1, j.eq2].filter(Boolean).flatMap(team =>
@@ -4665,6 +4700,11 @@ window.ffEditSchedule = function(jogoId, catId) {
   document.getElementById('ffSchedCatId').value  = catId;
   document.getElementById('ffSchedData').value   = j.data || '';
   document.getElementById('ffSchedHora').value   = j.hora || '';
+  const campoSel = document.getElementById('ffSchedCampo');
+  if (campoSel) {
+    const campos = (getData('campos') || []).sort((a,b) => (a.id||0)-(b.id||0));
+    campoSel.innerHTML = '<option value="">— Qualquer campo —</option>' + campos.map(c => `<option value="${escHtml(c.nome)}"${j.campo===c.nome?' selected':''}>${escHtml(c.nome)}</option>`).join('');
+  }
   openModal('modalFFSchedule');
 };
 
@@ -4673,16 +4713,19 @@ window.ffSaveSchedule = function() {
   const catId   = document.getElementById('ffSchedCatId').value;
   const novaData = document.getElementById('ffSchedData').value;
   const novaHora = document.getElementById('ffSchedHora').value;
+  const novoCampo = document.getElementById('ffSchedCampo')?.value || '';
   if (!novaData || !novaHora) return toast('Seleccione data e hora.', 'error');
   const ff = ffLoad();
   const j  = ff[catId]?.jogos?.find(x => x.id === jogoId);
   if (!j) return;
   j.data = novaData;
   j.hora = novaHora;
+  if (novoCampo) j.campo = novoCampo;
   ffSave(ff);
   closeModal('modalFFSchedule');
   renderFaseFinal();
   toast('Horário actualizado.');
+  _autoSync();
 };
 
 window.ffGenerate = function(catId) {
