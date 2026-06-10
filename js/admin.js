@@ -4455,6 +4455,45 @@ function ffMakeJogo(catId, fase, num, e1, e2, feedFrom = null, data = null, hora
   };
 }
 
+// ---- Shared QF pair builder (used by ffGenerateBracket + ffRecalcBracket) ----
+// Returns { pairs, swapNote }
+// pairs[0]=QF1, pairs[1]=QF2, pairs[2]=QF3, pairs[3]=QF4
+// Structure (both WILDCARD and 4G):
+//   QF1: S1 vs S8 | QF2: S4 vs S5 | QF3: S3 vs S6 | QF4: S2 vs S7
+//   SF1 = W(QF1) + W(QF2) — lado de S1
+//   SF2 = W(QF3) + W(QF4) — lado de S2  →  S1 e S2 só se encontram na Final
+function _ffBuildPairs(q) {
+  // q[0]=S1, q[1]=S2, q[2]=S3, q[3]=S4, q[4]=S5, q[5]=S6, q[6]=S7, q[7]=S8
+  let pairs = [
+    [q[0], q[7]],  // QF1: S1 vs S8
+    [q[3], q[4]],  // QF2: S4 vs S5
+    [q[2], q[5]],  // QF3: S3 vs S6
+    [q[1], q[6]],  // QF4: S2 vs S7
+  ];
+  let swapNote = null;
+
+  // Collision avoidance — S1 or S2 vs a 3rd-place team from the same group:
+  // swap S7 (pairs[3][1]) ↔ S8 (pairs[0][1])
+  const s1s8clash = pairs[0][0]?.grupo && pairs[0][0].grupo === pairs[0][1]?.grupo;
+  const s2s7clash = pairs[3][0]?.grupo && pairs[3][0].grupo === pairs[3][1]?.grupo;
+  if (s1s8clash || s2s7clash) {
+    [pairs[0][1], pairs[3][1]] = [pairs[3][1], pairs[0][1]];
+    swapNote = s1s8clash
+      ? `S7↔S8 trocados: S1 e S8 eram do mesmo grupo (${pairs[3][1]?.grupo})`
+      : `S7↔S8 trocados: S2 e S7 eram do mesmo grupo (${pairs[0][1]?.grupo})`;
+  }
+
+  // Additional avoidance in the S4/S5 half (QF2) — less likely but handled
+  if (pairs[1][0]?.grupo && pairs[1][0].grupo === pairs[1][1]?.grupo) {
+    // Try swapping S5 (pairs[1][1]) with S6 (pairs[2][1])
+    [pairs[1][1], pairs[2][1]] = [pairs[2][1], pairs[1][1]];
+    swapNote = (swapNote ? swapNote + '; ' : '') +
+      `S5↔S6 trocados: S4 e S5 eram do mesmo grupo`;
+  }
+
+  return { pairs, swapNote };
+}
+
 function ffGenerateBracket(catId) {
   const q = ffGetQualified(catId);
   const jogos = [];
@@ -4468,39 +4507,25 @@ function ffGenerateBracket(catId) {
     jogos.push(ffMakeJogo(catId, 'F',  1, null, null, [`${catId}-SF1`, `${catId}-SF2`], FF_F_DATE, FF_F_SLOT));
 
   } else if (FF_4G.includes(catId)) {
-    // QF1:#1vS8, QF2:#2v#7, QF3:#3v#6, QF4:#4v#5 → SF1=W(QF1)+W(QF4), SF2=W(QF2)+W(QF3)
-    let pairs4 = [[q[0],q[7]], [q[1],q[6]], [q[2],q[5]], [q[3],q[4]]];
-    // Collision avoidance: trocar oponentes dentro de cada metade
-    if (pairs4[0][0]?.grupo === pairs4[0][1]?.grupo || pairs4[1][0]?.grupo === pairs4[1][1]?.grupo)
-      { [pairs4[0][1], pairs4[1][1]] = [pairs4[1][1], pairs4[0][1]]; }
-    if (pairs4[2][0]?.grupo === pairs4[2][1]?.grupo || pairs4[3][0]?.grupo === pairs4[3][1]?.grupo)
-      { [pairs4[2][1], pairs4[3][1]] = [pairs4[3][1], pairs4[2][1]]; }
-    jogos.push(ffMakeJogo(catId, 'QF', 1, pairs4[0][0], pairs4[0][1], null));
-    jogos.push(ffMakeJogo(catId, 'QF', 2, pairs4[1][0], pairs4[1][1], null));
-    jogos.push(ffMakeJogo(catId, 'QF', 3, pairs4[2][0], pairs4[2][1], null));
-    jogos.push(ffMakeJogo(catId, 'QF', 4, pairs4[3][0], pairs4[3][1], null));
+    // 4 grupos: S1-S4 = vencedores, S5-S8 = segundos. Mesmo esquema de cruzamento.
+    const { pairs: pairs4, swapNote: sw4 } = _ffBuildPairs(q);
+    pairs4.forEach(([e1, e2], i) => jogos.push(ffMakeJogo(catId, 'QF', i + 1, e1, e2, null)));
     ffAutoAllocateQF(jogos.filter(j => j.fase === 'QF'));
-    jogos.push(ffMakeJogo(catId, 'SF', 1, null, null, [`${catId}-QF1`, `${catId}-QF4`], FF_SF_DATE, FF_SF_SLOTS[0]));
-    jogos.push(ffMakeJogo(catId, 'SF', 2, null, null, [`${catId}-QF2`, `${catId}-QF3`], FF_SF_DATE, FF_SF_SLOTS[1]));
+    jogos.push(ffMakeJogo(catId, 'SF', 1, null, null, [`${catId}-QF1`, `${catId}-QF2`], FF_SF_DATE, FF_SF_SLOTS[0]));
+    jogos.push(ffMakeJogo(catId, 'SF', 2, null, null, [`${catId}-QF3`, `${catId}-QF4`], FF_SF_DATE, FF_SF_SLOTS[1]));
     jogos.push(ffMakeJogo(catId, 'F',  1, null, null, [`${catId}-SF1`, `${catId}-SF2`], FF_F_DATE, FF_F_SLOT));
+    return { generated: true, jogos, swapNote: sw4 };
 
   } else {
-    // QF1:#1v#8, QF2:#2v#7, QF3:#3v#6, QF4:#4v#5 → SF1=W(QF1)+W(QF4), SF2=W(QF2)+W(QF3)
-    const s = q;
-    let pairs = [[s[0],s[7]], [s[1],s[6]], [s[2],s[5]], [s[3],s[4]]];
-    // Collision avoidance: se #1/#8 ou #2/#7 forem do mesmo grupo → trocar #7 e #8
-    if (pairs[0][0]?.grupo === pairs[0][1]?.grupo || pairs[1][0]?.grupo === pairs[1][1]?.grupo)
-      { [pairs[0][1], pairs[1][1]] = [pairs[1][1], pairs[0][1]]; }
-    // Se #3/#6 ou #4/#5 forem do mesmo grupo → trocar #5 e #6
-    if (pairs[2][0]?.grupo === pairs[2][1]?.grupo || pairs[3][0]?.grupo === pairs[3][1]?.grupo)
-      { [pairs[2][1], pairs[3][1]] = [pairs[3][1], pairs[2][1]]; }
+    // 3 grupos (WILDCARD): S1-S3 = vencedores, S4-S6 = segundos, S7-S8 = melhores 3.ºs
+    const { pairs, swapNote: sw } = _ffBuildPairs(q);
     pairs.forEach(([e1, e2], i) => jogos.push(ffMakeJogo(catId, 'QF', i + 1, e1, e2, null)));
     ffAutoAllocateQF(jogos.filter(j => j.fase === 'QF'));
-    jogos.push(ffMakeJogo(catId, 'SF', 1, null, null, [`${catId}-QF1`, `${catId}-QF4`], FF_SF_DATE, FF_SF_SLOTS[0]));
-    jogos.push(ffMakeJogo(catId, 'SF', 2, null, null, [`${catId}-QF2`, `${catId}-QF3`], FF_SF_DATE, FF_SF_SLOTS[1]));
+    jogos.push(ffMakeJogo(catId, 'SF', 1, null, null, [`${catId}-QF1`, `${catId}-QF2`], FF_SF_DATE, FF_SF_SLOTS[0]));
+    jogos.push(ffMakeJogo(catId, 'SF', 2, null, null, [`${catId}-QF3`, `${catId}-QF4`], FF_SF_DATE, FF_SF_SLOTS[1]));
     jogos.push(ffMakeJogo(catId, 'F',  1, null, null, [`${catId}-SF1`, `${catId}-SF2`], FF_F_DATE, FF_F_SLOT));
+    return { generated: true, jogos, swapNote: sw };
   }
-  return { generated: true, jogos };
 }
 
 // Recalculates QF seedings for an already-generated bracket.
@@ -4512,23 +4537,7 @@ function ffRecalcBracket(catId) {
   if (FF_2G.includes(catId)) { alert(catId + ' não tem QF (2 grupos)'); return; }
 
   const q = ffGetQualified(catId);
-  let newPairs;
-
-  // QF1:#1v#8, QF2:#2v#7, QF3:#3v#6, QF4:#4v#5 — com collision avoidance por metade
-  if (FF_4G.includes(catId)) {
-    newPairs = [[q[0],q[7]], [q[1],q[6]], [q[2],q[5]], [q[3],q[4]]];
-    if (newPairs[0][0]?.grupo === newPairs[0][1]?.grupo || newPairs[1][0]?.grupo === newPairs[1][1]?.grupo)
-      { [newPairs[0][1], newPairs[1][1]] = [newPairs[1][1], newPairs[0][1]]; }
-    if (newPairs[2][0]?.grupo === newPairs[2][1]?.grupo || newPairs[3][0]?.grupo === newPairs[3][1]?.grupo)
-      { [newPairs[2][1], newPairs[3][1]] = [newPairs[3][1], newPairs[2][1]]; }
-  } else {
-    const s = q;
-    newPairs = [[s[0],s[7]], [s[1],s[6]], [s[2],s[5]], [s[3],s[4]]];
-    if (newPairs[0][0]?.grupo === newPairs[0][1]?.grupo || newPairs[1][0]?.grupo === newPairs[1][1]?.grupo)
-      { [newPairs[0][1], newPairs[1][1]] = [newPairs[1][1], newPairs[0][1]]; }
-    if (newPairs[2][0]?.grupo === newPairs[2][1]?.grupo || newPairs[3][0]?.grupo === newPairs[3][1]?.grupo)
-      { [newPairs[2][1], newPairs[3][1]] = [newPairs[3][1], newPairs[2][1]]; }
-  }
+  const { pairs: newPairs, swapNote } = _ffBuildPairs(q);
 
   const qfJogos = ff[catId].jogos.filter(j => j.fase === 'QF').sort((a, b) => a.num - b.num);
   qfJogos.forEach((jogo, i) => {
@@ -4538,15 +4547,18 @@ function ffRecalcBracket(catId) {
     jogo.eq2 = e2?.par ?? null; jogo.eq2grupo = e2?.grupo ?? null; jogo.eq2seed = e2?.seed ?? null;
   });
 
-  // Corrigir SF feedFrom: SF1=W(QF1)+W(QF4), SF2=W(QF2)+W(QF3)
+  // Corrigir SF feedFrom: SF1=W(QF1)+W(QF2), SF2=W(QF3)+W(QF4)
   const sf1 = ff[catId].jogos.find(j => j.fase === 'SF' && j.num === 1);
   const sf2 = ff[catId].jogos.find(j => j.fase === 'SF' && j.num === 2);
-  if (sf1) sf1.feedFrom = [`${catId}-QF1`, `${catId}-QF4`];
-  if (sf2) sf2.feedFrom = [`${catId}-QF2`, `${catId}-QF3`];
+  if (sf1) sf1.feedFrom = [`${catId}-QF1`, `${catId}-QF2`];
+  if (sf2) sf2.feedFrom = [`${catId}-QF3`, `${catId}-QF4`];
+
+  // Guardar justificação da troca
+  ff[catId].swapNote = swapNote || null;
 
   ffSave(ff);
   renderFaseFinal();
-  auditLog('ff_recalc_bracket', { cat: catId });
+  auditLog('ff_recalc_bracket', { cat: catId, swapNote });
 }
 
 function ffGetWinner(r) {
@@ -4657,6 +4669,7 @@ function renderFaseFinal() {
         </div>`).join('')}
       ${ffChampionColHtml(ffCurrentCat)}
     </div>
+    ${catData.swapNote ? `<p style="font-size:.7rem;color:var(--amarelo);margin:.6rem 0 0;display:flex;align-items:center;gap:.3rem"><i class="ph ph-swap"></i> <em>${escHtml(catData.swapNote)}</em></p>` : ''}
     ${Auth.hasRole('admin','operator') ? `<div style="margin-top:1.25rem;display:flex;gap:.5rem;flex-wrap:wrap">
       <button class="btn btn-ghost btn-sm" style="color:var(--verde);border-color:rgba(0,195,123,.3)" onclick="ffRecalcBracket('${ffCurrentCat}')">
         <i class="ph ph-arrows-clockwise"></i> Recalcular Seeds
