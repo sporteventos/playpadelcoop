@@ -4465,33 +4465,36 @@ function ffMakeJogo(catId, fase, num, e1, e2, feedFrom = null, data = null, hora
 function _ffBuildPairs(q) {
   // q[0]=S1, q[1]=S2, q[2]=S3, q[3]=S4, q[4]=S5, q[5]=S6, q[6]=S7, q[7]=S8
   let pairs = [
-    [q[0], q[7]],  // QF1: S1 vs S8
-    [q[3], q[4]],  // QF2: S4 vs S5
-    [q[2], q[5]],  // QF3: S3 vs S6
-    [q[1], q[6]],  // QF4: S2 vs S7
+    [q[0], q[7]],  // QF1: S1 vs S8  — Half A → SF1
+    [q[3], q[4]],  // QF2: S4 vs S5  — Half A → SF1
+    [q[2], q[5]],  // QF3: S3 vs S6  — Half B → SF2
+    [q[1], q[6]],  // QF4: S2 vs S7  — Half B → SF2
   ];
-  let swapNote = null;
+  const notes = [];
 
-  // Collision avoidance — S1 or S2 vs a 3rd-place team from the same group:
-  // swap S7 (pairs[3][1]) ↔ S8 (pairs[0][1])
-  const s1s8clash = pairs[0][0]?.grupo && pairs[0][0].grupo === pairs[0][1]?.grupo;
-  const s2s7clash = pairs[3][0]?.grupo && pairs[3][0].grupo === pairs[3][1]?.grupo;
-  if (s1s8clash || s2s7clash) {
-    [pairs[0][1], pairs[3][1]] = [pairs[3][1], pairs[0][1]];
-    swapNote = s1s8clash
-      ? `S7↔S8 trocados: S1 e S8 eram do mesmo grupo (${pairs[3][1]?.grupo})`
-      : `S7↔S8 trocados: S2 e S7 eram do mesmo grupo (${pairs[0][1]?.grupo})`;
+  // Half A (QF1+QF2): if either game has a same-group clash → swap opponents between QF1 and QF2 (S8↔S5)
+  const halfAQF1clash = pairs[0][0]?.grupo && pairs[0][0].grupo === pairs[0][1]?.grupo;
+  const halfAQF2clash = pairs[1][0]?.grupo && pairs[1][0].grupo === pairs[1][1]?.grupo;
+  if (halfAQF1clash || halfAQF2clash) {
+    const reason = halfAQF1clash
+      ? `S1 e S8 do mesmo grupo (${pairs[0][0].grupo})`
+      : `S4 e S5 do mesmo grupo (${pairs[1][0].grupo})`;
+    [pairs[0][1], pairs[1][1]] = [pairs[1][1], pairs[0][1]];
+    notes.push(`S8↔S5 trocados: ${reason}`);
   }
 
-  // Additional avoidance in the S4/S5 half (QF2) — less likely but handled
-  if (pairs[1][0]?.grupo && pairs[1][0].grupo === pairs[1][1]?.grupo) {
-    // Try swapping S5 (pairs[1][1]) with S6 (pairs[2][1])
-    [pairs[1][1], pairs[2][1]] = [pairs[2][1], pairs[1][1]];
-    swapNote = (swapNote ? swapNote + '; ' : '') +
-      `S5↔S6 trocados: S4 e S5 eram do mesmo grupo`;
+  // Half B (QF3+QF4): if either game has a same-group clash → swap opponents between QF3 and QF4 (S6↔S7)
+  const halfBQF3clash = pairs[2][0]?.grupo && pairs[2][0].grupo === pairs[2][1]?.grupo;
+  const halfBQF4clash = pairs[3][0]?.grupo && pairs[3][0].grupo === pairs[3][1]?.grupo;
+  if (halfBQF3clash || halfBQF4clash) {
+    const reason = halfBQF3clash
+      ? `S3 e S6 do mesmo grupo (${pairs[2][0].grupo})`
+      : `S2 e S7 do mesmo grupo (${pairs[3][0].grupo})`;
+    [pairs[2][1], pairs[3][1]] = [pairs[3][1], pairs[2][1]];
+    notes.push(`S6↔S7 trocados: ${reason}`);
   }
 
-  return { pairs, swapNote };
+  return { pairs, swapNote: notes.length ? notes.join('; ') : null };
 }
 
 function ffGenerateBracket(catId) {
