@@ -299,12 +299,20 @@ document.addEventListener('DOMContentLoaded', () => {
       return { group: g, gJogos, rows };
     });
 
-    // 2. Determinar qualificados
+    // 2. Determinar qualificados + seedMap
     const qualified = new Map(); // par -> 'direto' | 'wildcard'
     allGroupData.forEach(gd => {
       if (gd.rows[0] && gd.rows[0].j > 0) qualified.set(gd.rows[0].par, 'direto');
       if (gd.rows[1] && gd.rows[1].j > 0) qualified.set(gd.rows[1].par, 'direto');
     });
+
+    // Compute seed map: 1sts sorted by perf → S1..Sn, 2nds → Sn+1.., wildcards → last
+    const seedMap = new Map();
+    const _sortPerf = (a, b) => b.v-a.v || (b.sv-b.sd)-(a.sv-a.sd) || (b.gv-b.gd)-(a.gv-a.gd) || b.gv-a.gv;
+    const _sf = allGroupData.filter(gd => gd.rows[0]?.j > 0).map(gd => gd.rows[0]).sort(_sortPerf);
+    const _ss = allGroupData.filter(gd => gd.rows[1]?.j > 0).map(gd => gd.rows[1]).sort(_sortPerf);
+    _sf.forEach((r, i) => seedMap.set(r.par, i + 1));
+    _ss.forEach((r, i) => seedMap.set(r.par, _sf.length + i + 1));
 
     let terceiros = [];
     if (hasWildcard) {
@@ -321,8 +329,9 @@ document.addEventListener('DOMContentLoaded', () => {
         if (dg !== 0) return dg;
         return b.gv - a.gv;
       });
-      terceiros.slice(0, 2).forEach(t => {
+      terceiros.slice(0, 2).forEach((t, i) => {
         if (!qualified.has(t.par)) qualified.set(t.par, 'wildcard');
+        seedMap.set(t.par, _sf.length + _ss.length + i + 1);
       });
     }
 
@@ -355,13 +364,15 @@ document.addEventListener('DOMContentLoaded', () => {
         rows.forEach((r, idx) => {
           const pts   = r.v * 2;
           const qType = qualified.get(r.par);
+          const seed  = seedMap.get(r.par);
+          const seedTag = seed ? ` <span style="font-family:'Barlow Condensed',sans-serif;font-size:.6rem;font-weight:800;color:var(--azul);background:rgba(74,158,255,.15);border:1px solid rgba(74,158,255,.3);border-radius:3px;padding:.05rem .25rem;margin-left:.2rem">S${seed}</span>` : '';
           let posCell, rowClass = '';
           if (qType === 'direto') {
             rowClass = 'row-qual-direto';
-            posCell  = `<span class="qual-badge qual-direto" title="Qualificado directo">Q</span>`;
+            posCell  = `<span class="qual-badge qual-direto" title="Qualificado directo">Q</span>${seedTag}`;
           } else if (qType === 'wildcard') {
             rowClass = 'row-qual-wildcard';
-            posCell  = `<span class="qual-badge qual-wildcard" title="Qualificado — Melhor 3.º">Q3</span>`;
+            posCell  = `<span class="qual-badge qual-wildcard" title="Qualificado — Melhor 3.º">Q3</span>${seedTag}`;
           } else if (hasWildcard && idx === 2) {
             posCell  = `<span class="qual-3rd" title="3.º lugar — candidato a melhor 3.º">${idx + 1}</span>`;
           } else {
@@ -411,8 +422,11 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>
         <div class="apuramento-quals-grid">`;
       directQuals.forEach(q => {
+        const s = seedMap.get(q.par);
+        const sTag = s ? `<span style="font-family:'Barlow Condensed',sans-serif;font-size:.65rem;font-weight:800;color:var(--azul);background:rgba(74,158,255,.15);border:1px solid rgba(74,158,255,.3);border-radius:4px;padding:.1rem .3rem;flex-shrink:0">S${s}</span>` : '';
         html += `<div class="apuramento-qual-item">
           <span class="apuramento-pos-label">${q.pos}º<span class="apuramento-group-tag">${q.group}</span></span>
+          ${sTag}
           <span class="apuramento-par-name">${q.par.split(' & ').join('<br>')}</span>
         </div>`;
       });
@@ -448,9 +462,11 @@ document.addEventListener('DOMContentLoaded', () => {
           const isQ = i < 2;
           const ds  = t.sv - t.sd;
           const dg  = t.gv - t.gd;
+          const s   = seedMap.get(t.par);
+          const sTag = s ? `<span style="font-family:'Barlow Condensed',sans-serif;font-size:.6rem;font-weight:800;color:var(--azul);background:rgba(74,158,255,.15);border:1px solid rgba(74,158,255,.3);border-radius:3px;padding:.05rem .25rem">S${s}</span>` : '';
           html += `<tr class="${isQ ? 'row-qual-wildcard' : ''}">
             <td class="st-pos">${isQ
-              ? `<span class="qual-badge qual-wildcard" title="Qualificado">Q3</span>`
+              ? `<span class="qual-badge qual-wildcard" title="Qualificado">Q3</span>${sTag}`
               : `<span class="qual-pos">${i + 1}</span>`}
             </td>
             <td><span class="cat-pill cat-${activeCat}">${t.fromGroup}</span></td>

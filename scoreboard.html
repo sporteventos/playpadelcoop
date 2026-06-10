@@ -69,6 +69,7 @@
     .qual-p2 { font-size:.78rem; font-weight:600; color:var(--branco); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; flex:1; min-width:0; }
     .qual-p2.elim { color:var(--cinza-texto); }
     .qual-from { font-size:.65rem; color:var(--cinza-texto); white-space:nowrap; flex-shrink:0; }
+    .qual-seed { font-family:'Barlow Condensed',sans-serif; font-size:.65rem; font-weight:800; color:var(--azul); background:rgba(74,158,255,.15); border:1px solid rgba(74,158,255,.3); border-radius:4px; padding:.05rem .3rem; flex-shrink:0; white-space:nowrap; letter-spacing:.03em; }
     .qual-badge-sm { font-size:.6rem; font-weight:700; padding:.1rem .35rem; border-radius:4px; flex-shrink:0; white-space:nowrap; }
     .badge-ap  { background:rgba(0,195,123,.2);  color:var(--verde); }
     .badge-el  { background:rgba(255,74,74,.2);   color:var(--vermelho); }
@@ -411,7 +412,26 @@
   }
 
   // â”€â”€ Build status panels (Apurados + Eliminados) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-  function buildStatusPanels(confirmedMap) {
+  // -- Compute seed map (S1-S8) for a category
+  function computeSeedMap(cat, grupos, jogos) {
+    const catGrupos = grupos.filter(g => g.cat === cat);
+    const firsts = [], seconds = [], thirds = [];
+    const sortPerf = (a, b) => b.v - a.v || (b.sv-b.sl)-(a.sv-a.sl) || (b.gv-b.gl)-(a.gv-a.gl) || b.gv - a.gv;
+    catGrupos.forEach(g => {
+      const rows = computeStandings(g, jogos);
+      if (rows[0]?.pj > 0) firsts.push(rows[0]);
+      if (rows[1]?.pj > 0) seconds.push(rows[1]);
+      if (WILDCARD_CATS.has(cat) && rows[2]?.pj > 0) thirds.push(rows[2]);
+    });
+    firsts.sort(sortPerf); seconds.sort(sortPerf); thirds.sort(sortPerf);
+    const map = new Map();
+    firsts.forEach((r, i) => map.set(r.par, i + 1));
+    seconds.forEach((r, i) => map.set(r.par, firsts.length + i + 1));
+    thirds.slice(0, 2).forEach((r, i) => map.set(r.par, firsts.length + seconds.length + i + 1));
+    return map;
+  }
+
+  function buildStatusPanels(confirmedMap, seedMap) {
     const apurados  = [...confirmedMap.entries()].filter(([,v]) => v.status === 'qualified');
     const eliminados= [...confirmedMap.entries()].filter(([,v]) => v.status === 'eliminated');
 
@@ -420,8 +440,10 @@
       const cards = apurados.map(([par, v]) => {
         const [p1, p2] = par.split(' & ');
         const isWc = !!v._isWildcard;
+        const seed = seedMap?.get(par);
+        const seedHtml = seed ? `<span class="qual-seed">S${seed}</span>` : '';
         return `<div class="qual-card q-apurado${isWc ? ' q-wildcard' : ''}">
-          <div class="qual-row"><span class="qual-p1" title="${escHtml(p1)}">${escHtml(p1)}</span><span class="qual-from">${v.group}</span></div>
+          <div class="qual-row"><span class="qual-p1" title="${escHtml(p1)}">${escHtml(p1)}</span><span style="display:flex;align-items:center;gap:.3rem;flex-shrink:0">${seedHtml}<span class="qual-from">${v.group}</span></span></div>
           <div class="qual-row"><span class="qual-p2" title="${escHtml(p2||'')}">${escHtml(p2||'')}</span><span class="qual-badge-sm ${isWc ? 'badge-wc' : 'badge-ap'}">${isWc ? 'Wildcard' : 'Apurado'}</span></div>
         </div>`;
       }).join('');
@@ -482,9 +504,11 @@
     {
       // Confirmed status across all cats
       const allConfirmed = new Map();
+      const allSeedMap = new Map();
       CATS.forEach(cat => {
         const cMap = getConfirmedStatus(cat, grupos, jogos);
         cMap.forEach((v, k) => allConfirmed.set(k, { ...v, cat }));
+        computeSeedMap(cat, grupos, jogos).forEach((s, k) => allSeedMap.set(k, s));
       });
 
       // Recent results — count from config
@@ -567,9 +591,9 @@
         </span>`;
       }).join('');
 
-      const statusHtml = buildStatusPanels(allConfirmed);
+      const statusHtml = buildStatusPanels(allConfirmed, allSeedMap);
 
-      allHtml += `<div class="cat-section${activeTab==='TODOS'?' active':''}" id="cat-TODOS">
+      allHtml += `<div class="cat-section${activeTab==='TODOS'?' active':''}" id="cat-TODOS">`
         <div class="cat-chips">${catChipsHtml}</div>
         <div class="section-heading"><i class="ph ph-shield-check"></i> Estado de Qualificação</div>
         ${statusHtml}
@@ -598,7 +622,8 @@
         ${wcCount > 0 ? `<span class="chip" style="background:rgba(245,197,24,.12);color:var(--amarelo);border:1px solid rgba(245,197,24,.25)"><span class="chip-dot" style="background:var(--amarelo)"></span>${wcCount} Poss. wildcard</span>` : ''}
       </div>`;
 
-      const statusHtml = buildStatusPanels(confirmedMap);
+      const seedMap = computeSeedMap(cat, grupos, jogos);
+      const statusHtml = buildStatusPanels(confirmedMap, seedMap);
 
       // Decisive games for this cat
       const catDecisive = groupJogos.filter(j => {
