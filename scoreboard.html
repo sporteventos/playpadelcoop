@@ -210,8 +210,8 @@
       if (r.wo) {
         // wo: 'eq1' means eq1 gave the WO (forfeited) → eq2 wins
         const win = r.wo==='eq1'?j.eq2:j.eq1, los = r.wo==='eq1'?j.eq1:j.eq2;
-        if (table[win]) { table[win].pj++; table[win].v++; }
-        if (table[los]) { table[los].pj++;  table[los].d++; }
+        if (table[win]) { table[win].pj++; table[win].v++; table[win].sv+=2; }
+        if (table[los]) { table[los].pj++;  table[los].d++; table[los].sl+=2; }
         return;
       }
       const sets = [[r.s1eq1,r.s1eq2],[r.s2eq1,r.s2eq2],[r.s3eq1,r.s3eq2]].filter(([a,b])=>a!=null&&b!=null);
