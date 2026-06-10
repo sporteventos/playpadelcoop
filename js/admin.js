@@ -4468,8 +4468,8 @@ function ffGenerateBracket(catId) {
     jogos.push(ffMakeJogo(catId, 'F',  1, null, null, [`${catId}-SF1`, `${catId}-SF2`], FF_F_DATE, FF_F_SLOT));
 
   } else if (FF_4G.includes(catId)) {
-    // Seeding por performance: S1vS8, S2vS7, S3vS6, S4vS5 — evitar duplas do mesmo grupo
-    let pairs4 = [[q[0],q[7]], [q[1],q[6]], [q[2],q[5]], [q[3],q[4]]];
+    // Seeding: S1vS8, S4vS5, S3vS6, S2vS7 → S1 e S2 em meias opostas (só se encontram na final)
+    let pairs4 = [[q[0],q[7]], [q[3],q[4]], [q[2],q[5]], [q[1],q[6]]];
     for (let i = 0; i < pairs4.length; i++) {
       if (pairs4[i][0]?.grupo && pairs4[i][0].grupo === pairs4[i][1]?.grupo) {
         for (let j = i + 1; j < pairs4.length; j++) {
@@ -4490,14 +4490,13 @@ function ffGenerateBracket(catId) {
     jogos.push(ffMakeJogo(catId, 'F',  1, null, null, [`${catId}-SF1`, `${catId}-SF2`], FF_F_DATE, FF_F_SLOT));
 
   } else {
-    // QF seeding: S1vS8, S2vS7, S3vS6, S4vS5 — evitar duplas do mesmo grupo
+    // QF seeding: S1vS8, S4vS5, S3vS6, S2vS7 → S1 e S2 em meias opostas (só se encontram na final)
     const s = q; // already in seed order
-    let pairs = [[s[0],s[7]], [s[1],s[6]], [s[2],s[5]], [s[3],s[4]]];
-    // Fix: wildcards em QF1/QF2 — trocar S7 e S8 se colisão
+    let pairs = [[s[0],s[7]], [s[3],s[4]], [s[2],s[5]], [s[1],s[6]]];
+    // Evitar mesmo grupo: metade S1 (QF1+QF2), metade S2 (QF3+QF4)
     if (pairs[0][0]?.grupo === pairs[0][1]?.grupo || pairs[1][0]?.grupo === pairs[1][1]?.grupo)
       { [pairs[0][1], pairs[1][1]] = [pairs[1][1], pairs[0][1]]; }
-    // Fix: segundos em QF3/QF4 — trocar S5 e S6 se colisão
-    if (pairs[2][0]?.grupo === pairs[2][1]?.grupo)
+    if (pairs[2][0]?.grupo === pairs[2][1]?.grupo || pairs[3][0]?.grupo === pairs[3][1]?.grupo)
       { [pairs[2][1], pairs[3][1]] = [pairs[3][1], pairs[2][1]]; }
     pairs.forEach(([e1, e2], i) => jogos.push(ffMakeJogo(catId, 'QF', i + 1, e1, e2, null)));
     ffAutoAllocateQF(jogos.filter(j => j.fase === 'QF'));
@@ -4506,6 +4505,50 @@ function ffGenerateBracket(catId) {
     jogos.push(ffMakeJogo(catId, 'F',  1, null, null, [`${catId}-SF1`, `${catId}-SF2`], FF_F_DATE, FF_F_SLOT));
   }
   return { generated: true, jogos };
+}
+
+// Recalculates QF seedings for an already-generated bracket.
+// Preserves existing data/hora/campo/resultado — only updates eq1/eq2/seeds.
+function ffRecalcBracket(catId) {
+  const ff = ffLoad();
+  if (!ff[catId]?.generated) { alert('Bracket não gerado para ' + catId); return; }
+  if (FF_2G.includes(catId)) { alert(catId + ' não tem QF (2 grupos)'); return; }
+
+  const q = ffGetQualified(catId);
+  let newPairs;
+
+  if (FF_4G.includes(catId)) {
+    newPairs = [[q[0],q[7]], [q[3],q[4]], [q[2],q[5]], [q[1],q[6]]];
+    for (let i = 0; i < newPairs.length; i++) {
+      if (newPairs[i][0]?.grupo && newPairs[i][0].grupo === newPairs[i][1]?.grupo) {
+        for (let j = i + 1; j < newPairs.length; j++) {
+          if (newPairs[i][0]?.grupo !== newPairs[j][1]?.grupo && newPairs[j][0]?.grupo !== newPairs[i][1]?.grupo) {
+            [newPairs[i][1], newPairs[j][1]] = [newPairs[j][1], newPairs[i][1]];
+            break;
+          }
+        }
+      }
+    }
+  } else {
+    const s = q;
+    newPairs = [[s[0],s[7]], [s[3],s[4]], [s[2],s[5]], [s[1],s[6]]];
+    if (newPairs[0][0]?.grupo === newPairs[0][1]?.grupo || newPairs[1][0]?.grupo === newPairs[1][1]?.grupo)
+      { [newPairs[0][1], newPairs[1][1]] = [newPairs[1][1], newPairs[0][1]]; }
+    if (newPairs[2][0]?.grupo === newPairs[2][1]?.grupo || newPairs[3][0]?.grupo === newPairs[3][1]?.grupo)
+      { [newPairs[2][1], newPairs[3][1]] = [newPairs[3][1], newPairs[2][1]]; }
+  }
+
+  const qfJogos = ff[catId].jogos.filter(j => j.fase === 'QF').sort((a, b) => a.num - b.num);
+  qfJogos.forEach((jogo, i) => {
+    if (i >= newPairs.length) return;
+    const [e1, e2] = newPairs[i];
+    jogo.eq1 = e1?.par ?? null; jogo.eq1grupo = e1?.grupo ?? null; jogo.eq1seed = e1?.seed ?? null;
+    jogo.eq2 = e2?.par ?? null; jogo.eq2grupo = e2?.grupo ?? null; jogo.eq2seed = e2?.seed ?? null;
+  });
+
+  ffSave(ff);
+  renderFaseFinal();
+  auditLog('ff_recalc_bracket', { cat: catId });
 }
 
 function ffGetWinner(r) {
@@ -4617,6 +4660,9 @@ function renderFaseFinal() {
       ${ffChampionColHtml(ffCurrentCat)}
     </div>
     ${Auth.isAdmin() ? `<div style="margin-top:1.25rem;display:flex;gap:.5rem;flex-wrap:wrap">
+      <button class="btn btn-ghost btn-sm" style="color:var(--verde);border-color:rgba(0,195,123,.3)" onclick="ffRecalcBracket('${ffCurrentCat}')">
+        <i class="ph ph-arrows-clockwise"></i> Recalcular Seeds
+      </button>
       <button class="btn btn-ghost btn-sm danger-btn" style="color:var(--amarelo);border-color:rgba(245,197,24,.3)" onclick="ffGerarAleatorios('${ffCurrentCat}')">
         <i class="ph ph-shuffle"></i> Resultados Aleatórios
       </button>
