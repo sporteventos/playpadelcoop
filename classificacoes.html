@@ -264,17 +264,32 @@ document.addEventListener('DOMContentLoaded', () => {
     else        { return s2 > s1 ? -1 : s1 > s2 ? 1 : 0; }
   }
 
-  // Ordenação: V → H2H → ΔSets → ΔGames → Total games ganhos
+  // Ordenação: mini-grupo H2H (circular-safe) → ΔSets mini → ΔGames mini → fallback global
   function sortRows(rows, gJogos) {
-    return [...rows].sort((a, b) => {
-      if (b.v !== a.v) return b.v - a.v;
-      const hh = h2h(a.par, b.par, gJogos);
-      if (hh !== 0) return hh;
-      const ds = (b.sv - b.sd) - (a.sv - a.sd);
-      if (ds !== 0) return ds;
-      const dg = (b.gv - b.gd) - (a.gv - a.gd);
-      if (dg !== 0) return dg;
-      return b.gv - a.gv;
+    const byV = {};
+    rows.forEach(r => { (byV[r.v] = byV[r.v] || []).push(r); });
+    return Object.keys(byV).map(Number).sort((a,b)=>b-a).flatMap(v => {
+      const g = byV[v];
+      if (g.length === 1) return g;
+      const pars = new Set(g.map(r => r.par));
+      const ms = {}; g.forEach(r => { ms[r.par] = {v:0,sv:0,sd:0,gv:0,gd:0}; });
+      gJogos.forEach(j => {
+        if (!j.resultado || !pars.has(j.eq1) || !pars.has(j.eq2)) return;
+        const r = j.resultado;
+        if (r.wo) {
+          const win=r.wo==='eq1'?j.eq2:j.eq1, los=r.wo==='eq1'?j.eq1:j.eq2;
+          ms[win].v++; ms[win].sv+=2; ms[win].gv+=12; ms[los].sd+=2; ms[los].gd+=12; return;
+        }
+        const sets=[[r.s1eq1,r.s1eq2],[r.s2eq1,r.s2eq2],[r.s3eq1,r.s3eq2]].filter(([a,b])=>a!=null&&b!=null);
+        let ve1=0,ve2=0;
+        sets.forEach(([a,b])=>{ if(a>b){ve1++;ms[j.eq1].sv++;ms[j.eq1].gv+=a;ms[j.eq1].gd+=b;ms[j.eq2].sd++;ms[j.eq2].gv+=b;ms[j.eq2].gd+=a;}else{ve2++;ms[j.eq2].sv++;ms[j.eq2].gv+=b;ms[j.eq2].gd+=a;ms[j.eq1].sd++;ms[j.eq1].gv+=a;ms[j.eq1].gd+=b;} });
+        if(ve1>ve2)ms[j.eq1].v++;else ms[j.eq2].v++;
+      });
+      return [...g].sort((a,b)=>{
+        const ma=ms[a.par],mb=ms[b.par];
+        return mb.v-ma.v||(mb.sv-mb.sd)-(ma.sv-ma.sd)||(mb.gv-mb.gd)-(ma.gv-ma.gd)||mb.gv-ma.gv
+              ||(b.sv-b.sd)-(a.sv-a.sd)||(b.gv-b.gd)-(a.gv-a.gd)||b.gv-a.gv;
+      });
     });
   }
 

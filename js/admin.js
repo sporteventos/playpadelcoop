@@ -5528,7 +5528,34 @@ function _adminClassStandings(grupo, jogos) {
     if (pairs[j.eq1]) { pairs[j.eq1].pj++; if (eq1win) { pairs[j.eq1].v++; pairs[j.eq1].pts+=2; } else pairs[j.eq1].d++; }
     if (pairs[j.eq2]) { pairs[j.eq2].pj++; if (!eq1win){ pairs[j.eq2].v++; pairs[j.eq2].pts+=2; } else pairs[j.eq2].d++; }
   });
-  return Object.values(pairs).sort((a,b) => b.pts - a.pts || _adminHeadToHead(a.par, b.par, gJogos) || (b.sv-b.sl)-(a.sv-a.sl) || (b.gv-b.gl)-(a.gv-a.gl) || b.gv - a.gv);
+  function miniGroupSort(rows) {
+    const byPts = {};
+    rows.forEach(r => { (byPts[r.pts] = byPts[r.pts] || []).push(r); });
+    return Object.keys(byPts).map(Number).sort((a,b)=>b-a).flatMap(pts => {
+      const g = byPts[pts];
+      if (g.length === 1) return g;
+      const pars = new Set(g.map(r => r.par));
+      const ms = {}; g.forEach(r => { ms[r.par] = {v:0,sv:0,sl:0,gv:0,gl:0}; });
+      gJogos.forEach(j => {
+        if (!j.resultado || !pars.has(j.eq1) || !pars.has(j.eq2)) return;
+        const r = j.resultado;
+        if (r.wo) {
+          const win=r.wo==='eq1'?j.eq2:j.eq1, los=r.wo==='eq1'?j.eq1:j.eq2;
+          ms[win].v++; ms[win].sv+=2; ms[win].gv+=12; ms[los].sl+=2; ms[los].gl+=12; return;
+        }
+        const sets=[[r.s1eq1,r.s1eq2],[r.s2eq1,r.s2eq2],[r.s3eq1,r.s3eq2]].filter(([a,b])=>a!=null&&b!=null);
+        let ve1=0,ve2=0;
+        sets.forEach(([a,b])=>{ if(a>b){ve1++;ms[j.eq1].sv++;ms[j.eq1].gv+=a;ms[j.eq1].gl+=b;ms[j.eq2].sl++;ms[j.eq2].gv+=b;ms[j.eq2].gl+=a;}else{ve2++;ms[j.eq2].sv++;ms[j.eq2].gv+=b;ms[j.eq2].gl+=a;ms[j.eq1].sl++;ms[j.eq1].gv+=a;ms[j.eq1].gl+=b;} });
+        if(ve1>ve2)ms[j.eq1].v++;else ms[j.eq2].v++;
+      });
+      return [...g].sort((a,b)=>{
+        const ma=ms[a.par],mb=ms[b.par];
+        return mb.v-ma.v||(mb.sv-mb.sl)-(ma.sv-ma.sl)||(mb.gv-mb.gl)-(ma.gv-ma.gl)||mb.gv-ma.gv
+              ||(b.sv-b.sl)-(a.sv-a.sl)||(b.gv-b.gl)-(a.gv-a.gl)||b.gv-a.gv;
+      });
+    });
+  }
+  return miniGroupSort(Object.values(pairs));
 }
 
 function _adminHeadToHead(parA, parB, gJogos) {
