@@ -593,7 +593,7 @@
 
       const statusHtml = buildStatusPanels(allConfirmed, allSeedMap);
 
-      allHtml += `<div class="cat-section${activeTab==='TODOS'?' active':''}" id="cat-TODOS">`
+      allHtml += `<div class="cat-section${activeTab==='TODOS'?' active':''}" id="cat-TODOS">
         <div class="cat-chips">${catChipsHtml}</div>
         <div class="section-heading"><i class="ph ph-shield-check"></i> Estado de Qualificação</div>
         ${statusHtml}
