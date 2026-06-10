@@ -4510,6 +4510,7 @@ function ffGenerateBracket(catId) {
 // Recalculates QF seedings for an already-generated bracket.
 // Preserves existing data/hora/campo/resultado — only updates eq1/eq2/seeds.
 function ffRecalcBracket(catId) {
+  if (!Auth.hasRole('admin', 'operator')) return toast('Apenas administradores ou operadores.', 'error');
   const ff = ffLoad();
   if (!ff[catId]?.generated) { alert('Bracket não gerado para ' + catId); return; }
   if (FF_2G.includes(catId)) { alert(catId + ' não tem QF (2 grupos)'); return; }
@@ -4517,25 +4518,12 @@ function ffRecalcBracket(catId) {
   const q = ffGetQualified(catId);
   let newPairs;
 
+  // Strict seeding: S1vS8, S4vS5, S3vS6, S2vS7 — sem trocar por grupo (regra de seeding pura)
   if (FF_4G.includes(catId)) {
     newPairs = [[q[0],q[7]], [q[3],q[4]], [q[2],q[5]], [q[1],q[6]]];
-    for (let i = 0; i < newPairs.length; i++) {
-      if (newPairs[i][0]?.grupo && newPairs[i][0].grupo === newPairs[i][1]?.grupo) {
-        for (let j = i + 1; j < newPairs.length; j++) {
-          if (newPairs[i][0]?.grupo !== newPairs[j][1]?.grupo && newPairs[j][0]?.grupo !== newPairs[i][1]?.grupo) {
-            [newPairs[i][1], newPairs[j][1]] = [newPairs[j][1], newPairs[i][1]];
-            break;
-          }
-        }
-      }
-    }
   } else {
     const s = q;
     newPairs = [[s[0],s[7]], [s[3],s[4]], [s[2],s[5]], [s[1],s[6]]];
-    if (newPairs[0][0]?.grupo === newPairs[0][1]?.grupo || newPairs[1][0]?.grupo === newPairs[1][1]?.grupo)
-      { [newPairs[0][1], newPairs[1][1]] = [newPairs[1][1], newPairs[0][1]]; }
-    if (newPairs[2][0]?.grupo === newPairs[2][1]?.grupo || newPairs[3][0]?.grupo === newPairs[3][1]?.grupo)
-      { [newPairs[2][1], newPairs[3][1]] = [newPairs[3][1], newPairs[2][1]]; }
   }
 
   const qfJogos = ff[catId].jogos.filter(j => j.fase === 'QF').sort((a, b) => a.num - b.num);
@@ -4659,10 +4647,11 @@ function renderFaseFinal() {
         </div>`).join('')}
       ${ffChampionColHtml(ffCurrentCat)}
     </div>
-    ${Auth.isAdmin() ? `<div style="margin-top:1.25rem;display:flex;gap:.5rem;flex-wrap:wrap">
+    ${Auth.hasRole('admin','operator') ? `<div style="margin-top:1.25rem;display:flex;gap:.5rem;flex-wrap:wrap">
       <button class="btn btn-ghost btn-sm" style="color:var(--verde);border-color:rgba(0,195,123,.3)" onclick="ffRecalcBracket('${ffCurrentCat}')">
         <i class="ph ph-arrows-clockwise"></i> Recalcular Seeds
       </button>
+      ${Auth.isAdmin() ? `
       <button class="btn btn-ghost btn-sm danger-btn" style="color:var(--amarelo);border-color:rgba(245,197,24,.3)" onclick="ffGerarAleatorios('${ffCurrentCat}')">
         <i class="ph ph-shuffle"></i> Resultados Aleatórios
       </button>
@@ -4674,7 +4663,7 @@ function renderFaseFinal() {
       </button>
       <button class="btn btn-ghost btn-sm danger-btn" style="color:var(--vermelho);border-color:rgba(255,74,74,.3)" onclick="ffReset('${ffCurrentCat}')">
         <i class="ph ph-arrow-counter-clockwise"></i> Resetar Bracket
-      </button>
+      </button>` : ''}
     </div>` : ''}` ;
 }
 
