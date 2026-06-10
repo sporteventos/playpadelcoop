@@ -221,8 +221,8 @@ document.addEventListener('DOMContentLoaded', () => {
       const r = j.resultado;
       let s1 = 0, s2 = 0, gv1 = 0, gv2 = 0;
       if (r.wo) {
-        // WO: winner (non-WO team) gets 2 sets, loser 0; no game points
-        if (r.wo === 'eq1') { s2 = 2; } else { s1 = 2; }
+        // WO = 6-0 6-0: winner gets 2 sets + 12 games, loser gets 0 sets + 0 games
+        if (r.wo === 'eq1') { s2 = 2; gv2 = 12; } else { s1 = 2; gv1 = 12; }
       } else {
         [[r.s1eq1, r.s1eq2], [r.s2eq1, r.s2eq2], [r.s3eq1, r.s3eq2]].forEach(([a, b]) => {
           if (a == null || b == null) return;
