@@ -4389,7 +4389,22 @@
       "grupo": "M4-C",
       "eq1": "Shiraz & Kheizar",
       "eq2": "Fádhil Khan & Kelyo",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 6,
+        "s1eq2": 3,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 7,
+        "s2eq2": 5,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": null,
+        "s3eq2": null,
+        "tb3eq1": null,
+        "tb3eq2": null
+      },
+      "suspenso": null,
+      "adiado": null
     },
     {
       "id": 122,
@@ -5118,6 +5133,16 @@
     }
   ],
   "auditlog": [
+    {
+      "id": "mq8jna7jxj2va24",
+      "userId": "mpzxoo1v8l1za3r",
+      "username": "djanasse",
+      "role": "operator",
+      "action": "SAVE_RESULT",
+      "target": "resultados",
+      "detail": "Resultado guardado: jogo #121",
+      "ts": "2026-06-10T20:51:19.279Z"
+    },
     {
       "id": "mq8jm3whr95bx3n",
       "userId": "mpzxoo1v8l1za3r",
@@ -13249,5 +13274,5 @@
       "ts": "2026-06-03T06:06:37.211Z"
     }
   ],
-  "_updated": "2026-06-10T20:50:31.916Z"
+  "_updated": "2026-06-10T20:51:19.285Z"
 }
