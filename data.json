@@ -4732,8 +4732,8 @@
           "eq2seed": 6,
           "resultado": null,
           "data": "2026-06-12",
-          "hora": "18:30",
-          "campo": "TVCabo"
+          "hora": "19:30",
+          "campo": "Stella Artois"
         },
         {
           "id": "F1-QF4",
@@ -5120,9 +5120,9 @@
           "eq1": "Shiraz & Kheizar",
           "eq1grupo": "M4-C",
           "eq1seed": 1,
-          "eq2": "Joshua & Noah",
-          "eq2grupo": "M4-A",
-          "eq2seed": 7,
+          "eq2": "Nuno Resende & Gonçalo Bettencourt",
+          "eq2grupo": "M4-B",
+          "eq2seed": 5,
           "resultado": null,
           "data": "2026-06-11",
           "hora": "17:30",
@@ -5136,9 +5136,9 @@
           "eq1": "André Reves & Francisco Morais",
           "eq1grupo": "M4-A",
           "eq1seed": 4,
-          "eq2": "Nuno Resende & Gonçalo Bettencourt",
-          "eq2grupo": "M4-B",
-          "eq2seed": 5,
+          "eq2": "Fádhil Khan & Kelyo",
+          "eq2grupo": "M4-C",
+          "eq2seed": 8,
           "resultado": null,
           "data": "2026-06-11",
           "hora": "20:30",
@@ -5152,9 +5152,9 @@
           "eq1": "Jason & Bosch",
           "eq1grupo": "M4-D",
           "eq1seed": 3,
-          "eq2": "Muhammad Chona & Ibrahim Bilal",
-          "eq2grupo": "M4-D",
-          "eq2seed": 6,
+          "eq2": "Joshua & Noah",
+          "eq2grupo": "M4-A",
+          "eq2seed": 7,
           "resultado": null,
           "data": "2026-06-11",
           "hora": "20:30",
@@ -5168,9 +5168,9 @@
           "eq1": "Duncan & James",
           "eq1grupo": "M4-B",
           "eq1seed": 2,
-          "eq2": "Fádhil Khan & Kelyo",
-          "eq2grupo": "M4-C",
-          "eq2seed": 8,
+          "eq2": "Muhammad Chona & Ibrahim Bilal",
+          "eq2grupo": "M4-D",
+          "eq2seed": 6,
           "resultado": null,
           "data": "2026-06-11",
           "hora": "19:30",
@@ -5231,7 +5231,8 @@
           "hora": "15:00"
         }
       ],
-      "swapNote": "S7↔S8 trocados: S1 e S8 eram do mesmo grupo (M4-C)"
+      "swapNote": "Ajuste anti-colisão: S5→QF1, S8→QF2, S7→QF3, S6→QF4",
+      "incomplete": false
     },
     "M2": {
       "generated": true,
@@ -5244,9 +5245,9 @@
           "eq1": "Rui Lourenço & Francisco Pegado",
           "eq1grupo": "M2-A",
           "eq1seed": 1,
-          "eq2": "José Moreira & Nuno L. Pereira",
+          "eq2": "Dej Cruz & Nuno Correa Mendes",
           "eq2grupo": "M2-B",
-          "eq2seed": 7,
+          "eq2seed": 6,
           "resultado": null,
           "data": "2026-06-12",
           "hora": "19:30",
@@ -5260,9 +5261,9 @@
           "eq1": "Feizan Omar & Filipe Lobo",
           "eq1grupo": "M2-C",
           "eq1seed": 4,
-          "eq2": "Frederico Jonet & Francisco Ferreira",
+          "eq2": "Luis Trigo de Morais & Ricky Kamissa",
           "eq2grupo": "M2-A",
-          "eq2seed": 5,
+          "eq2seed": 8,
           "resultado": null,
           "data": "2026-06-12",
           "hora": "18:30",
@@ -5276,9 +5277,9 @@
           "eq1": "Jameel Abdula & Tahir",
           "eq1grupo": "M2-B",
           "eq1seed": 3,
-          "eq2": "Dej Cruz & Nuno Correa Mendes",
-          "eq2grupo": "M2-B",
-          "eq2seed": 6,
+          "eq2": "Frederico Jonet & Francisco Ferreira",
+          "eq2grupo": "M2-A",
+          "eq2seed": 5,
           "resultado": null,
           "data": "2026-06-12",
           "hora": "20:30",
@@ -5292,9 +5293,9 @@
           "eq1": "Ricardo Oliveira & Vasco Silva",
           "eq1grupo": "M2-C",
           "eq1seed": 2,
-          "eq2": "Luis Trigo de Morais & Ricky Kamissa",
-          "eq2grupo": "M2-A",
-          "eq2seed": 8,
+          "eq2": "José Moreira & Nuno L. Pereira",
+          "eq2grupo": "M2-B",
+          "eq2seed": 7,
           "resultado": null,
           "data": "2026-06-12",
           "hora": "18:30",
@@ -5355,7 +5356,8 @@
           "hora": "15:00"
         }
       ],
-      "swapNote": "S7↔S8 trocados: S1 e S8 eram do mesmo grupo (M2-A)"
+      "swapNote": "Ajuste anti-colisão: S6→QF1, S8→QF2, S5→QF3",
+      "incomplete": false
     },
     "M3": {
       "generated": true,
@@ -5372,9 +5374,9 @@
           "eq2grupo": "M3-A",
           "eq2seed": 8,
           "resultado": null,
-          "data": "2026-06-11",
+          "data": "2026-06-12",
           "hora": "21:30",
-          "campo": "Play Padel"
+          "campo": "TVCabo"
         },
         {
           "id": "M3-QF2",
@@ -5388,8 +5390,8 @@
           "eq2grupo": "M3-B",
           "eq2seed": 6,
           "resultado": null,
-          "data": "2026-06-11",
-          "hora": "21:30",
+          "data": "2026-06-12",
+          "hora": "18:30",
           "campo": "TVCabo"
         },
         {
@@ -5404,8 +5406,8 @@
           "eq2grupo": "M3-C",
           "eq2seed": 5,
           "resultado": null,
-          "data": "2026-06-11",
-          "hora": "21:30",
+          "data": "2026-06-12",
+          "hora": "20:30",
           "campo": "Stella Artois"
         },
         {
@@ -5576,6 +5578,46 @@
   ],
   "auditlog": [
     {
+      "id": "mq8nqn11jl56fns",
+      "userId": "mpz46x5c2zupza0",
+      "username": "bgaspar",
+      "role": "operator",
+      "action": "HORARIO_DRAG",
+      "target": "fasefinal",
+      "detail": "Jogo M3-QF2 movido para 18:30 @ TVCabo",
+      "ts": "2026-06-10T22:45:54.325Z"
+    },
+    {
+      "id": "mq8npff66np5m31",
+      "userId": "mpz46x5c2zupza0",
+      "username": "bgaspar",
+      "role": "operator",
+      "action": "HORARIO_MOVER_DIA",
+      "target": "fasefinal",
+      "detail": "Jogo M3-QF1 de 2026-06-11 21:30 Play Padel → 2026-06-12 21:30 TVCabo",
+      "ts": "2026-06-10T22:44:57.810Z"
+    },
+    {
+      "id": "mq8noywy8c4mxv0",
+      "userId": "mpz46x5c2zupza0",
+      "username": "bgaspar",
+      "role": "operator",
+      "action": "HORARIO_MOVER_DIA",
+      "target": "fasefinal",
+      "detail": "Jogo M3-QF3 de 2026-06-11 21:30 Stella Artois → 2026-06-12 20:30 Stella Artois",
+      "ts": "2026-06-10T22:44:36.418Z"
+    },
+    {
+      "id": "mq8nogsdxyexyjx",
+      "userId": "mpz46x5c2zupza0",
+      "username": "bgaspar",
+      "role": "operator",
+      "action": "HORARIO_MOVER_DIA",
+      "target": "fasefinal",
+      "detail": "Jogo M3-QF2 de 2026-06-11 21:30 TVCabo → 2026-06-12 19:30 Stella Artois",
+      "ts": "2026-06-10T22:44:12.925Z"
+    },
+    {
       "id": "mq8nkjrne22gtbe",
       "userId": "mpz8aq9sg983ubo",
       "username": "euamusse",
@@ -5604,6 +5646,26 @@
       "target": "auth",
       "detail": "Logout: euamusse",
       "ts": "2026-06-10T22:40:36.908Z"
+    },
+    {
+      "id": "mq8njlkdmjb0q65",
+      "userId": "mpz46x5c2zupza0",
+      "username": "bgaspar",
+      "role": "operator",
+      "action": "LOGIN",
+      "target": "auth",
+      "detail": "Login: bgaspar (operator)",
+      "ts": "2026-06-10T22:40:25.837Z"
+    },
+    {
+      "id": "mq8ng8zg1r5auja",
+      "userId": "mpz46x5c2zupza0",
+      "username": "bgaspar",
+      "role": "operator",
+      "action": "LOGOUT",
+      "target": "auth",
+      "detail": "Logout: bgaspar",
+      "ts": "2026-06-10T22:37:49.564Z"
     },
     {
       "id": "mq8n5mgapw15ycz",
@@ -13356,16 +13418,6 @@
       "ts": "2026-06-04T10:07:53.262Z"
     },
     {
-      "id": "mpzc0pm5f6rf9hp",
-      "userId": "mpz46x5c2zupza0",
-      "username": "bgaspar",
-      "role": "operator",
-      "action": "GENERATE_BRACKET",
-      "target": "fasefinal",
-      "detail": "Bracket gerado: M3",
-      "ts": "2026-06-04T10:07:53.261Z"
-    },
-    {
       "id": "mpzc0pm5nfvxi2o",
       "userId": "mpz46x5c2zupza0",
       "username": "bgaspar",
@@ -13373,6 +13425,16 @@
       "action": "GENERATE_BRACKET",
       "target": "fasefinal",
       "detail": "Bracket gerado: M4",
+      "ts": "2026-06-04T10:07:53.261Z"
+    },
+    {
+      "id": "mpzc0pm5f6rf9hp",
+      "userId": "mpz46x5c2zupza0",
+      "username": "bgaspar",
+      "role": "operator",
+      "action": "GENERATE_BRACKET",
+      "target": "fasefinal",
+      "detail": "Bracket gerado: M3",
       "ts": "2026-06-04T10:07:53.261Z"
     },
     {
@@ -13386,16 +13448,6 @@
       "ts": "2026-06-04T10:07:53.260Z"
     },
     {
-      "id": "mpzc0pm367mtbow",
-      "userId": "mpz46x5c2zupza0",
-      "username": "bgaspar",
-      "role": "operator",
-      "action": "GENERATE_BRACKET",
-      "target": "fasefinal",
-      "detail": "Bracket gerado: M2",
-      "ts": "2026-06-04T10:07:53.259Z"
-    },
-    {
       "id": "mpzc0pm3orrbffx",
       "userId": "mpz46x5c2zupza0",
       "username": "bgaspar",
@@ -13403,6 +13455,16 @@
       "action": "GENERATE_BRACKET",
       "target": "fasefinal",
       "detail": "Bracket gerado: F1",
+      "ts": "2026-06-04T10:07:53.259Z"
+    },
+    {
+      "id": "mpzc0pm367mtbow",
+      "userId": "mpz46x5c2zupza0",
+      "username": "bgaspar",
+      "role": "operator",
+      "action": "GENERATE_BRACKET",
+      "target": "fasefinal",
+      "detail": "Bracket gerado: M2",
       "ts": "2026-06-04T10:07:53.259Z"
     },
     {
@@ -13446,13 +13508,13 @@
       "ts": "2026-06-04T10:04:43.866Z"
     },
     {
-      "id": "mpzbwnh5huj1ru4",
+      "id": "mpzbwnh5452obyl",
       "userId": "mpz8aq9sg983ubo",
       "username": "euamusse",
       "role": "admin",
       "action": "RESET_BRACKET",
       "target": "fasefinal",
-      "detail": "Bracket resetado: F2",
+      "detail": "Bracket resetado: M4",
       "ts": "2026-06-04T10:04:43.865Z"
     },
     {
@@ -13466,24 +13528,14 @@
       "ts": "2026-06-04T10:04:43.865Z"
     },
     {
-      "id": "mpzbwnh5452obyl",
+      "id": "mpzbwnh5huj1ru4",
       "userId": "mpz8aq9sg983ubo",
       "username": "euamusse",
       "role": "admin",
       "action": "RESET_BRACKET",
       "target": "fasefinal",
-      "detail": "Bracket resetado: M4",
+      "detail": "Bracket resetado: F2",
       "ts": "2026-06-04T10:04:43.865Z"
-    },
-    {
-      "id": "mpzbwnh4yrxl3ty",
-      "userId": "mpz8aq9sg983ubo",
-      "username": "euamusse",
-      "role": "admin",
-      "action": "RESET_BRACKET",
-      "target": "fasefinal",
-      "detail": "Bracket resetado: M2",
-      "ts": "2026-06-04T10:04:43.864Z"
     },
     {
       "id": "mpzbwnh4opbzbjx",
@@ -13493,6 +13545,16 @@
       "action": "RESET_BRACKET",
       "target": "fasefinal",
       "detail": "Bracket resetado: F1",
+      "ts": "2026-06-04T10:04:43.864Z"
+    },
+    {
+      "id": "mpzbwnh4yrxl3ty",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "RESET_BRACKET",
+      "target": "fasefinal",
+      "detail": "Bracket resetado: M2",
       "ts": "2026-06-04T10:04:43.864Z"
     },
     {
@@ -13646,16 +13708,6 @@
       "ts": "2026-06-04T09:20:14.577Z"
     },
     {
-      "id": "mpzabfu8n0hkr7s",
-      "userId": "mpz8aq9sg983ubo",
-      "username": "euamusse",
-      "role": "admin",
-      "action": "GENERATE_BRACKET",
-      "target": "fasefinal",
-      "detail": "Bracket gerado: M4",
-      "ts": "2026-06-04T09:20:14.576Z"
-    },
-    {
       "id": "mpzabfu8h0q1lhx",
       "userId": "mpz8aq9sg983ubo",
       "username": "euamusse",
@@ -13666,13 +13718,23 @@
       "ts": "2026-06-04T09:20:14.576Z"
     },
     {
-      "id": "mpzabfu7udh75w9",
+      "id": "mpzabfu8n0hkr7s",
       "userId": "mpz8aq9sg983ubo",
       "username": "euamusse",
       "role": "admin",
       "action": "GENERATE_BRACKET",
       "target": "fasefinal",
-      "detail": "Bracket gerado: F2",
+      "detail": "Bracket gerado: M4",
+      "ts": "2026-06-04T09:20:14.576Z"
+    },
+    {
+      "id": "mpzabfu7zqri1l3",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "GENERATE_BRACKET",
+      "target": "fasefinal",
+      "detail": "Bracket gerado: M2",
       "ts": "2026-06-04T09:20:14.575Z"
     },
     {
@@ -13686,13 +13748,13 @@
       "ts": "2026-06-04T09:20:14.575Z"
     },
     {
-      "id": "mpzabfu7zqri1l3",
+      "id": "mpzabfu7udh75w9",
       "userId": "mpz8aq9sg983ubo",
       "username": "euamusse",
       "role": "admin",
       "action": "GENERATE_BRACKET",
       "target": "fasefinal",
-      "detail": "Bracket gerado: M2",
+      "detail": "Bracket gerado: F2",
       "ts": "2026-06-04T09:20:14.575Z"
     },
     {
@@ -13806,16 +13868,6 @@
       "ts": "2026-06-04T08:25:15.384Z"
     },
     {
-      "id": "mpz8cq5wqczxaae",
-      "userId": "mpxnxlqhg3dzc1o",
-      "username": "admin",
-      "role": "admin",
-      "action": "RESET_BRACKET",
-      "target": "fasefinal",
-      "detail": "Bracket resetado: M3",
-      "ts": "2026-06-04T08:25:15.380Z"
-    },
-    {
       "id": "mpz8cq5wczsv85o",
       "userId": "mpxnxlqhg3dzc1o",
       "username": "admin",
@@ -13823,6 +13875,16 @@
       "action": "RESET_BRACKET",
       "target": "fasefinal",
       "detail": "Bracket resetado: M4",
+      "ts": "2026-06-04T08:25:15.380Z"
+    },
+    {
+      "id": "mpz8cq5wqczxaae",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "RESET_BRACKET",
+      "target": "fasefinal",
+      "detail": "Bracket resetado: M3",
       "ts": "2026-06-04T08:25:15.380Z"
     },
     {
@@ -14036,13 +14098,13 @@
       "ts": "2026-06-04T07:09:00.904Z"
     },
     {
-      "id": "mpz5moh3z8uepzg",
+      "id": "mpz5moh3atzzely",
       "userId": "mpxnxlqhg3dzc1o",
       "username": "admin",
       "role": "admin",
       "action": "RESET_BRACKET",
       "target": "fasefinal",
-      "detail": "Bracket resetado: F2",
+      "detail": "Bracket resetado: M4",
       "ts": "2026-06-04T07:09:00.903Z"
     },
     {
@@ -14056,24 +14118,14 @@
       "ts": "2026-06-04T07:09:00.903Z"
     },
     {
-      "id": "mpz5moh3atzzely",
+      "id": "mpz5moh3z8uepzg",
       "userId": "mpxnxlqhg3dzc1o",
       "username": "admin",
       "role": "admin",
       "action": "RESET_BRACKET",
       "target": "fasefinal",
-      "detail": "Bracket resetado: M4",
+      "detail": "Bracket resetado: F2",
       "ts": "2026-06-04T07:09:00.903Z"
-    },
-    {
-      "id": "mpz5moh2m79xab7",
-      "userId": "mpxnxlqhg3dzc1o",
-      "username": "admin",
-      "role": "admin",
-      "action": "RESET_BRACKET",
-      "target": "fasefinal",
-      "detail": "Bracket resetado: M2",
-      "ts": "2026-06-04T07:09:00.902Z"
     },
     {
       "id": "mpz5moh2e5p54sm",
@@ -14083,6 +14135,16 @@
       "action": "RESET_BRACKET",
       "target": "fasefinal",
       "detail": "Bracket resetado: F1",
+      "ts": "2026-06-04T07:09:00.902Z"
+    },
+    {
+      "id": "mpz5moh2m79xab7",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "RESET_BRACKET",
+      "target": "fasefinal",
+      "detail": "Bracket resetado: M2",
       "ts": "2026-06-04T07:09:00.902Z"
     },
     {
@@ -14146,16 +14208,6 @@
       "ts": "2026-06-04T07:00:35.289Z"
     },
     {
-      "id": "mpz5buc8z6bzq1p",
-      "userId": "mpxnxlqhg3dzc1o",
-      "username": "admin",
-      "role": "admin",
-      "action": "GENERATE_BRACKET",
-      "target": "fasefinal",
-      "detail": "Bracket gerado: M1",
-      "ts": "2026-06-04T07:00:35.288Z"
-    },
-    {
       "id": "mpz5buc8g1jvelt",
       "userId": "mpxnxlqhg3dzc1o",
       "username": "admin",
@@ -14163,6 +14215,16 @@
       "action": "GENERATE_BRACKET",
       "target": "fasefinal",
       "detail": "Bracket gerado: M2",
+      "ts": "2026-06-04T07:00:35.288Z"
+    },
+    {
+      "id": "mpz5buc8z6bzq1p",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "GENERATE_BRACKET",
+      "target": "fasefinal",
+      "detail": "Bracket gerado: M1",
       "ts": "2026-06-04T07:00:35.288Z"
     },
     {
@@ -14786,5 +14848,5 @@
       "ts": "2026-06-03T06:06:37.211Z"
     }
   ],
-  "_updated": "2026-06-10T22:41:43.426Z"
+  "_updated": "2026-06-10T22:50:19.123Z"
 }
