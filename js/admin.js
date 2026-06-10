@@ -4381,10 +4381,11 @@ function ffGetQualified(catId) {
   const grupos   = getData('grupos').filter(g => g.cat === catId);
   const firsts = [], seconds = [], thirds = [];
   grupos.forEach(g => {
-    const gJogos = allJogos.filter(j => j.grupo === g.id);
-    const sorted = ffSortRows(Object.values(ffStandings(gJogos)));
+    // Use _adminClassStandings: handles WOs correctly + mini-group circular tiebreak
+    const sorted = _adminClassStandings(g, allJogos);
     sorted.forEach((r, i) => {
-      const e = { ...r, grupo: g.id, pos: i + 1 };
+      // Map sl/gl → sd/gd for ffSortByPerf compatibility
+      const e = { ...r, grupo: g.id, pos: i + 1, sd: r.sl, gd: r.gl };
       if (i === 0) firsts.push(e);
       else if (i === 1) seconds.push(e);
       else if (i === 2) thirds.push(e);
