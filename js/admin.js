@@ -4841,8 +4841,28 @@ window.ffGenerate = function(catId) {
 window.ffGenerateIncomplete = function(catId) {
   if (!Auth.hasRole('admin', 'operator')) return toast('Acesso restrito.', 'error');
   const ff = ffLoad();
-  ff[catId] = ffGenerateBracket(catId);
-  ff[catId].incomplete = true; // flag so UI can warn
+  const result = ffGenerateBracket(catId);
+
+  // Null out any team that is NOT a group winner (seed > numGroups) AND comes from a
+  // group that still has pending games — their position is not yet decided.
+  const grupos = getData('grupos').filter(g => g.cat === catId);
+  const numGroups = grupos.length;
+  const allJogos = getData('jogos') || [];
+  const pendingGroups = new Set(
+    grupos.filter(g => allJogos.some(j => j.grupo === g.id && !j.resultado)).map(g => g.id)
+  );
+  result.jogos.forEach(j => {
+    if (j.fase !== 'QF') return;
+    if (j.eq1grupo && pendingGroups.has(j.eq1grupo) && j.eq1seed > numGroups) {
+      j.eq1 = null; j.eq1grupo = null; j.eq1seed = null;
+    }
+    if (j.eq2grupo && pendingGroups.has(j.eq2grupo) && j.eq2seed > numGroups) {
+      j.eq2 = null; j.eq2grupo = null; j.eq2seed = null;
+    }
+  });
+
+  ff[catId] = result;
+  ff[catId].incomplete = true;
   ffSave(ff);
   renderFaseFinal();
   Auth.log('GENERATE_BRACKET_INCOMPLETE', 'fasefinal', `Bracket gerado (incompleto): ${catId}`);
