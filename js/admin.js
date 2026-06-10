@@ -5509,6 +5509,13 @@ function _adminClassStandings(grupo, jogos) {
   gJogos.forEach(j => {
     if (!j.resultado) return;
     const r = j.resultado;
+    if (r.wo) {
+      // wo:'eq1' → eq1 forfeited → eq2 wins; wo:'eq2' → eq2 forfeited → eq1 wins
+      const eq1win = r.wo === 'eq2';
+      if (pairs[j.eq1]) { pairs[j.eq1].pj++; pairs[j.eq1].sv += eq1win?2:0; pairs[j.eq1].sl += eq1win?0:2; if (eq1win){pairs[j.eq1].v++;pairs[j.eq1].pts+=2;}else pairs[j.eq1].d++; }
+      if (pairs[j.eq2]) { pairs[j.eq2].pj++; pairs[j.eq2].sv += eq1win?0:2; pairs[j.eq2].sl += eq1win?2:0; if (!eq1win){pairs[j.eq2].v++;pairs[j.eq2].pts+=2;}else pairs[j.eq2].d++; }
+      return;
+    }
     const allSets = [[r.s1eq1,r.s1eq2],[r.s2eq1,r.s2eq2],[r.s3eq1,r.s3eq2]].filter(([a]) => a != null);
     let vEq1=0, vEq2=0;
     allSets.forEach(([a,b]) => {
