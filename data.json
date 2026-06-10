@@ -4382,7 +4382,22 @@
       "grupo": "F2-C",
       "eq1": "Saira Sale & Sónia Caravela",
       "eq2": "Dalila & Tatiana",
-      "resultado": null
+      "resultado": {
+        "s1eq1": 6,
+        "s1eq2": 3,
+        "tb1eq1": null,
+        "tb1eq2": null,
+        "s2eq1": 6,
+        "s2eq2": 4,
+        "tb2eq1": null,
+        "tb2eq2": null,
+        "s3eq1": null,
+        "s3eq2": null,
+        "tb3eq1": null,
+        "tb3eq2": null
+      },
+      "suspenso": null,
+      "adiado": null
     },
     {
       "id": 124,
@@ -4610,6 +4625,16 @@
     }
   ],
   "auditlog": [
+    {
+      "id": "mq8bvtqatmyj56y",
+      "userId": "mpzxoo1v8l1za3r",
+      "username": "djanasse",
+      "role": "operator",
+      "action": "SAVE_RESULT",
+      "target": "resultados",
+      "detail": "Resultado guardado: jogo #123",
+      "ts": "2026-06-10T17:14:00.898Z"
+    },
     {
       "id": "mq8b5qnatubwk6j",
       "userId": "mpzxoo1v8l1za3r",
@@ -12271,5 +12296,5 @@
       "ts": "2026-06-03T06:06:37.211Z"
     }
   ],
-  "_updated": "2026-06-10T17:13:08.667Z"
+  "_updated": "2026-06-10T17:14:00.908Z"
 }
