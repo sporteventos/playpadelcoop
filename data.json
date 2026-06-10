@@ -3153,7 +3153,9 @@
       "grupo": "M4-B",
       "eq1": "Nuno Resende & Gonçalo Bettencourt",
       "eq2": "Alao Almeida & Ayaan Mussa",
-      "resultado": null,
+      "resultado": {
+        "wo": "eq2"
+      },
       "adiado": null,
       "suspenso": null
     },
@@ -4608,6 +4610,16 @@
     }
   ],
   "auditlog": [
+    {
+      "id": "mq8a14qsl44b8rv",
+      "userId": "mpzxoo1v8l1za3r",
+      "username": "djanasse",
+      "role": "operator",
+      "action": "SAVE_RESULT",
+      "target": "resultados",
+      "detail": "WO registado: jogo #69 — eq2",
+      "ts": "2026-06-10T16:22:09.222Z"
+    },
     {
       "id": "mq89lreg5oo3mus",
       "userId": "mpzxoo1v8l1za3r",
@@ -12249,5 +12261,5 @@
       "ts": "2026-06-03T06:06:37.211Z"
     }
   ],
-  "_updated": "2026-06-10T16:16:21.603Z"
+  "_updated": "2026-06-10T16:22:09.230Z"
 }
