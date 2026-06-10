@@ -4401,7 +4401,7 @@ function ffGetQualified(catId) {
   return q;
 }
 
-const FF_QF_DATE = '2026-06-11'; // Quinta-feira — Quartos de Final
+const FF_QF_DATE = '2026-06-12'; // Sexta-feira — Quartos de Final
 const FF_SF_DATE = '2026-06-13'; // Sábado — Meias-Finais
 const FF_F_DATE  = '2026-06-14'; // Domingo — Finais
 const FF_QF_SLOTS = ['17:00', '18:00', '19:00', '20:00', '21:00'];
