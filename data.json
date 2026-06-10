@@ -4346,15 +4346,15 @@
       "eq2": "Faizal & Sherial",
       "resultado": null,
       "suspenso": {
-        "s1eq1": 6,
-        "s1eq2": 2,
+        "s1eq1": 7,
+        "s1eq2": 5,
         "s2eq1": null,
         "s2eq2": null,
         "s3eq1": null,
         "s3eq2": null,
-        "serve": null,
+        "serve": "Luis Antunes",
         "nota": "",
-        "ts": "2026-06-10T13:55:59.905Z"
+        "ts": "2026-06-10T13:59:48.150Z"
       }
     },
     {
@@ -4593,6 +4593,16 @@
     }
   ],
   "auditlog": [
+    {
+      "id": "mq84y2fd2vh6i3h",
+      "userId": "mpz46x5c2zupza0",
+      "username": "bgaspar",
+      "role": "operator",
+      "action": "SUSPEND_GAME",
+      "target": "resultados",
+      "detail": "Jogo #122 suspenso [serve:Luis Antunes]",
+      "ts": "2026-06-10T13:59:48.169Z"
+    },
     {
       "id": "mq84t6b11af54nv",
       "userId": "mpz46x5c2zupza0",
@@ -12124,5 +12134,5 @@
       "ts": "2026-06-03T06:06:37.211Z"
     }
   ],
-  "_updated": "2026-06-10T13:55:59.923Z"
+  "_updated": "2026-06-10T13:59:48.175Z"
 }
