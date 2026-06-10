@@ -4928,6 +4928,26 @@
   ],
   "auditlog": [
     {
+      "id": "mq8fv0230o4isku",
+      "userId": "mpz46x5c2zupza0",
+      "username": "bgaspar",
+      "role": "operator",
+      "action": "LOGIN",
+      "target": "auth",
+      "detail": "Login: bgaspar (operator)",
+      "ts": "2026-06-10T19:05:20.907Z"
+    },
+    {
+      "id": "mq8fsulb5lado84",
+      "userId": "mpz46x5c2zupza0",
+      "username": "bgaspar",
+      "role": "operator",
+      "action": "LOGOUT",
+      "target": "auth",
+      "detail": "Logout: bgaspar",
+      "ts": "2026-06-10T19:03:40.511Z"
+    },
+    {
       "id": "mq8frdn6g8yysaj",
       "userId": "mpz46x5c2zupza0",
       "username": "bgaspar",
@@ -12838,5 +12858,5 @@
       "ts": "2026-06-03T06:06:37.211Z"
     }
   ],
-  "_updated": "2026-06-10T19:02:53.952Z"
+  "_updated": "2026-06-10T19:05:28.800Z"
 }
