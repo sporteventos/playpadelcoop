@@ -4463,38 +4463,55 @@ function ffMakeJogo(catId, fase, num, e1, e2, feedFrom = null, data = null, hora
 //   SF1 = W(QF1) + W(QF2) — lado de S1
 //   SF2 = W(QF3) + W(QF4) — lado de S2  →  S1 e S2 só se encontram na Final
 function _ffBuildPairs(q) {
-  // q[0]=S1, q[1]=S2, q[2]=S3, q[3]=S4, q[4]=S5, q[5]=S6, q[6]=S7, q[7]=S8
-  let pairs = [
-    [q[0], q[7]],  // QF1: S1 vs S8  — Half A → SF1
-    [q[3], q[4]],  // QF2: S4 vs S5  — Half A → SF1
-    [q[2], q[5]],  // QF3: S3 vs S6  — Half B → SF2
-    [q[1], q[6]],  // QF4: S2 vs S7  — Half B → SF2
-  ];
-  const notes = [];
+  // Upper seeds per QF slot (fixed by bracket structure):
+  //   slot 0=QF1:S1  slot 1=QF2:S4  slot 2=QF3:S3  slot 3=QF4:S2
+  const upper = [q[0], q[3], q[2], q[1]];
 
-  // Half A (QF1+QF2): if either game has a same-group clash → swap opponents between QF1 and QF2 (S8↔S5)
-  const halfAQF1clash = pairs[0][0]?.grupo && pairs[0][0].grupo === pairs[0][1]?.grupo;
-  const halfAQF2clash = pairs[1][0]?.grupo && pairs[1][0].grupo === pairs[1][1]?.grupo;
-  if (halfAQF1clash || halfAQF2clash) {
-    const reason = halfAQF1clash
-      ? `S1 e S8 do mesmo grupo (${pairs[0][0].grupo})`
-      : `S4 e S5 do mesmo grupo (${pairs[1][0].grupo})`;
-    [pairs[0][1], pairs[1][1]] = [pairs[1][1], pairs[0][1]];
-    notes.push(`S8↔S5 trocados: ${reason}`);
+  // Lower seeds — ideal assignment per slot:
+  //   slot 0(QF1)=S8=q[7]  slot 1(QF2)=S5=q[4]  slot 2(QF3)=S6=q[5]  slot 3(QF4)=S7=q[6]
+  const lowerPool = [q[7], q[4], q[5], q[6]]; // index 0=S8, 1=S5, 2=S6, 3=S7
+
+  // Enumerate all 24 permutations of [0,1,2,3]
+  const perms = [];
+  for (let a = 0; a < 4; a++)
+    for (let b = 0; b < 4; b++) { if (b === a) continue;
+      for (let c = 0; c < 4; c++) { if (c === a || c === b) continue;
+        perms.push([a, b, c, 6 - a - b - c]);
+      }
+    }
+
+  let bestPerm = null;
+  let bestPenalty = Infinity;
+
+  for (const perm of perms) {
+    // Check no same-group clash in any QF
+    let valid = true;
+    for (let i = 0; i < 4; i++) {
+      const u = upper[i], l = lowerPool[perm[i]];
+      if (u?.grupo && l?.grupo && u.grupo === l.grupo) { valid = false; break; }
+    }
+    if (!valid) continue;
+    // Penalty = positional distance from ideal; lower = closer to standard seeding
+    const penalty = perm.reduce((s, src, slot) => s + Math.abs(src - slot), 0);
+    if (penalty < bestPenalty) { bestPenalty = penalty; bestPerm = perm; }
   }
 
-  // Half B (QF3+QF4): if either game has a same-group clash → swap opponents between QF3 and QF4 (S6↔S7)
-  const halfBQF3clash = pairs[2][0]?.grupo && pairs[2][0].grupo === pairs[2][1]?.grupo;
-  const halfBQF4clash = pairs[3][0]?.grupo && pairs[3][0].grupo === pairs[3][1]?.grupo;
-  if (halfBQF3clash || halfBQF4clash) {
-    const reason = halfBQF3clash
-      ? `S3 e S6 do mesmo grupo (${pairs[2][0].grupo})`
-      : `S2 e S7 do mesmo grupo (${pairs[3][0].grupo})`;
-    [pairs[2][1], pairs[3][1]] = [pairs[3][1], pairs[2][1]];
-    notes.push(`S6↔S7 trocados: ${reason}`);
-  }
+  // If no clash-free assignment exists (impossible), fall back to ideal
+  if (!bestPerm) bestPerm = [0, 1, 2, 3];
 
-  return { pairs, swapNote: notes.length ? notes.join('; ') : null };
+  const lower = bestPerm.map(i => lowerPool[i]);
+  const pairs = upper.map((u, i) => [u, lower[i]]);
+
+  // Describe changes vs ideal
+  const lowerLabels = ['S8', 'S5', 'S6', 'S7'];
+  const changes = bestPerm
+    .map((src, slot) => src !== slot ? `${lowerLabels[src]}→QF${slot + 1}` : null)
+    .filter(Boolean);
+  const swapNote = changes.length
+    ? `Ajuste anti-colisão: ${changes.join(', ')}`
+    : null;
+
+  return { pairs, swapNote };
 }
 
 function ffGenerateBracket(catId) {
