@@ -280,27 +280,42 @@
     const result = new Map();
 
     allGroupData.forEach(({ g, rows }) => {
-      rows.forEach(r => {
-        // How many others can potentially reach >= r's min wins (could overtake in worst case)
-        const canOvertake = rows.filter(o => o.par !== r.par && o._maxWins >= r._minWins).length;
-        // How many others are guaranteed to have STRICTLY MORE wins than r's best case
-        const guaranteedAbove = rows.filter(o => o.par !== r.par && o._minWins > r._maxWins).length;
+      const allDone = rows.every(r => r._remaining === 0);
+      if (allDone) {
+        // All games played: trust the sorted rows[] order directly.
+        // rows[0..1] = qualified, rows[2] = wildcard candidate (eliminated_group), rows[3+] = eliminated.
+        // This correctly handles ties broken by tiebreakers (not just wins).
+        rows.forEach((r, i) => {
+          if (i < 2) {
+            result.set(r.par, { status: 'qualified', group: g.id });
+          } else {
+            result.set(r.par, {
+              status: hasWc && i === 2 ? 'eliminated_group' : 'eliminated',
+              group: g.id, _maxWins: r._maxWins, _minWins: r._minWins,
+              _sv: r.sv, _sl: r.sl, _gv: r.gv, _gl: r.gl
+            });
+          }
+        });
+      } else {
+        rows.forEach(r => {
+          // How many others can potentially reach >= r's min wins (could overtake in worst case)
+          const canOvertake = rows.filter(o => o.par !== r.par && o._maxWins >= r._minWins).length;
+          // How many others are guaranteed to have STRICTLY MORE wins than r's best case
+          const guaranteedAbove = rows.filter(o => o.par !== r.par && o._minWins > r._maxWins).length;
 
-        if (canOvertake <= 1) {
-          // At most 1 other can beat them even at their worst -> confirmed top 2
-          result.set(r.par, { status: 'qualified', group: g.id });
-        } else if (guaranteedAbove >= 2) {
-          // 2+ guaranteed above even at their best -> out of top 2
-          result.set(r.par, {
-            status: hasWc ? 'eliminated_group' : 'eliminated',
-            group: g.id, _maxWins: r._maxWins, _minWins: r._minWins,
-            _sv: r.sv, _sl: r.sl, _gv: r.gv, _gl: r.gl,
-            _guaranteedAbove: guaranteedAbove
-          });
-        } else {
-          result.set(r.par, { status: 'contention', group: g.id });
-        }
-      });
+          if (canOvertake <= 1) {
+            result.set(r.par, { status: 'qualified', group: g.id });
+          } else if (guaranteedAbove >= 2) {
+            result.set(r.par, {
+              status: hasWc ? 'eliminated_group' : 'eliminated',
+              group: g.id, _maxWins: r._maxWins, _minWins: r._minWins,
+              _sv: r.sv, _sl: r.sl, _gv: r.gv, _gl: r.gl
+            });
+          } else {
+            result.set(r.par, { status: 'contention', group: g.id });
+          }
+        });
+      }
     });
 
     // For wildcard cats: check if eliminated-from-group pairs can still get wildcard
