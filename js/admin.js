@@ -4575,8 +4575,29 @@ function ffRecalcBracket(catId) {
 
   // Guardar justificação da troca
   ff[catId].swapNote = swapNote || null;
-  // Clear incomplete flag if all group games are now done
-  if (allGroupGamesDone(catId)) ff[catId].incomplete = false;
+
+  // If bracket is incomplete, null out teams from groups with pending games (show "A definir")
+  const allDone = allGroupGamesDone(catId);
+  if (!allDone) {
+    const grupos = getData('grupos').filter(g => g.cat === catId);
+    const numGroups = grupos.length;
+    const allJogos = getData('jogos') || [];
+    const pendingGroups = new Set(
+      grupos.filter(g => allJogos.some(j => j.grupo === g.id && !j.resultado)).map(g => g.id)
+    );
+    ff[catId].jogos.forEach(j => {
+      if (j.fase !== 'QF') return;
+      if (j.eq1grupo && pendingGroups.has(j.eq1grupo) && j.eq1seed > numGroups) {
+        j.eq1 = null; j.eq1grupo = null; j.eq1seed = null;
+      }
+      if (j.eq2grupo && pendingGroups.has(j.eq2grupo) && j.eq2seed > numGroups) {
+        j.eq2 = null; j.eq2grupo = null; j.eq2seed = null;
+      }
+    });
+    ff[catId].incomplete = true;
+  } else {
+    ff[catId].incomplete = false;
+  }
 
   ffSave(ff);
   renderFaseFinal();
