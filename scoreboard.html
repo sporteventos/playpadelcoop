@@ -310,13 +310,14 @@
         .map(([par, v]) => ({ par, ...v }));
 
       // Only the BEST eliminated per group is eligible for wildcard (true 3rd place)
-      // Multiple entries per group happen in groups of 4+ (3rd and 4th are both eliminated_group)
+      // Use allGroupData rows[] (already sorted by miniGroupSort) to pick the correct 3rd
       const bestPerGroup = new Map();
-      elim3.forEach(t => {
-        const ex = bestPerGroup.get(t.group);
-        // Pick the one with fewest teams above (lowest _guaranteedAbove = highest rank in group)
-        if (!ex || t._guaranteedAbove < ex._guaranteedAbove) {
-          bestPerGroup.set(t.group, t);
+      allGroupData.forEach(({ g, rows }) => {
+        // rows is sorted: find first row that is eliminated_group (= true 3rd place)
+        const best = rows.find(r => result.get(r.par)?.status === 'eliminated_group');
+        if (best) {
+          const v = result.get(best.par);
+          bestPerGroup.set(g.id, { par: best.par, ...v });
         }
       });
       const wcCandidates = [...bestPerGroup.values()];
