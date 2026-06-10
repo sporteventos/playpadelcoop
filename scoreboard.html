@@ -281,13 +281,33 @@
         .filter(([, v]) => v.status === 'eliminated_group')
         .map(([par, v]) => ({ par, ...v }));
 
+      // Only the BEST eliminated per group is eligible for wildcard (true 3rd place)
+      // Multiple entries per group happen in groups of 4+ (3rd and 4th are both eliminated_group)
+      const bestPerGroup = new Map();
+      elim3.forEach(t => {
+        const ex = bestPerGroup.get(t.group);
+        if (!ex || t._maxWins > ex._maxWins ||
+            (t._maxWins === ex._maxWins && (t._sv - t._sl) > (ex._sv - ex._sl)) ||
+            (t._maxWins === ex._maxWins && (t._sv - t._sl) === (ex._sv - ex._sl) && (t._gv - t._gl) > (ex._gv - ex._gl))) {
+          bestPerGroup.set(t.group, t);
+        }
+      });
+      const wcCandidates = [...bestPerGroup.values()];
+
+      // Mark non-candidates (4th, 5th…) as definitively eliminated
+      elim3.forEach(t => {
+        if (!wcCandidates.find(c => c.par === t.par)) {
+          result.set(t.par, { status: 'eliminated', group: t.group });
+        }
+      });
+
       const nWildcards = Math.max(0, 8 - 2 * catGrupos.length);
       // When all groups are fully played, rank by tiebreak and assign definitively
-      const allGroupsDone = elim3.length > 0 && elim3.every(t => t._maxWins === t._minWins);
+      const allGroupsDone = wcCandidates.length > 0 && wcCandidates.every(t => t._maxWins === t._minWins);
 
       if (allGroupsDone && nWildcards > 0) {
         // Rank wildcards: wins → sets diff → games diff → games won (no H2H across groups)
-        const ranked = [...elim3].sort((a, b) =>
+        const ranked = [...wcCandidates].sort((a, b) =>
           b._maxWins - a._maxWins ||
           (b._sv - b._sl) - (a._sv - a._sl) ||
           (b._gv - b._gl) - (a._gv - a._gl) ||
@@ -301,8 +321,8 @@
           });
         });
       } else {
-        elim3.forEach(({ par, _maxWins, group }) => {
-          const betterGuaranteed = elim3.filter(t => t.par !== par && t._minWins > _maxWins).length;
+        wcCandidates.forEach(({ par, _maxWins, group }) => {
+          const betterGuaranteed = wcCandidates.filter(t => t.par !== par && t._minWins > _maxWins).length;
           result.set(par, betterGuaranteed >= nWildcards
             ? { status: 'eliminated', group }
             : { status: 'contention_wc', group }
