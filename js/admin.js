@@ -6828,10 +6828,9 @@ window.horarioMoverDiaRefreshSlots = function() {
   }
   const times = [...new Set([...CLUB_SLOTS, ...dayJogos.map(j => j.hora).filter(Boolean)])].sort();
 
-  if (!times.length) {
-    container.innerHTML = `<p style="color:var(--cinza-texto);font-size:.8rem;margin-top:.5rem">Nenhum jogo neste dia — slots de referência indisponíveis.</p>`;
-    return;
-  }
+  // Fallback: if no games on target day, use standard evening slots
+  const DEFAULT_SLOTS = ['17:00','17:30','18:00','18:30','19:00','19:30','20:00','20:30','21:00','21:30'];
+  const effectiveTimes = times.length ? times : DEFAULT_SLOTS;
 
   // Occupation map {hora|campo : jogo}
   const occupied = {};
@@ -6844,7 +6843,7 @@ window.horarioMoverDiaRefreshSlots = function() {
   campos.forEach(c => { html += `<th style="padding:.3rem .5rem;color:var(--cinza-texto);text-align:center;border-bottom:1px solid var(--preto-borda)">${escHtml(c)}</th>`; });
   html += `</tr></thead><tbody>`;
 
-  times.forEach(t => {
+  effectiveTimes.forEach(t => {
     html += `<tr><td style="padding:.25rem .5rem;color:var(--branco);font-weight:700;white-space:nowrap">${t}</td>`;
     campos.forEach(campo => {
       const key = `${t}|${campo}`;
