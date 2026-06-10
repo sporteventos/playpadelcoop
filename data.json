@@ -4699,9 +4699,9 @@
           "eq2grupo": "F1-B",
           "eq2seed": 8,
           "resultado": null,
-          "data": "2026-06-12",
-          "hora": "19:30",
-          "campo": "TVCabo"
+          "data": "2026-06-11",
+          "hora": "18:30",
+          "campo": "Play Padel"
         },
         {
           "id": "F1-QF2",
@@ -4963,9 +4963,9 @@
           "eq2grupo": "M1-C",
           "eq2seed": 5,
           "resultado": null,
-          "data": "2026-06-11",
+          "data": "2026-06-12",
           "hora": "19:30",
-          "campo": "Play Padel"
+          "campo": "TVCabo"
         },
         {
           "id": "M1-QF3",
@@ -5266,7 +5266,7 @@
           "eq2seed": 6,
           "resultado": null,
           "data": "2026-06-11",
-          "hora": "18:30",
+          "hora": "19:30",
           "campo": "Play Padel"
         },
         {
@@ -5577,6 +5577,46 @@
     }
   ],
   "auditlog": [
+    {
+      "id": "mq8pvng3l0dvnx5",
+      "userId": "mpz46x5c2zupza0",
+      "username": "bgaspar",
+      "role": "operator",
+      "action": "HORARIO_DRAG",
+      "target": "fasefinal",
+      "detail": "Jogo F1-QF1 movido para 18:30 @ Play Padel",
+      "ts": "2026-06-10T23:45:47.379Z"
+    },
+    {
+      "id": "mq8pvfcbnxi2yhh",
+      "userId": "mpz46x5c2zupza0",
+      "username": "bgaspar",
+      "role": "operator",
+      "action": "HORARIO_DRAG",
+      "target": "fasefinal",
+      "detail": "Jogo F1-QF1 movido para 19:30 @ Play Padel",
+      "ts": "2026-06-10T23:45:36.875Z"
+    },
+    {
+      "id": "mq8pv7i25qry1ch",
+      "userId": "mpz46x5c2zupza0",
+      "username": "bgaspar",
+      "role": "operator",
+      "action": "HORARIO_MOVER_DIA",
+      "target": "fasefinal",
+      "detail": "Jogo M1-QF2 de 2026-06-11 19:30 Play Padel → 2026-06-12 19:30 TVCabo",
+      "ts": "2026-06-10T23:45:26.714Z"
+    },
+    {
+      "id": "mq8pusl8xdx1tk3",
+      "userId": "mpz46x5c2zupza0",
+      "username": "bgaspar",
+      "role": "operator",
+      "action": "HORARIO_MOVER_DIA",
+      "target": "fasefinal",
+      "detail": "Jogo F1-QF1 de 2026-06-12 19:30 TVCabo → 2026-06-11 16:30 TVCabo",
+      "ts": "2026-06-10T23:45:07.388Z"
+    },
     {
       "id": "mq8pjvootv9csgd",
       "userId": "mpz46x5c2zupza0",
@@ -15188,5 +15228,5 @@
       "ts": "2026-06-03T06:06:37.211Z"
     }
   ],
-  "_updated": "2026-06-10T23:38:13.467Z"
+  "_updated": "2026-06-10T23:46:01.344Z"
 }
