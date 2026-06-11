@@ -3739,7 +3739,20 @@ window.suspenderJogo = function() {
 
 // Auto-sync silencioso após guardar dados críticos (resultados, adiados, suspensos)
 // Tenta push para GitHub sem bloquear o utilizador; mostra toast só se falhar.
+let _autoSyncPaused = false;
+window.toggleAutoSyncPause = function() {
+  _autoSyncPaused = !_autoSyncPaused;
+  const btn  = document.getElementById('syncPauseBtn');
+  const icon = document.getElementById('syncPauseIcon');
+  if (btn)  btn.title  = _autoSyncPaused ? 'Auto-sync PAUSADO — clique para retomar' : 'Pausar auto-sync';
+  if (btn)  btn.style.color  = _autoSyncPaused ? 'var(--vermelho)' : '';
+  if (btn)  btn.style.borderColor = _autoSyncPaused ? 'rgba(255,74,74,.4)' : '';
+  if (icon) icon.className = _autoSyncPaused ? 'ph ph-pause-circle' : 'ph ph-play-circle';
+  toast(_autoSyncPaused ? '⏸ Auto-sync pausado. Os dados locais não serão publicados.' : '▶ Auto-sync retomado.', _autoSyncPaused ? 'error' : 'success');
+};
+
 function _autoSync() {
+  if (_autoSyncPaused) return;
   if (typeof GHSync === 'undefined' || !GHSync.isConfigured()) return;
   GHSync.push(GHSync.getAllData()).then(() => {
     // success — silent
