@@ -253,7 +253,7 @@ document.addEventListener('DOMContentLoaded', () => {
           id: 'ff-' + j.id,
           data: j.data,
           hora: j.hora,
-          campo: 'Fase Final',
+          campo: j.campo || 'Fase Final',
           grupo: catId + '-' + (j.fase === 'F' ? 'Final' : j.fase + j.num),
           eq1: j.eq1 || 'A definir',
           eq2: j.eq2 || 'A definir',
