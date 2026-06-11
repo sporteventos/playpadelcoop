@@ -5580,6 +5580,16 @@
   ],
   "auditlog": [
     {
+      "id": "mq9orvmlf5aaws8",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "SAVE_RESULT_FF",
+      "target": "fasefinal",
+      "detail": "Resultado FF: M1 jogo M1-QF1",
+      "ts": "2026-06-11T16:02:37.917Z"
+    },
+    {
       "id": "mq9o76qxmwhgxzs",
       "userId": "mpz8aq9sg983ubo",
       "username": "euamusse",
@@ -15568,17 +15578,7 @@
       "target": "auth",
       "detail": "Logout: admin",
       "ts": "2026-06-03T18:45:26.415Z"
-    },
-    {
-      "id": "mpyez03dgvt61ta",
-      "userId": "mpxnxlqhg3dzc1o",
-      "username": "admin",
-      "role": "admin",
-      "action": "RESET_BRACKET",
-      "target": "fasefinal",
-      "detail": "Bracket resetado: M1",
-      "ts": "2026-06-03T18:42:46.201Z"
     }
   ],
-  "_updated": "2026-06-11T16:01:32.655Z"
+  "_updated": "2026-06-11T16:03:49.060Z"
 }
