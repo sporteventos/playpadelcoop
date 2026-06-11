@@ -5671,7 +5671,7 @@ function _adminQualifiedMap(catId, grupos, jogos) {
     // E todos os jogos do grupo estão disputados
     const allGroupsDone = terceiros.length === catGroups.length && catGroups.every(g => {
       const gJogos = jogos.filter(j => j.grupo === g.id);
-      return gJogos.length > 0 && gJogos.every(j => j.r !== undefined || j.wo);
+      return gJogos.length > 0 && gJogos.every(j => !!j.resultado);
     });
     if (allGroupsDone) {
       terceiros.sort((a,b) => b.v-a.v || (b.sv-b.sl)-(a.sv-a.sl) || (b.gv-b.gl)-(a.gv-a.gl) || b.gv-a.gv);
@@ -5895,10 +5895,14 @@ window.gerarPanfletoClassificacoes = function() {
   const jogos     = getData('jogos');
   if (!allGrupos.length) return toast('Sem grupos para gerar.', 'error');
 
+  const qualifiedByCat = {};
+  cats.forEach(cid => { qualifiedByCat[cid] = _adminQualifiedMap(cid, allGrupos, jogos); });
+
   const groupData = allGrupos.map(g => {
     const rows = _adminClassStandings(g, jogos);
     const gJogos = jogos.filter(j => j.grupo === g.id);
-    return { id: g.id, rows, total: gJogos.length, done: gJogos.filter(j => j.resultado).length };
+    const gCatId = g.id.split('-')[0];
+    return { id: g.id, rows, total: gJogos.length, done: gJogos.filter(j => j.resultado).length, qualMap: qualifiedByCat[gCatId] };
   });
 
   const catColor = catId ? ({ M1:'#4A9EFF', M2:'#00C37B', M3:'#39FF8F', M4:'#F5C518', M5:'#FF9A3C', F1:'#FF6BB0', F2:'#C97BFF' }[catId] || '#00C37B') : '#00C37B';
@@ -6023,14 +6027,29 @@ window.gerarPanfletoClassificacoes = function() {
       // Team rows
       g.rows.forEach((r, ri) => {
         const ry = cy + CARD_HEAD_H + COL_HEAD_H + ri * ROW_H;
-        if (ri === 0) { ctx.fillStyle = 'rgba(57,255,143,0.08)'; ctx.fillRect(cx, ry, CARD_W, ROW_H); }
+        const qType = g.qualMap?.get(r.par);
+        if (qType === 'direto')    { ctx.fillStyle = 'rgba(57,255,143,0.08)';  ctx.fillRect(cx, ry, CARD_W, ROW_H); ctx.fillStyle = '#39FF8F'; ctx.fillRect(cx, ry, 4, ROW_H); }
+        else if (qType === 'wildcard') { ctx.fillStyle = 'rgba(245,197,24,0.08)'; ctx.fillRect(cx, ry, CARD_W, ROW_H); ctx.fillStyle = '#F5C518'; ctx.fillRect(cx, ry, 4, ROW_H); }
+        else if (ri === 0) { ctx.fillStyle = 'rgba(57,255,143,0.08)'; ctx.fillRect(cx, ry, CARD_W, ROW_H); }
         else if (ri === 1) { ctx.fillStyle = 'rgba(57,255,143,0.04)'; ctx.fillRect(cx, ry, CARD_W, ROW_H); }
         else if (ri % 2 === 0) { ctx.fillStyle = 'rgba(255,255,255,0.02)'; ctx.fillRect(cx, ry, CARD_W, ROW_H); }
 
         const rcy = ry + ROW_H * 0.68;
-        ctx.fillStyle = ri === 0 ? '#39FF8F' : ri === 1 ? '#8AA396' : '#4A6058';
-        ctx.font = 'bold 15px Arial, sans-serif';
-        ctx.fillText(`${ri + 1}`, rx.rank, rcy);
+        if (qType === 'direto') {
+          ctx.fillStyle = 'rgba(57,255,143,0.35)';
+          ctx.beginPath(); ctx.roundRect(rx.rank - 2, ry + 6, 24, ROW_H - 12, 3); ctx.fill();
+          ctx.fillStyle = '#39FF8F'; ctx.font = 'bold 13px Arial, sans-serif';
+          ctx.textAlign = 'center'; ctx.fillText('Q', rx.rank + 10, rcy); ctx.textAlign = 'left';
+        } else if (qType === 'wildcard') {
+          ctx.fillStyle = 'rgba(245,197,24,0.35)';
+          ctx.beginPath(); ctx.roundRect(rx.rank - 2, ry + 6, 24, ROW_H - 12, 3); ctx.fill();
+          ctx.fillStyle = '#F5C518'; ctx.font = 'bold 10px Arial, sans-serif';
+          ctx.textAlign = 'center'; ctx.fillText('WC', rx.rank + 10, rcy); ctx.textAlign = 'left';
+        } else {
+          ctx.fillStyle = ri === 0 ? '#39FF8F' : ri === 1 ? '#8AA396' : '#4A6058';
+          ctx.font = 'bold 15px Arial, sans-serif';
+          ctx.fillText(`${ri + 1}`, rx.rank, rcy);
+        }
 
         ctx.fillStyle = ri === 0 ? '#F0F7F3' : '#C4D4CC';
         ctx.font = '15px Arial, sans-serif';
