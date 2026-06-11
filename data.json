@@ -5511,7 +5511,20 @@
           "eq2": "Keiss Chiraze & Saif Issa",
           "eq2grupo": "M3-C",
           "eq2seed": 5,
-          "resultado": null,
+          "resultado": {
+            "s1eq1": 6,
+            "s1eq2": 3,
+            "tb1eq1": null,
+            "tb1eq2": null,
+            "s2eq1": 6,
+            "s2eq2": 3,
+            "tb2eq1": null,
+            "tb2eq2": null,
+            "s3eq1": null,
+            "s3eq2": null,
+            "tb3eq1": null,
+            "tb3eq2": null
+          },
           "data": "2026-06-11",
           "hora": "20:30",
           "campo": "Play Padel"
@@ -5558,8 +5571,8 @@
             "M3-QF3",
             "M3-QF4"
           ],
-          "eq1": null,
-          "eq1grupo": null,
+          "eq1": "Sueil & Ahmed Riaze",
+          "eq1grupo": "M3-D",
           "eq1seed": null,
           "eq2": null,
           "eq2grupo": null,
@@ -5683,6 +5696,16 @@
     }
   ],
   "auditlog": [
+    {
+      "id": "mq9xjy3l3f94b8u",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "SAVE_RESULT_FF",
+      "target": "fasefinal",
+      "detail": "Resultado FF: M3 jogo M3-QF3",
+      "ts": "2026-06-11T20:08:24.417Z"
+    },
     {
       "id": "mq9wnjui58o142h",
       "userId": "mpz8aq9sg983ubo",
@@ -15672,17 +15695,7 @@
       "target": "fasefinal",
       "detail": "Bracket gerado: M1",
       "ts": "2026-06-04T07:00:35.288Z"
-    },
-    {
-      "id": "mpz5buc8g1jvelt",
-      "userId": "mpxnxlqhg3dzc1o",
-      "username": "admin",
-      "role": "admin",
-      "action": "GENERATE_BRACKET",
-      "target": "fasefinal",
-      "detail": "Bracket gerado: M2",
-      "ts": "2026-06-04T07:00:35.288Z"
     }
   ],
-  "_updated": "2026-06-11T20:07:15.749Z"
+  "_updated": "2026-06-11T20:08:24.420Z"
 }
