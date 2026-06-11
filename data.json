@@ -5494,9 +5494,9 @@
           "eq1": "Shueb & Sahad",
           "eq1grupo": "M3-B",
           "eq1seed": 1,
-          "eq2": null,
-          "eq2grupo": null,
-          "eq2seed": null,
+          "eq2": "Abdul Ibraimo & Guilherme Godinho",
+          "eq2grupo": "M3-A",
+          "eq2seed": 8,
           "resultado": null,
           "data": "2026-06-12",
           "hora": "20:30",
@@ -5619,8 +5619,9 @@
           "campo": "TVCabo"
         }
       ],
-      "swapNote": "Ajuste anti-colisão: S6→QF2, S5→QF3",
-      "incomplete": true
+      "swapNote": null,
+      "incomplete": false,
+      "collisionNote": "Ajuste anti-colisão: S6→QF2, S5→QF3"
     }
   },
   "telefones": {
@@ -15716,5 +15717,5 @@
       "ts": "2026-06-04T07:00:35.293Z"
     }
   ],
-  "_updated": "2026-06-11T21:08:03.380Z"
+  "_updated": "2026-06-11T21:08:14.029Z"
 }
