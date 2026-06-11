@@ -1453,12 +1453,6 @@ function _buildFotoFlyerFF(img) {
     const teamZoneH = 148;
     const midX = W / 2;
 
-    // Subtle winner-side tint
-    const winGrad = ctx.createLinearGradient(0, teamZoneY, 0, teamZoneY + teamZoneH);
-    winGrad.addColorStop(0, PHASE_CLR + '00'); winGrad.addColorStop(1, PHASE_CLR + '1A');
-    ctx.fillStyle = winGrad;
-    ctx.fillRect(eq1Won ? 0 : midX, teamZoneY, midX, teamZoneH);
-
     function drawSplitTeam(name, side, won, seed) {
       const xC = side === 'left' ? W / 4 : 3 * W / 4;
       const maxW = midX - PAD * 1.5;
@@ -1522,21 +1516,21 @@ function _buildFotoFlyerFF(img) {
     // ── Winner banner ──────────────────────────────
     const winner = eq1Won ? jogo.eq1 : jogo.eq2;
     const wParts = winner.split(' & ');
-    const wH = wParts.length === 2 ? 106 : 80;
-    const wY = scoreY + 68;
+    const wH = wParts.length === 2 ? 116 : 88;
+    const wY = scoreY + 96;
     ctx.fillStyle = 'rgba(245,197,24,0.10)';
     ctx.beginPath(); ctx.roundRect(PAD, wY, W - PAD*2, wH, 14); ctx.fill();
     ctx.strokeStyle = 'rgba(245,197,24,0.38)'; ctx.lineWidth = 1.5;
     ctx.beginPath(); ctx.roundRect(PAD, wY, W - PAD*2, wH, 14); ctx.stroke();
     ctx.fillStyle = '#F5C518'; ctx.font = 'bold 18px Arial, sans-serif'; ctx.textAlign = 'center';
-    ctx.fillText('\uD83C\uDFC6  VENCEDOR', W/2, wY + 26);
+    ctx.fillText('\uD83C\uDFC6  VENCEDOR', W/2, wY + 30);
     ctx.fillStyle = '#F0F7F3';
     if (wParts.length === 2) {
       ctx.font = 'bold 24px Arial, sans-serif';
-      ctx.fillText(wParts[0], W/2, wY + 60); ctx.fillText(wParts[1], W/2, wY + 90);
+      ctx.fillText(wParts[0], W/2, wY + 66); ctx.fillText(wParts[1], W/2, wY + 98);
     } else {
       ctx.font = 'bold 28px Arial, sans-serif';
-      ctx.fillText(winner, W/2, wY + 58);
+      ctx.fillText(winner, W/2, wY + 62);
     }
 
     // Bottom strip
