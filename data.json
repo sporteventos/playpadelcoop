@@ -4866,7 +4866,20 @@
           "eq2": "Saira Sale & Sónia Caravela",
           "eq2grupo": "F2-C",
           "eq2seed": 5,
-          "resultado": null,
+          "resultado": {
+            "s1eq1": 6,
+            "s1eq2": 2,
+            "tb1eq1": null,
+            "tb1eq2": null,
+            "s2eq1": 7,
+            "s2eq2": 6,
+            "tb2eq1": 7,
+            "tb2eq2": 4,
+            "s3eq1": null,
+            "s3eq2": null,
+            "tb3eq1": null,
+            "tb3eq2": null
+          },
           "data": "2026-06-11",
           "hora": "18:30",
           "campo": "TVCabo"
@@ -4927,8 +4940,8 @@
           "eq1": "Karina Darsan & Bethany",
           "eq1grupo": "F2-B",
           "eq1seed": null,
-          "eq2": null,
-          "eq2grupo": null,
+          "eq2": "Florence & Jinane",
+          "eq2grupo": "F2-A",
           "eq2seed": null,
           "resultado": null,
           "data": "2026-06-13",
@@ -5631,6 +5644,36 @@
     }
   ],
   "auditlog": [
+    {
+      "id": "mq9t5p64sy3etr8",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "SAVE_RESULT_FF",
+      "target": "fasefinal",
+      "detail": "Resultado FF: F2 jogo F2-QF2",
+      "ts": "2026-06-11T18:05:21.196Z"
+    },
+    {
+      "id": "mq9t4lxafk52izq",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "LOGIN",
+      "target": "auth",
+      "detail": "Login: euamusse (admin)",
+      "ts": "2026-06-11T18:04:30.334Z"
+    },
+    {
+      "id": "mq9t4boei8a1u41",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "LOGOUT",
+      "target": "auth",
+      "detail": "Logout: euamusse",
+      "ts": "2026-06-11T18:04:17.054Z"
+    },
     {
       "id": "mq9s8kr7zc21xwv",
       "userId": "mpz8aq9sg983ubo",
@@ -15600,37 +15643,7 @@
       "target": "fasefinal",
       "detail": "Bracket resetado: F2",
       "ts": "2026-06-04T06:44:58.731Z"
-    },
-    {
-      "id": "mpz4rpkcrqbbbu8",
-      "userId": "mpxnxlqhg3dzc1o",
-      "username": "admin",
-      "role": "admin",
-      "action": "RESET_BRACKET",
-      "target": "fasefinal",
-      "detail": "Bracket resetado: F1",
-      "ts": "2026-06-04T06:44:55.980Z"
-    },
-    {
-      "id": "mpz4rn3c9uuth5q",
-      "userId": "mpxnxlqhg3dzc1o",
-      "username": "admin",
-      "role": "admin",
-      "action": "RESET_BRACKET",
-      "target": "fasefinal",
-      "detail": "Bracket resetado: M2",
-      "ts": "2026-06-04T06:44:52.776Z"
-    },
-    {
-      "id": "mpz4rjjupmtiffu",
-      "userId": "mpxnxlqhg3dzc1o",
-      "username": "admin",
-      "role": "admin",
-      "action": "RESET_BRACKET",
-      "target": "fasefinal",
-      "detail": "Bracket resetado: M1",
-      "ts": "2026-06-04T06:44:48.186Z"
     }
   ],
-  "_updated": "2026-06-11T17:40:54.116Z"
+  "_updated": "2026-06-11T18:05:21.197Z"
 }
