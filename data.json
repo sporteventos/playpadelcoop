@@ -4060,11 +4060,21 @@
       "grupo": "M3-A",
       "eq1": "Burhan Hassan & Sarfaraz",
       "eq2": "Abdul Ibraimo & Guilherme Godinho",
-      "resultado": null,
-      "adiado": {
-        "motivo": "",
-        "ts": 1781073862572
+      "resultado": {
+        "s1eq1": 7,
+        "s1eq2": 6,
+        "tb1eq1": 7,
+        "tb1eq2": 1,
+        "s2eq1": 6,
+        "s2eq2": 7,
+        "tb2eq1": 4,
+        "tb2eq2": 7,
+        "s3eq1": 5,
+        "s3eq2": 7,
+        "tb3eq1": null,
+        "tb3eq2": null
       },
+      "adiado": null,
       "suspenso": null
     },
     {
@@ -5696,6 +5706,36 @@
     }
   ],
   "auditlog": [
+    {
+      "id": "mq9zma8xfhqyy1n",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "SAVE_RESULT",
+      "target": "resultados",
+      "detail": "Resultado guardado: jogo #107",
+      "ts": "2026-06-11T21:06:12.705Z"
+    },
+    {
+      "id": "mq9y71uk7n2mnna",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "LOGIN",
+      "target": "auth",
+      "detail": "Login: euamusse (admin)",
+      "ts": "2026-06-11T20:26:22.364Z"
+    },
+    {
+      "id": "mq9y6x81mabk1oh",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "LOGOUT",
+      "target": "auth",
+      "detail": "Logout: euamusse",
+      "ts": "2026-06-11T20:26:16.369Z"
+    },
     {
       "id": "mq9xjy3l3f94b8u",
       "userId": "mpz8aq9sg983ubo",
@@ -15665,37 +15705,7 @@
       "target": "fasefinal",
       "detail": "Bracket gerado: M3",
       "ts": "2026-06-04T07:00:35.293Z"
-    },
-    {
-      "id": "mpz5bucactuwual",
-      "userId": "mpxnxlqhg3dzc1o",
-      "username": "admin",
-      "role": "admin",
-      "action": "GENERATE_BRACKET",
-      "target": "fasefinal",
-      "detail": "Bracket gerado: F2",
-      "ts": "2026-06-04T07:00:35.290Z"
-    },
-    {
-      "id": "mpz5buc9hbplhzo",
-      "userId": "mpxnxlqhg3dzc1o",
-      "username": "admin",
-      "role": "admin",
-      "action": "GENERATE_BRACKET",
-      "target": "fasefinal",
-      "detail": "Bracket gerado: F1",
-      "ts": "2026-06-04T07:00:35.289Z"
-    },
-    {
-      "id": "mpz5buc8z6bzq1p",
-      "userId": "mpxnxlqhg3dzc1o",
-      "username": "admin",
-      "role": "admin",
-      "action": "GENERATE_BRACKET",
-      "target": "fasefinal",
-      "detail": "Bracket gerado: M1",
-      "ts": "2026-06-04T07:00:35.288Z"
     }
   ],
-  "_updated": "2026-06-11T20:08:24.420Z"
+  "_updated": "2026-06-11T21:06:12.707Z"
 }
