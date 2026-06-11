@@ -7304,6 +7304,7 @@ function renderRelatorioJogos() {
       grupo: `${catId} ${faseLabels[j.fase] || j.fase}${j.num > 1 ? ' '+j.num : ''}`,
       campo: j.campo || 'Fase Final',
       _ff: true,
+      _cat: catId,
     }))
   );
   const allJogos = [...jogos, ...ffJogos];
