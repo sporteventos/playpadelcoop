@@ -5580,6 +5580,36 @@
   ],
   "auditlog": [
     {
+      "id": "mq9pcl3eym9zs4j",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "SAVE_RESULT_FF",
+      "target": "fasefinal",
+      "detail": "Resultado FF: F2 jogo F2-QF4",
+      "ts": "2026-06-11T16:18:44.042Z"
+    },
+    {
+      "id": "mq9p8ds0o3enbo7",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "LOGIN",
+      "target": "auth",
+      "detail": "Login: euamusse (admin)",
+      "ts": "2026-06-11T16:15:27.936Z"
+    },
+    {
+      "id": "mq9p24m8qvx946x",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "LOGOUT",
+      "target": "auth",
+      "detail": "Logout: euamusse",
+      "ts": "2026-06-11T16:10:36.128Z"
+    },
+    {
       "id": "mq9orvmlf5aaws8",
       "userId": "mpz8aq9sg983ubo",
       "username": "euamusse",
@@ -15548,37 +15578,7 @@
       "target": "auth",
       "detail": "Logout: admin",
       "ts": "2026-06-03T19:59:17.416Z"
-    },
-    {
-      "id": "mpyhakdvoq11j59",
-      "userId": "mpxnxlqhg3dzc1o",
-      "username": "admin",
-      "role": "admin",
-      "action": "DELETE_JOGADOR",
-      "target": "jogadores",
-      "detail": "\"Faheem Adomo\" eliminado de 1 jogo(s)",
-      "ts": "2026-06-03T19:47:44.947Z"
-    },
-    {
-      "id": "mpyg3ivaes5kufm",
-      "userId": "mpxnxlqhg3dzc1o",
-      "username": "admin",
-      "role": "admin",
-      "action": "LOGIN",
-      "target": "auth",
-      "detail": "Login: admin (admin)",
-      "ts": "2026-06-03T19:14:16.774Z"
-    },
-    {
-      "id": "mpyf2fpriehaqwu",
-      "userId": "mpxnxlqhg3dzc1o",
-      "username": "admin",
-      "role": "admin",
-      "action": "LOGOUT",
-      "target": "auth",
-      "detail": "Logout: admin",
-      "ts": "2026-06-03T18:45:26.415Z"
     }
   ],
-  "_updated": "2026-06-11T16:03:49.060Z"
+  "_updated": "2026-06-11T16:19:58.356Z"
 }
