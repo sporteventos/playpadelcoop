@@ -4782,8 +4782,8 @@
           "eq1": null,
           "eq1grupo": null,
           "eq1seed": null,
-          "eq2": null,
-          "eq2grupo": null,
+          "eq2": "Érica Capela & Sarah Taillon",
+          "eq2grupo": "F1-B",
           "eq2seed": null,
           "resultado": null,
           "data": "2026-06-13",
@@ -4872,7 +4872,20 @@
           "eq2": "Shanel & Kaitlynn",
           "eq2grupo": "F2-B",
           "eq2seed": 8,
-          "resultado": null,
+          "resultado": {
+            "s1eq1": 6,
+            "s1eq2": 0,
+            "tb1eq1": null,
+            "tb1eq2": null,
+            "s2eq1": 6,
+            "s2eq2": 3,
+            "tb2eq1": null,
+            "tb2eq2": null,
+            "s3eq1": null,
+            "s3eq2": null,
+            "tb3eq1": null,
+            "tb3eq2": null
+          },
           "data": "2026-06-11",
           "hora": "17:30",
           "campo": "TVCabo"
@@ -4906,8 +4919,8 @@
           "eq1": null,
           "eq1grupo": null,
           "eq1seed": null,
-          "eq2": null,
-          "eq2grupo": null,
+          "eq2": "Cris Vasconcelos & Beatriz Madeira",
+          "eq2grupo": "F2-A",
           "eq2seed": null,
           "resultado": null,
           "data": "2026-06-13",
@@ -5580,6 +5593,36 @@
   ],
   "auditlog": [
     {
+      "id": "mq9pxl55ejewppu",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "SAVE_RESULT_FF",
+      "target": "fasefinal",
+      "detail": "Resultado FF: F2 jogo F2-QF4",
+      "ts": "2026-06-11T16:35:03.881Z"
+    },
+    {
+      "id": "mq9pwesir0eq5i1",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "LOGIN",
+      "target": "auth",
+      "detail": "Login: euamusse (admin)",
+      "ts": "2026-06-11T16:34:08.995Z"
+    },
+    {
+      "id": "mq9pvsb57vuu557",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "LOGIN",
+      "target": "auth",
+      "detail": "Login: euamusse (admin)",
+      "ts": "2026-06-11T16:33:39.857Z"
+    },
+    {
       "id": "mq9pcl3eym9zs4j",
       "userId": "mpz8aq9sg983ubo",
       "username": "euamusse",
@@ -5680,6 +5723,36 @@
       "ts": "2026-06-11T14:42:04.343Z"
     },
     {
+      "id": "mq9lrwvcow1uom1",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "GENERATE_BRACKET_INCOMPLETE",
+      "target": "fasefinal",
+      "detail": "Bracket gerado (incompleto): M3",
+      "ts": "2026-06-11T14:38:40.680Z"
+    },
+    {
+      "id": "mq9lqpf5l5bnka5",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "LOGIN",
+      "target": "auth",
+      "detail": "Login: euamusse (admin)",
+      "ts": "2026-06-11T14:37:44.369Z"
+    },
+    {
+      "id": "mq9lqkwa75pagwg",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "LOGOUT",
+      "target": "auth",
+      "detail": "Logout: euamusse",
+      "ts": "2026-06-11T14:37:38.506Z"
+    },
+    {
       "id": "mq9lqcc3a0y2ju3",
       "userId": "mpzxoo1v8l1za3r",
       "username": "djanasse",
@@ -5730,6 +5803,26 @@
       "ts": "2026-06-11T14:30:38.677Z"
     },
     {
+      "id": "mq9juzb7c25w6g8",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "LOGIN",
+      "target": "auth",
+      "detail": "Login: euamusse (admin)",
+      "ts": "2026-06-11T13:45:04.579Z"
+    },
+    {
+      "id": "mq9juvtb8ettmgg",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "LOGOUT",
+      "target": "auth",
+      "detail": "Logout: euamusse",
+      "ts": "2026-06-11T13:45:00.047Z"
+    },
+    {
       "id": "mq9jm4wcb8wlvq1",
       "userId": "mpz46x5c2zupza0",
       "username": "bgaspar",
@@ -5768,6 +5861,26 @@
       "target": "auth",
       "detail": "Login: bgaspar (operator)",
       "ts": "2026-06-11T11:56:56.833Z"
+    },
+    {
+      "id": "mq9dzzv9qcj9upv",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "LOGIN",
+      "target": "auth",
+      "detail": "Login: euamusse (admin)",
+      "ts": "2026-06-11T11:01:00.885Z"
+    },
+    {
+      "id": "mq9dzum1ooa0mht",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "LOGOUT",
+      "target": "auth",
+      "detail": "Logout: euamusse",
+      "ts": "2026-06-11T11:00:54.073Z"
     },
     {
       "id": "mq9cmampbanlhak",
@@ -5940,6 +6053,26 @@
       "ts": "2026-06-11T05:57:03.202Z"
     },
     {
+      "id": "mq934arbdla670j",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "LOGIN",
+      "target": "auth",
+      "detail": "Login: euamusse (admin)",
+      "ts": "2026-06-11T05:56:25.847Z"
+    },
+    {
+      "id": "mq933uej8ant35m",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "LOGOUT",
+      "target": "auth",
+      "detail": "Logout: euamusse",
+      "ts": "2026-06-11T05:56:04.651Z"
+    },
+    {
       "id": "mq8rgreo8liobg8",
       "userId": "mpz46x5c2zupza0",
       "username": "bgaspar",
@@ -6008,6 +6141,26 @@
       "target": "fasefinal",
       "detail": "Jogo F1-QF1 de 2026-06-12 19:30 TVCabo → 2026-06-11 16:30 TVCabo",
       "ts": "2026-06-10T23:45:07.388Z"
+    },
+    {
+      "id": "mq8pp24b14ptmvp",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "LOGIN",
+      "target": "auth",
+      "detail": "Login: euamusse (admin)",
+      "ts": "2026-06-10T23:40:39.803Z"
+    },
+    {
+      "id": "mq8poxq2vgk0cte",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "LOGOUT",
+      "target": "auth",
+      "detail": "Logout: euamusse",
+      "ts": "2026-06-10T23:40:34.106Z"
     },
     {
       "id": "mq8ple5r2t3cm5s",
@@ -15438,147 +15591,7 @@
       "target": "utilizadores",
       "detail": "Actualizado \"bgaspar\"",
       "ts": "2026-06-04T06:27:51.013Z"
-    },
-    {
-      "id": "mpz2twrq42qbpol",
-      "userId": "mpxnxlqhg3dzc1o",
-      "username": "admin",
-      "role": "admin",
-      "action": "LOGIN",
-      "target": "auth",
-      "detail": "Login: admin (admin)",
-      "ts": "2026-06-04T05:50:39.398Z"
-    },
-    {
-      "id": "mpz2tr2f1ewpdt9",
-      "userId": "mpxnxlqhg3dzc1o",
-      "username": "admin",
-      "role": "admin",
-      "action": "LOGOUT",
-      "target": "auth",
-      "detail": "Logout: admin",
-      "ts": "2026-06-04T05:50:32.007Z"
-    },
-    {
-      "id": "mpz2pe0bo4d1288",
-      "userId": "mpxnxlqhg3dzc1o",
-      "username": "admin",
-      "role": "admin",
-      "action": "UPDATE_USER",
-      "target": "utilizadores",
-      "detail": "Actualizado \"Bruno Gaspar\"",
-      "ts": "2026-06-04T05:47:08.459Z"
-    },
-    {
-      "id": "mpz18pga0pvygzm",
-      "userId": "mpxnxlqhg3dzc1o",
-      "username": "admin",
-      "role": "admin",
-      "action": "GENERATE_BRACKET",
-      "target": "fasefinal",
-      "detail": "Bracket gerado: M5",
-      "ts": "2026-06-04T05:06:10.522Z"
-    },
-    {
-      "id": "mpz18n5lmxow1mt",
-      "userId": "mpxnxlqhg3dzc1o",
-      "username": "admin",
-      "role": "admin",
-      "action": "GENERATE_BRACKET",
-      "target": "fasefinal",
-      "detail": "Bracket gerado: M4",
-      "ts": "2026-06-04T05:06:07.545Z"
-    },
-    {
-      "id": "mpz18kb3oxfiz5t",
-      "userId": "mpxnxlqhg3dzc1o",
-      "username": "admin",
-      "role": "admin",
-      "action": "GENERATE_BRACKET",
-      "target": "fasefinal",
-      "detail": "Bracket gerado: M3",
-      "ts": "2026-06-04T05:06:03.855Z"
-    },
-    {
-      "id": "mpz18gxvg5udf0q",
-      "userId": "mpxnxlqhg3dzc1o",
-      "username": "admin",
-      "role": "admin",
-      "action": "GENERATE_BRACKET",
-      "target": "fasefinal",
-      "detail": "Bracket gerado: F2",
-      "ts": "2026-06-04T05:05:59.491Z"
-    },
-    {
-      "id": "mpz18e47w0zcl47",
-      "userId": "mpxnxlqhg3dzc1o",
-      "username": "admin",
-      "role": "admin",
-      "action": "GENERATE_BRACKET",
-      "target": "fasefinal",
-      "detail": "Bracket gerado: F1",
-      "ts": "2026-06-04T05:05:55.832Z"
-    },
-    {
-      "id": "mpz188gome8uy5t",
-      "userId": "mpxnxlqhg3dzc1o",
-      "username": "admin",
-      "role": "admin",
-      "action": "GENERATE_BRACKET",
-      "target": "fasefinal",
-      "detail": "Bracket gerado: M2",
-      "ts": "2026-06-04T05:05:48.504Z"
-    },
-    {
-      "id": "mpz1803b5utagjb",
-      "userId": "mpxnxlqhg3dzc1o",
-      "username": "admin",
-      "role": "admin",
-      "action": "GENERATE_BRACKET",
-      "target": "fasefinal",
-      "detail": "Bracket gerado: M1",
-      "ts": "2026-06-04T05:05:37.655Z"
-    },
-    {
-      "id": "mpz17vqc3b7y6xd",
-      "userId": "mpxnxlqhg3dzc1o",
-      "username": "admin",
-      "role": "admin",
-      "action": "LOGIN",
-      "target": "auth",
-      "detail": "Login: admin (admin)",
-      "ts": "2026-06-04T05:05:32.004Z"
-    },
-    {
-      "id": "mpz16vy61ukkb1k",
-      "userId": "mpxnxlqhg3dzc1o",
-      "username": "admin",
-      "role": "admin",
-      "action": "LOGOUT",
-      "target": "auth",
-      "detail": "Logout: admin",
-      "ts": "2026-06-04T05:04:45.631Z"
-    },
-    {
-      "id": "mpyzl0lym3r3n09",
-      "userId": "mpxnxlqhg3dzc1o",
-      "username": "admin",
-      "role": "admin",
-      "action": "LOGIN",
-      "target": "auth",
-      "detail": "Login: admin (admin)",
-      "ts": "2026-06-04T04:19:45.622Z"
-    },
-    {
-      "id": "mpyhpep4ty85kjc",
-      "userId": "mpxnxlqhg3dzc1o",
-      "username": "admin",
-      "role": "admin",
-      "action": "LOGOUT",
-      "target": "auth",
-      "detail": "Logout: admin",
-      "ts": "2026-06-03T19:59:17.416Z"
     }
   ],
-  "_updated": "2026-06-11T16:19:58.356Z"
+  "_updated": "2026-06-11T16:35:03.884Z"
 }
