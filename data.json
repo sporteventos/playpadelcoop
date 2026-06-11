@@ -4948,20 +4948,7 @@
           "eq2": "João Alberty & Manel Alberty",
           "eq2grupo": "M1-A",
           "eq2seed": 8,
-          "resultado": {
-            "s1eq1": 6,
-            "s1eq2": 0,
-            "tb1eq1": null,
-            "tb1eq2": null,
-            "s2eq1": 6,
-            "s2eq2": 0,
-            "tb2eq1": null,
-            "tb2eq2": null,
-            "s3eq1": null,
-            "s3eq2": null,
-            "tb3eq1": null,
-            "tb3eq2": null
-          },
+          "resultado": null,
           "data": "2026-06-12",
           "hora": "20:30",
           "campo": "Play Padel"
@@ -5022,8 +5009,8 @@
             "M1-QF1",
             "M1-QF2"
           ],
-          "eq1": "Tayab & Badru Rosa",
-          "eq1grupo": "M1-C",
+          "eq1": null,
+          "eq1grupo": null,
           "eq1seed": null,
           "eq2": null,
           "eq2grupo": null,
@@ -15593,5 +15580,5 @@
       "ts": "2026-06-03T18:42:46.201Z"
     }
   ],
-  "_updated": "2026-06-11T15:46:32.559Z"
+  "_updated": "2026-06-11T16:01:32.655Z"
 }
