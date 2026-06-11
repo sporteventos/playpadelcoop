@@ -4746,9 +4746,11 @@
           "eq2": "Omar Fernandes & Claudia Sumaya",
           "eq2grupo": "F1-C",
           "eq2seed": 7,
-          "resultado": null,
+          "resultado": {
+            "wo": "eq2"
+          },
           "data": "2026-06-11",
-          "hora": "18:30",
+          "hora": "21:30",
           "campo": "TVCabo"
         },
         {
@@ -5577,6 +5579,66 @@
     }
   ],
   "auditlog": [
+    {
+      "id": "mq97h3rpba0qota",
+      "userId": "mpz46x5c2zupza0",
+      "username": "bgaspar",
+      "role": "operator",
+      "action": "SAVE_RESULT_FF",
+      "target": "fasefinal",
+      "detail": "WO: F1 jogo F1-QF4 — eq2",
+      "ts": "2026-06-11T07:58:21.781Z"
+    },
+    {
+      "id": "mq97gp9krbayd6l",
+      "userId": "mpz46x5c2zupza0",
+      "username": "bgaspar",
+      "role": "operator",
+      "action": "HORARIO_DRAG",
+      "target": "fasefinal",
+      "detail": "Jogo F1-QF4 movido para 21:30 @ TVCabo",
+      "ts": "2026-06-11T07:58:02.984Z"
+    },
+    {
+      "id": "mq9767bffuwlog6",
+      "userId": "mpz46x5c2zupza0",
+      "username": "bgaspar",
+      "role": "operator",
+      "action": "LOGIN",
+      "target": "auth",
+      "detail": "Login: bgaspar (operator)",
+      "ts": "2026-06-11T07:49:53.163Z"
+    },
+    {
+      "id": "mq971qesgrgbver",
+      "userId": "mpz46x5c2zupza0",
+      "username": "bgaspar",
+      "role": "operator",
+      "action": "LOGOUT",
+      "target": "auth",
+      "detail": "Logout: bgaspar",
+      "ts": "2026-06-11T07:46:24.628Z"
+    },
+    {
+      "id": "mq95fuzfqxyun4q",
+      "userId": "mpz46x5c2zupza0",
+      "username": "bgaspar",
+      "role": "operator",
+      "action": "LOGIN",
+      "target": "auth",
+      "detail": "Login: bgaspar (operator)",
+      "ts": "2026-06-11T07:01:24.507Z"
+    },
+    {
+      "id": "mq8rgreo8liobg8",
+      "userId": "mpz46x5c2zupza0",
+      "username": "bgaspar",
+      "role": "operator",
+      "action": "LOGOUT",
+      "target": "auth",
+      "detail": "Logout: bgaspar",
+      "ts": "2026-06-11T00:30:11.904Z"
+    },
     {
       "id": "mq8q30p5bzl3xkd",
       "userId": "mpz46x5c2zupza0",
@@ -15238,5 +15300,5 @@
       "ts": "2026-06-03T06:06:37.211Z"
     }
   ],
-  "_updated": "2026-06-10T23:51:33.459Z"
+  "_updated": "2026-06-11T07:58:28.666Z"
 }
