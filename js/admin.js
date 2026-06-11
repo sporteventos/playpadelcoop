@@ -4507,11 +4507,11 @@ function _ffBuildPairs(q) {
   const changes = bestPerm
     .map((src, slot) => src !== slot ? `${lowerLabels[src]}→QF${slot + 1}` : null)
     .filter(Boolean);
-  const swapNote = changes.length
+  const collisionNote = changes.length
     ? `Ajuste anti-colisão: ${changes.join(', ')}`
     : null;
 
-  return { pairs, swapNote };
+  return { pairs, collisionNote };
 }
 
 function ffGenerateBracket(catId) {
@@ -4528,23 +4528,23 @@ function ffGenerateBracket(catId) {
 
   } else if (FF_4G.includes(catId)) {
     // 4 grupos: S1-S4 = vencedores, S5-S8 = segundos. Mesmo esquema de cruzamento.
-    const { pairs: pairs4, swapNote: sw4 } = _ffBuildPairs(q);
+    const { pairs: pairs4, collisionNote: cn4 } = _ffBuildPairs(q);
     pairs4.forEach(([e1, e2], i) => jogos.push(ffMakeJogo(catId, 'QF', i + 1, e1, e2, null)));
     ffAutoAllocateQF(jogos.filter(j => j.fase === 'QF'));
     jogos.push(ffMakeJogo(catId, 'SF', 1, null, null, [`${catId}-QF1`, `${catId}-QF2`], FF_SF_DATE, FF_SF_SLOTS[0]));
     jogos.push(ffMakeJogo(catId, 'SF', 2, null, null, [`${catId}-QF3`, `${catId}-QF4`], FF_SF_DATE, FF_SF_SLOTS[1]));
     jogos.push(ffMakeJogo(catId, 'F',  1, null, null, [`${catId}-SF1`, `${catId}-SF2`], FF_F_DATE, FF_F_SLOT));
-    return { generated: true, jogos, swapNote: sw4 };
+    return { generated: true, jogos, collisionNote: cn4 };
 
   } else {
     // 3 grupos (WILDCARD): S1-S3 = vencedores, S4-S6 = segundos, S7-S8 = melhores 3.ºs
-    const { pairs, swapNote: sw } = _ffBuildPairs(q);
+    const { pairs, collisionNote: cn } = _ffBuildPairs(q);
     pairs.forEach(([e1, e2], i) => jogos.push(ffMakeJogo(catId, 'QF', i + 1, e1, e2, null)));
     ffAutoAllocateQF(jogos.filter(j => j.fase === 'QF'));
     jogos.push(ffMakeJogo(catId, 'SF', 1, null, null, [`${catId}-QF1`, `${catId}-QF2`], FF_SF_DATE, FF_SF_SLOTS[0]));
     jogos.push(ffMakeJogo(catId, 'SF', 2, null, null, [`${catId}-QF3`, `${catId}-QF4`], FF_SF_DATE, FF_SF_SLOTS[1]));
     jogos.push(ffMakeJogo(catId, 'F',  1, null, null, [`${catId}-SF1`, `${catId}-SF2`], FF_F_DATE, FF_F_SLOT));
-    return { generated: true, jogos, swapNote: sw };
+    return { generated: true, jogos, collisionNote: cn };
   }
 }
 
@@ -4557,7 +4557,7 @@ function ffRecalcBracket(catId) {
   if (FF_2G.includes(catId)) { alert(catId + ' não tem QF (2 grupos)'); return; }
 
   const q = ffGetQualified(catId);
-  const { pairs: newPairs, swapNote } = _ffBuildPairs(q);
+  const { pairs: newPairs, collisionNote } = _ffBuildPairs(q);
 
   const qfJogos = ff[catId].jogos.filter(j => j.fase === 'QF').sort((a, b) => a.num - b.num);
   qfJogos.forEach((jogo, i) => {
@@ -4573,8 +4573,9 @@ function ffRecalcBracket(catId) {
   if (sf1) sf1.feedFrom = [`${catId}-QF1`, `${catId}-QF2`];
   if (sf2) sf2.feedFrom = [`${catId}-QF3`, `${catId}-QF4`];
 
-  // Guardar justificação da troca
-  ff[catId].swapNote = swapNote || null;
+  // Guardar notas separadas: collisionNote (anti-colisão) e swapNote (trocas manuais)
+  ff[catId].collisionNote = collisionNote || null;
+  ff[catId].swapNote = null; // reset manual swaps on recalc
 
   // If bracket is incomplete, null out teams from groups with pending games (show "A definir")
   const allDone = allGroupGamesDone(catId);
@@ -4601,7 +4602,7 @@ function ffRecalcBracket(catId) {
 
   ffSave(ff);
   renderFaseFinal();
-  auditLog('ff_recalc_bracket', { cat: catId, swapNote });
+  auditLog('ff_recalc_bracket', { cat: catId, collisionNote });
 }
 
 function ffGetWinner(r) {
@@ -4730,7 +4731,8 @@ function renderFaseFinal() {
         </div>`).join('')}
       ${ffChampionColHtml(ffCurrentCat)}
     </div>
-    ${catData.swapNote ? `<p style="font-size:.7rem;color:var(--amarelo);margin:.6rem 0 0;display:flex;align-items:center;gap:.3rem"><i class="ph ph-swap"></i> <em>${escHtml(catData.swapNote)}</em></p>` : ''}
+    ${catData.collisionNote ? `<p style="font-size:.7rem;color:var(--amarelo);margin:.6rem 0 0;display:flex;align-items:center;gap:.3rem"><i class="ph ph-swap"></i> <em>${escHtml(catData.collisionNote)}</em></p>` : ''}
+    ${catData.swapNote ? `<p style="font-size:.7rem;color:var(--cinza-texto);margin:.25rem 0 0;display:flex;align-items:center;gap:.3rem"><i class="ph ph-arrows-left-right"></i> <em>${escHtml(catData.swapNote)}</em></p>` : ''}
     ${Auth.hasRole('admin','operator') ? `<div style="margin-top:1.25rem;display:flex;gap:.5rem;flex-wrap:wrap">
       <button class="btn btn-ghost btn-sm" style="color:${_ffDragMode ? 'var(--verde)' : 'var(--cinza-texto)'};border-color:${_ffDragMode ? 'rgba(0,195,123,.4)' : 'var(--preto-borda)'}" onclick="ffToggleDragMode()">
         <i class="ph ph-arrows-out-cardinal"></i> ${_ffDragMode ? 'Sair Edição' : 'Trocar Duplas'}
