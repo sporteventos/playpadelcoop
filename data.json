@@ -4716,7 +4716,7 @@
           "eq2seed": 5,
           "resultado": null,
           "data": "2026-06-12",
-          "hora": "18:30",
+          "hora": "17:30",
           "campo": "Play Padel"
         },
         {
@@ -4998,7 +4998,7 @@
           "eq2seed": 7,
           "resultado": null,
           "data": "2026-06-12",
-          "hora": "17:30",
+          "hora": "18:30",
           "campo": "Play Padel"
         },
         {
@@ -5579,6 +5579,16 @@
     }
   ],
   "auditlog": [
+    {
+      "id": "mq98lq2gxzj2z70",
+      "userId": "mpz46x5c2zupza0",
+      "username": "bgaspar",
+      "role": "operator",
+      "action": "HORARIO_DRAG",
+      "target": "fasefinal",
+      "detail": "Jogo F1-QF2 movido para 17:30 @ Play Padel",
+      "ts": "2026-06-11T08:29:56.920Z"
+    },
     {
       "id": "mq97zpyxdrzjusw",
       "userId": "mpz46x5c2zupza0",
@@ -15320,5 +15330,5 @@
       "ts": "2026-06-03T06:06:37.211Z"
     }
   ],
-  "_updated": "2026-06-11T08:29:30.844Z"
+  "_updated": "2026-06-11T08:30:04.382Z"
 }
