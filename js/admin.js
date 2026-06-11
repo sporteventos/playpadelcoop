@@ -4855,6 +4855,8 @@ function ffRecalcBracket(catId) {
 
 function ffGetWinner(r) {
   if (!r) return 0;
+  if (r.wo === 'eq1') return 2; // eq1 walkover → eq2 wins
+  if (r.wo === 'eq2') return 1; // eq2 walkover → eq1 wins
   let s1 = 0, s2 = 0;
   [[r.s1eq1,r.s1eq2],[r.s2eq1,r.s2eq2],[r.s3eq1,r.s3eq2]].forEach(([a,b]) => { if (a!=null&&b!=null) { if(a>b) s1++; else s2++; } });
   return s1 > s2 ? 1 : s2 > s1 ? 2 : 0;
@@ -4906,6 +4908,11 @@ function ffChampionColHtml(catId) {
 }
 
 function renderFaseFinal() {
+  // Re-propagate all generated categories so WO results and normal results
+  // that were saved before this fix take effect immediately
+  const _ffProp = ffLoad();
+  Object.keys(_ffProp).forEach(c => { if (_ffProp[c]?.generated) ffPropagate(c); });
+
   const ff   = ffLoad();
   const cats = ['M1', 'M2', 'F1', 'F2', 'M3', 'M4', 'M5'];
   document.getElementById('ffCatTabs').innerHTML = [
