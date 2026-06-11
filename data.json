@@ -4837,7 +4837,20 @@
           "eq2": "Dalila & Tatiana",
           "eq2grupo": "F2-C",
           "eq2seed": 7,
-          "resultado": null,
+          "resultado": {
+            "s1eq1": 6,
+            "s1eq2": 1,
+            "tb1eq1": null,
+            "tb1eq2": null,
+            "s2eq1": 4,
+            "s2eq2": 6,
+            "tb2eq1": null,
+            "tb2eq2": null,
+            "s3eq1": 6,
+            "s3eq2": 0,
+            "tb3eq1": null,
+            "tb3eq2": null
+          },
           "data": "2026-06-11",
           "hora": "17:30",
           "campo": "Stella Artois"
@@ -4911,8 +4924,8 @@
             "F2-QF1",
             "F2-QF2"
           ],
-          "eq1": null,
-          "eq1grupo": null,
+          "eq1": "Karina Darsan & Bethany",
+          "eq1grupo": "F2-B",
           "eq1seed": null,
           "eq2": null,
           "eq2grupo": null,
@@ -5605,6 +5618,36 @@
     }
   ],
   "auditlog": [
+    {
+      "id": "mq9rigbxwjczie0",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "LOGIN",
+      "target": "auth",
+      "detail": "Login: euamusse (admin)",
+      "ts": "2026-06-11T17:19:17.037Z"
+    },
+    {
+      "id": "mq9ria4k1fd4mjv",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "LOGOUT",
+      "target": "auth",
+      "detail": "Logout: euamusse",
+      "ts": "2026-06-11T17:19:08.996Z"
+    },
+    {
+      "id": "mq9ri95cp1i5027",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "SAVE_RESULT_FF",
+      "target": "fasefinal",
+      "detail": "Resultado FF: F2 jogo F2-QF1",
+      "ts": "2026-06-11T17:19:07.728Z"
+    },
     {
       "id": "mq9qleniclsygkc",
       "userId": "mpz8aq9sg983ubo",
@@ -15574,37 +15617,7 @@
       "target": "auth",
       "detail": "Login: admin (admin)",
       "ts": "2026-06-04T06:37:11.168Z"
-    },
-    {
-      "id": "mpz4fs47ktsjz2m",
-      "userId": "mpxnxlqhg3dzc1o",
-      "username": "admin",
-      "role": "admin",
-      "action": "LOGOUT",
-      "target": "auth",
-      "detail": "Logout: admin",
-      "ts": "2026-06-04T06:35:39.415Z"
-    },
-    {
-      "id": "mpz46x5morujjrh",
-      "userId": "mpxnxlqhg3dzc1o",
-      "username": "admin",
-      "role": "admin",
-      "action": "CREATE_USER",
-      "target": "utilizadores",
-      "detail": "Criado \"bgaspar\" (operator)",
-      "ts": "2026-06-04T06:28:46.042Z"
-    },
-    {
-      "id": "mpz46l4baxh1wnx",
-      "userId": "mpxnxlqhg3dzc1o",
-      "username": "admin",
-      "role": "admin",
-      "action": "DELETE_USER",
-      "target": "utilizadores",
-      "detail": "Eliminado \"bgaspar\"",
-      "ts": "2026-06-04T06:28:30.443Z"
     }
   ],
-  "_updated": "2026-06-11T16:55:20.986Z"
+  "_updated": "2026-06-11T17:19:28.432Z"
 }
