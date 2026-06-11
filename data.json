@@ -4842,8 +4842,8 @@
           "eq2seed": 5,
           "resultado": null,
           "data": "2026-06-11",
-          "hora": "17:30",
-          "campo": "Play Padel"
+          "hora": "18:30",
+          "campo": "TVCabo"
         },
         {
           "id": "F2-QF3",
@@ -5251,8 +5251,8 @@
           "eq2grupo": "M2-B",
           "eq2seed": 7,
           "resultado": null,
-          "data": "2026-06-12",
-          "hora": "19:30",
+          "data": "2026-06-11",
+          "hora": "17:30",
           "campo": "Play Padel"
         },
         {
@@ -5579,6 +5579,26 @@
     }
   ],
   "auditlog": [
+    {
+      "id": "mq97zpyxdrzjusw",
+      "userId": "mpz46x5c2zupza0",
+      "username": "bgaspar",
+      "role": "operator",
+      "action": "HORARIO_MOVER_DIA",
+      "target": "fasefinal",
+      "detail": "Jogo M2-QF1 de 2026-06-12 19:30 Play Padel → 2026-06-11 17:30 Play Padel",
+      "ts": "2026-06-11T08:12:50.361Z"
+    },
+    {
+      "id": "mq97v6cezjray3l",
+      "userId": "mpz46x5c2zupza0",
+      "username": "bgaspar",
+      "role": "operator",
+      "action": "HORARIO_DRAG",
+      "target": "fasefinal",
+      "detail": "Jogo F2-QF2 movido para 18:30 @ TVCabo",
+      "ts": "2026-06-11T08:09:18.302Z"
+    },
     {
       "id": "mq97h3rpba0qota",
       "userId": "mpz46x5c2zupza0",
@@ -15300,5 +15320,5 @@
       "ts": "2026-06-03T06:06:37.211Z"
     }
   ],
-  "_updated": "2026-06-11T07:58:28.666Z"
+  "_updated": "2026-06-11T08:29:30.844Z"
 }
