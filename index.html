@@ -475,12 +475,22 @@
 // ---- Proximos jogos ----
 (function () {
   var jogos = ppGet('jogos');
+  var ffRaw = ppLoad('fasefinal') || {};
+  var ffJogos = Object.entries(ffRaw).flatMap(function([catId, catData]) {
+    if (!catData || !catData.jogos) return [];
+    return catData.jogos
+      .filter(function(j) { return !j.resultado && j.eq1 && j.eq2 && j.eq1 !== 'A definir' && j.eq2 !== 'A definir' && j.data && j.hora; })
+      .map(function(j) {
+        var fLabel = j.fase === 'F' ? 'Final' : j.fase === 'SF' ? ('SF ' + j.num) : ('QF ' + j.num);
+        return Object.assign({}, j, { _isFF: true, grupo: catId + ' · ' + fLabel, campo: j.campo || 'FF' });
+      });
+  });
   var nowStr = new Date().toISOString().slice(0, 16);
-  var pending = jogos
+  var pending = jogos.concat(ffJogos)
     .filter(function(j){ return !j.resultado; })
     .map(function(j){
       var dt = (j.data && j.hora) ? j.data + 'T' + j.hora : null;
-      return Object.assign({}, j, { _overdue: !!(dt && dt < nowStr && !j.adiado), _suspenso: !!j.suspenso, _adiado: !!j.adiado });
+      return Object.assign({}, j, { _overdue: !!(dt && dt < nowStr && !j.adiado && !j._isFF), _suspenso: !!j.suspenso, _adiado: !!j.adiado });
     })
     .sort(function(a, b){
       var aU = (a._overdue || a._suspenso) ? 0 : (a._adiado ? 1 : 2);

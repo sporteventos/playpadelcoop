@@ -2377,30 +2377,27 @@ function renderDashboard() {
   const tbody = document.getElementById('dashProximosBody');
   tbody.innerHTML = proximos.map(j => {
     const isFF = !!j._cat;
-    if (isFF) {
-      const fLabel = j.fase === 'F' ? 'Final' : j.fase === 'SF' ? `SF ${j.num}` : `QF ${j.num}`;
-      return `
-        <tr>
-          <td><span class="badge badge-cinza">Fase Final</span></td>
-          <td>—</td>
-          <td>—</td>
-          <td><span class="cat-pill cat-${j._cat}">${j._cat} · ${fLabel}</span></td>
-          <td style="text-align:right">${j.eq1 ? j.eq1.split(' & ').join('<br>') : '—'}</td>
-          <td style="color:var(--cinza-texto);padding:0 0.4rem">VS</td>
-          <td>${j.eq2 ? j.eq2.split(' & ').join('<br>') : '—'}</td>
-          <td>${j.adiado ? '<span style="color:#6B9CF7;font-size:.7rem;background:rgba(107,156,247,.12);padding:.1rem .35rem;border-radius:4px">&#x1F4C5; Adiado</span>' : '<span class="badge badge-amarelo">Pendente</span>'}</td>
-      </tr>`;
-  }
-  return `
+    const fLabel = isFF ? (j.fase === 'F' ? 'Final' : j.fase === 'SF' ? `SF ${j.num}` : `QF ${j.num}`) : null;
+    const grupo  = isFF ? `${j._cat} · ${fLabel}` : j.grupo;
+    const catKey = isFF ? j._cat : j.grupo.split('-')[0];
+    const dataStr = j.data ? `<span class="td-mono">${formatDate(j.data)}</span>` : '<span style="color:var(--cinza-texto)">—</span>';
+    const horaStr = j.hora || '<span style="color:var(--cinza-texto)">—</span>';
+    const campoStr = j.campo && j.campo !== '—' ? j.campo : (isFF ? 'FF' : '—');
+    const eq1 = (j.eq1 || '—').split(' & ').join('<br>');
+    const eq2 = (j.eq2 || '—').split(' & ').join('<br>');
+    const estadoHtml = j.adiado
+      ? '<span style="color:#6B9CF7;font-size:.7rem;background:rgba(107,156,247,.12);padding:.1rem .35rem;border-radius:4px">&#x1F4C5; Adiado</span>'
+      : '<span class="badge badge-amarelo">Pendente</span>';
+    return `
       <tr>
-        <td><span class="td-mono">${formatDate(j.data)}</span></td>
-        <td>${j.hora}</td>
-        <td><span class="badge badge-cinza">${j.campo}</span></td>
-        <td><span class="cat-pill cat-${j.grupo.split('-')[0]}">${j.grupo}</span></td>
-        <td style="text-align:right">${j.eq1.split(' & ').join('<br>')}</td>
+        <td>${dataStr}</td>
+        <td>${horaStr}</td>
+        <td><span class="badge badge-cinza">${escHtml(campoStr)}</span></td>
+        <td><span class="cat-pill cat-${catKey}">${escHtml(grupo)}</span></td>
+        <td style="text-align:right">${eq1}</td>
         <td style="color:var(--cinza-texto);padding:0 0.4rem">VS</td>
-        <td>${j.eq2.split(' & ').join('<br>')}</td>
-        <td>${j.adiado ? '<span style="color:#6B9CF7;font-size:.7rem;background:rgba(107,156,247,.12);padding:.1rem .35rem;border-radius:4px">&#x1F4C5; Adiado</span>' : '<span class="badge badge-amarelo">Pendente</span>'}</td>
+        <td>${eq2}</td>
+        <td>${estadoHtml}</td>
       </tr>`;
   }).join('');
 
