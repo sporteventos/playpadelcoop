@@ -3524,9 +3524,32 @@ function renderResultados(filtroData = 'todos') {
   let jogos = getData('jogos').filter(j => !j.resultado);
   if (filtroData !== 'todos') jogos = jogos.filter(j => j.data === filtroData);
 
+  // FF jogos without result (only if teams are defined — not "A definir")
+  const ff = ffLoad() || {};
+  let ffJogos = Object.entries(ff).flatMap(([catId, catData]) =>
+    (catData?.jogos || [])
+      .filter(j => !j.resultado && j.eq1 && j.eq2 && j.eq1 !== 'A definir' && j.eq2 !== 'A definir' && j.data && j.hora)
+      .map(j => ({
+        _ff: true, _cat: catId, id: j.id,
+        data: j.data, hora: j.hora, campo: j.campo || '—',
+        grupo: catId + '-' + (j.fase === 'F' ? 'Final' : j.fase + j.num),
+        eq1: j.eq1, eq2: j.eq2,
+      }))
+  );
+  if (filtroData !== 'todos') ffJogos = ffJogos.filter(j => j.data === filtroData);
+
+  const all = [...jogos, ...ffJogos].sort((a, b) => (a.data + a.hora).localeCompare(b.data + b.hora));
+
   const tbody = document.getElementById('resultadosBody');
-  tbody.innerHTML = jogos.map(j => {
+  tbody.innerHTML = all.map(j => {
     const cat = j.grupo.split('-')[0];
+    const btn = j._ff
+      ? `<button class="btn btn-primary btn-sm" onclick="ffAbrirResultado('${j.id}','${j._cat}')">
+           <i class="ph ph-pencil-simple"></i> Resultado
+         </button>`
+      : `<button class="btn btn-primary btn-sm" onclick="abrirResultado(${j.id})">
+           <i class="ph ph-pencil-simple"></i> Resultado
+         </button>`;
     return `
     <tr>
       <td><span class="td-mono">${formatDate(j.data)}</span> ${j.hora}</td>
@@ -3535,15 +3558,11 @@ function renderResultados(filtroData = 'todos') {
       <td style="text-align:right">${j.eq1.split(' & ').join('<br>')}</td>
       <td style="text-align:center;color:var(--cinza-texto)">VS</td>
       <td>${j.eq2.split(' & ').join('<br>')}</td>
-      <td>
-        <button class="btn btn-primary btn-sm" onclick="abrirResultado(${j.id})">
-          <i class="ph ph-pencil-simple"></i> Resultado
-        </button>
-      </td>
+      <td>${btn}</td>
     </tr>`;
   }).join('');
 
-  document.getElementById('resultadosPendentes').textContent = jogos.length;
+  document.getElementById('resultadosPendentes').textContent = all.length;
 }
 
 // ---------- LANÇAR RESULTADO ----------
