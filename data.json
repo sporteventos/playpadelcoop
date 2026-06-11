@@ -5424,9 +5424,9 @@
           "eq2grupo": "M3-D",
           "eq2seed": 7,
           "resultado": null,
-          "data": "2026-06-11",
-          "hora": "20:30",
-          "campo": "Stella Artois"
+          "data": "2026-06-12",
+          "hora": "15:30",
+          "campo": "Play Padel"
         },
         {
           "id": "M3-SF1",
@@ -5579,6 +5579,46 @@
     }
   ],
   "auditlog": [
+    {
+      "id": "mq9jm4wcb8wlvq1",
+      "userId": "mpz46x5c2zupza0",
+      "username": "bgaspar",
+      "role": "operator",
+      "action": "HORARIO_MOVER_DIA",
+      "target": "fasefinal",
+      "detail": "Jogo M3-QF4 de 2026-06-11 20:30 Stella Artois → 2026-06-12 15:30 Play Padel",
+      "ts": "2026-06-11T13:38:11.916Z"
+    },
+    {
+      "id": "mq9i9pv3n4z7vnc",
+      "userId": "mpz46x5c2zupza0",
+      "username": "bgaspar",
+      "role": "operator",
+      "action": "LOGIN",
+      "target": "auth",
+      "detail": "Login: bgaspar (operator)",
+      "ts": "2026-06-11T13:00:32.943Z"
+    },
+    {
+      "id": "mq9hml8oje5zuwl",
+      "userId": "mpz46x5c2zupza0",
+      "username": "bgaspar",
+      "role": "operator",
+      "action": "LOGOUT",
+      "target": "auth",
+      "detail": "Logout: bgaspar",
+      "ts": "2026-06-11T12:42:33.864Z"
+    },
+    {
+      "id": "mq9fzxc1frhx53q",
+      "userId": "mpz46x5c2zupza0",
+      "username": "bgaspar",
+      "role": "operator",
+      "action": "LOGIN",
+      "target": "auth",
+      "detail": "Login: bgaspar (operator)",
+      "ts": "2026-06-11T11:56:56.833Z"
+    },
     {
       "id": "mq9cmampbanlhak",
       "userId": "mpz46x5c2zupza0",
@@ -5738,6 +5778,16 @@
       "target": "fasefinal",
       "detail": "Jogo M4-QF1 movido para 18:30 @ Stella Artois",
       "ts": "2026-06-10T23:51:31.145Z"
+    },
+    {
+      "id": "mq8pvu5p992qame",
+      "userId": "mpz46x5c2zupza0",
+      "username": "bgaspar",
+      "role": "operator",
+      "action": "LOGOUT",
+      "target": "auth",
+      "detail": "Logout: bgaspar",
+      "ts": "2026-06-10T23:45:56.077Z"
     },
     {
       "id": "mq8pvng3l0dvnx5",
@@ -15390,5 +15440,5 @@
       "ts": "2026-06-03T06:06:37.211Z"
     }
   ],
-  "_updated": "2026-06-11T10:47:30.005Z"
+  "_updated": "2026-06-11T13:38:56.882Z"
 }
