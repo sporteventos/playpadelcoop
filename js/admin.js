@@ -4601,6 +4601,7 @@ function ffRecalcBracket(catId) {
   }
 
   ffSave(ff);
+  _autoSync();
   renderFaseFinal();
   auditLog('ff_recalc_bracket', { cat: catId, collisionNote });
 }
@@ -4906,6 +4907,7 @@ window.ffGenerate = function(catId) {
   const ff = ffLoad();
   ff[catId] = ffGenerateBracket(catId);
   ffSave(ff);
+  _autoSync();
   renderFaseFinal();
   Auth.log('GENERATE_BRACKET', 'fasefinal', `Bracket gerado: ${catId}`);
   toast(`Bracket gerado para ${catId}.`);
@@ -4939,6 +4941,7 @@ window.ffGenerateIncomplete = function(catId) {
   ff[catId] = result;
   ff[catId].incomplete = true;
   ffSave(ff);
+  _autoSync();
   renderFaseFinal();
   Auth.log('GENERATE_BRACKET_INCOMPLETE', 'fasefinal', `Bracket gerado (incompleto): ${catId}`);
   toast(`Bracket de ${catId} gerado com equipas em falta. Use "Recalcular Seeds" após o jogo.`, 'warning');
@@ -4947,7 +4950,7 @@ window.ffGenerateIncomplete = function(catId) {
 window.ffReset = function(catId) {
   if (!Auth.isAdmin()) return toast('Apenas administradores podem executar esta acção.', 'error');
   if (!confirm(`Resetar o bracket de ${catId}? Todos os resultados desta fase serão apagados.`)) return;
-  const ff = ffLoad(); delete ff[catId]; ffSave(ff);
+  const ff = ffLoad(); delete ff[catId]; ffSave(ff); _autoSync();
   renderFaseFinal();
   Auth.log('RESET_BRACKET', 'fasefinal', `Bracket resetado: ${catId}`);
   toast(`Bracket de ${catId} removido.`);
