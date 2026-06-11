@@ -1333,13 +1333,13 @@ window._gerarPanfletoAdiado = function(jogo) {
 };
 
 // ============================================
-//  PANFLETO COM FOTO — FASE FINAL (layout épico)
+//  PANFLETO COM FOTO — FASE FINAL (premium)
 // ============================================
 function _buildFotoFlyerFF(img) {
   const jogo = APP._fotoFlyer?.jogo;
   if (!jogo || !jogo.resultado) return;
 
-  const W = 1080, H = 1350, PAD = 60;
+  const W = 1080, H = 1350, PAD = 52, BAND_H = 420;
   const CAT_CLR = { M1:'#4A9EFF', M2:'#00C37B', M3:'#39FF8F', M4:'#F5C518', M5:'#FF9A3C', F1:'#FF6BB0', F2:'#C97BFF' };
   const canvas = document.getElementById('fotoFlyerCanvas');
   canvas.width = W; canvas.height = H;
@@ -1351,7 +1351,7 @@ function _buildFotoFlyerFF(img) {
   const isFinal = fase === 'F' || fase === 'Final';
   const isSF    = fase === 'SF';
   const PHASE_CLR   = isFinal ? '#F5C518' : isSF ? '#4A9EFF' : '#C97BFF';
-  const PHASE_LABEL = isFinal ? '🏆  FINAL' : isSF ? 'MEIA-FINAL' : 'QUARTOS DE FINAL';
+  const PHASE_LABEL = isFinal ? '\uD83C\uDFC6  FINAL' : isSF ? 'MEIA-FINAL' : 'QUARTOS DE FINAL';
   const cat    = (jogo._cat || (jogo.grupo || 'M1').split('-')[0]);
   const catClr = CAT_CLR[cat] || '#8AA396';
 
@@ -1362,158 +1362,154 @@ function _buildFotoFlyerFF(img) {
     return t + '\u2026';
   }
 
-  // ── Background ──────────────────────────────────
+  // ── Photo (full bleed, zoom/pan) ─────────────────
+  const zoomFactor = (parseInt(document.getElementById('fotoFlyerZoom')?.value ?? 100)) / 100;
+  const panX = parseInt(document.getElementById('fotoFlyerPanX')?.value ?? 0) / 100;
+  const panY = parseInt(document.getElementById('fotoFlyerPanY')?.value ?? 0) / 100;
   if (img) {
-    const zoomFactor = (parseInt(document.getElementById('fotoFlyerZoom')?.value ?? 100)) / 100;
-    const panX = parseInt(document.getElementById('fotoFlyerPanX')?.value ?? 0) / 100;
-    const panY = parseInt(document.getElementById('fotoFlyerPanY')?.value ?? 0) / 100;
     const baseScl = Math.max(W / img.naturalWidth, H / img.naturalHeight);
     const scl = baseScl * zoomFactor;
     const iw = img.naturalWidth * scl, ih = img.naturalHeight * scl;
     ctx.drawImage(img, (W - iw) / 2 * (1 - panX), (H - ih) / 2 * (1 - panY), iw, ih);
-    // Heavy dark overlay
-    ctx.fillStyle = 'rgba(8,13,11,0.84)';
-    ctx.fillRect(0, 0, W, H);
   } else {
-    ctx.fillStyle = '#080D0B';
-    ctx.fillRect(0, 0, W, H);
-    ctx.save();
-    ctx.strokeStyle = 'rgba(255,255,255,0.025)'; ctx.lineWidth = 1;
-    for (let y = 0; y < H; y += 72) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke(); }
-    for (let x = 0; x < W; x += 72) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke(); }
+    ctx.fillStyle = '#080D0B'; ctx.fillRect(0, 0, W, H);
+    ctx.save(); ctx.strokeStyle = 'rgba(255,255,255,0.025)'; ctx.lineWidth = 1;
+    for (let y = 0; y < H; y += 72) { ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(W,y); ctx.stroke(); }
+    for (let x = 0; x < W; x += 72) { ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,H); ctx.stroke(); }
     ctx.restore();
   }
 
-  // ── Top bar ─────────────────────────────────────
+  // ── Top gradient strip ───────────────────────────
   const gTop = ctx.createLinearGradient(0, 0, W, 0);
   gTop.addColorStop(0, PHASE_CLR); gTop.addColorStop(1, catClr);
   ctx.fillStyle = gTop; ctx.fillRect(0, 0, W, 10);
 
+  // ── Phase badge floating top-left over photo ─────
+  ctx.font = `bold ${isFinal ? 26 : 22}px Arial, sans-serif`;
+  const phW = ctx.measureText(PHASE_LABEL).width + 44;
+  ctx.fillStyle = 'rgba(8,13,11,0.70)';
+  ctx.beginPath(); ctx.roundRect(PAD, 24, phW, 50, 12); ctx.fill();
+  ctx.strokeStyle = PHASE_CLR + 'AA'; ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.roundRect(PAD, 24, phW, 50, 12); ctx.stroke();
+  ctx.fillStyle = PHASE_CLR; ctx.textAlign = 'left';
+  ctx.fillText(PHASE_LABEL, PAD + 22, 55);
+
+  // ── Bottom gradient fade ──────────────────────────
+  const bandY = H - BAND_H;
+  const grad = ctx.createLinearGradient(0, bandY - 300, 0, H);
+  grad.addColorStop(0, 'rgba(10,15,13,0)');
+  grad.addColorStop(0.3, 'rgba(10,15,13,0.70)');
+  grad.addColorStop(1, 'rgba(10,15,13,0.97)');
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, bandY - 300, W, BAND_H + 300);
+
+  // Phase color accent line at band top
+  ctx.fillStyle = gTop; ctx.fillRect(0, bandY, W, 6);
+
+  // Band solid background
+  ctx.fillStyle = 'rgba(10,15,13,0.95)';
+  ctx.fillRect(0, bandY + 6, W, BAND_H - 6);
+
   function draw(logoImg) {
-    // ── Logo + branding (y: 28) ──────────────────
-    const LOGO_SZ = 60, LX = (W - LOGO_SZ) / 2, LY = 28;
+    // ── Branding row ─────────────────────────────
+    const LOGO_SZ = 48;
+    const textX = logoImg ? PAD + LOGO_SZ + 14 : PAD;
     if (logoImg) {
       ctx.save();
-      ctx.beginPath(); ctx.arc(LX + LOGO_SZ/2, LY + LOGO_SZ/2, LOGO_SZ/2, 0, Math.PI*2); ctx.clip();
-      ctx.drawImage(logoImg, LX, LY, LOGO_SZ, LOGO_SZ);
+      ctx.beginPath(); ctx.arc(PAD + LOGO_SZ/2, bandY + 20 + LOGO_SZ/2, LOGO_SZ/2, 0, Math.PI*2); ctx.clip();
+      ctx.drawImage(logoImg, PAD, bandY + 20, LOGO_SZ, LOGO_SZ);
       ctx.restore();
     }
-    ctx.textAlign = 'center';
-    ctx.fillStyle = '#00C37B'; ctx.font = 'bold 27px Arial, sans-serif';
-    ctx.fillText('PLAY PADEL COOP', W/2, LY + LOGO_SZ + 36);
+    ctx.textAlign = 'left';
+    ctx.fillStyle = '#00C37B'; ctx.font = 'bold 24px Arial, sans-serif';
+    ctx.fillText('PLAY PADEL COOP', textX, bandY + 46);
+    const ppw = ctx.measureText('PLAY PADEL COOP').width;
     ctx.fillStyle = '#8AA396'; ctx.font = '17px Arial, sans-serif';
-    ctx.fillText('TORNEIO ANIVERSÁRIO 2026', W/2, LY + LOGO_SZ + 59);
+    ctx.fillText('\u00B7 TORNEIO ANIVERS\u00C1RIO 2026', textX + ppw + 10, bandY + 46);
 
-    // ── Phase badge (y: 200) ─────────────────────
-    const phY = 198;
-    // Radial glow behind the phase text
-    const radGrd = ctx.createRadialGradient(W/2, phY + 60, 0, W/2, phY + 60, 320);
-    radGrd.addColorStop(0, PHASE_CLR + '28'); radGrd.addColorStop(1, 'rgba(0,0,0,0)');
-    ctx.fillStyle = radGrd; ctx.fillRect(W/2 - 320, phY - 30, 640, 210);
-
-    ctx.fillStyle = PHASE_CLR;
-    ctx.font = `bold ${isFinal ? 78 : 60}px Arial, sans-serif`;
-    ctx.textAlign = 'center';
-    ctx.fillText(PHASE_LABEL, W/2, phY + 74);
-
-    // Category pill + date row (y: 290)
-    const infoY = phY + 106;
-    const grpText = cat.toUpperCase();
-    const bw = ctx.measureText(grpText).width + 36;
+    // Cat pill + date
+    const bw = ctx.measureText(cat.toUpperCase()).width + 30;
     ctx.fillStyle = catClr + '28';
-    ctx.beginPath(); ctx.roundRect((W - bw)/2, infoY, bw, 38, 8); ctx.fill();
-    ctx.strokeStyle = catClr + '88'; ctx.lineWidth = 1;
-    ctx.beginPath(); ctx.roundRect((W - bw)/2, infoY, bw, 38, 8); ctx.stroke();
-    ctx.fillStyle = catClr; ctx.font = 'bold 18px Arial, sans-serif';
-    ctx.fillText(grpText, W/2, infoY + 27);
+    ctx.beginPath(); ctx.roundRect(textX, bandY + 58, bw, 32, 6); ctx.fill();
+    ctx.strokeStyle = catClr + '55'; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.roundRect(textX, bandY + 58, bw, 32, 6); ctx.stroke();
+    ctx.fillStyle = catClr; ctx.font = 'bold 15px Arial, sans-serif'; ctx.textAlign = 'center';
+    ctx.fillText(cat.toUpperCase(), textX + bw/2, bandY + 79);
+    const dateStr = (jogo.data ? ppFormatDate(jogo.data) : '') +
+      (jogo.hora ? '  \u00B7  ' + jogo.hora : '') +
+      (jogo.campo && jogo.campo !== '\u2014' ? '  \u00B7  ' + jogo.campo : '');
+    ctx.fillStyle = '#8AA396'; ctx.font = '16px Arial, sans-serif'; ctx.textAlign = 'left';
+    ctx.fillText(dateStr, textX + bw + 14, bandY + 79);
 
-    const dateStr = (jogo.data ? ppFormatDate(jogo.data) : '')
-      + (jogo.hora ? '  ·  ' + jogo.hora : '')
-      + (jogo.campo && jogo.campo !== '—' ? '  ·  ' + jogo.campo : '');
-    ctx.fillStyle = '#8AA396'; ctx.font = '18px Arial, sans-serif';
-    ctx.fillText(dateStr, W/2, infoY + 64);
+    // ── Separator ─────────────────────────────────
+    const sepY = bandY + 100;
+    ctx.strokeStyle = '#1C2620'; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(PAD, sepY); ctx.lineTo(W - PAD, sepY); ctx.stroke();
 
-    // ── Divider ──────────────────────────────────
-    const divY = infoY + 90;
-    const gDiv = ctx.createLinearGradient(PAD, 0, W - PAD, 0);
-    gDiv.addColorStop(0, 'rgba(0,0,0,0)'); gDiv.addColorStop(0.3, PHASE_CLR + '77');
-    gDiv.addColorStop(0.7, PHASE_CLR + '77'); gDiv.addColorStop(1, 'rgba(0,0,0,0)');
-    ctx.strokeStyle = gDiv; ctx.lineWidth = 1.5;
-    ctx.beginPath(); ctx.moveTo(PAD, divY); ctx.lineTo(W - PAD, divY); ctx.stroke();
-
-    // ── Teams (two columns) ──────────────────────
+    // ── Split team zone (two columns) ─────────────
     const { w1, w2 } = matchSetsScore(jogo.resultado);
     const eq1Won = w1 > w2;
-    const teamZoneY = divY + 44;
-    const teamZoneH = 230;
+    const teamZoneY = sepY + 8;
+    const teamZoneH = 148;
     const midX = W / 2;
 
-    // Column backgrounds
-    ctx.fillStyle = (eq1Won ? PHASE_CLR : '#1C2620') + '0D';
-    ctx.fillRect(0, teamZoneY, midX, teamZoneH);
-    ctx.fillStyle = (!eq1Won ? PHASE_CLR : '#1C2620') + '0D';
-    ctx.fillRect(midX, teamZoneY, midX, teamZoneH);
+    // Subtle winner-side tint
+    const winGrad = ctx.createLinearGradient(0, teamZoneY, 0, teamZoneY + teamZoneH);
+    winGrad.addColorStop(0, PHASE_CLR + '00'); winGrad.addColorStop(1, PHASE_CLR + '1A');
+    ctx.fillStyle = winGrad;
+    ctx.fillRect(eq1Won ? 0 : midX, teamZoneY, midX, teamZoneH);
 
-    function drawFFTeam(name, side, won) {
-      const xCenter = side === 'left' ? W / 4 : 3 * W / 4;
-      const maxW = midX - PAD * 1.4;
+    function drawSplitTeam(name, side, won, seed) {
+      const xC = side === 'left' ? W / 4 : 3 * W / 4;
+      const maxW = midX - PAD * 1.5;
       const parts = name.split(' & ');
-      const fs = parts.length === 2 ? 34 : 40;
       ctx.textAlign = 'center';
-      ctx.fillStyle = won ? '#39FF8F' : '#9AB8AE';
-      ctx.font = `bold ${fs}px Arial, sans-serif`;
-      if (parts.length === 2) {
-        ctx.fillText(trunc(parts[0], maxW), xCenter, teamZoneY + teamZoneH/2 - 14);
-        ctx.font = `bold ${fs - 4}px Arial, sans-serif`;
-        ctx.fillText(trunc(parts[1], maxW), xCenter, teamZoneY + teamZoneH/2 + 30);
-      } else {
-        ctx.fillText(trunc(name, maxW), xCenter, teamZoneY + teamZoneH/2 + 10);
-      }
-      // Seed badge (if stored in jogo)
-      const seed = side === 'left' ? jogo.eq1seed : jogo.eq2seed;
+      // Seed badge
       if (seed) {
-        const sLabel = 'S' + seed;
-        ctx.font = 'bold 14px Arial, sans-serif';
-        const sw = ctx.measureText(sLabel).width + 16;
-        const sx = xCenter - sw/2, sy = teamZoneY + 16;
-        ctx.fillStyle = PHASE_CLR + '2A';
-        ctx.beginPath(); ctx.roundRect(sx, sy, sw, 26, 5); ctx.fill();
+        const sl = 'S' + seed;
+        ctx.font = 'bold 12px Arial, sans-serif';
+        const sw = ctx.measureText(sl).width + 14;
+        ctx.fillStyle = PHASE_CLR + '28';
+        ctx.beginPath(); ctx.roundRect(xC - sw/2, teamZoneY + 10, sw, 22, 4); ctx.fill();
         ctx.fillStyle = PHASE_CLR;
-        ctx.fillText(sLabel, xCenter, sy + 18);
+        ctx.fillText(sl, xC, teamZoneY + 25);
       }
-      // Win tick
+      ctx.fillStyle = won ? '#39FF8F' : '#9AB8AE';
+      const fs = parts.length === 2 ? 28 : 34;
+      ctx.font = `bold ${fs}px Arial, sans-serif`;
+      const nameY = seed ? teamZoneY + 66 : teamZoneY + 54;
+      if (parts.length === 2) {
+        ctx.fillText(trunc(parts[0], maxW), xC, nameY);
+        ctx.font = `bold ${fs - 4}px Arial, sans-serif`;
+        ctx.fillText(trunc(parts[1], maxW), xC, nameY + 36);
+      } else {
+        ctx.fillText(trunc(name, maxW), xC, nameY + 16);
+      }
       if (won) {
-        ctx.fillStyle = '#39FF8F'; ctx.font = 'bold 16px Arial, sans-serif';
-        ctx.fillText('✓ VENCEDOR', xCenter, teamZoneY + teamZoneH - 16);
+        ctx.fillStyle = PHASE_CLR; ctx.font = 'bold 13px Arial, sans-serif';
+        ctx.fillText('\u2713  VENCEDOR', xC, teamZoneY + teamZoneH - 8);
       }
     }
 
-    drawFFTeam(jogo.eq1, 'left',  eq1Won);
-    drawFFTeam(jogo.eq2, 'right', !eq1Won);
+    drawSplitTeam(jogo.eq1, 'left',  eq1Won, jogo.eq1seed);
+    drawSplitTeam(jogo.eq2, 'right', !eq1Won, jogo.eq2seed);
 
-    // VS divider line + circle
-    ctx.strokeStyle = PHASE_CLR + '55'; ctx.lineWidth = 1.5;
-    ctx.beginPath(); ctx.moveTo(midX, teamZoneY + 20); ctx.lineTo(midX, teamZoneY + teamZoneH - 20); ctx.stroke();
-    const vsY = teamZoneY + teamZoneH / 2;
+    // Vertical divider + VS circle
+    ctx.strokeStyle = '#2A3830'; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(midX, teamZoneY + 10); ctx.lineTo(midX, teamZoneY + teamZoneH - 10); ctx.stroke();
     ctx.fillStyle = '#0D1A14';
-    ctx.beginPath(); ctx.arc(midX, vsY, 28, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath(); ctx.arc(midX, teamZoneY + teamZoneH/2, 26, 0, Math.PI * 2); ctx.fill();
     ctx.strokeStyle = PHASE_CLR + '66'; ctx.lineWidth = 1.5;
-    ctx.beginPath(); ctx.arc(midX, vsY, 28, 0, Math.PI * 2); ctx.stroke();
-    ctx.fillStyle = '#6A8880'; ctx.font = 'bold 18px Arial, sans-serif'; ctx.textAlign = 'center';
-    ctx.fillText('VS', midX, vsY + 7);
+    ctx.beginPath(); ctx.arc(midX, teamZoneY + teamZoneH/2, 26, 0, Math.PI * 2); ctx.stroke();
+    ctx.fillStyle = '#6A8880'; ctx.font = 'bold 16px Arial, sans-serif'; ctx.textAlign = 'center';
+    ctx.fillText('VS', midX, teamZoneY + teamZoneH/2 + 6);
 
-    // ── Score box ────────────────────────────────
-    const scoreZoneY = teamZoneY + teamZoneH + 36;
-    const sbW = 340, sbH = 120;
-    const sbX = (W - sbW) / 2;
-    ctx.fillStyle = 'rgba(255,255,255,0.05)';
-    ctx.beginPath(); ctx.roundRect(sbX, scoreZoneY, sbW, sbH, 18); ctx.fill();
-    ctx.strokeStyle = PHASE_CLR + '66'; ctx.lineWidth = 1.5;
-    ctx.beginPath(); ctx.roundRect(sbX, scoreZoneY, sbW, sbH, 18); ctx.stroke();
-    ctx.fillStyle = '#F0F7F3'; ctx.font = 'bold 84px Arial, sans-serif'; ctx.textAlign = 'center';
-    ctx.fillText(`${w1} \u2013 ${w2}`, W/2, scoreZoneY + 88);
+    // ── Score ──────────────────────────────────────
+    const scoreY = teamZoneY + teamZoneH + 56;
+    ctx.fillStyle = '#F0F7F3'; ctx.font = 'bold 100px Arial, sans-serif'; ctx.textAlign = 'center';
+    ctx.fillText(`${w1} \u2013 ${w2}`, W/2, scoreY);
 
-    // Sets line
+    // Sets detail
     const r = jogo.resultado;
     const _tbSc = [[r.tb1eq1,r.tb1eq2],[r.tb2eq1,r.tb2eq2],[r.tb3eq1,r.tb3eq2]];
     const sets = r.wo ? 'Walkover (W.O.)' : [[r.s1eq1,r.s1eq2],[r.s2eq1,r.s2eq2],[r.s3eq1,r.s3eq2]]
@@ -1521,38 +1517,29 @@ function _buildFotoFlyerFF(img) {
       .map(([a, b], i) => { const [ta,tb] = _tbSc[i]; return `${a}-${b}${ta != null ? ` (${ta}-${tb})` : ''}`; })
       .join('  /  ');
     ctx.fillStyle = '#8AA396'; ctx.font = '20px Arial, sans-serif';
-    ctx.fillText(sets, W/2, scoreZoneY + sbH + 28);
+    ctx.fillText(sets, W/2, scoreY + 38);
 
-    // ── Winner banner ─────────────────────────────
-    const winnerBannerY = scoreZoneY + sbH + 68;
-    const winnerBannerH = jogo.resultado.wo ? 76 : 104;
-    ctx.fillStyle = 'rgba(245,197,24,0.10)';
-    ctx.beginPath(); ctx.roundRect(PAD, winnerBannerY, W - PAD*2, winnerBannerH, 14); ctx.fill();
-    ctx.strokeStyle = 'rgba(245,197,24,0.40)'; ctx.lineWidth = 1.5;
-    ctx.beginPath(); ctx.roundRect(PAD, winnerBannerY, W - PAD*2, winnerBannerH, 14); ctx.stroke();
-    ctx.fillStyle = '#F5C518'; ctx.font = 'bold 20px Arial, sans-serif'; ctx.textAlign = 'center';
-    ctx.fillText('\uD83C\uDFC6  VENCEDOR', W/2, winnerBannerY + 30);
+    // ── Winner banner ──────────────────────────────
     const winner = eq1Won ? jogo.eq1 : jogo.eq2;
     const wParts = winner.split(' & ');
+    const wH = wParts.length === 2 ? 106 : 80;
+    const wY = scoreY + 68;
+    ctx.fillStyle = 'rgba(245,197,24,0.10)';
+    ctx.beginPath(); ctx.roundRect(PAD, wY, W - PAD*2, wH, 14); ctx.fill();
+    ctx.strokeStyle = 'rgba(245,197,24,0.38)'; ctx.lineWidth = 1.5;
+    ctx.beginPath(); ctx.roundRect(PAD, wY, W - PAD*2, wH, 14); ctx.stroke();
+    ctx.fillStyle = '#F5C518'; ctx.font = 'bold 18px Arial, sans-serif'; ctx.textAlign = 'center';
+    ctx.fillText('\uD83C\uDFC6  VENCEDOR', W/2, wY + 26);
     ctx.fillStyle = '#F0F7F3';
-    if (wParts.length === 2 && winnerBannerH > 80) {
-      ctx.font = 'bold 26px Arial, sans-serif';
-      ctx.fillText(wParts[0], W/2, winnerBannerY + 62);
-      ctx.fillText(wParts[1], W/2, winnerBannerY + 94);
+    if (wParts.length === 2) {
+      ctx.font = 'bold 24px Arial, sans-serif';
+      ctx.fillText(wParts[0], W/2, wY + 60); ctx.fillText(wParts[1], W/2, wY + 90);
     } else {
-      ctx.font = 'bold 30px Arial, sans-serif';
-      ctx.fillText(winner, W/2, winnerBannerY + 62);
+      ctx.font = 'bold 28px Arial, sans-serif';
+      ctx.fillText(winner, W/2, wY + 58);
     }
 
-    // ── Footer ────────────────────────────────────
-    const footY = H - 76;
-    ctx.fillStyle = 'rgba(8,13,11,0.90)'; ctx.fillRect(0, footY, W, 66);
-    ctx.strokeStyle = PHASE_CLR + '44'; ctx.lineWidth = 1;
-    ctx.beginPath(); ctx.moveTo(0, footY); ctx.lineTo(W, footY); ctx.stroke();
-    ctx.fillStyle = '#4A6058'; ctx.font = '17px Arial, sans-serif'; ctx.textAlign = 'center';
-    ctx.fillText('Play Padel  \u00B7  Torneio Aniversário 2026', W/2, footY + 40);
-
-    // Bottom bar
+    // Bottom strip
     ctx.fillStyle = gTop; ctx.fillRect(0, H - 10, W, 10);
 
     document.getElementById('fotoFlyerPreview').style.display = 'block';
