@@ -606,9 +606,12 @@
           .bk-round{display:flex;flex-direction:column;flex-shrink:0;min-width:195px}
           .bk-rhead{font-size:.6rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--cinza-texto);padding-bottom:.35rem;border-bottom:1px solid var(--preto-borda);margin-bottom:.1rem}
           .bk-slot{flex:1;display:flex;flex-direction:column;justify-content:center;padding:7px 0;position:relative;overflow:visible}
-          /* Connector lines */
-          .bk-slot-top::after{content:'';position:absolute;top:50%;right:-32px;width:32px;height:50%;border-top:2px solid rgba(0,195,123,.22);border-right:2px solid rgba(0,195,123,.22);pointer-events:none;z-index:0}
-          .bk-slot-bot::after{content:'';position:absolute;top:0;right:-32px;width:32px;height:50%;border-bottom:2px solid rgba(0,195,123,.22);border-right:2px solid rgba(0,195,123,.22);pointer-events:none;z-index:0}
+          /* Connector lines — outgoing (right side of each QF/SF pair) */
+          .bk-slot-top::after{content:'';position:absolute;top:50%;right:-32px;width:32px;height:50%;border-top:2px solid rgba(0,195,123,.42);border-right:2px solid rgba(0,195,123,.42);pointer-events:none;z-index:0}
+          .bk-slot-bot::after{content:'';position:absolute;top:0;right:-32px;width:32px;height:50%;border-bottom:2px solid rgba(0,195,123,.42);border-right:2px solid rgba(0,195,123,.42);pointer-events:none;z-index:0}
+          /* Connector lines — incoming (left side of SF and Final cards) */
+          .bk-bracket .bk-round:not(:first-child):not(.bk-round-champion) .bk-slot::before{content:'';position:absolute;top:calc(50% - 1px);left:-32px;width:32px;height:2px;background:rgba(0,195,123,.42);pointer-events:none;z-index:0}
+          .bk-slot:has(.bk-card.is-final)::before{background:rgba(245,197,24,.45)!important}
           /* Game card */
           .bk-card{background:var(--preto-card);border:1px solid var(--preto-borda);border-radius:10px;padding:.6rem .72rem;display:flex;flex-direction:column;gap:.22rem;position:relative;z-index:1;transition:border-color .2s}
           .bk-card.done{border-color:rgba(0,195,123,.3)}
@@ -631,7 +634,7 @@
           .champion-col-name{font-size:1.55rem;font-weight:900;color:var(--branco);line-height:1.15}
           .champion-col-grup{font-size:.78rem;color:var(--cinza-texto)}
           .bk-round-final-connector{position:relative}
-          .bk-round-final-connector::before{content:'';position:absolute;top:50%;left:-32px;width:32px;height:2px;background:rgba(245,197,24,.3);pointer-events:none}
+          .bk-round-final-connector::before{content:'';position:absolute;top:50%;left:-32px;width:32px;height:2px;background:rgba(245,197,24,.45);pointer-events:none}
         </style>
         <div class="page-header">
           <div class="page-title-wrap">
