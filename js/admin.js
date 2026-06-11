@@ -4655,6 +4655,7 @@ const FF_F_DATE  = '2026-06-14'; // Domingo — Finais
 const FF_QF_SLOTS = ['17:30', '18:30', '19:30', '20:30', '21:30'];
 const FF_SF_SLOTS = ['15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00', '22:00'];
 const FF_F_SLOT   = '15:00';
+const FF_FINAL_CAMPOS = { M1:'Play Padel', M2:'Play Padel', F1:'Play Padel', F2:'Play Padel', M3:'TVCabo', M4:'TVCabo', M5:'TVCabo' };
 
 // Auto-alocação de QF nos slots livres de 5a/6a feira (11 e 12 Jun)
 function ffAutoAllocateQF(qfJogos) {
@@ -4691,14 +4692,14 @@ function ffAutoAllocateQF(qfJogos) {
   });
 }
 
-function ffMakeJogo(catId, fase, num, e1, e2, feedFrom = null, data = null, hora = null) {
+function ffMakeJogo(catId, fase, num, e1, e2, feedFrom = null, data = null, hora = null, campo = null) {
   return {
     id: `${catId}-${fase === 'F' ? 'F' : fase + num}`,
     fase, num, feedFrom,
     eq1: e1?.par ?? null, eq1grupo: e1?.grupo ?? null, eq1seed: e1?.seed ?? null,
     eq2: e2?.par ?? null, eq2grupo: e2?.grupo ?? null, eq2seed: e2?.seed ?? null,
     resultado: null,
-    data, hora,
+    data, hora, campo,
   };
 }
 
@@ -4771,7 +4772,7 @@ function ffGenerateBracket(catId) {
     const [gA, gB] = Object.keys(bg).sort();
     jogos.push(ffMakeJogo(catId, 'SF', 1, bg[gA][0], bg[gB][1], null, FF_SF_DATE, FF_SF_SLOTS[0]));
     jogos.push(ffMakeJogo(catId, 'SF', 2, bg[gB][0], bg[gA][1], null, FF_SF_DATE, FF_SF_SLOTS[1]));
-    jogos.push(ffMakeJogo(catId, 'F',  1, null, null, [`${catId}-SF1`, `${catId}-SF2`], FF_F_DATE, FF_F_SLOT));
+    jogos.push(ffMakeJogo(catId, 'F',  1, null, null, [`${catId}-SF1`, `${catId}-SF2`], FF_F_DATE, FF_F_SLOT, FF_FINAL_CAMPOS[catId] || null));
 
   } else if (FF_4G.includes(catId)) {
     // 4 grupos: S1-S4 = vencedores, S5-S8 = segundos. Mesmo esquema de cruzamento.
@@ -4780,7 +4781,7 @@ function ffGenerateBracket(catId) {
     ffAutoAllocateQF(jogos.filter(j => j.fase === 'QF'));
     jogos.push(ffMakeJogo(catId, 'SF', 1, null, null, [`${catId}-QF1`, `${catId}-QF2`], FF_SF_DATE, FF_SF_SLOTS[0]));
     jogos.push(ffMakeJogo(catId, 'SF', 2, null, null, [`${catId}-QF3`, `${catId}-QF4`], FF_SF_DATE, FF_SF_SLOTS[1]));
-    jogos.push(ffMakeJogo(catId, 'F',  1, null, null, [`${catId}-SF1`, `${catId}-SF2`], FF_F_DATE, FF_F_SLOT));
+    jogos.push(ffMakeJogo(catId, 'F',  1, null, null, [`${catId}-SF1`, `${catId}-SF2`], FF_F_DATE, FF_F_SLOT, FF_FINAL_CAMPOS[catId] || null));
     return { generated: true, jogos, collisionNote: cn4 };
 
   } else {
@@ -4790,7 +4791,7 @@ function ffGenerateBracket(catId) {
     ffAutoAllocateQF(jogos.filter(j => j.fase === 'QF'));
     jogos.push(ffMakeJogo(catId, 'SF', 1, null, null, [`${catId}-QF1`, `${catId}-QF2`], FF_SF_DATE, FF_SF_SLOTS[0]));
     jogos.push(ffMakeJogo(catId, 'SF', 2, null, null, [`${catId}-QF3`, `${catId}-QF4`], FF_SF_DATE, FF_SF_SLOTS[1]));
-    jogos.push(ffMakeJogo(catId, 'F',  1, null, null, [`${catId}-SF1`, `${catId}-SF2`], FF_F_DATE, FF_F_SLOT));
+    jogos.push(ffMakeJogo(catId, 'F',  1, null, null, [`${catId}-SF1`, `${catId}-SF2`], FF_F_DATE, FF_F_SLOT, FF_FINAL_CAMPOS[catId] || null));
     return { generated: true, jogos, collisionNote: cn };
   }
 }
@@ -4873,6 +4874,8 @@ function ffPropagate(catId) {
     jogo.eq1grupo = j1 ? (w1 === 1 ? j1.eq1grupo : w1 === 2 ? j1.eq2grupo : null) : null;
     jogo.eq2      = j2 ? (w2 === 1 ? j2.eq1 : w2 === 2 ? j2.eq2 : null) : null;
     jogo.eq2grupo = j2 ? (w2 === 1 ? j2.eq1grupo : w2 === 2 ? j2.eq2grupo : null) : null;
+    // Auto-set Final campo from default if missing (also fixes existing brackets)
+    if (jogo.fase === 'F' && !jogo.campo && FF_FINAL_CAMPOS[catId]) jogo.campo = FF_FINAL_CAMPOS[catId];
   });
   ffSave(ff);
 }
