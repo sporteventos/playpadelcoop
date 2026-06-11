@@ -604,7 +604,7 @@ window.gerarPanfleto = function(periodo) {
   const filtroData  = document.getElementById('filtroDataJogos').value;
   const filtroCampo = document.getElementById('filtroCampoJogos').value;
   const filtroGrupo = document.getElementById('filtroGrupoJogos')?.value || 'todos';
-  let jogos = getData('jogos');
+  let jogos = getAllJogosNormalized();
   if (filtroData  !== 'todos') jogos = jogos.filter(j => j.data  === filtroData);
   if (filtroCampo !== 'todos') jogos = jogos.filter(j => j.campo === filtroCampo);
   if (filtroGrupo !== 'todos') jogos = jogos.filter(j => j.grupo === filtroGrupo);
