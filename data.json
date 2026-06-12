@@ -5624,8 +5624,8 @@
           "eq2grupo": null,
           "eq2seed": null,
           "resultado": null,
-          "data": "2026-06-14",
-          "hora": "16:00",
+          "data": null,
+          "hora": null,
           "campo": "TVCabo"
         }
       ],
@@ -15727,5 +15727,5 @@
       "ts": "2026-06-04T08:09:07.848Z"
     }
   ],
-  "_updated": "2026-06-12T12:56:38.558Z"
+  "_updated": "2026-06-12T12:56:42.402Z"
 }
