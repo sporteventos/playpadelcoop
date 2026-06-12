@@ -4930,10 +4930,10 @@
             "s2eq2": 2,
             "tb2eq1": null,
             "tb2eq2": null,
-            "s3eq1": 6,
-            "s3eq2": 7,
-            "tb3eq1": 4,
-            "tb3eq2": 7
+            "s3eq1": 4,
+            "s3eq2": 6,
+            "tb3eq1": null,
+            "tb3eq2": null
           },
           "data": "2026-06-12",
           "hora": "17:30",
@@ -5834,6 +5834,16 @@
     }
   ],
   "auditlog": [
+    {
+      "id": "mqbcdgj9f38zemd",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "SAVE_RESULT_FF",
+      "target": "fasefinal",
+      "detail": "Resultado FF: F2 jogo F2-QF3",
+      "ts": "2026-06-12T19:51:02.133Z"
+    },
     {
       "id": "mqbccbr1ba998e1",
       "userId": "mpz8aq9sg983ubo",
@@ -15823,17 +15833,7 @@
       "target": "fasefinal",
       "detail": "Bracket gerado: F2",
       "ts": "2026-06-04T09:22:55.820Z"
-    },
-    {
-      "id": "mpzaew973jch1jc",
-      "userId": "mpxnxlqhg3dzc1o",
-      "username": "admin",
-      "role": "admin",
-      "action": "GENERATE_BRACKET",
-      "target": "fasefinal",
-      "detail": "Bracket gerado: F1",
-      "ts": "2026-06-04T09:22:55.819Z"
     }
   ],
-  "_updated": "2026-06-12T19:50:13.527Z"
+  "_updated": "2026-06-12T19:51:02.136Z"
 }
