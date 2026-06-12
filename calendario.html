@@ -248,7 +248,7 @@ document.addEventListener('DOMContentLoaded', () => {
     Object.entries(ffData).forEach(([catId, catData]) => {
       if (!catData?.jogos) return;
       catData.jogos.forEach(j => {
-        if (!j.data || !j.hora) return;
+        if (!j.data) return;
         out.push({
           id: 'ff-' + j.id,
           data: j.data,
@@ -364,7 +364,7 @@ document.addEventListener('DOMContentLoaded', () => {
         html += `<div class="court-block">
           <div class="court-label"><i class="ph ph-tennis"></i> ${campo}</div>
           <div class="matches-list">`;
-        byDate[data][campo].sort((a,b) => a.hora.localeCompare(b.hora)).forEach(j => {
+        byDate[data][campo].sort((a,b) => (a.hora || '00:00').localeCompare(b.hora || '00:00')).forEach(j => {
           html += renderJogo(j);
         });
         html += `</div></div>`;
