@@ -4810,7 +4810,7 @@
           "eq2grupo": "F1-B",
           "eq2seed": null,
           "resultado": null,
-          "data": null,
+          "data": "2026-06-13",
           "hora": null,
           "campo": null
         },
@@ -15725,5 +15725,5 @@
       "ts": "2026-06-04T08:09:07.848Z"
     }
   ],
-  "_updated": "2026-06-12T12:55:57.289Z"
+  "_updated": "2026-06-12T12:56:01.628Z"
 }
