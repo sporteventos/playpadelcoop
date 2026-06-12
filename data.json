@@ -4830,7 +4830,7 @@
           "eq2seed": null,
           "resultado": null,
           "data": "2026-06-14",
-          "hora": "19:00",
+          "hora": null,
           "campo": "Play Padel"
         }
       ],
@@ -4957,7 +4957,7 @@
           "eq2grupo": "F2-A",
           "eq2seed": null,
           "resultado": null,
-          "data": "2026-06-13",
+          "data": null,
           "hora": null,
           "campo": null
         },
@@ -4976,7 +4976,7 @@
           "eq2grupo": "F2-A",
           "eq2seed": null,
           "resultado": null,
-          "data": "2026-06-13",
+          "data": null,
           "hora": null,
           "campo": null
         },
@@ -4995,7 +4995,7 @@
           "eq2grupo": null,
           "eq2seed": null,
           "resultado": null,
-          "data": "2026-06-14",
+          "data": null,
           "hora": null,
           "campo": "Play Padel"
         }
@@ -5147,8 +5147,7 @@
           "eq2seed": 4,
           "resultado": null,
           "data": "2026-06-13",
-          "hora": null,
-          "campo": null
+          "hora": "15:00"
         },
         {
           "id": "M5-SF2",
@@ -5163,8 +5162,7 @@
           "eq2seed": 3,
           "resultado": null,
           "data": "2026-06-13",
-          "hora": null,
-          "campo": null
+          "hora": "16:00"
         },
         {
           "id": "M5-F",
@@ -5309,8 +5307,7 @@
           "eq2seed": null,
           "resultado": null,
           "data": "2026-06-13",
-          "hora": null,
-          "campo": null
+          "hora": "15:00"
         },
         {
           "id": "M4-SF2",
@@ -5328,8 +5325,7 @@
           "eq2seed": null,
           "resultado": null,
           "data": "2026-06-13",
-          "hora": null,
-          "campo": null
+          "hora": "16:00"
         },
         {
           "id": "M4-F",
@@ -5347,7 +5343,7 @@
           "eq2seed": null,
           "resultado": null,
           "data": "2026-06-14",
-          "hora": null,
+          "hora": "15:00",
           "campo": "TVCabo"
         }
       ],
@@ -5450,8 +5446,7 @@
           "eq2seed": null,
           "resultado": null,
           "data": "2026-06-13",
-          "hora": null,
-          "campo": null
+          "hora": "15:00"
         },
         {
           "id": "M2-SF2",
@@ -5591,8 +5586,7 @@
           "eq2seed": null,
           "resultado": null,
           "data": "2026-06-13",
-          "hora": null,
-          "campo": null
+          "hora": "15:00"
         },
         {
           "id": "M3-SF2",
@@ -5610,8 +5604,7 @@
           "eq2seed": null,
           "resultado": null,
           "data": "2026-06-13",
-          "hora": null,
-          "campo": null
+          "hora": "16:00"
         },
         {
           "id": "M3-F",
@@ -5629,7 +5622,7 @@
           "eq2seed": null,
           "resultado": null,
           "data": "2026-06-14",
-          "hora": null,
+          "hora": "16:00",
           "campo": "TVCabo"
         }
       ],
@@ -15731,5 +15724,5 @@
       "ts": "2026-06-04T08:09:07.848Z"
     }
   ],
-  "_updated": "2026-06-12T12:58:05.112Z"
+  "_updated": "2026-06-12T12:59:38.199Z"
 }
