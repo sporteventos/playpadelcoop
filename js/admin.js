@@ -5080,9 +5080,14 @@ function ffCardHtml(j, catId) {
   let scoreHtml = '';
   if (done) {
     const r = j.resultado;
-    const sets = [[r.s1eq1,r.s1eq2],[r.s2eq1,r.s2eq2],[r.s3eq1,r.s3eq2]]
-      .filter(([a]) => a != null).map(([a,b]) => `${a}-${b}`).join(' / ');
-    scoreHtml = `<div class="bk-card-score">${sets}</div>`;
+    if (r.wo) {
+      const woWinner = r.wo === 'eq1' ? (j.eq2 || '—') : (j.eq1 || '—');
+      scoreHtml = `<div class="bk-card-score" style="color:var(--vermelho);background:rgba(255,74,74,.1)">W.O.</div>`;
+    } else {
+      const sets = [[r.s1eq1,r.s1eq2],[r.s2eq1,r.s2eq2],[r.s3eq1,r.s3eq2]]
+        .filter(([a]) => a != null).map(([a,b]) => `${a}-${b}`).join(' / ');
+      scoreHtml = `<div class="bk-card-score">${sets}</div>`;
+    }
   }
 
   const canEdit = !!(j.eq1 && j.eq2);

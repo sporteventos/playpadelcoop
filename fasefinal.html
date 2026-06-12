@@ -224,10 +224,14 @@ document.addEventListener('DOMContentLoaded', () => {
     let scoreHtml = '';
     if (done) {
       const r = j.resultado;
-      const sets = [[r.s1eq1,r.s1eq2,r.tb1eq1,r.tb1eq2],[r.s2eq1,r.s2eq2,r.tb2eq1,r.tb2eq2],[r.s3eq1,r.s3eq2,r.tb3eq1,r.tb3eq2]]
-        .filter(([a]) => a != null)
-        .map(([a,b,ta,tb]) => `${a}-${b}${ta != null ? `<sup style="font-size:.6em;color:var(--amarelo)">(${ta}-${tb})</sup>` : ''}`).join(' / ');
-      scoreHtml = `<div class="bk-card-score">${sets}</div>`;
+      if (r.wo) {
+        scoreHtml = `<div class="bk-card-score" style="color:var(--vermelho);background:rgba(255,74,74,.1)">W.O.</div>`;
+      } else {
+        const sets = [[r.s1eq1,r.s1eq2,r.tb1eq1,r.tb1eq2],[r.s2eq1,r.s2eq2,r.tb2eq1,r.tb2eq2],[r.s3eq1,r.s3eq2,r.tb3eq1,r.tb3eq2]]
+          .filter(([a]) => a != null)
+          .map(([a,b,ta,tb]) => `${a}-${b}${ta != null ? `<sup style="font-size:.6em;color:var(--amarelo)">(${ta}-${tb})</sup>` : ''}`).join(' / ');
+        scoreHtml = `<div class="bk-card-score">${sets}</div>`;
+      }
     }
     const schedHtml = (j.data || j.hora || j.campo)
       ? `<div style="font-size:.65rem;color:var(--cinza-texto);margin-bottom:.25rem">${j.data ? ppFormatDate(j.data) : ''}${j.hora ? ' · ' + j.hora : ''}${j.campo ? ' · ' + j.campo : ''}</div>`
