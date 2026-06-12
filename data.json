@@ -5058,7 +5058,20 @@
           "eq2": "Carlos Cardeano & José Santos",
           "eq2grupo": "M1-C",
           "eq2seed": 5,
-          "resultado": null,
+          "resultado": {
+            "s1eq1": 6,
+            "s1eq2": 3,
+            "tb1eq1": null,
+            "tb1eq2": null,
+            "s2eq1": 6,
+            "s2eq2": 0,
+            "tb2eq1": null,
+            "tb2eq2": null,
+            "s3eq1": null,
+            "s3eq2": null,
+            "tb3eq1": null,
+            "tb3eq2": null
+          },
           "data": "2026-06-12",
           "hora": "19:30",
           "campo": "TVCabo"
@@ -5119,8 +5132,8 @@
           "eq1": null,
           "eq1grupo": null,
           "eq1seed": null,
-          "eq2": null,
-          "eq2grupo": null,
+          "eq2": "Gonçalo Nascimento & João Catela",
+          "eq2grupo": "M1-B",
           "eq2seed": null,
           "resultado": null,
           "data": "2026-06-13",
@@ -5834,6 +5847,16 @@
     }
   ],
   "auditlog": [
+    {
+      "id": "mqbcgazmzxd2wxh",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "SAVE_RESULT_FF",
+      "target": "fasefinal",
+      "detail": "Resultado FF: M1 jogo M1-QF2",
+      "ts": "2026-06-12T19:53:14.915Z"
+    },
     {
       "id": "mqbcdgj9f38zemd",
       "userId": "mpz8aq9sg983ubo",
@@ -15823,17 +15846,7 @@
       "target": "fasefinal",
       "detail": "Bracket gerado: M3",
       "ts": "2026-06-04T09:22:55.822Z"
-    },
-    {
-      "id": "mpzaew980ayuome",
-      "userId": "mpxnxlqhg3dzc1o",
-      "username": "admin",
-      "role": "admin",
-      "action": "GENERATE_BRACKET",
-      "target": "fasefinal",
-      "detail": "Bracket gerado: F2",
-      "ts": "2026-06-04T09:22:55.820Z"
     }
   ],
-  "_updated": "2026-06-12T19:51:05.442Z"
+  "_updated": "2026-06-12T19:53:14.917Z"
 }
