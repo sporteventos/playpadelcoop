@@ -5491,7 +5491,20 @@
           "eq2": "Frederico Jonet & Francisco Ferreira",
           "eq2grupo": "M2-A",
           "eq2seed": 5,
-          "resultado": null,
+          "resultado": {
+            "s1eq1": 6,
+            "s1eq2": 4,
+            "tb1eq1": null,
+            "tb1eq2": null,
+            "s2eq1": 3,
+            "s2eq2": 6,
+            "tb2eq1": null,
+            "tb2eq2": null,
+            "s3eq1": 6,
+            "s3eq2": 2,
+            "tb3eq1": null,
+            "tb3eq2": null
+          },
           "data": "2026-06-12",
           "hora": "20:30",
           "campo": "TVCabo"
@@ -5552,8 +5565,8 @@
             "M2-QF3",
             "M2-QF4"
           ],
-          "eq1": null,
-          "eq1grupo": null,
+          "eq1": "Jameel Abdula & Tahir",
+          "eq1grupo": "M2-B",
           "eq1seed": null,
           "eq2": "Ricardo Oliveira & Vasco Silva",
           "eq2grupo": "M2-C",
@@ -5860,6 +5873,16 @@
     }
   ],
   "auditlog": [
+    {
+      "id": "mqbexhl66lou1v0",
+      "userId": "system",
+      "username": "system",
+      "role": "-",
+      "action": "SAVE_RESULT_FF",
+      "target": "fasefinal",
+      "detail": "Resultado FF: M2 jogo M2-QF3",
+      "ts": "2026-06-12T21:02:35.850Z"
+    },
     {
       "id": "mqbci2x4yji3oak",
       "userId": "mpz8aq9sg983ubo",
@@ -15849,17 +15872,7 @@
       "target": "fasefinal",
       "detail": "Bracket gerado: M5",
       "ts": "2026-06-04T09:22:55.825Z"
-    },
-    {
-      "id": "mpzaew9bgwikx9d",
-      "userId": "mpxnxlqhg3dzc1o",
-      "username": "admin",
-      "role": "admin",
-      "action": "GENERATE_BRACKET",
-      "target": "fasefinal",
-      "detail": "Bracket gerado: M4",
-      "ts": "2026-06-04T09:22:55.823Z"
     }
   ],
-  "_updated": "2026-06-12T19:55:56.353Z"
+  "_updated": "2026-06-12T21:02:35.853Z"
 }
