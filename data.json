@@ -5440,9 +5440,8 @@
           "eq2grupo": "M2-C",
           "eq2seed": null,
           "resultado": null,
-          "data": null,
-          "hora": null,
-          "campo": null
+          "data": "2026-06-13",
+          "hora": "15:00"
         },
         {
           "id": "M2-SF2",
@@ -5459,8 +5458,9 @@
           "eq2grupo": null,
           "eq2seed": null,
           "resultado": null,
-          "data": "2026-06-13",
-          "hora": "16:00"
+          "data": null,
+          "hora": null,
+          "campo": null
         },
         {
           "id": "M2-F",
@@ -15719,5 +15719,5 @@
       "ts": "2026-06-04T08:09:07.848Z"
     }
   ],
-  "_updated": "2026-06-12T12:49:20.351Z"
+  "_updated": "2026-06-12T12:51:03.514Z"
 }
