@@ -5368,7 +5368,20 @@
           "eq2": "José Moreira & Nuno L. Pereira",
           "eq2grupo": "M2-B",
           "eq2seed": 7,
-          "resultado": null,
+          "resultado": {
+            "s1eq1": 6,
+            "s1eq2": 4,
+            "tb1eq1": null,
+            "tb1eq2": null,
+            "s2eq1": 6,
+            "s2eq2": 3,
+            "tb2eq1": null,
+            "tb2eq2": null,
+            "s3eq1": null,
+            "s3eq2": null,
+            "tb3eq1": null,
+            "tb3eq2": null
+          },
           "data": "2026-06-12",
           "hora": "17:30",
           "campo": "Play Padel"
@@ -5442,8 +5455,8 @@
             "M2-QF1",
             "M2-QF2"
           ],
-          "eq1": null,
-          "eq1grupo": null,
+          "eq1": "Rui Lourenço & Francisco Pegado",
+          "eq1grupo": "M2-A",
           "eq1seed": null,
           "eq2": "Feizan Omar & Filipe Lobo",
           "eq2grupo": "M2-C",
@@ -5756,6 +5769,16 @@
     }
   ],
   "auditlog": [
+    {
+      "id": "mqb64nas01f90qj",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "SAVE_RESULT_FF",
+      "target": "fasefinal",
+      "detail": "Resultado FF: M2 jogo M2-QF1",
+      "ts": "2026-06-12T16:56:13.300Z"
+    },
     {
       "id": "mqb5wsvsf2s5a2g",
       "userId": "mpz8aq9sg983ubo",
@@ -15745,17 +15768,7 @@
       "target": "auth",
       "detail": "Login: euamusse (admin)",
       "ts": "2026-06-04T09:18:53.355Z"
-    },
-    {
-      "id": "mpz9zadjwb6eucy",
-      "userId": "mpxnxlqhg3dzc1o",
-      "username": "admin",
-      "role": "admin",
-      "action": "LOGIN",
-      "target": "auth",
-      "detail": "Login: admin (admin)",
-      "ts": "2026-06-04T09:10:47.623Z"
     }
   ],
-  "_updated": "2026-06-12T16:50:32.399Z"
+  "_updated": "2026-06-12T16:56:13.303Z"
 }
