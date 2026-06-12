@@ -4995,7 +4995,7 @@
           "eq2grupo": null,
           "eq2seed": null,
           "resultado": null,
-          "data": null,
+          "data": "2026-06-14",
           "hora": null,
           "campo": "Play Padel"
         }
@@ -15725,5 +15725,5 @@
       "ts": "2026-06-04T08:09:07.848Z"
     }
   ],
-  "_updated": "2026-06-12T12:56:15.856Z"
+  "_updated": "2026-06-12T12:56:20.063Z"
 }
