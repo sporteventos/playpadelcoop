@@ -5587,7 +5587,8 @@
           "eq2seed": null,
           "resultado": null,
           "data": "2026-06-13",
-          "hora": "15:00"
+          "hora": null,
+          "campo": null
         },
         {
           "id": "M3-SF2",
@@ -5605,7 +5606,8 @@
           "eq2seed": null,
           "resultado": null,
           "data": "2026-06-13",
-          "hora": "16:00"
+          "hora": null,
+          "campo": null
         },
         {
           "id": "M3-F",
@@ -5623,7 +5625,7 @@
           "eq2seed": null,
           "resultado": null,
           "data": "2026-06-14",
-          "hora": "16:00",
+          "hora": null,
           "campo": "TVCabo"
         }
       ],
@@ -15725,5 +15727,5 @@
       "ts": "2026-06-04T08:09:07.848Z"
     }
   ],
-  "_updated": "2026-06-12T13:02:15.945Z"
+  "_updated": "2026-06-12T13:02:48.144Z"
 }
