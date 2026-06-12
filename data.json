@@ -5182,7 +5182,7 @@
           "eq2seed": null,
           "resultado": null,
           "data": "2026-06-14",
-          "hora": "17:00",
+          "hora": "13:00",
           "campo": "TVCabo"
         }
       ]
@@ -5730,6 +5730,16 @@
     }
   ],
   "auditlog": [
+    {
+      "id": "mqb05ymcc3rez76",
+      "userId": "mpz46x5c2zupza0",
+      "username": "bgaspar",
+      "role": "operator",
+      "action": "LOGIN",
+      "target": "auth",
+      "detail": "Login: bgaspar (operator)",
+      "ts": "2026-06-12T14:09:16.932Z"
+    },
     {
       "id": "mqaxystgk6t5ggp",
       "userId": "mpz46x5c2zupza0",
@@ -15719,17 +15729,7 @@
       "target": "auth",
       "detail": "Login: admin (admin)",
       "ts": "2026-06-04T08:23:01.101Z"
-    },
-    {
-      "id": "mpz879xrnulqat0",
-      "userId": "mpxnxlqhg3dzc1o",
-      "username": "admin",
-      "role": "admin",
-      "action": "LOGOUT",
-      "target": "auth",
-      "detail": "Logout: admin",
-      "ts": "2026-06-04T08:21:01.071Z"
     }
   ],
-  "_updated": "2026-06-12T13:44:28.110Z"
+  "_updated": "2026-06-12T14:09:50.117Z"
 }
