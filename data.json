@@ -5325,8 +5325,9 @@
           "eq2grupo": "M4-C",
           "eq2seed": null,
           "resultado": null,
-          "data": "2026-06-13",
-          "hora": "16:00"
+          "data": null,
+          "hora": null,
+          "campo": null
         },
         {
           "id": "M4-F",
@@ -15728,5 +15729,5 @@
       "ts": "2026-06-04T08:09:07.848Z"
     }
   ],
-  "_updated": "2026-06-12T12:57:08.674Z"
+  "_updated": "2026-06-12T12:57:14.035Z"
 }
