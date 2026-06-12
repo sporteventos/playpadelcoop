@@ -5099,9 +5099,8 @@
           "eq2grupo": null,
           "eq2seed": null,
           "resultado": null,
-          "data": null,
-          "hora": null,
-          "campo": null
+          "data": "2026-06-13",
+          "hora": "16:00"
         },
         {
           "id": "M1-F",
@@ -5118,8 +5117,8 @@
           "eq2grupo": null,
           "eq2seed": null,
           "resultado": null,
-          "data": null,
-          "hora": null,
+          "data": "2026-06-14",
+          "hora": "20:00",
           "campo": "Play Padel"
         }
       ],
@@ -5460,9 +5459,8 @@
           "eq2grupo": null,
           "eq2seed": null,
           "resultado": null,
-          "data": null,
-          "hora": null,
-          "campo": null
+          "data": "2026-06-13",
+          "hora": "16:00"
         },
         {
           "id": "M2-F",
@@ -15721,5 +15719,5 @@
       "ts": "2026-06-04T08:09:07.848Z"
     }
   ],
-  "_updated": "2026-06-12T12:47:28.050Z"
+  "_updated": "2026-06-12T12:49:20.351Z"
 }
