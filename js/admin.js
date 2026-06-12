@@ -5146,12 +5146,12 @@ window.ffSaveSchedule = function() {
   const novaData = document.getElementById('ffSchedData').value;
   const novaHora = document.getElementById('ffSchedHora').value;
   const novoCampo = document.getElementById('ffSchedCampo')?.value || '';
-  if (!novaData || !novaHora) return toast('Seleccione data e hora.', 'error');
+  if (!novaData) return toast('Seleccione a data.', 'error');
   const ff = ffLoad();
   const j  = ff[catId]?.jogos?.find(x => x.id === jogoId);
   if (!j) return;
-  j.data = novaData;
-  j.hora = novaHora;
+  j.data  = novaData;
+  j.hora  = novaHora || null;
   j.campo = novoCampo || null;
   ffSave(ff);
   closeModal('modalFFSchedule');
