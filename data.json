@@ -5586,8 +5586,9 @@
           "eq2grupo": null,
           "eq2seed": null,
           "resultado": null,
-          "data": "2026-06-13",
-          "hora": "15:00"
+          "data": null,
+          "hora": null,
+          "campo": null
         },
         {
           "id": "M3-SF2",
@@ -15725,5 +15726,5 @@
       "ts": "2026-06-04T08:09:07.848Z"
     }
   ],
-  "_updated": "2026-06-12T12:56:20.063Z"
+  "_updated": "2026-06-12T12:56:25.541Z"
 }
