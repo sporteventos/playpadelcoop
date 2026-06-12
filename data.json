@@ -5455,7 +5455,20 @@
           "eq2": "Ricardo Oliveira & Vasco Silva",
           "eq2grupo": "M2-C",
           "eq2seed": 2,
-          "resultado": null,
+          "resultado": {
+            "s1eq1": 2,
+            "s1eq2": 6,
+            "tb1eq1": null,
+            "tb1eq2": null,
+            "s2eq1": 1,
+            "s2eq2": 6,
+            "tb2eq1": null,
+            "tb2eq2": null,
+            "s3eq1": null,
+            "s3eq2": null,
+            "tb3eq1": null,
+            "tb3eq2": null
+          },
           "data": "2026-06-12",
           "hora": "18:30",
           "campo": "Stella Artois"
@@ -5490,8 +5503,8 @@
           "eq1": null,
           "eq1grupo": null,
           "eq1seed": null,
-          "eq2": null,
-          "eq2grupo": null,
+          "eq2": "Ricardo Oliveira & Vasco Silva",
+          "eq2grupo": "M2-C",
           "eq2seed": null,
           "resultado": null,
           "data": "2026-06-13",
@@ -5782,6 +5795,16 @@
     }
   ],
   "auditlog": [
+    {
+      "id": "mqb8ev3invi0lcd",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "SAVE_RESULT_FF",
+      "target": "fasefinal",
+      "detail": "Resultado FF: M2 jogo M2-QF4",
+      "ts": "2026-06-12T18:00:09.199Z"
+    },
     {
       "id": "mqb8df64gfxo1hl",
       "userId": "mpz8aq9sg983ubo",
@@ -15771,17 +15794,7 @@
       "target": "fasefinal",
       "detail": "Bracket resetado: M2",
       "ts": "2026-06-04T09:19:55.192Z"
-    },
-    {
-      "id": "mpzaarkvjcxih3o",
-      "userId": "mpxnxlqhg3dzc1o",
-      "username": "admin",
-      "role": "admin",
-      "action": "RESET_BRACKET",
-      "target": "fasefinal",
-      "detail": "Bracket resetado: M1",
-      "ts": "2026-06-04T09:19:43.135Z"
     }
   ],
-  "_updated": "2026-06-12T17:59:01.903Z"
+  "_updated": "2026-06-12T18:00:09.200Z"
 }
