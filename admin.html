@@ -1247,9 +1247,12 @@
         <select class="form-select" id="ffSchedCampo"></select>
       </div>
     </div>
-    <div class="modal-footer">
-      <button class="btn btn-ghost" onclick="closeModal('modalFFSchedule')">Cancelar</button>
-      <button class="btn btn-primary" onclick="ffSaveSchedule()"><i class="ph ph-floppy-disk"></i> Guardar</button>
+    <div class="modal-footer" style="justify-content:space-between">
+      <button class="btn btn-ghost" style="color:var(--vermelho);border-color:rgba(255,74,74,.25)" onclick="ffClearSchedule()"><i class="ph ph-eraser"></i> Limpar</button>
+      <div style="display:flex;gap:.5rem">
+        <button class="btn btn-ghost" onclick="closeModal('modalFFSchedule')">Cancelar</button>
+        <button class="btn btn-primary" onclick="ffSaveSchedule()"><i class="ph ph-floppy-disk"></i> Guardar</button>
+      </div>
     </div>
   </div>
 </div>

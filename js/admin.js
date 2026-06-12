@@ -5152,11 +5152,26 @@ window.ffSaveSchedule = function() {
   if (!j) return;
   j.data = novaData;
   j.hora = novaHora;
-  if (novoCampo) j.campo = novoCampo;
+  j.campo = novoCampo || null;
   ffSave(ff);
   closeModal('modalFFSchedule');
   renderFaseFinal();
   toast('Horário actualizado.');
+  _autoSync();
+};
+
+window.ffClearSchedule = function() {
+  const jogoId = document.getElementById('ffSchedJogoId').value;
+  const catId  = document.getElementById('ffSchedCatId').value;
+  if (!confirm('Limpar data, hora e campo deste jogo?')) return;
+  const ff = ffLoad();
+  const j  = ff[catId]?.jogos?.find(x => x.id === jogoId);
+  if (!j) return;
+  j.data = null; j.hora = null; j.campo = null;
+  ffSave(ff);
+  closeModal('modalFFSchedule');
+  renderFaseFinal();
+  toast('Horário removido.', 'warning');
   _autoSync();
 };
 
