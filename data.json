@@ -4737,7 +4737,20 @@
           "eq2": "Stacey & Marlou Mulder",
           "eq2grupo": "F1-A",
           "eq2seed": 5,
-          "resultado": null,
+          "resultado": {
+            "s1eq1": 6,
+            "s1eq2": 2,
+            "tb1eq1": null,
+            "tb1eq2": null,
+            "s2eq1": 6,
+            "s2eq2": 2,
+            "tb2eq1": null,
+            "tb2eq2": null,
+            "s3eq1": null,
+            "s3eq2": null,
+            "tb3eq1": null,
+            "tb3eq2": null
+          },
           "data": "2026-06-12",
           "hora": "19:30",
           "campo": "Play Padel"
@@ -4800,8 +4813,8 @@
           "eq1": "Helen Khumalo & Narcisa Nhamitambo",
           "eq1grupo": "F1-A",
           "eq1seed": null,
-          "eq2": null,
-          "eq2grupo": null,
+          "eq2": "Marta Botelho & Ana Oliveira",
+          "eq2grupo": "F1-C",
           "eq2seed": null,
           "resultado": null,
           "data": "2026-06-13",
@@ -5847,6 +5860,16 @@
     }
   ],
   "auditlog": [
+    {
+      "id": "mqbci2x4yji3oak",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "SAVE_RESULT_FF",
+      "target": "fasefinal",
+      "detail": "Resultado FF: F1 jogo F1-QF2",
+      "ts": "2026-06-12T19:54:37.768Z"
+    },
     {
       "id": "mqbcgazmzxd2wxh",
       "userId": "mpz8aq9sg983ubo",
@@ -15836,17 +15859,7 @@
       "target": "fasefinal",
       "detail": "Bracket gerado: M4",
       "ts": "2026-06-04T09:22:55.823Z"
-    },
-    {
-      "id": "mpzaew9aaasepus",
-      "userId": "mpxnxlqhg3dzc1o",
-      "username": "admin",
-      "role": "admin",
-      "action": "GENERATE_BRACKET",
-      "target": "fasefinal",
-      "detail": "Bracket gerado: M3",
-      "ts": "2026-06-04T09:22:55.822Z"
     }
   ],
-  "_updated": "2026-06-12T19:53:14.917Z"
+  "_updated": "2026-06-12T19:55:56.353Z"
 }
