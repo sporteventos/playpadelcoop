@@ -5077,7 +5077,20 @@
           "eq2": "Naim Hassan & Sidik",
           "eq2grupo": "M1-B",
           "eq2seed": 7,
-          "resultado": null,
+          "resultado": {
+            "s1eq1": 6,
+            "s1eq2": 4,
+            "tb1eq1": null,
+            "tb1eq2": null,
+            "s2eq1": 2,
+            "s2eq2": 6,
+            "tb2eq1": null,
+            "tb2eq2": null,
+            "s3eq1": 3,
+            "s3eq2": 6,
+            "tb3eq1": null,
+            "tb3eq2": null
+          },
           "data": "2026-06-12",
           "hora": "18:30",
           "campo": "Play Padel"
@@ -5112,8 +5125,8 @@
           "eq1": null,
           "eq1grupo": null,
           "eq1seed": null,
-          "eq2": null,
-          "eq2grupo": null,
+          "eq2": "Naim Hassan & Sidik",
+          "eq2grupo": "M1-B",
           "eq2seed": null,
           "resultado": null,
           "data": "2026-06-13",
@@ -5808,6 +5821,16 @@
     }
   ],
   "auditlog": [
+    {
+      "id": "mqbauw0biay92x5",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "SAVE_RESULT_FF",
+      "target": "fasefinal",
+      "detail": "Resultado FF: M1 jogo M1-QF4",
+      "ts": "2026-06-12T19:08:36.107Z"
+    },
     {
       "id": "mqbar32bimyhq0u",
       "userId": "mpz8aq9sg983ubo",
@@ -15797,17 +15820,7 @@
       "target": "fasefinal",
       "detail": "Bracket gerado: F2",
       "ts": "2026-06-04T09:20:14.575Z"
-    },
-    {
-      "id": "mpzabfu7fepho4q",
-      "userId": "mpz8aq9sg983ubo",
-      "username": "euamusse",
-      "role": "admin",
-      "action": "GENERATE_BRACKET",
-      "target": "fasefinal",
-      "detail": "Bracket gerado: F1",
-      "ts": "2026-06-04T09:20:14.575Z"
     }
   ],
-  "_updated": "2026-06-12T19:06:37.864Z"
+  "_updated": "2026-06-12T19:08:36.109Z"
 }
