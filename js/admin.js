@@ -4874,8 +4874,6 @@ function ffPropagate(catId) {
     jogo.eq1grupo = j1 ? (w1 === 1 ? j1.eq1grupo : w1 === 2 ? j1.eq2grupo : null) : null;
     jogo.eq2      = j2 ? (w2 === 1 ? j2.eq1 : w2 === 2 ? j2.eq2 : null) : null;
     jogo.eq2grupo = j2 ? (w2 === 1 ? j2.eq1grupo : w2 === 2 ? j2.eq2grupo : null) : null;
-    // Auto-set Final campo from default if missing (also fixes existing brackets)
-    if (jogo.fase === 'F' && !jogo.campo && FF_FINAL_CAMPOS[catId]) jogo.campo = FF_FINAL_CAMPOS[catId];
   });
   ffSave(ff);
 }
