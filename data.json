@@ -4753,7 +4753,20 @@
           "eq2": "Maria Tomaz & Isabel Ribeiro",
           "eq2grupo": "F1-B",
           "eq2seed": 6,
-          "resultado": null,
+          "resultado": {
+            "s1eq1": 6,
+            "s1eq2": 4,
+            "tb1eq1": null,
+            "tb1eq2": null,
+            "s2eq1": 6,
+            "s2eq2": 0,
+            "tb2eq1": null,
+            "tb2eq2": null,
+            "s3eq1": null,
+            "s3eq2": null,
+            "tb3eq1": null,
+            "tb3eq2": null
+          },
           "data": "2026-06-12",
           "hora": "19:30",
           "campo": "Stella Artois"
@@ -4803,8 +4816,8 @@
             "F1-QF3",
             "F1-QF4"
           ],
-          "eq1": null,
-          "eq1grupo": null,
+          "eq1": "Anouk Fumane & Letícia",
+          "eq1grupo": "F1-C",
           "eq1seed": null,
           "eq2": "Érica Capela & Sarah Taillon",
           "eq2grupo": "F1-B",
@@ -5822,6 +5835,26 @@
   ],
   "auditlog": [
     {
+      "id": "mqbbcblavpptbu4",
+      "userId": "mpzxoo1v8l1za3r",
+      "username": "djanasse",
+      "role": "operator",
+      "action": "SAVE_RESULT_FF",
+      "target": "fasefinal",
+      "detail": "Resultado FF: F1 jogo F1-QF3",
+      "ts": "2026-06-12T19:22:09.456Z"
+    },
+    {
+      "id": "mqbbbqz99xqi0f4",
+      "userId": "mpzxoo1v8l1za3r",
+      "username": "djanasse",
+      "role": "operator",
+      "action": "LOGIN",
+      "target": "auth",
+      "detail": "Login: djanasse (operator)",
+      "ts": "2026-06-12T19:21:42.741Z"
+    },
+    {
       "id": "mqbauw0biay92x5",
       "userId": "mpz8aq9sg983ubo",
       "username": "euamusse",
@@ -6222,6 +6255,16 @@
       "ts": "2026-06-11T20:17:18.211Z"
     },
     {
+      "id": "mq9xpuk1tq7j4n7",
+      "userId": "mpzxoo1v8l1za3r",
+      "username": "djanasse",
+      "role": "operator",
+      "action": "LOGOUT",
+      "target": "auth",
+      "detail": "Logout: djanasse",
+      "ts": "2026-06-11T20:12:59.763Z"
+    },
+    {
       "id": "mq9xjy3l3f94b8u",
       "userId": "mpz8aq9sg983ubo",
       "username": "euamusse",
@@ -6342,6 +6385,16 @@
       "ts": "2026-06-11T17:39:35.827Z"
     },
     {
+      "id": "mq9s1uwnu3cz9lr",
+      "userId": "mpzxoo1v8l1za3r",
+      "username": "djanasse",
+      "role": "operator",
+      "action": "LOGIN",
+      "target": "auth",
+      "detail": "Login: djanasse (operator)",
+      "ts": "2026-06-11T17:34:22.391Z"
+    },
+    {
       "id": "mq9rigbxwjczie0",
       "userId": "mpz8aq9sg983ubo",
       "username": "euamusse",
@@ -6370,6 +6423,16 @@
       "target": "fasefinal",
       "detail": "Resultado FF: F2 jogo F2-QF1",
       "ts": "2026-06-11T17:19:07.728Z"
+    },
+    {
+      "id": "mq9rcwp37bf2ftm",
+      "userId": "mpzxoo1v8l1za3r",
+      "username": "djanasse",
+      "role": "operator",
+      "action": "LOGOUT",
+      "target": "auth",
+      "detail": "Logout: djanasse",
+      "ts": "2026-06-11T17:14:58.315Z"
     },
     {
       "id": "mq9r1b5ccwe5782",
@@ -15770,57 +15833,7 @@
       "target": "fasefinal",
       "detail": "Bracket gerado: M2",
       "ts": "2026-06-04T09:22:55.818Z"
-    },
-    {
-      "id": "mpzaew9585mwvls",
-      "userId": "mpxnxlqhg3dzc1o",
-      "username": "admin",
-      "role": "admin",
-      "action": "GENERATE_BRACKET",
-      "target": "fasefinal",
-      "detail": "Bracket gerado: M1",
-      "ts": "2026-06-04T09:22:55.817Z"
-    },
-    {
-      "id": "mpzabfu93ypm6hx",
-      "userId": "mpz8aq9sg983ubo",
-      "username": "euamusse",
-      "role": "admin",
-      "action": "GENERATE_BRACKET",
-      "target": "fasefinal",
-      "detail": "Bracket gerado: M5",
-      "ts": "2026-06-04T09:20:14.577Z"
-    },
-    {
-      "id": "mpzabfu8n0hkr7s",
-      "userId": "mpz8aq9sg983ubo",
-      "username": "euamusse",
-      "role": "admin",
-      "action": "GENERATE_BRACKET",
-      "target": "fasefinal",
-      "detail": "Bracket gerado: M4",
-      "ts": "2026-06-04T09:20:14.576Z"
-    },
-    {
-      "id": "mpzabfu8h0q1lhx",
-      "userId": "mpz8aq9sg983ubo",
-      "username": "euamusse",
-      "role": "admin",
-      "action": "GENERATE_BRACKET",
-      "target": "fasefinal",
-      "detail": "Bracket gerado: M3",
-      "ts": "2026-06-04T09:20:14.576Z"
-    },
-    {
-      "id": "mpzabfu7udh75w9",
-      "userId": "mpz8aq9sg983ubo",
-      "username": "euamusse",
-      "role": "admin",
-      "action": "GENERATE_BRACKET",
-      "target": "fasefinal",
-      "detail": "Bracket gerado: F2",
-      "ts": "2026-06-04T09:20:14.575Z"
     }
   ],
-  "_updated": "2026-06-12T19:09:01.449Z"
+  "_updated": "2026-06-12T19:22:09.468Z"
 }
