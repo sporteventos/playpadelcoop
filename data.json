@@ -4837,7 +4837,7 @@
           "eq2seed": null,
           "resultado": null,
           "data": "2026-06-13",
-          "hora": "17:00",
+          "hora": "16:00",
           "campo": "TVCabo"
         },
         {
@@ -5016,7 +5016,7 @@
           "eq2seed": null,
           "resultado": null,
           "data": "2026-06-13",
-          "hora": "18:00",
+          "hora": "17:00",
           "campo": "Stella Artois"
         },
         {
@@ -5912,6 +5912,36 @@
     }
   ],
   "auditlog": [
+    {
+      "id": "mqc33hhyzshphso",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "HORARIO_DRAG",
+      "target": "fasefinal",
+      "detail": "Jogo F1-SF2 movido para 16:00 @ TVCabo",
+      "ts": "2026-06-13T08:19:06.454Z"
+    },
+    {
+      "id": "mqc33d34cka1aea",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "HORARIO_DRAG",
+      "target": "fasefinal",
+      "detail": "Jogo F2-SF2 movido para 17:00 @ Stella Artois",
+      "ts": "2026-06-13T08:19:00.736Z"
+    },
+    {
+      "id": "mqc33c43bfmfhig",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "HORARIO_DRAG",
+      "target": "fasefinal",
+      "detail": "Jogo F1-SF2 movido para 15:30 @ TVCabo",
+      "ts": "2026-06-13T08:18:59.475Z"
+    },
     {
       "id": "mqc2qehgq33crql",
       "userId": "mpz8aq9sg983ubo",
@@ -15881,37 +15911,7 @@
       "target": "fasefinal",
       "detail": "Bracket resetado: M4",
       "ts": "2026-06-04T10:04:43.865Z"
-    },
-    {
-      "id": "mpzbwnh5rdyk0lu",
-      "userId": "mpz8aq9sg983ubo",
-      "username": "euamusse",
-      "role": "admin",
-      "action": "RESET_BRACKET",
-      "target": "fasefinal",
-      "detail": "Bracket resetado: M3",
-      "ts": "2026-06-04T10:04:43.865Z"
-    },
-    {
-      "id": "mpzbwnh5huj1ru4",
-      "userId": "mpz8aq9sg983ubo",
-      "username": "euamusse",
-      "role": "admin",
-      "action": "RESET_BRACKET",
-      "target": "fasefinal",
-      "detail": "Bracket resetado: F2",
-      "ts": "2026-06-04T10:04:43.865Z"
-    },
-    {
-      "id": "mpzbwnh4opbzbjx",
-      "userId": "mpz8aq9sg983ubo",
-      "username": "euamusse",
-      "role": "admin",
-      "action": "RESET_BRACKET",
-      "target": "fasefinal",
-      "detail": "Bracket resetado: F1",
-      "ts": "2026-06-04T10:04:43.864Z"
     }
   ],
-  "_updated": "2026-06-13T08:18:24.752Z"
+  "_updated": "2026-06-13T08:19:14.234Z"
 }
