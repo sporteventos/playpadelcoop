@@ -5503,8 +5503,8 @@
           "eq2seed": null,
           "resultado": null,
           "data": "2026-06-14",
-          "hora": "14:30",
-          "campo": "TVCabo"
+          "hora": "14:00",
+          "campo": null
         }
       ],
       "swapNote": "Ajuste anti-colisão: S5→QF1, S8→QF2, S7→QF3, S6→QF4; Troca manual: M4-QF2/eq2 ⇔ M4-QF4/eq2; Troca manual: M4-QF3/eq2 ⇔ M4-QF1/eq2; Troca manual: M4-QF3/eq2 ⇔ M4-QF2/eq2; Troca manual: M4-QF2/eq2 ⇔ M4-QF3/eq2",
@@ -15978,5 +15978,5 @@
       "ts": "2026-06-04T13:39:55.169Z"
     }
   ],
-  "_updated": "2026-06-13T15:46:17.159Z"
+  "_updated": "2026-06-13T15:46:47.211Z"
 }
