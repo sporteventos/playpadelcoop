@@ -5876,8 +5876,8 @@
           "eq2seed": null,
           "resultado": null,
           "data": "2026-06-14",
-          "hora": "12:30",
-          "campo": "TVCabo"
+          "hora": "15:00",
+          "campo": null
         }
       ],
       "swapNote": null,
@@ -15978,5 +15978,5 @@
       "ts": "2026-06-04T13:39:55.169Z"
     }
   ],
-  "_updated": "2026-06-13T15:45:41.386Z"
+  "_updated": "2026-06-13T15:46:17.159Z"
 }
