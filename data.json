@@ -5215,7 +5215,20 @@
           "eq2": "Gonçalo Nascimento & João Catela",
           "eq2grupo": "M1-B",
           "eq2seed": null,
-          "resultado": null,
+          "resultado": {
+            "s1eq1": 6,
+            "s1eq2": 4,
+            "tb1eq1": null,
+            "tb1eq2": null,
+            "s2eq1": 6,
+            "s2eq2": 0,
+            "tb2eq1": null,
+            "tb2eq2": null,
+            "s3eq1": null,
+            "s3eq2": null,
+            "tb3eq1": null,
+            "tb3eq2": null
+          },
           "data": "2026-06-13",
           "hora": "18:00",
           "campo": "Play Padel"
@@ -5260,8 +5273,8 @@
             "M1-SF1",
             "M1-SF2"
           ],
-          "eq1": null,
-          "eq1grupo": null,
+          "eq1": "Tayab & Badru Rosa",
+          "eq1grupo": "M1-C",
           "eq1seed": null,
           "eq2": "Karim Kanifani & Octávio Barros",
           "eq2grupo": "M1-B",
@@ -6005,6 +6018,16 @@
     }
   ],
   "auditlog": [
+    {
+      "id": "mqcmbww35suzr4z",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "SAVE_RESULT_FF",
+      "target": "fasefinal",
+      "detail": "Resultado FF: M1 jogo M1-SF1",
+      "ts": "2026-06-13T17:17:32.355Z"
+    },
     {
       "id": "mqcm1ls4jtygwf7",
       "userId": "mpz8aq9sg983ubo",
@@ -15994,17 +16017,7 @@
       "target": "auth",
       "detail": "Login: bgaspar (operator)",
       "ts": "2026-06-04T14:43:09.273Z"
-    },
-    {
-      "id": "mpzluliixp3j6ys",
-      "userId": "mpz46x5c2zupza0",
-      "username": "bgaspar",
-      "role": "operator",
-      "action": "LOGOUT",
-      "target": "auth",
-      "detail": "Logout: bgaspar",
-      "ts": "2026-06-04T14:43:04.170Z"
     }
   ],
-  "_updated": "2026-06-13T17:15:46.051Z"
+  "_updated": "2026-06-13T17:17:32.356Z"
 }
