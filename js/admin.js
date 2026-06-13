@@ -4996,6 +4996,9 @@ function renderFaseFinal() {
       <button class="btn btn-ghost btn-sm" style="color:var(--verde);border-color:rgba(0,195,123,.3)" onclick="ffRecalcBracket('${ffCurrentCat}')">
         <i class="ph ph-arrows-clockwise"></i> Recalcular Seeds
       </button>
+      <button class="btn btn-ghost btn-sm" style="color:var(--amarelo);border-color:rgba(245,197,24,.3)" onclick="gerarPanfletoFinalAnuncio('${ffCurrentCat}')">
+        <i class="ph ph-medal"></i> Panfleto Final
+      </button>
       ${Auth.isAdmin() ? `
       <button class="btn btn-ghost btn-sm danger-btn" style="color:var(--amarelo);border-color:rgba(245,197,24,.3)" onclick="ffGerarAleatorios('${ffCurrentCat}')">
         <i class="ph ph-shuffle"></i> Resultados Aleatórios
@@ -5121,6 +5124,9 @@ function ffCardHtml(j, catId) {
       ${canEdit ? `<button class="btn btn-sm ${done ? 'btn-ghost' : 'btn-primary'}" style="width:100%;margin-top:.3rem;font-size:.72rem;padding:.28rem" onclick="ffAbrirResultado('${j.id}','${catId}')">
         <i class="ph ph-${done ? 'pencil-simple' : 'plus'}"></i> ${done ? 'Editar' : 'Lançar'}
       </button>` : ''}
+      ${j.fase === 'F' ? `<button class="btn btn-ghost btn-sm" style="width:100%;margin-top:.3rem;font-size:.72rem;padding:.28rem;color:var(--amarelo);border-color:rgba(245,197,24,.3)" onclick="gerarPanfletoFinalAnuncio('${catId}')">
+        <i class="ph ph-medal"></i> Panfleto Final
+      </button>` : ''}
       ${ffWaHtml}
     </div>`;
 }
@@ -5241,6 +5247,9 @@ function ffRenderGlobal() {
     <div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1.25rem;padding-bottom:1rem;border-bottom:1px solid var(--preto-borda)">
       <button class="btn btn-primary btn-sm" onclick="ffGerarTodosBrackets()">
         <i class="ph ph-magic-wand"></i> Gerar Brackets em Falta
+      </button>
+      <button class="btn btn-ghost btn-sm" style="color:var(--amarelo);border-color:rgba(245,197,24,.3)" onclick="gerarPanfletoDiaFinais()">
+        <i class="ph ph-medal"></i> Panfleto Dia das Finais
       </button>
       ${Auth.isAdmin() ? `<label style="display:flex;align-items:center;gap:.4rem;cursor:pointer;font-size:.75rem;color:var(--cinza-texto);padding:.2rem .5rem;border:1px solid var(--preto-borda);border-radius:6px;user-select:none">
         <input type="checkbox" id="ffModoAvancado" onchange="document.getElementById('ffBotoesAvancados').style.display=this.checked?'flex':'none'" style="cursor:pointer"/>
@@ -6497,6 +6506,225 @@ window.gerarPanfletoCampeoes = function() {
   logo.onload = () => draw(logo);
   logo.onerror = () => draw(null);
   logo.src = 'playpadellogo.jpg';
+};
+
+// ============================================
+//  PANFLETO ANÚNCIO — FINAL INDIVIDUAL (sem foto)
+// ============================================
+window.gerarPanfletoFinalAnuncio = function(catId) {
+  const ff    = ffLoad();
+  const final = ff[catId]?.jogos?.find(j => j.fase === 'F');
+  if (!final) return toast('Final não encontrada para ' + catId + '.', 'error');
+  const W = 1080, H = 1350, PAD = 56;
+  const CAT_CLR  = { M1:'#4A9EFF', M2:'#00C37B', M3:'#39FF8F', M4:'#F5C518', M5:'#FF9A3C', F1:'#FF6BB0', F2:'#C97BFF' };
+  const CAT_NOME = { M1:'Masculino 1', M2:'Masculino 2', M3:'Masculino 3', M4:'Masculino 4', M5:'Masculino 5', F1:'Feminino 1', F2:'Feminino 2' };
+  const clr = CAT_CLR[catId] || '#F5C518';
+
+  function draw(logoImg) {
+    const canvas = document.createElement('canvas');
+    canvas.width = W; canvas.height = H;
+    const ctx = canvas.getContext('2d');
+    function trunc(text, maxW) {
+      let t = String(text);
+      if (ctx.measureText(t).width <= maxW) return t;
+      while (t.length > 1 && ctx.measureText(t + '\u2026').width > maxW) t = t.slice(0, -1);
+      return t + '\u2026';
+    }
+    // Background
+    ctx.fillStyle = '#080D0B'; ctx.fillRect(0, 0, W, H);
+    ctx.save();
+    ctx.strokeStyle = 'rgba(255,255,255,0.018)'; ctx.lineWidth = 1;
+    for (let i = -H; i < W + H; i += 70) { ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i + H, H); ctx.stroke(); }
+    ctx.restore();
+    const bgGlow = ctx.createRadialGradient(W/2, H*0.48, 0, W/2, H*0.48, 540);
+    bgGlow.addColorStop(0, clr + '20'); bgGlow.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = bgGlow; ctx.fillRect(0, 0, W, H);
+    // Top/bottom gold bars
+    const topGrad = ctx.createLinearGradient(0, 0, W, 0);
+    topGrad.addColorStop(0, '#F5C518'); topGrad.addColorStop(0.5, '#FFE066'); topGrad.addColorStop(1, '#F5C518');
+    ctx.fillStyle = topGrad; ctx.fillRect(0, 0, W, 12); ctx.fillRect(0, H - 12, W, 12);
+    // Logo + branding
+    const LOGO_SZ = 52, logoX = PAD, logoY = 26;
+    if (logoImg) {
+      ctx.save(); ctx.beginPath(); ctx.arc(logoX + LOGO_SZ/2, logoY + LOGO_SZ/2, LOGO_SZ/2, 0, Math.PI*2); ctx.clip();
+      ctx.drawImage(logoImg, logoX, logoY, LOGO_SZ, LOGO_SZ); ctx.restore();
+    }
+    const brdX = PAD + LOGO_SZ + 14;
+    ctx.textAlign = 'left';
+    ctx.fillStyle = '#00C37B'; ctx.font = 'bold 26px Arial, sans-serif'; ctx.fillText('PLAY PADEL COOP', brdX, 52);
+    ctx.fillStyle = '#8AA396'; ctx.font = '18px Arial, sans-serif'; ctx.fillText('TORNEIO ANIVERSÁRIO 2026', brdX, 76);
+    // GRANDE FINAL badge
+    const badgeY = 118, badgeW = 430, badgeH = 80, badgeX = (W - badgeW) / 2;
+    const bGrad = ctx.createLinearGradient(badgeX, 0, badgeX + badgeW, 0);
+    bGrad.addColorStop(0, '#F5C51825'); bGrad.addColorStop(0.5, '#F5C51852'); bGrad.addColorStop(1, '#F5C51825');
+    ctx.fillStyle = bGrad; ctx.beginPath(); ctx.roundRect(badgeX, badgeY, badgeW, badgeH, 16); ctx.fill();
+    ctx.strokeStyle = '#F5C518AA'; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.roundRect(badgeX, badgeY, badgeW, badgeH, 16); ctx.stroke();
+    ctx.fillStyle = '#F5C518'; ctx.font = 'bold 40px Arial, sans-serif'; ctx.textAlign = 'center';
+    ctx.fillText('\uD83C\uDFC6  GRANDE FINAL', W/2, badgeY + 54);
+    // Category + schedule
+    ctx.fillStyle = clr; ctx.font = 'bold 28px Arial, sans-serif';
+    ctx.fillText(CAT_NOME[catId] + '  \u00B7  ' + catId, W/2, badgeY + badgeH + 48);
+    const schedParts = [];
+    if (final.data)  schedParts.push(ppFormatDate(final.data));
+    if (final.hora)  schedParts.push(final.hora);
+    if (final.campo) schedParts.push(final.campo);
+    if (schedParts.length) { ctx.fillStyle = '#8AA396'; ctx.font = '22px Arial, sans-serif'; ctx.fillText(schedParts.join('  \u00B7  '), W/2, badgeY + badgeH + 80); }
+    // Separator
+    const sep1Y = badgeY + badgeH + 110;
+    ctx.strokeStyle = clr + '30'; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(PAD * 2, sep1Y); ctx.lineTo(W - PAD*2, sep1Y); ctx.stroke();
+    // VS zone
+    const vsZoneY = sep1Y + 30, vsZoneH = 470, midX = W / 2;
+    const eq1 = final.eq1 || 'A definir', eq2 = final.eq2 || 'A definir';
+    function drawTeam(name, isDef, xC, seed) {
+      const maxW = midX - PAD * 1.6; ctx.textAlign = 'center';
+      if (isDef) { ctx.fillStyle = '#4A6454'; ctx.font = 'italic 30px Arial, sans-serif'; ctx.fillText('A definir\u2026', xC, vsZoneY + vsZoneH / 2); return; }
+      if (seed) {
+        const sl = 'S' + seed; ctx.font = 'bold 15px Arial, sans-serif';
+        const sw = ctx.measureText(sl).width + 20;
+        ctx.fillStyle = clr + '28'; ctx.beginPath(); ctx.roundRect(xC - sw/2, vsZoneY + 22, sw, 28, 5); ctx.fill();
+        ctx.fillStyle = clr; ctx.fillText(sl, xC, vsZoneY + 41);
+      }
+      const parts = name.split(' & '), nameStartY = seed ? vsZoneY + 100 : vsZoneY + 70;
+      if (parts.length === 2) {
+        ctx.fillStyle = '#F0F7F3'; ctx.font = 'bold 50px Arial, sans-serif'; ctx.fillText(trunc(parts[0], maxW), xC, nameStartY);
+        ctx.fillStyle = '#C0D4CA'; ctx.font = 'bold 42px Arial, sans-serif'; ctx.fillText(trunc(parts[1], maxW), xC, nameStartY + 60);
+      } else {
+        ctx.fillStyle = '#F0F7F3'; ctx.font = 'bold 54px Arial, sans-serif'; ctx.fillText(trunc(name, maxW), xC, nameStartY + 30);
+      }
+      const bw = 90, bh = 28, bx = xC - bw/2, by = nameStartY + (parts.length === 2 ? 90 : 70);
+      ctx.strokeStyle = clr + '44'; ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.moveTo(bx, by + bh); ctx.lineTo(bx, by); ctx.lineTo(bx + bw, by); ctx.lineTo(bx + bw, by + bh); ctx.stroke();
+    }
+    drawTeam(eq1, !final.eq1, W / 4,     final.eq1seed);
+    drawTeam(eq2, !final.eq2, 3 * W / 4, final.eq2seed);
+    // Vertical divider
+    ctx.strokeStyle = '#2A3830'; ctx.lineWidth = 1.5;
+    ctx.beginPath(); ctx.moveTo(midX, vsZoneY + 10); ctx.lineTo(midX, vsZoneY + vsZoneH - 10); ctx.stroke();
+    // VS circle
+    const vsY = vsZoneY + vsZoneH / 2, vsR = 70;
+    const vsGlow = ctx.createRadialGradient(midX, vsY, 0, midX, vsY, vsR * 2.2);
+    vsGlow.addColorStop(0, clr + '30'); vsGlow.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = vsGlow; ctx.beginPath(); ctx.arc(midX, vsY, vsR * 2.2, 0, Math.PI*2); ctx.fill();
+    ctx.fillStyle = '#0D1A14'; ctx.beginPath(); ctx.arc(midX, vsY, vsR, 0, Math.PI*2); ctx.fill();
+    ctx.strokeStyle = clr + '99'; ctx.lineWidth = 3;
+    ctx.beginPath(); ctx.arc(midX, vsY, vsR, 0, Math.PI*2); ctx.stroke();
+    ctx.fillStyle = '#F0F7F3'; ctx.font = 'bold 48px Arial, sans-serif'; ctx.textAlign = 'center';
+    ctx.fillText('VS', midX, vsY + 17);
+    // Bottom
+    const sep2Y = vsZoneY + vsZoneH + 30;
+    ctx.strokeStyle = clr + '30'; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(PAD * 2, sep2Y); ctx.lineTo(W - PAD*2, sep2Y); ctx.stroke();
+    ctx.fillStyle = '#4A6454'; ctx.font = '22px Arial, sans-serif'; ctx.textAlign = 'center';
+    ctx.fillText('playpadelcoop.sporteventos.net', W/2, sep2Y + 60);
+    ctx.fillStyle = topGrad; ctx.fillRect(0, H - 12, W, 12);
+    const link = document.createElement('a');
+    link.download = 'final-anuncio-' + catId.toLowerCase() + '-2026.png';
+    link.href = canvas.toDataURL('image/png'); link.click();
+    toast('Panfleto Final ' + catId + ' gerado!');
+  }
+  const logo = new Image(); logo.onload = () => draw(logo); logo.onerror = () => draw(null); logo.src = 'playpadellogo.jpg';
+};
+
+// ============================================
+//  PANFLETO DIA DAS FINAIS — SUPER PREMIUM
+// ============================================
+window.gerarPanfletoDiaFinais = function() {
+  const ff   = ffLoad();
+  const CATS = ['M1', 'M2', 'F1', 'F2', 'M3', 'M4', 'M5'];
+  const CAT_CLR  = { M1:'#4A9EFF', M2:'#00C37B', M3:'#39FF8F', M4:'#F5C518', M5:'#FF9A3C', F1:'#FF6BB0', F2:'#C97BFF' };
+  const CAT_NOME = { M1:'Masculino 1', M2:'Masculino 2', M3:'Masculino 3', M4:'Masculino 4', M5:'Masculino 5', F1:'Feminino 1', F2:'Feminino 2' };
+  const W = 1080, H = 1920, PAD = 52, CARD_H = 196, CARD_GAP = 14, LIST_Y = 490;
+
+  function draw(logoImg) {
+    const canvas = document.createElement('canvas');
+    canvas.width = W; canvas.height = H;
+    const ctx = canvas.getContext('2d');
+    function trunc(text, maxW) {
+      let t = String(text);
+      if (ctx.measureText(t).width <= maxW) return t;
+      while (t.length > 1 && ctx.measureText(t + '\u2026').width > maxW) t = t.slice(0, -1);
+      return t + '\u2026';
+    }
+    // Background + grid
+    ctx.fillStyle = '#080D0B'; ctx.fillRect(0, 0, W, H);
+    ctx.save(); ctx.strokeStyle = 'rgba(0,195,123,0.035)'; ctx.lineWidth = 1;
+    for (let y = 0; y < H; y += 90) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke(); }
+    for (let x = 0; x < W; x += 90) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke(); }
+    ctx.restore();
+    // Top glow
+    const topGlow = ctx.createRadialGradient(W/2, 220, 0, W/2, 220, 520);
+    topGlow.addColorStop(0, 'rgba(245,197,24,0.22)'); topGlow.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = topGlow; ctx.fillRect(0, 0, W, 620);
+    // Gold bars
+    const goldGrad = ctx.createLinearGradient(0, 0, W, 0);
+    goldGrad.addColorStop(0, '#F5C518'); goldGrad.addColorStop(0.5, '#FFE066'); goldGrad.addColorStop(1, '#F5C518');
+    ctx.fillStyle = goldGrad; ctx.fillRect(0, 0, W, 14); ctx.fillRect(0, H - 14, W, 14);
+    // Logo + branding
+    const LOGO_SZ = 66, logoX = (W - LOGO_SZ) / 2, logoY = 32;
+    if (logoImg) {
+      ctx.save(); ctx.beginPath(); ctx.arc(logoX + LOGO_SZ/2, logoY + LOGO_SZ/2, LOGO_SZ/2, 0, Math.PI*2); ctx.clip();
+      ctx.drawImage(logoImg, logoX, logoY, LOGO_SZ, LOGO_SZ); ctx.restore();
+    }
+    const brdBY = logoImg ? logoY + LOGO_SZ + 22 : 90;
+    ctx.textAlign = 'center';
+    ctx.fillStyle = '#00C37B'; ctx.font = 'bold 32px Arial, sans-serif'; ctx.fillText('PLAY PADEL COOP', W/2, brdBY);
+    ctx.fillStyle = '#8AA396'; ctx.font = '22px Arial, sans-serif'; ctx.fillText('TORNEIO ANIVERSÁRIO 2026', W/2, brdBY + 36);
+    // Trophy + DIA DAS FINAIS
+    ctx.fillStyle = '#F5C518'; ctx.font = 'bold 88px Arial, sans-serif'; ctx.fillText('\uD83C\uDFC6', W/2, brdBY + 140);
+    const hGrad = ctx.createLinearGradient(0, brdBY + 156, W, brdBY + 220);
+    hGrad.addColorStop(0, '#F5C518'); hGrad.addColorStop(0.5, '#FFE066'); hGrad.addColorStop(1, '#F5C518');
+    ctx.fillStyle = hGrad; ctx.font = 'bold 92px Arial, sans-serif'; ctx.fillText('DIA DAS FINAIS', W/2, brdBY + 228);
+    ctx.fillStyle = '#A89040'; ctx.font = '28px Arial, sans-serif'; ctx.fillText('14 JUNHO 2026', W/2, brdBY + 272);
+    // Separator
+    ctx.strokeStyle = 'rgba(245,197,24,0.35)'; ctx.lineWidth = 1.5;
+    ctx.beginPath(); ctx.moveTo(PAD, LIST_Y - 18); ctx.lineTo(W - PAD, LIST_Y - 18); ctx.stroke();
+    // Category final cards
+    CATS.forEach((cat, i) => {
+      const fy = LIST_Y + i * (CARD_H + CARD_GAP);
+      const catData = ff[cat];
+      const final = catData?.jogos?.find(j => j.fase === 'F');
+      const clr = CAT_CLR[cat];
+      ctx.fillStyle = 'rgba(14,21,17,0.92)';
+      ctx.beginPath(); ctx.roundRect(PAD, fy, W - PAD*2, CARD_H, 18); ctx.fill();
+      ctx.strokeStyle = clr + '44'; ctx.lineWidth = 1.5;
+      ctx.beginPath(); ctx.roundRect(PAD, fy, W - PAD*2, CARD_H, 18); ctx.stroke();
+      ctx.fillStyle = clr; ctx.beginPath(); ctx.roundRect(PAD, fy + 1, 7, CARD_H - 2, [18, 0, 0, 18]); ctx.fill();
+      ctx.textAlign = 'left';
+      ctx.fillStyle = clr; ctx.font = 'bold 24px Arial, sans-serif'; ctx.fillText(cat, PAD + 22, fy + 36);
+      ctx.fillStyle = '#8AA396'; ctx.font = '17px Arial, sans-serif'; ctx.fillText(CAT_NOME[cat], PAD + 72, fy + 36);
+      const sp = []; if (final?.hora) sp.push(final.hora); if (final?.campo) sp.push(final.campo);
+      ctx.fillStyle = '#556D60'; ctx.font = '15px Arial, sans-serif';
+      ctx.fillText(sp.length ? sp.join('  \u00B7  ') : 'Hor\u00E1rio a definir', PAD + 22, fy + 58);
+      const eq1 = final?.eq1 || 'A definir', eq2 = final?.eq2 || 'A definir';
+      const midX = W / 2, halfW = midX - PAD * 1.35;
+      const teamY = fy + CARD_H / 2 + 26;
+      const eq1p = eq1.split(' & '), eq2p = eq2.split(' & ');
+      ctx.textAlign = 'center';
+      const c1 = final?.eq1 ? '#F0F7F3' : '#4A6454', c2 = final?.eq2 ? '#F0F7F3' : '#4A6454';
+      if (eq1p.length === 2) {
+        ctx.fillStyle = c1; ctx.font = 'bold 24px Arial, sans-serif'; ctx.fillText(trunc(eq1p[0], halfW), midX * 0.48, teamY - 14);
+        ctx.font = 'bold 20px Arial, sans-serif'; ctx.fillText(trunc(eq1p[1], halfW), midX * 0.48, teamY + 12);
+      } else { ctx.fillStyle = c1; ctx.font = 'bold 24px Arial, sans-serif'; ctx.fillText(trunc(eq1, halfW), midX * 0.48, teamY); }
+      ctx.fillStyle = clr + 'CC'; ctx.font = 'bold 20px Arial, sans-serif'; ctx.fillText('VS', midX, teamY);
+      if (eq2p.length === 2) {
+        ctx.fillStyle = c2; ctx.font = 'bold 24px Arial, sans-serif'; ctx.fillText(trunc(eq2p[0], halfW), midX * 1.52, teamY - 14);
+        ctx.font = 'bold 20px Arial, sans-serif'; ctx.fillText(trunc(eq2p[1], halfW), midX * 1.52, teamY + 12);
+      } else { ctx.fillStyle = c2; ctx.font = 'bold 24px Arial, sans-serif'; ctx.fillText(trunc(eq2, halfW), midX * 1.52, teamY); }
+      ctx.strokeStyle = '#2A3830'; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(midX, fy + 68); ctx.lineTo(midX, fy + CARD_H - 14); ctx.stroke();
+    });
+    // Footer
+    const footY = LIST_Y + 7 * (CARD_H + CARD_GAP) + 46;
+    ctx.fillStyle = '#384D42'; ctx.font = '22px Arial, sans-serif'; ctx.textAlign = 'center';
+    ctx.fillText('playpadelcoop.sporteventos.net', W/2, footY);
+    const link = document.createElement('a');
+    link.download = 'dia-das-finais-2026.png';
+    link.href = canvas.toDataURL('image/png'); link.click();
+    toast('\uD83C\uDFC6 Panfleto Dia das Finais gerado!');
+  }
+  const logo = new Image(); logo.onload = () => draw(logo); logo.onerror = () => draw(null); logo.src = 'playpadellogo.jpg';
 };
 
 // ============================================
