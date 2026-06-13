@@ -5922,7 +5922,20 @@
           "eq2": "José Mestre & Koenraad",
           "eq2grupo": "M3-A",
           "eq2seed": null,
-          "resultado": null,
+          "resultado": {
+            "s1eq1": 7,
+            "s1eq2": 5,
+            "tb1eq1": null,
+            "tb1eq2": null,
+            "s2eq1": 6,
+            "s2eq2": 4,
+            "tb2eq1": null,
+            "tb2eq2": null,
+            "s3eq1": null,
+            "s3eq2": null,
+            "tb3eq1": null,
+            "tb3eq2": null
+          },
           "data": "2026-06-13",
           "hora": "19:00",
           "campo": "TVCabo"
@@ -5938,8 +5951,8 @@
           "eq1": "Sharik Omar & Muhamad Mussagy",
           "eq1grupo": "M3-C",
           "eq1seed": null,
-          "eq2": null,
-          "eq2grupo": null,
+          "eq2": "Sueil & Ahmed Riaze",
+          "eq2grupo": "M3-D",
           "eq2seed": null,
           "resultado": null,
           "data": "2026-06-14",
@@ -6044,6 +6057,26 @@
     }
   ],
   "auditlog": [
+    {
+      "id": "mqcq8ecb9gq0y6g",
+      "userId": "mpzxoo1v8l1za3r",
+      "username": "djanasse",
+      "role": "operator",
+      "action": "SAVE_RESULT_FF",
+      "target": "fasefinal",
+      "detail": "Resultado FF: M3 jogo M3-SF2",
+      "ts": "2026-06-13T19:06:46.811Z"
+    },
+    {
+      "id": "mqcq7pv8beudafw",
+      "userId": "mpzxoo1v8l1za3r",
+      "username": "djanasse",
+      "role": "operator",
+      "action": "LOGIN",
+      "target": "auth",
+      "detail": "Login: djanasse (operator)",
+      "ts": "2026-06-13T19:06:15.092Z"
+    },
     {
       "id": "mqcokip0uupyl2u",
       "userId": "mpz8aq9sg983ubo",
@@ -6885,6 +6918,26 @@
       "ts": "2026-06-13T02:05:45.654Z"
     },
     {
+      "id": "mqbgo89dfqpikux",
+      "userId": "mpzxoo1v8l1za3r",
+      "username": "djanasse",
+      "role": "operator",
+      "action": "SAVE_RESULT_FF",
+      "target": "fasefinal",
+      "detail": "Resultado FF: M1 jogo M1-QF3",
+      "ts": "2026-06-12T21:51:23.089Z"
+    },
+    {
+      "id": "mqbgmsdp3w7m9ih",
+      "userId": "mpzxoo1v8l1za3r",
+      "username": "djanasse",
+      "role": "operator",
+      "action": "LOGIN",
+      "target": "auth",
+      "detail": "Login: djanasse (operator)",
+      "ts": "2026-06-12T21:50:15.853Z"
+    },
+    {
       "id": "mqbf6i1gs9n346w",
       "userId": "mpz8aq9sg983ubo",
       "username": "euamusse",
@@ -6923,6 +6976,16 @@
       "target": "fasefinal",
       "detail": "Resultado FF: M2 jogo M2-QF3",
       "ts": "2026-06-12T21:02:35.850Z"
+    },
+    {
+      "id": "mqbdzf7w8tzwci4",
+      "userId": "mpzxoo1v8l1za3r",
+      "username": "djanasse",
+      "role": "operator",
+      "action": "LOGOUT",
+      "target": "auth",
+      "detail": "Logout: djanasse",
+      "ts": "2026-06-12T20:36:06.489Z"
     },
     {
       "id": "mqbcuf5896q1ird",
@@ -15993,57 +16056,7 @@
       "target": "jogos",
       "detail": "Horário/equipas actualizados: jogo #1",
       "ts": "2026-06-04T15:07:09.987Z"
-    },
-    {
-      "id": "mpzmpi4grpzei2b",
-      "userId": "mpz8aq9sg983ubo",
-      "username": "euamusse",
-      "role": "admin",
-      "action": "SAVE_SCHEDULE",
-      "target": "jogos",
-      "detail": "Horário/equipas actualizados: jogo #1",
-      "ts": "2026-06-04T15:07:06.112Z"
-    },
-    {
-      "id": "mpzmpaq3lne3rbx",
-      "userId": "mpz8aq9sg983ubo",
-      "username": "euamusse",
-      "role": "admin",
-      "action": "SAVE_SCHEDULE",
-      "target": "jogos",
-      "detail": "Horário/equipas actualizados: jogo #1",
-      "ts": "2026-06-04T15:06:56.523Z"
-    },
-    {
-      "id": "mpzmjukfalpkkk5",
-      "userId": "mpz8aq9sg983ubo",
-      "username": "euamusse",
-      "role": "admin",
-      "action": "LOGIN",
-      "target": "auth",
-      "detail": "Login: euamusse (admin)",
-      "ts": "2026-06-04T15:02:42.303Z"
-    },
-    {
-      "id": "mpzm2hpeh39yit4",
-      "userId": "mpz8aq9sg983ubo",
-      "username": "euamusse",
-      "role": "admin",
-      "action": "CREATE_USER",
-      "target": "utilizadores",
-      "detail": "Criado \"smonjane\" (operator)",
-      "ts": "2026-06-04T14:49:12.482Z"
-    },
-    {
-      "id": "mpzm1uhwc4r7vb5",
-      "userId": "mpz8aq9sg983ubo",
-      "username": "euamusse",
-      "role": "admin",
-      "action": "CREATE_USER",
-      "target": "utilizadores",
-      "detail": "Criado \"djanasse\" (operator)",
-      "ts": "2026-06-04T14:48:42.404Z"
     }
   ],
-  "_updated": "2026-06-13T18:38:43.418Z"
+  "_updated": "2026-06-13T19:06:46.822Z"
 }
