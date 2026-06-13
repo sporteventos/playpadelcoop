@@ -5319,7 +5319,20 @@
           "eq2": "Hamdan & Huzeifah",
           "eq2grupo": "M5-A",
           "eq2seed": 3,
-          "resultado": null,
+          "resultado": {
+            "s1eq1": 6,
+            "s1eq2": 3,
+            "tb1eq1": null,
+            "tb1eq2": null,
+            "s2eq1": 4,
+            "s2eq2": 6,
+            "tb2eq1": null,
+            "tb2eq2": null,
+            "s3eq1": 7,
+            "s3eq2": 5,
+            "tb3eq1": null,
+            "tb3eq2": null
+          },
           "data": "2026-06-13",
           "hora": "18:00",
           "campo": "Stella Artois"
@@ -5335,8 +5348,8 @@
           "eq1": null,
           "eq1grupo": null,
           "eq1seed": null,
-          "eq2": null,
-          "eq2grupo": null,
+          "eq2": "Filipe Ferreira & Paulo Baldaia",
+          "eq2grupo": "M5-B",
           "eq2seed": null,
           "resultado": null,
           "data": "2026-06-14",
@@ -6031,6 +6044,16 @@
     }
   ],
   "auditlog": [
+    {
+      "id": "mqcokip0uupyl2u",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "SAVE_RESULT_FF",
+      "target": "fasefinal",
+      "detail": "Resultado FF: M5 jogo M5-SF2",
+      "ts": "2026-06-13T18:20:13.092Z"
+    },
     {
       "id": "mqcoanak669ng3b",
       "userId": "mpz8aq9sg983ubo",
@@ -16020,17 +16043,7 @@
       "target": "utilizadores",
       "detail": "Criado \"djanasse\" (operator)",
       "ts": "2026-06-04T14:48:42.404Z"
-    },
-    {
-      "id": "mpzm0b3gr2z0kgt",
-      "userId": "mpz8aq9sg983ubo",
-      "username": "euamusse",
-      "role": "admin",
-      "action": "LOGIN",
-      "target": "auth",
-      "detail": "Login: euamusse (admin)",
-      "ts": "2026-06-04T14:47:30.604Z"
     }
   ],
-  "_updated": "2026-06-13T18:19:00.135Z"
+  "_updated": "2026-06-13T18:20:13.094Z"
 }
