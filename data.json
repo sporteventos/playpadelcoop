@@ -5683,8 +5683,8 @@
           "eq2seed": null,
           "resultado": null,
           "data": "2026-06-14",
-          "hora": "15:30",
-          "campo": "Play Padel"
+          "hora": "17:00",
+          "campo": null
         }
       ],
       "swapNote": "Ajuste anti-colisão: S6→QF1, S8→QF2, S5→QF3; Troca manual: M2-QF1/eq2 ⇔ M2-QF4/eq2; Troca manual: M2-QF4/eq2 ⇔ M2-QF1/eq2; Troca manual: M2-QF1/eq2 ⇔ M2-QF4/eq2; Troca manual: M2-QF4/eq2 ⇔ M2-QF1/eq2; Troca manual: M2-QF1/eq2 ⇔ M2-QF4/eq1; Troca manual: M2-QF4/eq2 ⇔ M2-QF1/eq2; Troca manual: M2-QF2/eq2 ⇔ M2-QF4/eq1",
@@ -15978,5 +15978,5 @@
       "ts": "2026-06-04T13:39:55.169Z"
     }
   ],
-  "_updated": "2026-06-13T15:44:08.009Z"
+  "_updated": "2026-06-13T15:44:43.531Z"
 }
