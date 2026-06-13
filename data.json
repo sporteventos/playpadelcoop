@@ -5113,7 +5113,20 @@
           "eq2": "Faizal & Sherial",
           "eq2grupo": "M1-A",
           "eq2seed": 6,
-          "resultado": null,
+          "resultado": {
+            "s1eq1": 6,
+            "s1eq2": 1,
+            "tb1eq1": null,
+            "tb1eq2": null,
+            "s2eq1": 6,
+            "s2eq2": 3,
+            "tb2eq1": null,
+            "tb2eq2": null,
+            "s3eq1": null,
+            "s3eq2": null,
+            "tb3eq1": null,
+            "tb3eq2": null
+          },
           "data": "2026-06-12",
           "hora": "21:30",
           "campo": "Play Padel"
@@ -5174,8 +5187,8 @@
             "M1-QF3",
             "M1-QF4"
           ],
-          "eq1": null,
-          "eq1grupo": null,
+          "eq1": "Karim Kanifani & Octávio Barros",
+          "eq1grupo": "M1-B",
           "eq1seed": null,
           "eq2": "Naim Hassan & Sidik",
           "eq2grupo": "M1-B",
@@ -5899,6 +5912,26 @@
     }
   ],
   "auditlog": [
+    {
+      "id": "mqc2hf58g44blnw",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "SAVE_RESULT_FF",
+      "target": "fasefinal",
+      "detail": "Resultado FF: M1 jogo M1-QF3",
+      "ts": "2026-06-13T08:01:56.972Z"
+    },
+    {
+      "id": "mqc2czux5qyx06u",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "LOGIN",
+      "target": "auth",
+      "detail": "Login: euamusse (admin)",
+      "ts": "2026-06-13T07:58:30.537Z"
+    },
     {
       "id": "mqbf6i1gs9n346w",
       "userId": "mpz8aq9sg983ubo",
@@ -15878,27 +15911,7 @@
       "target": "auth",
       "detail": "Logout: admin",
       "ts": "2026-06-04T09:55:47.635Z"
-    },
-    {
-      "id": "mpzb5z8ik54ingc",
-      "userId": "mpxnxlqhg3dzc1o",
-      "username": "admin",
-      "role": "admin",
-      "action": "DELETE_JOGADOR",
-      "target": "jogadores",
-      "detail": "\"Faizaan Ravat\" eliminado de 0 jogo(s)",
-      "ts": "2026-06-04T09:43:59.394Z"
-    },
-    {
-      "id": "mpzaxaeetgbrbxm",
-      "userId": "mpz46x5c2zupza0",
-      "username": "bgaspar",
-      "role": "operator",
-      "action": "LOGIN",
-      "target": "auth",
-      "detail": "Login: bgaspar (operator)",
-      "ts": "2026-06-04T09:37:13.958Z"
     }
   ],
-  "_updated": "2026-06-12T22:08:38.164Z"
+  "_updated": "2026-06-13T08:01:56.974Z"
 }
