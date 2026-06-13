@@ -5027,7 +5027,20 @@
           "eq2": "Cris Vasconcelos & Beatriz Madeira",
           "eq2grupo": "F2-A",
           "eq2seed": null,
-          "resultado": null,
+          "resultado": {
+            "s1eq1": 2,
+            "s1eq2": 6,
+            "tb1eq1": null,
+            "tb1eq2": null,
+            "s2eq1": 2,
+            "s2eq2": 6,
+            "tb2eq1": null,
+            "tb2eq2": null,
+            "s3eq1": null,
+            "s3eq2": null,
+            "tb3eq1": null,
+            "tb3eq2": null
+          },
           "data": "2026-06-13",
           "hora": "14:00",
           "campo": "Play Padel"
@@ -5043,8 +5056,8 @@
           "eq1": null,
           "eq1grupo": null,
           "eq1seed": null,
-          "eq2": null,
-          "eq2grupo": null,
+          "eq2": "Cris Vasconcelos & Beatriz Madeira",
+          "eq2grupo": "F2-A",
           "eq2seed": null,
           "resultado": null,
           "data": "2026-06-14",
@@ -5925,6 +5938,16 @@
     }
   ],
   "auditlog": [
+    {
+      "id": "mqcevfl67gqzcbb",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "SAVE_RESULT_FF",
+      "target": "fasefinal",
+      "detail": "Resultado FF: F2 jogo F2-SF2",
+      "ts": "2026-06-13T13:48:46.122Z"
+    },
     {
       "id": "mqcenu9ar78qxbr",
       "userId": "mpz8aq9sg983ubo",
@@ -15914,17 +15937,7 @@
       "target": "fasefinal",
       "detail": "Bracket resetado: M1",
       "ts": "2026-06-04T13:34:10.171Z"
-    },
-    {
-      "id": "mpzisim50ye8y1i",
-      "userId": "mpz8aq9sg983ubo",
-      "username": "euamusse",
-      "role": "admin",
-      "action": "RESET_BRACKET",
-      "target": "fasefinal",
-      "detail": "Bracket resetado: M5",
-      "ts": "2026-06-04T13:17:28.253Z"
     }
   ],
-  "_updated": "2026-06-13T13:48:17.682Z"
+  "_updated": "2026-06-13T13:48:46.124Z"
 }
