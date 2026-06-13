@@ -6635,7 +6635,111 @@ window.gerarPanfletoDiaFinais = function() {
   const CATS = ['M1', 'M2', 'F1', 'F2', 'M3', 'M4', 'M5'];
   const CAT_CLR  = { M1:'#4A9EFF', M2:'#00C37B', M3:'#39FF8F', M4:'#F5C518', M5:'#FF9A3C', F1:'#FF6BB0', F2:'#C97BFF' };
   const CAT_NOME = { M1:'Masculino 1', M2:'Masculino 2', M3:'Masculino 3', M4:'Masculino 4', M5:'Masculino 5', F1:'Feminino 1', F2:'Feminino 2' };
-  const W = 1080, H = 1920, PAD = 52, CARD_H = 196, CARD_GAP = 14, LIST_Y = 490;
+  const W = 1080, PAD = 52, CARD_H = 196, CARD_GAP = 14, LIST_Y = 490;
+  const FOOTER_H = 110; // espaço abaixo dos cards: texto rodapé + barra dourada
+
+  // Build list sorted by hora (nulls at end), then by cat order
+  const catOrder = Object.fromEntries(CATS.map((c, i) => [c, i]));
+  const items = CATS.map(cat => {
+    const final = ff[cat]?.jogos?.find(j => j.fase === 'F');
+    return { cat, final };
+  }).sort((a, b) => {
+    const ha = a.final?.hora || 'ZZ', hb = b.final?.hora || 'ZZ';
+    if (ha !== hb) return ha.localeCompare(hb);
+    return catOrder[a.cat] - catOrder[b.cat];
+  });
+
+  const H = LIST_Y + items.length * (CARD_H + CARD_GAP) + FOOTER_H;
+
+  function draw(logoImg) {
+    const canvas = document.createElement('canvas');
+    canvas.width = W; canvas.height = H;
+    const ctx = canvas.getContext('2d');
+    function trunc(text, maxW) {
+      let t = String(text);
+      if (ctx.measureText(t).width <= maxW) return t;
+      while (t.length > 1 && ctx.measureText(t + '\u2026').width > maxW) t = t.slice(0, -1);
+      return t + '\u2026';
+    }
+    // Background + grid
+    ctx.fillStyle = '#080D0B'; ctx.fillRect(0, 0, W, H);
+    ctx.save(); ctx.strokeStyle = 'rgba(0,195,123,0.035)'; ctx.lineWidth = 1;
+    for (let y = 0; y < H; y += 90) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke(); }
+    for (let x = 0; x < W; x += 90) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke(); }
+    ctx.restore();
+    // Top glow
+    const topGlow = ctx.createRadialGradient(W/2, 220, 0, W/2, 220, 520);
+    topGlow.addColorStop(0, 'rgba(245,197,24,0.22)'); topGlow.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = topGlow; ctx.fillRect(0, 0, W, 620);
+    // Gold bars
+    const goldGrad = ctx.createLinearGradient(0, 0, W, 0);
+    goldGrad.addColorStop(0, '#F5C518'); goldGrad.addColorStop(0.5, '#FFE066'); goldGrad.addColorStop(1, '#F5C518');
+    ctx.fillStyle = goldGrad; ctx.fillRect(0, 0, W, 14); ctx.fillRect(0, H - 14, W, 14);
+    // Logo + branding
+    const LOGO_SZ = 66, logoX = (W - LOGO_SZ) / 2, logoY = 32;
+    if (logoImg) {
+      ctx.save(); ctx.beginPath(); ctx.arc(logoX + LOGO_SZ/2, logoY + LOGO_SZ/2, LOGO_SZ/2, 0, Math.PI*2); ctx.clip();
+      ctx.drawImage(logoImg, logoX, logoY, LOGO_SZ, LOGO_SZ); ctx.restore();
+    }
+    const brdBY = logoImg ? logoY + LOGO_SZ + 22 : 90;
+    ctx.textAlign = 'center';
+    ctx.fillStyle = '#00C37B'; ctx.font = 'bold 32px Arial, sans-serif'; ctx.fillText('PLAY PADEL COOP', W/2, brdBY);
+    ctx.fillStyle = '#8AA396'; ctx.font = '22px Arial, sans-serif'; ctx.fillText('TORNEIO ANIVERSÁRIO 2026', W/2, brdBY + 36);
+    // Trophy + DIA DAS FINAIS
+    ctx.fillStyle = '#F5C518'; ctx.font = 'bold 88px Arial, sans-serif'; ctx.fillText('\uD83C\uDFC6', W/2, brdBY + 140);
+    const hGrad = ctx.createLinearGradient(0, brdBY + 156, W, brdBY + 220);
+    hGrad.addColorStop(0, '#F5C518'); hGrad.addColorStop(0.5, '#FFE066'); hGrad.addColorStop(1, '#F5C518');
+    ctx.fillStyle = hGrad; ctx.font = 'bold 92px Arial, sans-serif'; ctx.fillText('DIA DAS FINAIS', W/2, brdBY + 228);
+    ctx.fillStyle = '#A89040'; ctx.font = '28px Arial, sans-serif'; ctx.fillText('14 JUNHO 2026', W/2, brdBY + 272);
+    // Separator
+    ctx.strokeStyle = 'rgba(245,197,24,0.35)'; ctx.lineWidth = 1.5;
+    ctx.beginPath(); ctx.moveTo(PAD, LIST_Y - 18); ctx.lineTo(W - PAD, LIST_Y - 18); ctx.stroke();
+    // Cards sorted by hora
+    items.forEach(({ cat, final }, i) => {
+      const fy = LIST_Y + i * (CARD_H + CARD_GAP);
+      const clr = CAT_CLR[cat];
+      ctx.fillStyle = 'rgba(14,21,17,0.92)';
+      ctx.beginPath(); ctx.roundRect(PAD, fy, W - PAD*2, CARD_H, 18); ctx.fill();
+      ctx.strokeStyle = clr + '44'; ctx.lineWidth = 1.5;
+      ctx.beginPath(); ctx.roundRect(PAD, fy, W - PAD*2, CARD_H, 18); ctx.stroke();
+      ctx.fillStyle = clr; ctx.beginPath(); ctx.roundRect(PAD, fy + 1, 7, CARD_H - 2, [18, 0, 0, 18]); ctx.fill();
+      ctx.textAlign = 'left';
+      ctx.fillStyle = clr; ctx.font = 'bold 24px Arial, sans-serif'; ctx.fillText(cat, PAD + 22, fy + 36);
+      ctx.fillStyle = '#8AA396'; ctx.font = '17px Arial, sans-serif'; ctx.fillText(CAT_NOME[cat], PAD + 72, fy + 36);
+      const sp = []; if (final?.hora) sp.push(final.hora); if (final?.campo) sp.push(final.campo);
+      ctx.fillStyle = '#556D60'; ctx.font = '15px Arial, sans-serif';
+      ctx.fillText(sp.length ? sp.join('  \u00B7  ') : 'Horário a definir', PAD + 22, fy + 58);
+      const eq1 = final?.eq1 || 'A definir', eq2 = final?.eq2 || 'A definir';
+      const midX = W / 2, halfW = midX - PAD * 1.35;
+      const teamY = fy + CARD_H / 2 + 26;
+      const eq1p = eq1.split(' & '), eq2p = eq2.split(' & ');
+      ctx.textAlign = 'center';
+      const c1 = final?.eq1 ? '#F0F7F3' : '#4A6454', c2 = final?.eq2 ? '#F0F7F3' : '#4A6454';
+      if (eq1p.length === 2) {
+        ctx.fillStyle = c1; ctx.font = 'bold 24px Arial, sans-serif'; ctx.fillText(trunc(eq1p[0], halfW), midX * 0.48, teamY - 14);
+        ctx.font = 'bold 20px Arial, sans-serif'; ctx.fillText(trunc(eq1p[1], halfW), midX * 0.48, teamY + 12);
+      } else { ctx.fillStyle = c1; ctx.font = 'bold 24px Arial, sans-serif'; ctx.fillText(trunc(eq1, halfW), midX * 0.48, teamY); }
+      ctx.fillStyle = clr + 'CC'; ctx.font = 'bold 20px Arial, sans-serif'; ctx.fillText('VS', midX, teamY);
+      if (eq2p.length === 2) {
+        ctx.fillStyle = c2; ctx.font = 'bold 24px Arial, sans-serif'; ctx.fillText(trunc(eq2p[0], halfW), midX * 1.52, teamY - 14);
+        ctx.font = 'bold 20px Arial, sans-serif'; ctx.fillText(trunc(eq2p[1], halfW), midX * 1.52, teamY + 12);
+      } else { ctx.fillStyle = c2; ctx.font = 'bold 24px Arial, sans-serif'; ctx.fillText(trunc(eq2, halfW), midX * 1.52, teamY); }
+      ctx.strokeStyle = '#2A3830'; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(midX, fy + 68); ctx.lineTo(midX, fy + CARD_H - 14); ctx.stroke();
+    });
+    // Footer
+    const footY = LIST_Y + items.length * (CARD_H + CARD_GAP) + 52;
+    ctx.fillStyle = '#384D42'; ctx.font = '22px Arial, sans-serif'; ctx.textAlign = 'center';
+    ctx.fillText('playpadelcoop.sporteventos.net', W/2, footY);
+    // Repaint gold bar on top to ensure it's not clipped
+    ctx.fillStyle = goldGrad; ctx.fillRect(0, H - 14, W, 14);
+    const link = document.createElement('a');
+    link.download = 'dia-das-finais-2026.png';
+    link.href = canvas.toDataURL('image/png'); link.click();
+    toast('\uD83C\uDFC6 Panfleto Dia das Finais gerado!');
+  }
+  const logo = new Image(); logo.onload = () => draw(logo); logo.onerror = () => draw(null); logo.src = 'playpadellogo.jpg';
+};
 
   function draw(logoImg) {
     const canvas = document.createElement('canvas');
