@@ -4848,7 +4848,9 @@
           "eq2": "Érica Capela & Sarah Taillon",
           "eq2grupo": "F1-B",
           "eq2seed": null,
-          "resultado": null,
+          "resultado": {
+            "wo": "eq2"
+          },
           "data": "2026-06-13",
           "hora": "17:00",
           "campo": "Play Padel"
@@ -4864,8 +4866,8 @@
           "eq1": "Helen Khumalo & Narcisa Nhamitambo",
           "eq1grupo": "F1-A",
           "eq1seed": null,
-          "eq2": null,
-          "eq2grupo": null,
+          "eq2": "Anouk Fumane & Letícia",
+          "eq2grupo": "F1-C",
           "eq2seed": null,
           "resultado": null,
           "data": "2026-06-14",
@@ -5990,6 +5992,16 @@
     }
   ],
   "auditlog": [
+    {
+      "id": "mqck1aj8bw05zy1",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "SAVE_RESULT_FF",
+      "target": "fasefinal",
+      "detail": "WO: F1 jogo F1-SF2 — eq2",
+      "ts": "2026-06-13T16:13:17.588Z"
+    },
     {
       "id": "mqcjzcv5k35hqgv",
       "userId": "mpz8aq9sg983ubo",
@@ -15979,17 +15991,7 @@
       "target": "auth",
       "detail": "Login: bgaspar (operator)",
       "ts": "2026-06-04T13:36:09.883Z"
-    },
-    {
-      "id": "mpzjdzpf6r1qtmq",
-      "userId": "mpz8aq9sg983ubo",
-      "username": "euamusse",
-      "role": "admin",
-      "action": "RESET_BRACKET",
-      "target": "fasefinal",
-      "detail": "Bracket resetado: M5",
-      "ts": "2026-06-04T13:34:10.179Z"
     }
   ],
-  "_updated": "2026-06-13T16:12:56.745Z"
+  "_updated": "2026-06-13T16:13:21.598Z"
 }
