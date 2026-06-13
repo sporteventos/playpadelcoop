@@ -5658,7 +5658,20 @@
           "eq2": "Feizan Omar & Filipe Lobo",
           "eq2grupo": "M2-C",
           "eq2seed": null,
-          "resultado": null,
+          "resultado": {
+            "s1eq1": 3,
+            "s1eq2": 6,
+            "tb1eq1": null,
+            "tb1eq2": null,
+            "s2eq1": 6,
+            "s2eq2": 1,
+            "tb2eq1": null,
+            "tb2eq2": null,
+            "s3eq1": 3,
+            "s3eq2": 6,
+            "tb3eq1": null,
+            "tb3eq2": null
+          },
           "data": "2026-06-13",
           "hora": "17:00",
           "campo": "TVCabo"
@@ -5690,8 +5703,8 @@
             "M2-SF1",
             "M2-SF2"
           ],
-          "eq1": null,
-          "eq1grupo": null,
+          "eq1": "Feizan Omar & Filipe Lobo",
+          "eq1grupo": "M2-C",
           "eq1seed": null,
           "eq2": null,
           "eq2grupo": null,
@@ -5992,6 +6005,16 @@
     }
   ],
   "auditlog": [
+    {
+      "id": "mqcln0log0wsmwg",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "SAVE_RESULT_FF",
+      "target": "fasefinal",
+      "detail": "Resultado FF: M2 jogo M2-SF1",
+      "ts": "2026-06-13T16:58:10.764Z"
+    },
     {
       "id": "mqck1aj8bw05zy1",
       "userId": "mpz8aq9sg983ubo",
@@ -15981,17 +16004,7 @@
       "target": "fasefinal",
       "detail": "Bracket resetado: M1",
       "ts": "2026-06-04T13:39:55.167Z"
-    },
-    {
-      "id": "mpzjgk2jmyyquu3",
-      "userId": "mpz46x5c2zupza0",
-      "username": "bgaspar",
-      "role": "operator",
-      "action": "LOGIN",
-      "target": "auth",
-      "detail": "Login: bgaspar (operator)",
-      "ts": "2026-06-04T13:36:09.883Z"
     }
   ],
-  "_updated": "2026-06-13T16:57:47.594Z"
+  "_updated": "2026-06-13T16:58:10.766Z"
 }
