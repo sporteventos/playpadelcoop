@@ -5797,7 +5797,20 @@
           "eq2": "Sharik Omar & Muhamad Mussagy",
           "eq2grupo": "M3-C",
           "eq2seed": null,
-          "resultado": null,
+          "resultado": {
+            "s1eq1": 4,
+            "s1eq2": 6,
+            "tb1eq1": null,
+            "tb1eq2": null,
+            "s2eq1": 4,
+            "s2eq2": 6,
+            "tb2eq1": null,
+            "tb2eq2": null,
+            "s3eq1": null,
+            "s3eq2": null,
+            "tb3eq1": null,
+            "tb3eq2": null
+          },
           "data": "2026-06-13",
           "hora": "15:00",
           "campo": "TVCabo"
@@ -5829,8 +5842,8 @@
             "M3-SF1",
             "M3-SF2"
           ],
-          "eq1": null,
-          "eq1grupo": null,
+          "eq1": "Sharik Omar & Muhamad Mussagy",
+          "eq1grupo": "M3-C",
           "eq1seed": null,
           "eq2": null,
           "eq2grupo": null,
@@ -5938,6 +5951,16 @@
     }
   ],
   "auditlog": [
+    {
+      "id": "mqcffksar75t4zr",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "SAVE_RESULT_FF",
+      "target": "fasefinal",
+      "detail": "Resultado FF: M3 jogo M3-SF1",
+      "ts": "2026-06-13T14:04:25.978Z"
+    },
     {
       "id": "mqcevfl67gqzcbb",
       "userId": "mpz8aq9sg983ubo",
@@ -15927,17 +15950,7 @@
       "target": "fasefinal",
       "detail": "Bracket resetado: F1",
       "ts": "2026-06-04T13:34:10.173Z"
-    },
-    {
-      "id": "mpzjdzp70yqdno5",
-      "userId": "mpz8aq9sg983ubo",
-      "username": "euamusse",
-      "role": "admin",
-      "action": "RESET_BRACKET",
-      "target": "fasefinal",
-      "detail": "Bracket resetado: M1",
-      "ts": "2026-06-04T13:34:10.171Z"
     }
   ],
-  "_updated": "2026-06-13T13:49:35.332Z"
+  "_updated": "2026-06-13T14:04:25.980Z"
 }
