@@ -4998,7 +4998,7 @@
           "resultado": null,
           "data": "2026-06-13",
           "hora": "15:00",
-          "campo": "Stella Artois"
+          "campo": "TVCabo"
         },
         {
           "id": "F2-SF2",
@@ -5433,7 +5433,7 @@
           "resultado": null,
           "data": "2026-06-13",
           "hora": "18:00",
-          "campo": "Stella Artois"
+          "campo": "Play Padel"
         },
         {
           "id": "M4-F",
@@ -5774,7 +5774,7 @@
           "resultado": null,
           "data": "2026-06-13",
           "hora": "14:00",
-          "campo": "Stella Artois"
+          "campo": "Play Padel"
         },
         {
           "id": "M3-SF2",
@@ -5912,6 +5912,36 @@
     }
   ],
   "auditlog": [
+    {
+      "id": "mqc3fhsyua31apb",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "HORARIO_DRAG",
+      "target": "fasefinal",
+      "detail": "Jogo M4-SF2 movido para 18:00 @ Play Padel",
+      "ts": "2026-06-13T08:28:26.722Z"
+    },
+    {
+      "id": "mqc3f8x9tb6iwxp",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "HORARIO_DRAG",
+      "target": "fasefinal",
+      "detail": "Jogo F2-SF1 movido para 15:00 @ TVCabo",
+      "ts": "2026-06-13T08:28:15.213Z"
+    },
+    {
+      "id": "mqc3f83be4bkk3w",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "HORARIO_DRAG",
+      "target": "fasefinal",
+      "detail": "Jogo M3-SF1 movido para 14:00 @ Play Padel",
+      "ts": "2026-06-13T08:28:14.135Z"
+    },
     {
       "id": "mqc3eob67kt734l",
       "userId": "mpz8aq9sg983ubo",
@@ -15881,37 +15911,7 @@
       "target": "fasefinal",
       "detail": "Bracket gerado: M3",
       "ts": "2026-06-04T10:07:53.261Z"
-    },
-    {
-      "id": "mpzc0pm5nfvxi2o",
-      "userId": "mpz46x5c2zupza0",
-      "username": "bgaspar",
-      "role": "operator",
-      "action": "GENERATE_BRACKET",
-      "target": "fasefinal",
-      "detail": "Bracket gerado: M4",
-      "ts": "2026-06-04T10:07:53.261Z"
-    },
-    {
-      "id": "mpzc0pm47vmr2xn",
-      "userId": "mpz46x5c2zupza0",
-      "username": "bgaspar",
-      "role": "operator",
-      "action": "GENERATE_BRACKET",
-      "target": "fasefinal",
-      "detail": "Bracket gerado: F2",
-      "ts": "2026-06-04T10:07:53.260Z"
-    },
-    {
-      "id": "mpzc0pm367mtbow",
-      "userId": "mpz46x5c2zupza0",
-      "username": "bgaspar",
-      "role": "operator",
-      "action": "GENERATE_BRACKET",
-      "target": "fasefinal",
-      "detail": "Bracket gerado: M2",
-      "ts": "2026-06-04T10:07:53.259Z"
     }
   ],
-  "_updated": "2026-06-13T08:27:58.626Z"
+  "_updated": "2026-06-13T08:28:36.793Z"
 }
