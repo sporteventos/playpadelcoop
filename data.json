@@ -4869,8 +4869,8 @@
           "eq2seed": null,
           "resultado": null,
           "data": "2026-06-14",
-          "hora": "17:00",
-          "campo": "Play Padel"
+          "hora": "18:00",
+          "campo": null
         }
       ],
       "swapNote": null
@@ -15978,5 +15978,5 @@
       "ts": "2026-06-04T13:39:55.169Z"
     }
   ],
-  "_updated": "2026-06-13T15:44:43.531Z"
+  "_updated": "2026-06-13T15:45:19.822Z"
 }
