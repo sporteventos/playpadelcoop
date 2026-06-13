@@ -5491,7 +5491,20 @@
           "eq2": "Muhammad Chona & Ibrahim Bilal",
           "eq2grupo": "M4-D",
           "eq2seed": null,
-          "resultado": null,
+          "resultado": {
+            "s1eq1": 6,
+            "s1eq2": 2,
+            "tb1eq1": null,
+            "tb1eq2": null,
+            "s2eq1": 6,
+            "s2eq2": 2,
+            "tb2eq1": null,
+            "tb2eq2": null,
+            "s3eq1": null,
+            "s3eq2": null,
+            "tb3eq1": null,
+            "tb3eq2": null
+          },
           "data": "2026-06-13",
           "hora": "20:00",
           "campo": "Stella Artois"
@@ -5536,8 +5549,8 @@
             "M4-SF1",
             "M4-SF2"
           ],
-          "eq1": null,
-          "eq1grupo": null,
+          "eq1": "Shiraz & Kheizar",
+          "eq1grupo": "M4-C",
           "eq1seed": null,
           "eq2": "Fádhil Khan & Kelyo",
           "eq2grupo": "M4-C",
@@ -6057,6 +6070,16 @@
     }
   ],
   "auditlog": [
+    {
+      "id": "mqcqa3lru4yp5dt",
+      "userId": "mpzxoo1v8l1za3r",
+      "username": "djanasse",
+      "role": "operator",
+      "action": "SAVE_RESULT_FF",
+      "target": "fasefinal",
+      "detail": "Resultado FF: M4 jogo M4-SF1",
+      "ts": "2026-06-13T19:08:06.207Z"
+    },
     {
       "id": "mqcq8ecb9gq0y6g",
       "userId": "mpzxoo1v8l1za3r",
@@ -16046,17 +16069,7 @@
       "target": "utilizadores",
       "detail": "Criado \"smonjane\" (operator)",
       "ts": "2026-06-04T15:10:39.860Z"
-    },
-    {
-      "id": "mpzmpl43hnftkw4",
-      "userId": "mpz8aq9sg983ubo",
-      "username": "euamusse",
-      "role": "admin",
-      "action": "SAVE_SCHEDULE",
-      "target": "jogos",
-      "detail": "Horário/equipas actualizados: jogo #1",
-      "ts": "2026-06-04T15:07:09.987Z"
     }
   ],
-  "_updated": "2026-06-13T19:06:46.822Z"
+  "_updated": "2026-06-13T19:08:06.218Z"
 }
