@@ -6084,6 +6084,26 @@
   ],
   "auditlog": [
     {
+      "id": "mqcqxi3dl1nzirl",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "LOGIN",
+      "target": "auth",
+      "detail": "Login: euamusse (admin)",
+      "ts": "2026-06-13T19:26:18.073Z"
+    },
+    {
+      "id": "mqcqxdv2n0in0zb",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "LOGOUT",
+      "target": "auth",
+      "detail": "Logout: euamusse",
+      "ts": "2026-06-13T19:26:12.590Z"
+    },
+    {
       "id": "mqcqb8q8pj47djz",
       "userId": "mpzxoo1v8l1za3r",
       "username": "djanasse",
@@ -16062,27 +16082,7 @@
       "target": "auth",
       "detail": "Logout: euamusse",
       "ts": "2026-06-04T15:32:31.450Z"
-    },
-    {
-      "id": "mpzmzu20sv6yokb",
-      "userId": "mpz8aq9sg983ubo",
-      "username": "euamusse",
-      "role": "admin",
-      "action": "LOGOUT",
-      "target": "auth",
-      "detail": "Logout: euamusse",
-      "ts": "2026-06-04T15:15:08.136Z"
-    },
-    {
-      "id": "mpzmupnky5tprs0",
-      "userId": "mpz8aq9sg983ubo",
-      "username": "euamusse",
-      "role": "admin",
-      "action": "CREATE_USER",
-      "target": "utilizadores",
-      "detail": "Criado \"djanasse\" (operator)",
-      "ts": "2026-06-04T15:11:09.152Z"
     }
   ],
-  "_updated": "2026-06-13T19:08:59.510Z"
+  "_updated": "2026-06-13T19:27:37.095Z"
 }
