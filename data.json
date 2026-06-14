@@ -6045,7 +6045,20 @@
           "eq2": "Sueil & Ahmed Riaze",
           "eq2grupo": "M3-D",
           "eq2seed": null,
-          "resultado": null,
+          "resultado": {
+            "s1eq1": 4,
+            "s1eq2": 6,
+            "tb1eq1": null,
+            "tb1eq2": null,
+            "s2eq1": 7,
+            "s2eq2": 6,
+            "tb2eq1": 7,
+            "tb2eq2": 1,
+            "s3eq1": 6,
+            "s3eq2": 2,
+            "tb3eq1": null,
+            "tb3eq2": null
+          },
           "data": "2026-06-14",
           "hora": "16:30",
           "campo": "TVCabo"
@@ -6148,6 +6161,16 @@
     }
   ],
   "auditlog": [
+    {
+      "id": "mqe1mljzi6g0l5s",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "SAVE_RESULT_FF",
+      "target": "fasefinal",
+      "detail": "Resultado FF: M3 jogo M3-F",
+      "ts": "2026-06-14T17:13:31.295Z"
+    },
     {
       "id": "mqe1gmxrla3k3ke",
       "userId": "mpz8aq9sg983ubo",
@@ -16137,17 +16160,7 @@
       "target": "auth",
       "detail": "Logout: bgaspar",
       "ts": "2026-06-04T19:37:07.055Z"
-    },
-    {
-      "id": "mpzw74oebm7etyy",
-      "userId": "mpz46x5c2zupza0",
-      "username": "bgaspar",
-      "role": "operator",
-      "action": "HORARIO_MOVER_DIA",
-      "target": "jogos",
-      "detail": "Jogo #97 de 2026-06-10 21:30 Play Padel → 2026-06-06 21:00 Play Padel",
-      "ts": "2026-06-04T19:32:45.038Z"
     }
   ],
-  "_updated": "2026-06-14T17:10:42.167Z"
+  "_updated": "2026-06-14T17:13:31.298Z"
 }
