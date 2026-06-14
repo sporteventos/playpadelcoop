@@ -405,9 +405,11 @@
     if (r.s3eq1 != null) sets++;
   });
 
-  // Games today (group stage only — FF games usually have no date)
+  // Games today: group stage games with today's date + all scheduled FF games
   const today = new Date().toISOString().slice(0, 10);
-  const hoje = jogos.filter(j => j.data === today);
+  const hojeGrupos = jogos.filter(j => j.data === today);
+  const hojeFF = jogosFF.filter(j => j.hora); // FF games with a scheduled time are today's games
+  const hoje = hojeGrupos.concat(hojeFF);
   const hojeDisputados = hoje.filter(j => !!j.resultado).length;
 
   document.getElementById('lsDisputados').textContent = disputados;
