@@ -405,11 +405,12 @@
     if (r.s3eq1 != null) sets++;
   });
 
-  // Games today: group stage games with today's date + all scheduled FF games
+  // Games today: on finals day (FF games with hora exist), show only those;
+  // otherwise fall back to group stage games with today's date
   const today = new Date().toISOString().slice(0, 10);
+  const hojeFF = jogosFF.filter(j => j.hora);
   const hojeGrupos = jogos.filter(j => j.data === today);
-  const hojeFF = jogosFF.filter(j => j.hora); // FF games with a scheduled time are today's games
-  const hoje = hojeGrupos.concat(hojeFF);
+  const hoje = hojeFF.length > 0 ? hojeFF : hojeGrupos;
   const hojeDisputados = hoje.filter(j => !!j.resultado).length;
 
   document.getElementById('lsDisputados').textContent = disputados;
