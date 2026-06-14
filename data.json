@@ -5983,7 +5983,7 @@
           "resultado": null,
           "data": "2026-06-14",
           "hora": "16:30",
-          "campo": "TVCabo"
+          "campo": "Stella Artois"
         }
       ],
       "swapNote": null,
@@ -6083,6 +6083,16 @@
     }
   ],
   "auditlog": [
+    {
+      "id": "mqdfrcagxchwmry",
+      "userId": "mpz46x5c2zupza0",
+      "username": "bgaspar",
+      "role": "operator",
+      "action": "HORARIO_DRAG",
+      "target": "fasefinal",
+      "detail": "Jogo M3-F movido para 16:30 @ Stella Artois",
+      "ts": "2026-06-14T07:01:21.016Z"
+    },
     {
       "id": "mqdfqhmilkhobd5",
       "userId": "mpz46x5c2zupza0",
@@ -16072,17 +16082,7 @@
       "target": "jogos",
       "detail": "Jogo #7 movido para 18:30 @ TVCabo",
       "ts": "2026-06-04T17:31:34.407Z"
-    },
-    {
-      "id": "mpzrtuq3xma62bu",
-      "userId": "mpz46x5c2zupza0",
-      "username": "bgaspar",
-      "role": "operator",
-      "action": "HORARIO_DRAG",
-      "target": "jogos",
-      "detail": "Jogo #8 movido para 18:30 @ TVCabo",
-      "ts": "2026-06-04T17:30:27.147Z"
     }
   ],
-  "_updated": "2026-06-14T07:00:54.042Z"
+  "_updated": "2026-06-14T07:03:32.581Z"
 }
