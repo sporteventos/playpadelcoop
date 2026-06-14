@@ -5364,7 +5364,20 @@
           "eq2": "Filipe Ferreira & Paulo Baldaia",
           "eq2grupo": "M5-B",
           "eq2seed": null,
-          "resultado": null,
+          "resultado": {
+            "s1eq1": 6,
+            "s1eq2": 3,
+            "tb1eq1": null,
+            "tb1eq2": null,
+            "s2eq1": 6,
+            "s2eq2": 3,
+            "tb2eq1": null,
+            "tb2eq2": null,
+            "s3eq1": null,
+            "s3eq2": null,
+            "tb3eq1": null,
+            "tb3eq2": null
+          },
           "data": "2026-06-14",
           "hora": "13:30",
           "campo": "Play Padel"
@@ -6096,6 +6109,16 @@
     }
   ],
   "auditlog": [
+    {
+      "id": "mqdry43f7ga13k2",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "SAVE_RESULT_FF",
+      "target": "fasefinal",
+      "detail": "Resultado FF: M5 jogo M5-F",
+      "ts": "2026-06-14T12:42:32.379Z"
+    },
     {
       "id": "mqdrx3i0z6vm2v5",
       "userId": "mpz8aq9sg983ubo",
@@ -16085,17 +16108,7 @@
       "target": "jogos",
       "detail": "Jogo #43 movido para 13:00 @ Stella Artois",
       "ts": "2026-06-04T18:51:37.122Z"
-    },
-    {
-      "id": "mpzuoe8v8r3it34",
-      "userId": "mpz46x5c2zupza0",
-      "username": "bgaspar",
-      "role": "operator",
-      "action": "LOGIN",
-      "target": "auth",
-      "detail": "Login: bgaspar (operator)",
-      "ts": "2026-06-04T18:50:11.359Z"
     }
   ],
-  "_updated": "2026-06-14T12:41:48.213Z"
+  "_updated": "2026-06-14T12:42:32.381Z"
 }
