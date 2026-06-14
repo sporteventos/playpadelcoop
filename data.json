@@ -6097,6 +6097,16 @@
   ],
   "auditlog": [
     {
+      "id": "mqdrx3i0z6vm2v5",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "LOGIN",
+      "target": "auth",
+      "detail": "Login: euamusse (admin)",
+      "ts": "2026-06-14T12:41:44.952Z"
+    },
+    {
       "id": "mqdp71p1d21xlrx",
       "userId": "mpz8aq9sg983ubo",
       "username": "euamusse",
@@ -16085,17 +16095,7 @@
       "target": "auth",
       "detail": "Login: bgaspar (operator)",
       "ts": "2026-06-04T18:50:11.359Z"
-    },
-    {
-      "id": "mpzuehh5g48kwhu",
-      "userId": "mpz8aq9sg983ubo",
-      "username": "euamusse",
-      "role": "admin",
-      "action": "LOGIN",
-      "target": "auth",
-      "detail": "Login: euamusse (admin)",
-      "ts": "2026-06-04T18:42:28.985Z"
     }
   ],
-  "_updated": "2026-06-14T11:26:32.649Z"
+  "_updated": "2026-06-14T12:41:48.213Z"
 }
