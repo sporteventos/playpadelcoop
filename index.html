@@ -196,7 +196,7 @@
       </div>
       <div class="live-stat-card">
         <div class="live-stat-val" id="lsHoje">&mdash;</div>
-        <div class="live-stat-lbl">Jogos hoje</div>
+        <div class="live-stat-lbl">Jogos fase final</div>
         <div class="live-stat-sub" id="lsHojeSub"></div>
       </div>
     </div>
@@ -405,12 +405,8 @@
     if (r.s3eq1 != null) sets++;
   });
 
-  // Games today: on finals day (FF games with hora exist), show only those;
-  // otherwise fall back to group stage games with today's date
-  const today = new Date().toISOString().slice(0, 10);
-  const hojeFF = jogosFF.filter(j => j.hora);
-  const hojeGrupos = jogos.filter(j => j.data === today);
-  const hoje = hojeFF.length > 0 ? hojeFF : hojeGrupos;
+  // Fase final games counter
+  const hoje = jogosFF;
   const hojeDisputados = hoje.filter(j => !!j.resultado).length;
 
   document.getElementById('lsDisputados').textContent = disputados;
@@ -419,7 +415,7 @@
   document.getElementById('lsSets').textContent = sets;
   document.getElementById('lsPct').textContent = pct + '%';
   document.getElementById('lsHoje').textContent = hoje.length;
-  document.getElementById('lsHojeSub').textContent = hoje.length ? hojeDisputados + ' conclu\u00eddos' : 'sem jogos hoje';
+  document.getElementById('lsHojeSub').textContent = hoje.length ? hojeDisputados + ' conclu\u00eddos' : 'a decorrer';
 })();
 
 // ---- Top Pares leaderboard ----
