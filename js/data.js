@@ -212,9 +212,16 @@ function ppFormatDate(d) {
             var localUsers  = JSON.parse(localStorage.getItem('pp_users') || '[]');
             var localIds    = new Set(localUsers.map(function(u) { return u.id; }));
             var deletedIds  = new Set(JSON.parse(localStorage.getItem('pp_users_deleted') || '[]'));
-            // Remote user already exists locally → local version wins
-            // Remote user in tombstone → was deleted locally, never re-add
-            var merged = localUsers.concat(d['users'].filter(function(u) {
+            // For users that exist in both: remote wins for auth fields (salt/passwordHash/active)
+            // so password changes on one device propagate to all others.
+            // For users only remote: add unless in tombstone.
+            var remoteMap = {};
+            d['users'].forEach(function(u) { remoteMap[u.id] = u; });
+            var merged = localUsers.map(function(u) {
+              var r = remoteMap[u.id];
+              if (!r) return u;
+              return Object.assign({}, u, { salt: r.salt, passwordHash: r.passwordHash, active: r.active, role: r.role, name: r.name });
+            }).concat(d['users'].filter(function(u) {
               return !localIds.has(u.id) && !deletedIds.has(u.id);
             }));
             ppSave('users', merged);
