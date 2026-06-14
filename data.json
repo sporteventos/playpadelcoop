@@ -5813,7 +5813,20 @@
           "eq2": "Ricardo Oliveira & Vasco Silva",
           "eq2grupo": "M2-C",
           "eq2seed": null,
-          "resultado": null,
+          "resultado": {
+            "s1eq1": 6,
+            "s1eq2": 2,
+            "tb1eq1": null,
+            "tb1eq2": null,
+            "s2eq1": 4,
+            "s2eq2": 6,
+            "tb2eq1": null,
+            "tb2eq2": null,
+            "s3eq1": 2,
+            "s3eq2": 6,
+            "tb3eq1": null,
+            "tb3eq2": null
+          },
           "data": "2026-06-14",
           "hora": "15:30",
           "campo": "Play Padel"
@@ -6122,6 +6135,36 @@
     }
   ],
   "auditlog": [
+    {
+      "id": "mqdy5wq1kzyzr0s",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "SAVE_RESULT_FF",
+      "target": "fasefinal",
+      "detail": "Resultado FF: M2 jogo M2-F",
+      "ts": "2026-06-14T15:36:33.769Z"
+    },
+    {
+      "id": "mqdy4p1ujo930w8",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "LOGIN",
+      "target": "auth",
+      "detail": "Login: euamusse (admin)",
+      "ts": "2026-06-14T15:35:37.170Z"
+    },
+    {
+      "id": "mqdy4kyq5t2qx4s",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "LOGOUT",
+      "target": "auth",
+      "detail": "Logout: euamusse",
+      "ts": "2026-06-14T15:35:31.874Z"
+    },
     {
       "id": "mqdvl2ie4hrg8hd",
       "userId": "mpz8aq9sg983ubo",
@@ -16091,37 +16134,7 @@
       "target": "jogos",
       "detail": "Jogo #97 de 2026-06-08 22:30 TVCabo → 2026-06-10 21:30 Play Padel",
       "ts": "2026-06-04T19:11:30.599Z"
-    },
-    {
-      "id": "mpzvepyepxpfeuu",
-      "userId": "mpz46x5c2zupza0",
-      "username": "bgaspar",
-      "role": "operator",
-      "action": "HORARIO_MOVER_DIA",
-      "target": "jogos",
-      "detail": "Jogo #122 de 2026-06-10 21:30 Play Padel → 2026-06-09 22:30 Play Padel",
-      "ts": "2026-06-04T19:10:39.590Z"
-    },
-    {
-      "id": "mpzuqo17kep098h",
-      "userId": "mpz46x5c2zupza0",
-      "username": "bgaspar",
-      "role": "operator",
-      "action": "HORARIO_DRAG",
-      "target": "jogos",
-      "detail": "Jogo #32 movido para 17:00 @ Stella Artois",
-      "ts": "2026-06-04T18:51:57.355Z"
-    },
-    {
-      "id": "mpzuqiic5qxckyw",
-      "userId": "mpz46x5c2zupza0",
-      "username": "bgaspar",
-      "role": "operator",
-      "action": "HORARIO_DRAG",
-      "target": "jogos",
-      "detail": "Jogo #46 movido para 16:00 @ Stella Artois",
-      "ts": "2026-06-04T18:51:50.196Z"
     }
   ],
-  "_updated": "2026-06-14T14:24:58.826Z"
+  "_updated": "2026-06-14T15:36:33.771Z"
 }
