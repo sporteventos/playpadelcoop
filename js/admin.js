@@ -6705,7 +6705,6 @@ window.gerarPanfletoDiaFinais = function() {
       ctx.fillStyle = clr; ctx.beginPath(); ctx.roundRect(PAD, fy + 1, 7, CARD_H - 2, [18, 0, 0, 18]); ctx.fill();
       ctx.textAlign = 'left';
       ctx.fillStyle = clr; ctx.font = 'bold 24px Arial, sans-serif'; ctx.fillText(cat, PAD + 22, fy + 36);
-      ctx.fillStyle = '#8AA396'; ctx.font = '17px Arial, sans-serif'; ctx.fillText(CAT_NOME[cat], PAD + 72, fy + 36);
       const sp = []; if (final?.hora) sp.push(final.hora); if (final?.campo) sp.push(final.campo);
       ctx.fillStyle = '#556D60'; ctx.font = '15px Arial, sans-serif';
       ctx.fillText(sp.length ? sp.join('  \u00B7  ') : 'Horário a definir', PAD + 22, fy + 58);
@@ -6716,14 +6715,14 @@ window.gerarPanfletoDiaFinais = function() {
       ctx.textAlign = 'center';
       const c1 = final?.eq1 ? '#F0F7F3' : '#4A6454', c2 = final?.eq2 ? '#F0F7F3' : '#4A6454';
       if (eq1p.length === 2) {
-        ctx.fillStyle = c1; ctx.font = 'bold 24px Arial, sans-serif'; ctx.fillText(trunc(eq1p[0], halfW), midX * 0.48, teamY - 14);
-        ctx.font = 'bold 20px Arial, sans-serif'; ctx.fillText(trunc(eq1p[1], halfW), midX * 0.48, teamY + 12);
-      } else { ctx.fillStyle = c1; ctx.font = 'bold 24px Arial, sans-serif'; ctx.fillText(trunc(eq1, halfW), midX * 0.48, teamY); }
+        ctx.fillStyle = c1; ctx.font = 'bold 22px Arial, sans-serif'; ctx.fillText(trunc(eq1p[0], halfW), midX * 0.48, teamY - 14);
+        ctx.fillText(trunc(eq1p[1], halfW), midX * 0.48, teamY + 12);
+      } else { ctx.fillStyle = c1; ctx.font = 'bold 22px Arial, sans-serif'; ctx.fillText(trunc(eq1, halfW), midX * 0.48, teamY); }
       ctx.fillStyle = clr + 'CC'; ctx.font = 'bold 20px Arial, sans-serif'; ctx.fillText('VS', midX, teamY);
       if (eq2p.length === 2) {
-        ctx.fillStyle = c2; ctx.font = 'bold 24px Arial, sans-serif'; ctx.fillText(trunc(eq2p[0], halfW), midX * 1.52, teamY - 14);
-        ctx.font = 'bold 20px Arial, sans-serif'; ctx.fillText(trunc(eq2p[1], halfW), midX * 1.52, teamY + 12);
-      } else { ctx.fillStyle = c2; ctx.font = 'bold 24px Arial, sans-serif'; ctx.fillText(trunc(eq2, halfW), midX * 1.52, teamY); }
+        ctx.fillStyle = c2; ctx.font = 'bold 22px Arial, sans-serif'; ctx.fillText(trunc(eq2p[0], halfW), midX * 1.52, teamY - 14);
+        ctx.fillText(trunc(eq2p[1], halfW), midX * 1.52, teamY + 12);
+      } else { ctx.fillStyle = c2; ctx.font = 'bold 22px Arial, sans-serif'; ctx.fillText(trunc(eq2, halfW), midX * 1.52, teamY); }
       ctx.strokeStyle = '#2A3830'; ctx.lineWidth = 1;
       ctx.beginPath(); ctx.moveTo(midX, fy + 68); ctx.lineTo(midX, fy + CARD_H - 14); ctx.stroke();
     });
