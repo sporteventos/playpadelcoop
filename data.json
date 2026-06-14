@@ -5305,7 +5305,20 @@
           "eq2": "Karim Kanifani & Octávio Barros",
           "eq2grupo": "M1-B",
           "eq2seed": null,
-          "resultado": null,
+          "resultado": {
+            "s1eq1": 4,
+            "s1eq2": 6,
+            "tb1eq1": null,
+            "tb1eq2": null,
+            "s2eq1": 6,
+            "s2eq2": 7,
+            "tb2eq1": 5,
+            "tb2eq2": 7,
+            "s3eq1": null,
+            "s3eq2": null,
+            "tb3eq1": null,
+            "tb3eq2": null
+          },
           "data": "2026-06-14",
           "hora": "17:30",
           "campo": "Play Padel"
@@ -6161,6 +6174,16 @@
     }
   ],
   "auditlog": [
+    {
+      "id": "mqe4t5ylk5rtwzm",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "SAVE_RESULT_FF",
+      "target": "fasefinal",
+      "detail": "Resultado FF: M1 jogo M1-F",
+      "ts": "2026-06-14T18:42:36.525Z"
+    },
     {
       "id": "mqe1mljzi6g0l5s",
       "userId": "mpz8aq9sg983ubo",
@@ -16150,17 +16173,7 @@
       "target": "auth",
       "detail": "Login: bgaspar (operator)",
       "ts": "2026-06-04T19:37:20.459Z"
-    },
-    {
-      "id": "mpzwcquni6oguyv",
-      "userId": "mpz46x5c2zupza0",
-      "username": "bgaspar",
-      "role": "operator",
-      "action": "LOGOUT",
-      "target": "auth",
-      "detail": "Logout: bgaspar",
-      "ts": "2026-06-04T19:37:07.055Z"
     }
   ],
-  "_updated": "2026-06-14T18:41:58.350Z"
+  "_updated": "2026-06-14T18:42:36.527Z"
 }
