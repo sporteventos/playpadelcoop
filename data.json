@@ -6084,6 +6084,16 @@
   ],
   "auditlog": [
     {
+      "id": "mqdp52j20fgqs2b",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "LOGIN",
+      "target": "auth",
+      "detail": "Login: euamusse (admin)",
+      "ts": "2026-06-14T11:23:58.094Z"
+    },
+    {
       "id": "mqdnd33f4j06svm",
       "userId": "mpz46x5c2zupza0",
       "username": "bgaspar",
@@ -6102,6 +6112,36 @@
       "target": "auth",
       "detail": "Login: bgaspar (operator)",
       "ts": "2026-06-14T10:33:31.318Z"
+    },
+    {
+      "id": "mqdm8jdkjbtzzqo",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "LOGIN",
+      "target": "auth",
+      "detail": "Login: euamusse (admin)",
+      "ts": "2026-06-14T10:02:41.048Z"
+    },
+    {
+      "id": "mqdm8ehyk98qoje",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "LOGOUT",
+      "target": "auth",
+      "detail": "Logout: euamusse",
+      "ts": "2026-06-14T10:02:34.726Z"
+    },
+    {
+      "id": "mqdj0om033doghl",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "LOGIN",
+      "target": "auth",
+      "detail": "Login: euamusse (admin)",
+      "ts": "2026-06-14T08:32:35.736Z"
     },
     {
       "id": "mqdfrcagxchwmry",
@@ -16042,47 +16082,7 @@
       "target": "auth",
       "detail": "Logout: euamusse",
       "ts": "2026-06-04T18:42:09.283Z"
-    },
-    {
-      "id": "mpzte0lmjnx43d2",
-      "userId": "mpz46x5c2zupza0",
-      "username": "bgaspar",
-      "role": "operator",
-      "action": "LOGOUT",
-      "target": "auth",
-      "detail": "Logout: bgaspar",
-      "ts": "2026-06-04T18:14:07.499Z"
-    },
-    {
-      "id": "mpzrx5uzogckr93",
-      "userId": "mpz46x5c2zupza0",
-      "username": "bgaspar",
-      "role": "operator",
-      "action": "HORARIO_DRAG",
-      "target": "jogos",
-      "detail": "Jogo #17 movido para 19:00 @ Play Padel",
-      "ts": "2026-06-04T17:33:01.547Z"
-    },
-    {
-      "id": "mpzrwy1wlif5qrj",
-      "userId": "mpz46x5c2zupza0",
-      "username": "bgaspar",
-      "role": "operator",
-      "action": "HORARIO_DRAG",
-      "target": "jogos",
-      "detail": "Jogo #17 movido para 11:00 @ Play Padel",
-      "ts": "2026-06-04T17:32:51.428Z"
-    },
-    {
-      "id": "mpzrwsrljhnw5pa",
-      "userId": "mpz46x5c2zupza0",
-      "username": "bgaspar",
-      "role": "operator",
-      "action": "HORARIO_DRAG",
-      "target": "jogos",
-      "detail": "Jogo #26 movido para 11:00 @ Play Padel",
-      "ts": "2026-06-04T17:32:44.577Z"
     }
   ],
-  "_updated": "2026-06-14T10:34:16.238Z"
+  "_updated": "2026-06-14T11:25:14.506Z"
 }
