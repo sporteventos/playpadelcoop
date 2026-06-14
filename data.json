@@ -5568,7 +5568,20 @@
           "eq2": "Fádhil Khan & Kelyo",
           "eq2grupo": "M4-C",
           "eq2seed": null,
-          "resultado": null,
+          "resultado": {
+            "s1eq1": 6,
+            "s1eq2": 0,
+            "tb1eq1": null,
+            "tb1eq2": null,
+            "s2eq1": 6,
+            "s2eq2": 1,
+            "tb2eq1": null,
+            "tb2eq2": null,
+            "s3eq1": null,
+            "s3eq2": null,
+            "tb3eq1": null,
+            "tb3eq2": null
+          },
           "data": "2026-06-14",
           "hora": "12:30",
           "campo": "Play Padel"
@@ -6083,6 +6096,16 @@
     }
   ],
   "auditlog": [
+    {
+      "id": "mqdp71p1d21xlrx",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "SAVE_RESULT_FF",
+      "target": "fasefinal",
+      "detail": "Resultado FF: M4 jogo M4-F",
+      "ts": "2026-06-14T11:25:30.325Z"
+    },
     {
       "id": "mqdp52j20fgqs2b",
       "userId": "mpz8aq9sg983ubo",
@@ -16072,17 +16095,7 @@
       "target": "auth",
       "detail": "Login: euamusse (admin)",
       "ts": "2026-06-04T18:42:28.985Z"
-    },
-    {
-      "id": "mpzue29v7xshkwh",
-      "userId": "mpz8aq9sg983ubo",
-      "username": "euamusse",
-      "role": "admin",
-      "action": "LOGOUT",
-      "target": "auth",
-      "detail": "Logout: euamusse",
-      "ts": "2026-06-04T18:42:09.283Z"
     }
   ],
-  "_updated": "2026-06-14T11:25:14.506Z"
+  "_updated": "2026-06-14T11:25:30.327Z"
 }
