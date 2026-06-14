@@ -6727,10 +6727,6 @@ window.gerarPanfletoDiaFinais = function() {
       ctx.strokeStyle = '#2A3830'; ctx.lineWidth = 1;
       ctx.beginPath(); ctx.moveTo(midX, fy + 68); ctx.lineTo(midX, fy + CARD_H - 14); ctx.stroke();
     });
-    // Footer
-    const footY = LIST_Y + items.length * (CARD_H + CARD_GAP) + 52;
-    ctx.fillStyle = '#384D42'; ctx.font = '22px Arial, sans-serif'; ctx.textAlign = 'center';
-    ctx.fillText('playpadelcoop.sporteventos.net', W/2, footY);
     // Repaint gold bar on top to ensure it's not clipped
     ctx.fillStyle = goldGrad; ctx.fillRect(0, H - 14, W, 14);
     const link = document.createElement('a');
