@@ -5074,7 +5074,20 @@
           "eq2": "Cris Vasconcelos & Beatriz Madeira",
           "eq2grupo": "F2-A",
           "eq2seed": null,
-          "resultado": null,
+          "resultado": {
+            "s1eq1": 2,
+            "s1eq2": 6,
+            "tb1eq1": null,
+            "tb1eq2": null,
+            "s2eq1": 4,
+            "s2eq2": 6,
+            "tb2eq1": null,
+            "tb2eq2": null,
+            "s3eq1": null,
+            "s3eq2": null,
+            "tb3eq1": null,
+            "tb3eq2": null
+          },
           "data": "2026-06-14",
           "hora": "14:30",
           "campo": "Play Padel"
@@ -6109,6 +6122,36 @@
     }
   ],
   "auditlog": [
+    {
+      "id": "mqdvl2ie4hrg8hd",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "SAVE_RESULT_FF",
+      "target": "fasefinal",
+      "detail": "Resultado FF: F2 jogo F2-F",
+      "ts": "2026-06-14T14:24:22.262Z"
+    },
+    {
+      "id": "mqdvk1wzo4ymlt0",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "LOGIN",
+      "target": "auth",
+      "detail": "Login: euamusse (admin)",
+      "ts": "2026-06-14T14:23:34.835Z"
+    },
+    {
+      "id": "mqdvjxo7xtonuxy",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "LOGOUT",
+      "target": "auth",
+      "detail": "Logout: euamusse",
+      "ts": "2026-06-14T14:23:29.335Z"
+    },
     {
       "id": "mqdry43f7ga13k2",
       "userId": "mpz8aq9sg983ubo",
@@ -16078,37 +16121,7 @@
       "target": "jogos",
       "detail": "Jogo #46 movido para 16:00 @ Stella Artois",
       "ts": "2026-06-04T18:51:50.196Z"
-    },
-    {
-      "id": "mpzuqf3axjuswff",
-      "userId": "mpz46x5c2zupza0",
-      "username": "bgaspar",
-      "role": "operator",
-      "action": "HORARIO_DRAG",
-      "target": "jogos",
-      "detail": "Jogo #45 movido para 15:00 @ Stella Artois",
-      "ts": "2026-06-04T18:51:45.766Z"
-    },
-    {
-      "id": "mpzuqbqw8tdktds",
-      "userId": "mpz46x5c2zupza0",
-      "username": "bgaspar",
-      "role": "operator",
-      "action": "HORARIO_DRAG",
-      "target": "jogos",
-      "detail": "Jogo #44 movido para 14:00 @ Stella Artois",
-      "ts": "2026-06-04T18:51:41.432Z"
-    },
-    {
-      "id": "mpzuq8f6xasne2r",
-      "userId": "mpz46x5c2zupza0",
-      "username": "bgaspar",
-      "role": "operator",
-      "action": "HORARIO_DRAG",
-      "target": "jogos",
-      "detail": "Jogo #43 movido para 13:00 @ Stella Artois",
-      "ts": "2026-06-04T18:51:37.122Z"
     }
   ],
-  "_updated": "2026-06-14T12:43:28.093Z"
+  "_updated": "2026-06-14T14:24:22.264Z"
 }
