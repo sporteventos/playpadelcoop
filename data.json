@@ -5983,7 +5983,7 @@
           "resultado": null,
           "data": "2026-06-14",
           "hora": "16:30",
-          "campo": "Stella Artois"
+          "campo": "TVCabo"
         }
       ],
       "swapNote": null,
@@ -6083,6 +6083,26 @@
     }
   ],
   "auditlog": [
+    {
+      "id": "mqdnd33f4j06svm",
+      "userId": "mpz46x5c2zupza0",
+      "username": "bgaspar",
+      "role": "operator",
+      "action": "HORARIO_DRAG",
+      "target": "fasefinal",
+      "detail": "Jogo M3-F movido para 16:30 @ TVCabo",
+      "ts": "2026-06-14T10:34:12.843Z"
+    },
+    {
+      "id": "mqdnc71y4xaez0h",
+      "userId": "mpz46x5c2zupza0",
+      "username": "bgaspar",
+      "role": "operator",
+      "action": "LOGIN",
+      "target": "auth",
+      "detail": "Login: bgaspar (operator)",
+      "ts": "2026-06-14T10:33:31.318Z"
+    },
     {
       "id": "mqdfrcagxchwmry",
       "userId": "mpz46x5c2zupza0",
@@ -16062,27 +16082,7 @@
       "target": "jogos",
       "detail": "Jogo #26 movido para 11:00 @ Play Padel",
       "ts": "2026-06-04T17:32:44.577Z"
-    },
-    {
-      "id": "mpzrvcxy6z5lykt",
-      "userId": "mpz46x5c2zupza0",
-      "username": "bgaspar",
-      "role": "operator",
-      "action": "HORARIO_DRAG",
-      "target": "jogos",
-      "detail": "Jogo #8 movido para 18:30 @ Stella Artois",
-      "ts": "2026-06-04T17:31:37.414Z"
-    },
-    {
-      "id": "mpzrvamfg08dd1i",
-      "userId": "mpz46x5c2zupza0",
-      "username": "bgaspar",
-      "role": "operator",
-      "action": "HORARIO_DRAG",
-      "target": "jogos",
-      "detail": "Jogo #7 movido para 18:30 @ TVCabo",
-      "ts": "2026-06-04T17:31:34.407Z"
     }
   ],
-  "_updated": "2026-06-14T08:32:18.912Z"
+  "_updated": "2026-06-14T10:34:16.238Z"
 }
