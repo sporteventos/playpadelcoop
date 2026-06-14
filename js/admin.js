@@ -6706,7 +6706,7 @@ window.gerarPanfletoDiaFinais = function() {
       ctx.textAlign = 'left';
       ctx.fillStyle = clr; ctx.font = 'bold 24px Arial, sans-serif'; ctx.fillText(cat, PAD + 22, fy + 36);
       const sp = []; if (final?.hora) sp.push(final.hora); if (final?.campo) sp.push(final.campo);
-      ctx.fillStyle = '#556D60'; ctx.font = '15px Arial, sans-serif';
+      ctx.fillStyle = '#C8D9CC'; ctx.font = '15px Arial, sans-serif';
       ctx.fillText(sp.length ? sp.join('  \u00B7  ') : 'Horário a definir', PAD + 22, fy + 58);
       const eq1 = final?.eq1 || 'A definir', eq2 = final?.eq2 || 'A definir';
       const midX = W / 2, halfW = midX - PAD * 1.35;
