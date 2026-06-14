@@ -4869,7 +4869,20 @@
           "eq2": "Anouk Fumane & Letícia",
           "eq2grupo": "F1-C",
           "eq2seed": null,
-          "resultado": null,
+          "resultado": {
+            "s1eq1": 6,
+            "s1eq2": 1,
+            "tb1eq1": null,
+            "tb1eq2": null,
+            "s2eq1": 5,
+            "s2eq2": 7,
+            "tb2eq1": null,
+            "tb2eq2": null,
+            "s3eq1": 6,
+            "s3eq2": 1,
+            "tb3eq1": null,
+            "tb3eq2": null
+          },
           "data": "2026-06-14",
           "hora": "16:30",
           "campo": "Play Padel"
@@ -6135,6 +6148,36 @@
     }
   ],
   "auditlog": [
+    {
+      "id": "mqe1gmxrla3k3ke",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "SAVE_RESULT_FF",
+      "target": "fasefinal",
+      "detail": "Resultado FF: F1 jogo F1-F",
+      "ts": "2026-06-14T17:08:53.151Z"
+    },
+    {
+      "id": "mqe1fz3moy77juc",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "LOGIN",
+      "target": "auth",
+      "detail": "Login: euamusse (admin)",
+      "ts": "2026-06-14T17:08:22.258Z"
+    },
+    {
+      "id": "mqe1fuwo9epm520",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "LOGOUT",
+      "target": "auth",
+      "detail": "Logout: euamusse",
+      "ts": "2026-06-14T17:08:16.824Z"
+    },
     {
       "id": "mqdy5wq1kzyzr0s",
       "userId": "mpz8aq9sg983ubo",
@@ -16104,37 +16147,7 @@
       "target": "jogos",
       "detail": "Jogo #97 de 2026-06-10 21:30 Play Padel → 2026-06-06 21:00 Play Padel",
       "ts": "2026-06-04T19:32:45.038Z"
-    },
-    {
-      "id": "mpzw0yb7tz9h2r7",
-      "userId": "mpz8aq9sg983ubo",
-      "username": "euamusse",
-      "role": "admin",
-      "action": "LOGIN",
-      "target": "auth",
-      "detail": "Login: euamusse (admin)",
-      "ts": "2026-06-04T19:27:56.851Z"
-    },
-    {
-      "id": "mpzw0csry0bzplf",
-      "userId": "mpz8aq9sg983ubo",
-      "username": "euamusse",
-      "role": "admin",
-      "action": "LOGOUT",
-      "target": "auth",
-      "detail": "Logout: euamusse",
-      "ts": "2026-06-04T19:27:28.971Z"
-    },
-    {
-      "id": "mpzvftbbzizzdqy",
-      "userId": "mpz46x5c2zupza0",
-      "username": "bgaspar",
-      "role": "operator",
-      "action": "HORARIO_MOVER_DIA",
-      "target": "jogos",
-      "detail": "Jogo #97 de 2026-06-08 22:30 TVCabo → 2026-06-10 21:30 Play Padel",
-      "ts": "2026-06-04T19:11:30.599Z"
     }
   ],
-  "_updated": "2026-06-14T15:38:01.460Z"
+  "_updated": "2026-06-14T17:08:53.152Z"
 }
