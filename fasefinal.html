@@ -24,7 +24,7 @@
     .cat-tab.active { background: var(--verde); color: var(--preto); border-color: var(--verde); }
 
     /* ---- Bracket with connecting lines ---- */
-    .bk-bracket { display: flex; align-items: stretch; gap: 36px; overflow-x: auto; padding-bottom: 1.5rem; min-height: 480px; }
+    .bk-bracket { display: flex; align-items: stretch; gap: 72px; overflow-x: auto; padding-bottom: 1.5rem; min-height: 480px; }
     .bk-round { display: flex; flex-direction: column; flex-shrink: 0; min-width: 210px; }
     .bk-rhead {
       font-size: .62rem; font-weight: 800; letter-spacing: .13em; text-transform: uppercase;
@@ -33,11 +33,11 @@
     .bk-slot { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 8px 0; position: relative; overflow: visible; }
     /* Connector lines */
     .bk-slot-top::after {
-      content: ''; position: absolute; top: 50%; right: -36px; width: 36px; height: 50%;
+      content: ''; position: absolute; top: 50%; right: -72px; width: 72px; height: 50%;
       border-top: 2px solid rgba(0,195,123,.25); border-right: 2px solid rgba(0,195,123,.25); pointer-events: none; z-index: 0;
     }
     .bk-slot-bot::after {
-      content: ''; position: absolute; top: 0; right: -36px; width: 36px; height: 50%;
+      content: ''; position: absolute; top: 0; right: -72px; width: 72px; height: 50%;
       border-bottom: 2px solid rgba(0,195,123,.25); border-right: 2px solid rgba(0,195,123,.25); pointer-events: none; z-index: 0;
     }
     /* Game card */
@@ -68,7 +68,7 @@
     /* ---- Mobile ---- */
     @media (max-width: 600px) {
       .bracket-page { padding: 1.5rem .75rem 3rem; }
-      .bk-bracket { gap: 20px; min-height: 360px; }
+      .bk-bracket { gap: 40px; min-height: 360px; }
       .bk-round { min-width: 160px; }
       .bk-card { padding: .55rem .65rem; border-radius: 9px; }
       .bk-cname { font-size: .75rem; }
@@ -79,7 +79,7 @@
       .champion-col-body { padding: 1.25rem 1rem; gap: .75rem; }
       .cat-tab { font-size: .72rem; padding: .35rem .85rem; }
       /* connector lines shrink with gap */
-      .bk-slot-top::after, .bk-slot-bot::after { right: -20px; width: 20px; }
+      .bk-slot-top::after, .bk-slot-bot::after { right: -40px; width: 40px; }
     }
 
     /* empty / champion */
@@ -106,7 +106,7 @@
     .bk-round-final-connector { position: relative; }
     .bk-round-final-connector::before {
       content: '';
-      position: absolute; top: 50%; left: -36px; width: 36px; height: 2px;
+      position: absolute; top: 50%; left: -72px; width: 72px; height: 2px;
       background: rgba(245,197,24,.35); pointer-events: none;
     }
   </style>
