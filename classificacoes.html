@@ -481,12 +481,12 @@ document.addEventListener('DOMContentLoaded', () => {
               scoreStr = 'WO';
             } else {
               const sets = [[r.s1eq1,r.s1eq2],[r.s2eq1,r.s2eq2],[r.s3eq1,r.s3eq2]].filter(([a])=>a!=null);
-              let v1=0,v2=0,parts=[];
-              sets.forEach(([a,b])=>{ if(a>b)v1++;else v2++;parts.push(a+'-'+b); });
+              let v1=0,v2=0;
+              sets.forEach(([a,b])=>{ if(a>b)v1++;else v2++; });
               winner = sets.length?(v1>v2?j.eq1:j.eq2):null;
-              scoreStr = parts.join(', ');
+              scoreStr = v1+'-'+v2;
             }
-            html += `<div class="gr-match">
+            html += `<div class="gr-match">`
               <div class="gr-team ${winner===j.eq1?'gr-team-winner':''}">` + j.eq1.split(' & ').join('<br>') + `</div>
               <div class="gr-score">${scoreStr}</div>
               <div class="gr-team ${winner===j.eq2?'gr-team-winner':''}" style="text-align:right">` + j.eq2.split(' & ').join('<br>') + `</div>
@@ -619,10 +619,10 @@ document.addEventListener('DOMContentLoaded', () => {
               scoreStr = 'WO';
             } else {
               const sets = [[r.s1eq1,r.s1eq2],[r.s2eq1,r.s2eq2],[r.s3eq1,r.s3eq2]].filter(([a])=>a!=null);
-              let v1=0, v2=0, parts=[];
-              sets.forEach(([a,b]) => { if(a>b) v1++; else v2++; parts.push(a+'-'+b); });
+              let v1=0, v2=0;
+              sets.forEach(([a,b]) => { if(a>b) v1++; else v2++; });
               winner = sets.length ? (v1>v2 ? j.eq1 : j.eq2) : null;
-              scoreStr = parts.join(', ');
+              scoreStr = v1+'-'+v2;
             }
           }
           const isFinal = fase === 'F';
