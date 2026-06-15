@@ -486,11 +486,15 @@ document.addEventListener('DOMContentLoaded', () => {
               winner = sets.length?(v1>v2?j.eq1:j.eq2):null;
               scoreStr = (v1+'-'+v2) + ' <span style="font-size:.68rem;opacity:.6;font-weight:400">('+parts.join(', ')+')</span>';
             }
-            html += `<div class="gr-match">`
-              <div class="gr-team ${winner===j.eq1?'gr-team-winner':''}">` + j.eq1.split(' & ').join('<br>') + `</div>
-              <div class="gr-score">${scoreStr}</div>
-              <div class="gr-team ${winner===j.eq2?'gr-team-winner':''}" style="text-align:right">` + j.eq2.split(' & ').join('<br>') + `</div>
-            </div>`;
+            const eq1html = j.eq1.split(' & ').join('<br>');
+            const eq2html = j.eq2.split(' & ').join('<br>');
+            const t1cls = winner===j.eq1 ? 'gr-team-winner' : '';
+            const t2cls = winner===j.eq2 ? 'gr-team-winner' : '';
+            html += '<div class="gr-match">'
+              + '<div class="gr-team ' + t1cls + '">' + eq1html + '</div>'
+              + '<div class="gr-score">' + scoreStr + '</div>'
+              + '<div class="gr-team ' + t2cls + '" style="text-align:right">' + eq2html + '</div>'
+              + '</div>';
           });
           html += `</div>`;
         }
