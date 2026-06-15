@@ -91,6 +91,50 @@
     .apuramento-note i { flex-shrink: 0; margin-top: .15rem; }
     .apuramento-empty { font-size: .875rem; color: var(--cinza-texto); text-align: center; padding: 1.5rem 0; }
     .apuramento-terceiros-wrap { margin-top: .5rem; }
+    /* ---- Fase Final Bracket ---- */
+    .ff-bracket-section {
+      margin-top: 2rem;
+      background: var(--preto-card);
+      border: 1px solid var(--preto-borda);
+      border-radius: 16px;
+      padding: 1.75rem;
+    }
+    .ff-phase { margin-bottom: 1.5rem; }
+    .ff-phase:last-child { margin-bottom: 0; }
+    .ff-phase-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: .72rem; font-weight: 700; color: var(--cinza-texto);
+      text-transform: uppercase; letter-spacing: .08em;
+      margin-bottom: .65rem;
+    }
+    .ff-matches { display: flex; flex-direction: column; gap: .5rem; }
+    .ff-match {
+      display: flex; align-items: stretch; gap: 0;
+      background: rgba(255,255,255,.025);
+      border: 1px solid var(--preto-borda);
+      border-radius: 10px; overflow: hidden;
+    }
+    .ff-team {
+      flex: 1; padding: .55rem .85rem;
+      font-size: .83rem; color: var(--cinza-texto);
+      display: flex; align-items: center; line-height: 1.3;
+    }
+    .ff-team-winner { color: #d0e8df; font-weight: 600; }
+    .ff-team-loser  { opacity: .45; }
+    .ff-match-info {
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      padding: .4rem .7rem; min-width: 80px;
+      border-left: 1px solid var(--preto-borda); border-right: 1px solid var(--preto-borda);
+      background: rgba(0,0,0,.2);
+    }
+    .ff-score { font-family: 'Barlow Condensed',sans-serif; font-size: .85rem; font-weight: 700; color: var(--amarelo); white-space: nowrap; }
+    .ff-score-pending { font-size: .85rem; color: var(--cinza-texto); }
+    .ff-match-meta { font-size: .65rem; color: var(--cinza-texto); margin-top: .2rem; white-space: nowrap; }
+    .ff-phase-divider { border: none; border-top: 1px solid var(--preto-borda); margin: 1.25rem 0; }
+    @media (max-width: 480px) {
+      .ff-team { font-size: .75rem; padding: .45rem .6rem; }
+      .ff-match-info { min-width: 64px; padding: .35rem .45rem; }
+    }
   </style>
 </head>
 <body>
@@ -500,6 +544,63 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     html += `</div>`; // .apuramento-section
+
+    // 5. Fase Final bracket for this category
+    const ffAll = ppLoad('fasefinal') || {};
+    const ffCat = ffAll[activeCat];
+    if (ffCat && ffCat.jogos && ffCat.jogos.length > 0) {
+      const ffJogos = ffCat.jogos;
+      const phases = ['QF', 'SF', 'F'];
+      const phaseNames = { QF: 'Quartos de Final', SF: 'Meias-Finais', F: 'Final' };
+      let ffHtml = `<div class="ff-bracket-section">
+        <div class="apuramento-header">
+          <i class="ph ph-brackets-round"></i>
+          <h2>Fase Final</h2>
+          <a href="fasefinal.html" class="apuramento-badge" style="text-decoration:none;cursor:pointer">Ver bracket completo →</a>
+        </div>`;
+      let firstPhase = true;
+      phases.forEach(fase => {
+        const faseJogos = ffJogos.filter(j => j.fase === fase && j.eq1 && j.eq2);
+        if (!faseJogos.length) return;
+        if (!firstPhase) ffHtml += `<hr class="ff-phase-divider">`;
+        firstPhase = false;
+        ffHtml += `<div class="ff-phase"><div class="ff-phase-title">${phaseNames[fase]}</div><div class="ff-matches">`;
+        faseJogos.forEach(j => {
+          const r = j.resultado;
+          let winner = null, scoreStr = '';
+          if (r) {
+            if (r.wo) {
+              winner = r.wo === 'eq1' ? j.eq2 : j.eq1;
+              scoreStr = 'WO';
+            } else {
+              const sets = [[r.s1eq1,r.s1eq2],[r.s2eq1,r.s2eq2],[r.s3eq1,r.s3eq2]].filter(([a])=>a!=null);
+              let v1=0, v2=0, parts=[];
+              sets.forEach(([a,b]) => { if(a>b) v1++; else v2++; parts.push(a+'-'+b); });
+              winner = sets.length ? (v1>v2 ? j.eq1 : j.eq2) : null;
+              scoreStr = parts.join(', ');
+            }
+          }
+          const isFinal = fase === 'F';
+          const renderTeam = (eq, won) => {
+            const trophy = (isFinal && won) ? '\uD83C\uDFC6 ' : '';
+            return `<div class="ff-team ${won ? 'ff-team-winner' : (winner ? 'ff-team-loser' : '')}">${trophy}${eq}</div>`;
+          };
+          const infoStr = [j.hora, j.campo].filter(Boolean).join(' \u00B7 ');
+          ffHtml += `<div class="ff-match">
+            ${renderTeam(j.eq1, winner===j.eq1)}
+            <div class="ff-match-info">
+              ${scoreStr ? `<span class="ff-score">${scoreStr}</span>` : '<span class="ff-score-pending">&mdash;</span>'}
+              ${infoStr ? `<div class="ff-match-meta">${infoStr}</div>` : ''}
+            </div>
+            ${renderTeam(j.eq2, winner===j.eq2)}
+          </div>`;
+        });
+        ffHtml += `</div></div>`;
+      });
+      ffHtml += `</div>`;
+      html += ffHtml;
+    }
+
     container.innerHTML = html;
   }
 
