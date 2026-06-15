@@ -31,14 +31,19 @@
       color: var(--cinza-texto); padding-bottom: .4rem; border-bottom: 1px solid var(--preto-borda); margin-bottom: .1rem;
     }
     .bk-slot { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 8px 0; position: relative; overflow: visible; }
-    /* Connector lines */
+    /* Connector lines — outgoing (right half of gap) */
     .bk-slot-top::after {
-      content: ''; position: absolute; top: 50%; right: -72px; width: 72px; height: 50%;
+      content: ''; position: absolute; top: 50%; right: -36px; width: 36px; height: 50%;
       border-top: 2px solid rgba(0,195,123,.25); border-right: 2px solid rgba(0,195,123,.25); pointer-events: none; z-index: 0;
     }
     .bk-slot-bot::after {
-      content: ''; position: absolute; top: 0; right: -72px; width: 72px; height: 50%;
+      content: ''; position: absolute; top: 0; right: -36px; width: 36px; height: 50%;
       border-bottom: 2px solid rgba(0,195,123,.25); border-right: 2px solid rgba(0,195,123,.25); pointer-events: none; z-index: 0;
+    }
+    /* Incoming connector line — left half of gap, for non-first-column slots */
+    .bk-slot-recv::before {
+      content: ''; position: absolute; top: 50%; left: -36px; width: 36px; height: 2px;
+      background: rgba(0,195,123,.25); pointer-events: none; z-index: 0; transform: translateY(-1px);
     }
     /* Game card */
     .bk-card {
@@ -68,7 +73,7 @@
     /* ---- Mobile ---- */
     @media (max-width: 600px) {
       .bracket-page { padding: 1.5rem .75rem 3rem; }
-      .bk-bracket { gap: 40px; min-height: 360px; }
+      .bk-bracket { gap: 48px; min-height: 360px; }
       .bk-round { min-width: 160px; }
       .bk-card { padding: .55rem .65rem; border-radius: 9px; }
       .bk-cname { font-size: .75rem; }
@@ -79,7 +84,8 @@
       .champion-col-body { padding: 1.25rem 1rem; gap: .75rem; }
       .cat-tab { font-size: .72rem; padding: .35rem .85rem; }
       /* connector lines shrink with gap */
-      .bk-slot-top::after, .bk-slot-bot::after { right: -40px; width: 40px; }
+      .bk-slot-top::after, .bk-slot-bot::after { right: -24px; width: 24px; }
+      .bk-slot-recv::before { left: -24px; width: 24px; }
     }
 
     /* empty / champion */
@@ -106,7 +112,7 @@
     .bk-round-final-connector { position: relative; }
     .bk-round-final-connector::before {
       content: '';
-      position: absolute; top: 50%; left: -72px; width: 72px; height: 2px;
+      position: absolute; top: 50%; left: -36px; width: 36px; height: 2px;
       background: rgba(245,197,24,.35); pointer-events: none;
     }
   </style>
@@ -290,9 +296,10 @@ document.addEventListener('DOMContentLoaded', () => {
       const games = [...jogos.filter(j => j.fase === fase)].sort((a, b) => a.num - b.num);
       const isLast = colIdx === phases.length - 1;
       return games.map((g, i) => {
+        const isFirst = colIdx === 0;
         const isTop = !isLast && i % 2 === 0;
         const isBot = !isLast && i % 2 === 1;
-      const cls = ['bk-slot', isTop ? 'bk-slot-top' : isBot ? 'bk-slot-bot' : ''].filter(Boolean).join(' ');
+        const cls = ['bk-slot', isTop ? 'bk-slot-top' : isBot ? 'bk-slot-bot' : '', !isFirst ? 'bk-slot-recv' : ''].filter(Boolean).join(' ');
         return `<div class="${cls}">${gameCard(g, fase === 'F')}</div>`;
       }).join('');
     });
