@@ -91,6 +91,25 @@
     .apuramento-note i { flex-shrink: 0; margin-top: .15rem; }
     .apuramento-empty { font-size: .875rem; color: var(--cinza-texto); text-align: center; padding: 1.5rem 0; }
     .apuramento-terceiros-wrap { margin-top: .5rem; }
+    /* ---- Resultados de jornada dentro do grupo ---- */
+    .group-results { margin-top: .75rem; border-top: 1px solid var(--preto-borda); padding-top: .65rem; }
+    .group-results-title {
+      font-size: .65rem; font-weight: 700; color: var(--cinza-texto);
+      text-transform: uppercase; letter-spacing: .07em; margin-bottom: .4rem;
+    }
+    .gr-match {
+      display: flex; align-items: center; gap: .4rem;
+      font-size: .78rem; padding: .3rem .1rem;
+      border-bottom: 1px solid rgba(255,255,255,.04);
+    }
+    .gr-match:last-child { border-bottom: none; }
+    .gr-team { flex: 1; color: var(--cinza-texto); line-height: 1.25; }
+    .gr-team-winner { color: #d0e8df; font-weight: 600; }
+    .gr-score {
+      font-family: 'Barlow Condensed', sans-serif; font-size: .8rem;
+      font-weight: 700; color: var(--amarelo); white-space: nowrap; text-align: center; min-width: 52px;
+    }
+    .gr-score-pending { font-size: .8rem; color: var(--cinza-texto); text-align: center; min-width: 52px; }
     /* ---- Fase Final Bracket ---- */
     .ff-bracket-section {
       margin-top: 2rem;
@@ -449,10 +468,36 @@ document.addEventListener('DOMContentLoaded', () => {
           </tr>`;
         });
         html += `</tbody></table></div>`;
+
+        // Match results within this group
+        const played = gJogos.filter(j => j.resultado);
+        if (played.length > 0) {
+          html += `<div class="group-results"><div class="group-results-title">Resultados</div>`;
+          played.forEach(j => {
+            const r = j.resultado;
+            let winner = null, scoreStr = '';
+            if (r.wo) {
+              winner = r.wo === 'eq1' ? j.eq2 : j.eq1;
+              scoreStr = 'WO';
+            } else {
+              const sets = [[r.s1eq1,r.s1eq2],[r.s2eq1,r.s2eq2],[r.s3eq1,r.s3eq2]].filter(([a])=>a!=null);
+              let v1=0,v2=0,parts=[];
+              sets.forEach(([a,b])=>{ if(a>b)v1++;else v2++;parts.push(a+'-'+b); });
+              winner = sets.length?(v1>v2?j.eq1:j.eq2):null;
+              scoreStr = parts.join(', ');
+            }
+            html += `<div class="gr-match">
+              <div class="gr-team ${winner===j.eq1?'gr-team-winner':''}">` + j.eq1.split(' & ').join('<br>') + `</div>
+              <div class="gr-score">${scoreStr}</div>
+              <div class="gr-team ${winner===j.eq2?'gr-team-winner':''}" style="text-align:right">` + j.eq2.split(' & ').join('<br>') + `</div>
+            </div>`;
+          });
+          html += `</div>`;
+        }
       }
-      html += `</div>`;
+      html += `</div>`; // .group-card
     });
-    html += '</div>';
+    html += '</div>'; // .groups-grid
 
     // 4. Secção de apuramento
     const directQuals = allGroupData.flatMap(gd =>
