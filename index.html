@@ -422,7 +422,11 @@
 (function() {
   const catClr = { M1:'#4A9EFF', M2:'#00C37B', M3:'#39FF8F', M4:'#F5C518', M5:'#FF9A3C', F1:'#FF6BB0', F2:'#C97BFF' };
   function grupoClr(g) { const k = g ? g.replace(/-.*$/,'') : ''; const c = catClr[k]; return c ? `background:${c}22;color:${c};border:1px solid ${c}55` : 'background:#1C2620;color:#8AA396'; }
-  const jogos = ppGet('jogos').filter(j => j.resultado && !j.resultado.wo);
+  // Include both group stage and fase final games (exclude WO for set stats)
+  const jogosGrupos = ppGet('jogos').filter(j => j.resultado && !j.resultado.wo);
+  const ffRaw2 = ppLoad('fasefinal') || {};
+  const jogosFF2 = Object.values(ffRaw2).flatMap(cat => (cat && cat.jogos) ? cat.jogos.filter(j => j.eq1 && j.eq2 && j.resultado && !j.resultado.wo) : []);
+  const jogos = jogosGrupos.concat(jogosFF2);
   const stats = {};
   function add(par, win, sw, sl, grupo) {
     if (!par) return;

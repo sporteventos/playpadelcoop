@@ -177,7 +177,12 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function _parseResultado(resultado, isEq1) {
-    if (!resultado || typeof resultado !== 'object') return { wins: 0, losses: 0, selfSets: 0, oppSets: 0 };
+    if (!resultado || typeof resultado !== 'object') return { wins: 0, losses: 0, selfSets: 0, oppSets: 0, wo: false };
+    // WO: wo='eq1' means eq1 gave WO (eq1 loses), wo='eq2' means eq2 gave WO (eq2 loses)
+    if (resultado.wo) {
+      const won = isEq1 ? resultado.wo !== 'eq1' : resultado.wo !== 'eq2';
+      return { wins: won ? 1 : 0, losses: won ? 0 : 1, selfSets: 0, oppSets: 0, wo: true };
+    }
     let selfSets = 0, oppSets = 0;
     [[resultado.s1eq1, resultado.s1eq2], [resultado.s2eq1, resultado.s2eq2], [resultado.s3eq1, resultado.s3eq2]]
       .forEach(([a, b]) => {
@@ -185,7 +190,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (isEq1) { if (a > b) selfSets++; else oppSets++; }
         else       { if (b > a) selfSets++; else oppSets++; }
       });
-    return { wins: selfSets > oppSets ? 1 : 0, losses: selfSets < oppSets ? 1 : 0, selfSets, oppSets };
+    return { wins: selfSets > oppSets ? 1 : 0, losses: selfSets < oppSets ? 1 : 0, selfSets, oppSets, wo: false };
   }
 
   function renderPlayer(p) {
@@ -228,9 +233,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
       let resultLabel = '';
       if (temRes) {
-        const { wins } = _parseResultado(j.resultado, isEq1);
+        const { wins, selfSets, oppSets, wo } = _parseResultado(j.resultado, isEq1);
         const won = wins === 1;
-        resultLabel = `<span class="result-pill ${won ? 'result-win' : 'result-loss'}">${won ? 'V' : 'D'}</span>`;
+        const scoreLabel = wo ? 'WO' : `${selfSets}-${oppSets}`;
+        resultLabel = `<span class="result-pill ${won ? 'result-win' : 'result-loss'}">${scoreLabel}</span>`;
       }
 
       return `<div class="player-match-row">
