@@ -486,7 +486,7 @@ document.addEventListener('DOMContentLoaded', () => {
               winner = sets.length?(v1>v2?j.eq1:j.eq2):null;
               scoreStr = v1+'-'+v2;
             }
-            html += `<div class="gr-match">`
+            html += `<div class="gr-match">
               <div class="gr-team ${winner===j.eq1?'gr-team-winner':''}">` + j.eq1.split(' & ').join('<br>') + `</div>
               <div class="gr-score">${scoreStr}</div>
               <div class="gr-team ${winner===j.eq2?'gr-team-winner':''}" style="text-align:right">` + j.eq2.split(' & ').join('<br>') + `</div>
