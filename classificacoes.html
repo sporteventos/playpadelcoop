@@ -106,8 +106,8 @@
     .gr-team { flex: 1; color: var(--cinza-texto); line-height: 1.25; }
     .gr-team-winner { color: #d0e8df; font-weight: 600; }
     .gr-score {
-      font-family: 'Barlow Condensed', sans-serif; font-size: .8rem;
-      font-weight: 700; color: var(--amarelo); white-space: nowrap; text-align: center; min-width: 52px;
+      font-family: 'Barlow Condensed',sans-serif; font-size: .85rem;
+      font-weight: 700; color: var(--amarelo); text-align: center; min-width: 64px; line-height: 1.4;
     }
     .gr-score-pending { font-size: .8rem; color: var(--cinza-texto); text-align: center; min-width: 52px; }
     /* ---- Fase Final Bracket ---- */
@@ -484,7 +484,7 @@ document.addEventListener('DOMContentLoaded', () => {
               let v1=0,v2=0,parts=[];
               sets.forEach(([a,b])=>{ if(a>b)v1++;else v2++;parts.push(a+'-'+b); });
               winner = sets.length?(v1>v2?j.eq1:j.eq2):null;
-              scoreStr = (v1+'-'+v2) + ' <span style="font-size:.68rem;opacity:.6;font-weight:400">('+parts.join(', ')+')</span>';
+              scoreStr = (v1+'-'+v2) + '<br><span style="font-size:.68rem;opacity:.6;font-weight:400">('+parts.join(', ')+')</span>';
             }
             const eq1html = j.eq1.split(' & ').join('<br>');
             const eq2html = j.eq2.split(' & ').join('<br>');
