@@ -634,12 +634,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const trophy = (isFinal && won) ? '\uD83C\uDFC6 ' : '';
             return `<div class="ff-team ${won ? 'ff-team-winner' : (winner ? 'ff-team-loser' : '')}">${trophy}${eq}</div>`;
           };
-          const infoStr = [j.hora, j.campo].filter(Boolean).join(' \u00B7 ');
           ffHtml += `<div class="ff-match">
             ${renderTeam(j.eq1, winner===j.eq1)}
             <div class="ff-match-info">
               ${scoreStr ? `<span class="ff-score">${scoreStr}</span>` : '<span class="ff-score-pending">&mdash;</span>'}
-              ${infoStr ? `<div class="ff-match-meta">${infoStr}</div>` : ''}
             </div>
             ${renderTeam(j.eq2, winner===j.eq2)}
           </div>`;
