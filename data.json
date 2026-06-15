@@ -6175,6 +6175,16 @@
   ],
   "auditlog": [
     {
+      "id": "mqfkixstf80xihd",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "LOGIN",
+      "target": "auth",
+      "detail": "Login: euamusse (admin)",
+      "ts": "2026-06-15T18:50:19.421Z"
+    },
+    {
       "id": "mqf6kma4fgmjfbd",
       "userId": "mpz8aq9sg983ubo",
       "username": "euamusse",
@@ -16163,17 +16173,7 @@
       "target": "jogos",
       "detail": "Jogo #59 movido para 16:00 @ Play Padel",
       "ts": "2026-06-04T19:55:57.811Z"
-    },
-    {
-      "id": "mpzwzwyggnsdzpz",
-      "userId": "mpz46x5c2zupza0",
-      "username": "bgaspar",
-      "role": "operator",
-      "action": "HORARIO_MOVER_DIA",
-      "target": "jogos",
-      "detail": "Jogo #60 de 2026-06-07 19:00 Play Padel → 2026-06-08 22:30 Play Padel",
-      "ts": "2026-06-04T19:55:08.056Z"
     }
   ],
-  "_updated": "2026-06-15T12:24:44.243Z"
+  "_updated": "2026-06-15T18:50:40.581Z"
 }
