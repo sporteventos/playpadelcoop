@@ -94,7 +94,7 @@
     "sbRecentCount": "16",
     "calendarioVisible": false,
     "jogadoresVisible": false,
-    "inscricoesVisible": false,
+    "inscricoesVisible": true,
     "regulamentoVisible": false
   },
   "users": [
@@ -10185,5 +10185,5 @@
       "ts": "2026-06-04T20:00:52.471Z"
     }
   ],
-  "_updated": "2026-08-03T19:17:20.561Z"
+  "_updated": "2026-08-03T19:26:14.673Z"
 }
