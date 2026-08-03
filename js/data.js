@@ -127,7 +127,15 @@ function ppFormatDate(d) {
     .then(function (r) { return r.ok ? r.json() : Promise.reject('404'); })
     .then(function (d) {
       KEYS.forEach(function (k) {
-        if (d[k] !== undefined) ppSave(k, d[k]);
+        if (d[k] === undefined) return;
+        if (k === 'config') {
+          // Merge: remote config is the base, but any locally-set admin overrides take priority.
+          // This ensures visibility toggles set in the admin panel survive the remote sync.
+          var localCfg = JSON.parse(localStorage.getItem('pp_config') || 'null') || {};
+          ppSave('config', Object.assign({}, d[k], localCfg));
+        } else {
+          ppSave(k, d[k]);
+        }
       });
       if (d._updated) localStorage.setItem('pp__updated', d._updated);
       window.dispatchEvent(new CustomEvent('pp:datasynced', { detail: d }));
