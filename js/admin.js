@@ -2187,6 +2187,7 @@ function navigate(view) {
     logs:          ['Logs de Auditoria', 'Auditoria'],
     sessoes:       ['Sessões Activas', 'Utilizadores Ligados'],
     configuracoes: ['Configurações', 'Portal Público'],
+    inscricoes:    ['Inscrições', 'Pré-inscrições'],
     classificacoes:['Classificações', 'Standings ao Vivo'],
     estatisticas:  ['Estatísticas', 'Resumo do Torneio'],
     importar:      ['Importar Resultados', 'Import em Lote'],
@@ -2218,6 +2219,7 @@ function renderView(view) {
     case 'utilizadores': renderUtilizadores(); break;
     case 'logs':         renderLogs();         break;
     case 'sessoes':      renderSessoes();       break;
+    case 'inscricoes':   renderInscricoes();   break;
     case 'configuracoes': renderConfigPanel();  break;
     case 'classificacoes': renderAdminClassificacoes(); break;
     case 'estatisticas': renderEstatisticas(); break;
@@ -2502,10 +2504,14 @@ function renderConfigPanel() {
     ${fieldText('tornDescFooter','Frase do Rodapé',     'ex: O padel que une Moçambique.',  'O padel que une Moçambique.')}
 
     ${section('Visibilidade de Páginas')}
+    ${fieldToggle('calendarioVisible',    'Calendário',               'ph-calendar',          true)}
     ${fieldToggle('scoreboardVisible',    'Quadro de Apuramento',     'ph-monitor-play',      true)}
     ${fieldToggle('classificacoesVisible','Classificações',           'ph-trophy',            true)}
     ${fieldToggle('fasefinalVisible',     'Fase Final',               'ph-brackets-round',    true)}
+    ${fieldToggle('jogadoresVisible',     'Jogadores',                'ph-users',             true)}
+    ${fieldToggle('inscricoesVisible',    'Inscrições',               'ph-clipboard-text',    true)}
     ${fieldToggle('estatisticasVisible',  'Estatísticas',             'ph-chart-bar',         true)}
+    ${fieldToggle('regulamentoVisible',   'Regulamento',              'ph-book-open',         true)}
 
     ${section('Quadro de Apuramento')}
     ${fieldSelect('sbRefreshMins', 'Auto-refresh (minutos)', [['5','5 min'],['10','10 min'],['15','15 min'],['30','30 min']], '15')}
@@ -5835,6 +5841,149 @@ window._logsClearFilters = function() {
   const r = document.getElementById('logsFilterRole');   if (r) r.value = '';
   const a = document.getElementById('logsFilterAction'); if (a) a.value = '';
   _logsApplyFilters();
+};
+
+// ============================================
+//  INSCRIÇÕES VIEW
+// ============================================
+function renderInscricoes() {
+  const el = document.getElementById('listInscricoes');
+  if (!el) return;
+
+  const STORAGE_KEY = 'pp_inscricoes';
+  function loadEntries() {
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); } catch(e) { return []; }
+  }
+  function saveEntries(entries) { localStorage.setItem(STORAGE_KEY, JSON.stringify(entries)); }
+  function download(filename, content, mime) {
+    const blob = new Blob([content], { type: mime });
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    a.href = url; a.download = filename; a.click();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  }
+
+  const entries = loadEntries();
+  const total   = entries.length;
+  const duplas  = entries.filter(e => e.tipo === 'dupla').length;
+  const indiv   = entries.filter(e => e.tipo === 'jogador').length;
+
+  const catMap  = {};
+  (getData('categorias') || []).forEach(c => { catMap[c.id] = c.nome; });
+
+  const catCounts = {};
+  entries.forEach(e => { catCounts[e.categoria] = (catCounts[e.categoria] || 0) + 1; });
+
+  el.innerHTML = `
+    <div style="max-width:1100px">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;flex-wrap:wrap;margin-bottom:1.25rem">
+        <div>
+          <h2 style="margin:0 0 .25rem;font-family:'Barlow Condensed',sans-serif;font-size:1.5rem;text-transform:uppercase">Pré-Inscrições</h2>
+          <p style="margin:0;color:var(--cinza-texto);font-size:.85rem">Registos guardados via formulário público</p>
+        </div>
+        <div style="display:flex;gap:.5rem;flex-wrap:wrap">
+          <button class="btn btn-secondary" id="insAdminExportJson"><i class="ph ph-download-simple"></i> Exportar JSON</button>
+          <button class="btn btn-secondary" id="insAdminExportCsv"><i class="ph ph-table"></i> Exportar CSV</button>
+          <button class="btn" style="background:rgba(255,74,74,.12);color:#FF4A4A;border:1px solid rgba(255,74,74,.25)" id="insAdminClear"><i class="ph ph-trash"></i> Limpar tudo</button>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:.7rem;margin-bottom:1.25rem">
+        <div class="card" style="padding:.9rem 1rem;text-align:center">
+          <div style="font-size:2rem;font-weight:800;color:var(--branco);line-height:1">${total}</div>
+          <div style="font-size:.68rem;text-transform:uppercase;letter-spacing:.06em;color:var(--cinza-texto);margin-top:.2rem">Total</div>
+        </div>
+        <div class="card" style="padding:.9rem 1rem;text-align:center">
+          <div style="font-size:2rem;font-weight:800;color:var(--verde);line-height:1">${duplas}</div>
+          <div style="font-size:.68rem;text-transform:uppercase;letter-spacing:.06em;color:var(--cinza-texto);margin-top:.2rem">Duplas</div>
+        </div>
+        <div class="card" style="padding:.9rem 1rem;text-align:center">
+          <div style="font-size:2rem;font-weight:800;color:var(--amarelo);line-height:1">${indiv}</div>
+          <div style="font-size:.68rem;text-transform:uppercase;letter-spacing:.06em;color:var(--cinza-texto);margin-top:.2rem">Individuais</div>
+        </div>
+        ${Object.entries(catCounts).map(([cat, n]) => `
+        <div class="card" style="padding:.9rem 1rem;text-align:center">
+          <div style="font-size:2rem;font-weight:800;color:var(--branco);line-height:1">${n}</div>
+          <div style="font-size:.68rem;text-transform:uppercase;letter-spacing:.06em;color:var(--cinza-texto);margin-top:.2rem">${cat}</div>
+        </div>`).join('')}
+      </div>
+
+      ${total === 0
+        ? `<div class="card" style="text-align:center;padding:3rem;color:var(--cinza-texto)"><i class="ph ph-clipboard-text" style="font-size:2.5rem;display:block;margin-bottom:.6rem"></i>Nenhuma inscrição registada ainda.</div>`
+        : `<div class="card" style="padding:0;overflow:hidden">
+            <table style="width:100%;border-collapse:collapse;font-size:.83rem">
+              <thead>
+                <tr style="background:rgba(255,255,255,.03);border-bottom:1px solid var(--preto-borda)">
+                  <th style="padding:.65rem .9rem;text-align:left;font-weight:700;text-transform:uppercase;letter-spacing:.05em;font-size:.68rem;color:var(--cinza-texto)">Nome</th>
+                  <th style="padding:.65rem .9rem;text-align:left;font-weight:700;text-transform:uppercase;letter-spacing:.05em;font-size:.68rem;color:var(--cinza-texto)">Tipo</th>
+                  <th style="padding:.65rem .9rem;text-align:left;font-weight:700;text-transform:uppercase;letter-spacing:.05em;font-size:.68rem;color:var(--cinza-texto)">Categoria</th>
+                  <th style="padding:.65rem .9rem;text-align:left;font-weight:700;text-transform:uppercase;letter-spacing:.05em;font-size:.68rem;color:var(--cinza-texto)">Contacto</th>
+                  <th style="padding:.65rem .9rem;text-align:left;font-weight:700;text-transform:uppercase;letter-spacing:.05em;font-size:.68rem;color:var(--cinza-texto)">Data</th>
+                  <th style="padding:.65rem .9rem;text-align:center;font-weight:700;text-transform:uppercase;letter-spacing:.05em;font-size:.68rem;color:var(--cinza-texto)">Acções</th>
+                </tr>
+              </thead>
+              <tbody id="insAdminTbody">
+                ${entries.slice().reverse().map(e => `
+                  <tr style="border-bottom:1px solid rgba(255,255,255,.04)" data-ins-id="${escHtml(e.id)}">
+                    <td style="padding:.65rem .9rem">
+                      <div style="font-weight:600;color:var(--branco)">${escHtml(e.nome1)}</div>
+                      ${e.nome2 ? `<div style="font-size:.75rem;color:var(--cinza-texto)"><i class="ph ph-user"></i> ${escHtml(e.nome2)}</div>` : ''}
+                      ${e.clube ? `<div style="font-size:.72rem;color:#4A6058">${escHtml(e.clube)}</div>` : ''}
+                    </td>
+                    <td style="padding:.65rem .9rem">
+                      <span style="font-size:.68rem;font-weight:700;text-transform:uppercase;padding:.15rem .45rem;border-radius:4px;background:${e.tipo==='dupla'?'rgba(0,195,123,.12)':'rgba(245,197,24,.12)'};color:${e.tipo==='dupla'?'var(--verde)':'var(--amarelo)'}">
+                        ${e.tipo === 'dupla' ? 'Dupla' : 'Individual'}
+                      </span>
+                      <span style="margin-left:.3rem;font-size:.68rem;font-weight:700;text-transform:uppercase;padding:.15rem .45rem;border-radius:4px;background:rgba(255,255,255,.06);color:var(--cinza-texto)">
+                        ${e.genero === 'F' ? 'Fem.' : 'Masc.'}
+                      </span>
+                    </td>
+                    <td style="padding:.65rem .9rem;font-weight:700;color:var(--branco)">${escHtml(e.categoria)}</td>
+                    <td style="padding:.65rem .9rem;color:var(--cinza-texto);font-size:.79rem">
+                      ${e.telefone ? `<div><i class="ph ph-phone"></i> ${escHtml(e.telefone)}</div>` : ''}
+                      ${e.email    ? `<div><i class="ph ph-envelope"></i> ${escHtml(e.email)}</div>` : ''}
+                    </td>
+                    <td style="padding:.65rem .9rem;color:var(--cinza-texto);font-size:.78rem;white-space:nowrap">
+                      ${new Date(e.criadoEm).toLocaleDateString('pt-PT')}
+                    </td>
+                    <td style="padding:.65rem .9rem;text-align:center">
+                      <button class="btn-icon" title="Remover" onclick="insAdminDelete('${escHtml(e.id)}')"><i class="ph ph-trash" style="color:#FF4A4A"></i></button>
+                    </td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+          </div>`
+      }
+    </div>
+  `;
+
+  document.getElementById('insAdminExportJson')?.addEventListener('click', () => {
+    download('inscricoes-reentre.json', JSON.stringify(loadEntries(), null, 2), 'application/json');
+  });
+  document.getElementById('insAdminExportCsv')?.addEventListener('click', () => {
+    const header = ['id','criadoEm','tipo','genero','categoria','nome1','nome2','telefone','email','clube','observacoes','estado'];
+    const rows = [header.join(',')].concat(loadEntries().map(e =>
+      header.map(k => '"' + String(e[k] || '').replace(/"/g, '""') + '"').join(',')
+    ));
+    download('inscricoes-reentre.csv', rows.join('\n'), 'text/csv;charset=utf-8');
+  });
+  document.getElementById('insAdminClear')?.addEventListener('click', () => {
+    if (!confirm('Apagar todas as inscrições? Esta acção não pode ser desfeita.')) return;
+    saveEntries([]);
+    renderInscricoes();
+    toast('Inscrições apagadas.', 'success');
+  });
+}
+
+window.insAdminDelete = function(id) {
+  if (!confirm('Remover esta inscrição?')) return;
+  try {
+    const entries = JSON.parse(localStorage.getItem('pp_inscricoes') || '[]').filter(e => e.id !== id);
+    localStorage.setItem('pp_inscricoes', JSON.stringify(entries));
+    renderInscricoes();
+    toast('Inscrição removida.', 'success');
+  } catch(e) { toast('Erro ao remover.', 'error'); }
 };
 
 // ============================================

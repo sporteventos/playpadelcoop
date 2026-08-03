@@ -69,13 +69,13 @@
 
   <ul class="nav-links">
     <li><a href="#inicio" class="active"><i class="ph ph-house nav-icon"></i> Início</a></li>
-    <li><a href="calendario.html"><i class="ph ph-calendar nav-icon"></i> Calendário</a></li>
+    <li id="navLiCalendario"><a href="calendario.html"><i class="ph ph-calendar nav-icon"></i> Calendário</a></li>
     <li id="navLiClassificacoes"><a href="classificacoes.html"><i class="ph ph-trophy nav-icon"></i> Classificações</a></li>
     <li id="navLiFasefinal"><a href="fasefinal.html"><i class="ph ph-brackets-round nav-icon"></i> Fase Final</a></li>
-    <li><a href="jogadores.html"><i class="ph ph-users nav-icon"></i> Jogadores</a></li>
-    <li><a href="inscricoes.html"><i class="ph ph-clipboard-text nav-icon"></i> Inscrições</a></li>
+    <li id="navLiJogadores"><a href="jogadores.html"><i class="ph ph-users nav-icon"></i> Jogadores</a></li>
+    <li id="navLiInscricoes"><a href="inscricoes.html"><i class="ph ph-clipboard-text nav-icon"></i> Inscrições</a></li>
     <li id="navLiEstatisticas"><a href="estatisticas.html"><i class="ph ph-chart-bar nav-icon"></i> Estatísticas</a></li>
-    <li><a href="regulamento.html"><i class="ph ph-book-open nav-icon"></i> Regulamento</a></li>
+    <li id="navLiRegulamento"><a href="regulamento.html"><i class="ph ph-book-open nav-icon"></i> Regulamento</a></li>
   </ul>
 
   <button class="nav-hamburger" id="hamburger" aria-label="Abrir menu" aria-expanded="false">
@@ -87,13 +87,13 @@
 <div class="nav-drawer" id="navDrawer">
   <ul>
     <li><a href="#inicio" class="active"><i class="ph ph-house"></i> Início</a></li>
-    <li><a href="calendario.html"><i class="ph ph-calendar"></i> Calendário</a></li>
+    <li id="drawerLiCalendario"><a href="calendario.html"><i class="ph ph-calendar"></i> Calendário</a></li>
     <li id="drawerLiClassificacoes"><a href="classificacoes.html"><i class="ph ph-trophy"></i> Classificações</a></li>
     <li id="drawerLiFasefinal"><a href="fasefinal.html"><i class="ph ph-brackets-round"></i> Fase Final</a></li>
-    <li><a href="jogadores.html"><i class="ph ph-users"></i> Jogadores</a></li>
-    <li><a href="inscricoes.html"><i class="ph ph-clipboard-text"></i> Inscrições</a></li>
+    <li id="drawerLiJogadores"><a href="jogadores.html"><i class="ph ph-users"></i> Jogadores</a></li>
+    <li id="drawerLiInscricoes"><a href="inscricoes.html"><i class="ph ph-clipboard-text"></i> Inscrições</a></li>
     <li id="drawerLiEstatisticas"><a href="estatisticas.html"><i class="ph ph-chart-bar"></i> Estatísticas</a></li>
-    <li><a href="regulamento.html"><i class="ph ph-book-open"></i> Regulamento</a></li>
+    <li id="drawerLiRegulamento"><a href="regulamento.html"><i class="ph ph-book-open"></i> Regulamento</a></li>
   </ul>
 </div>
 <!-- Banner global de aviso -->
@@ -594,15 +594,24 @@
         show('btnScoreboard', cfg.scoreboardVisible !== false);
         show('btnFaseFinalHero', cfg.fasefinalVisible !== false);
 
-        // Visibilidade páginas
-        show('navLiClassificacoes',  cfg.classificacoesVisible !== false);
-        show('drawerLiClassificacoes', cfg.classificacoesVisible !== false);
-        show('cardClassificacoes',   cfg.classificacoesVisible !== false);
-        show('navLiFasefinal',       cfg.fasefinalVisible !== false);
-        show('drawerLiFasefinal',    cfg.fasefinalVisible !== false);
-        show('cardFasefinal',        cfg.fasefinalVisible !== false);
-        show('navLiEstatisticas',    cfg.estatisticasVisible !== false);
-        show('drawerLiEstatisticas', cfg.estatisticasVisible !== false);
+        // Visibilidade páginas — nav desktop + drawer mobile + cards
+        show('navLiCalendario',       cfg.calendarioVisible !== false);
+        show('drawerLiCalendario',    cfg.calendarioVisible !== false);
+        show('navLiClassificacoes',   cfg.classificacoesVisible !== false);
+        show('drawerLiClassificacoes',cfg.classificacoesVisible !== false);
+        show('cardClassificacoes',    cfg.classificacoesVisible !== false);
+        show('navLiFasefinal',        cfg.fasefinalVisible !== false);
+        show('drawerLiFasefinal',     cfg.fasefinalVisible !== false);
+        show('cardFasefinal',         cfg.fasefinalVisible !== false);
+        show('navLiJogadores',        cfg.jogadoresVisible !== false);
+        show('drawerLiJogadores',     cfg.jogadoresVisible !== false);
+        show('navLiInscricoes',       cfg.inscricoesVisible !== false);
+        show('drawerLiInscricoes',    cfg.inscricoesVisible !== false);
+        show('cardInscricoes',        cfg.inscricoesVisible !== false);
+        show('navLiEstatisticas',     cfg.estatisticasVisible !== false);
+        show('drawerLiEstatisticas',  cfg.estatisticasVisible !== false);
+        show('navLiRegulamento',      cfg.regulamentoVisible !== false);
+        show('drawerLiRegulamento',   cfg.regulamentoVisible !== false);
 
         // Banner global
         var banner = document.getElementById('globalBanner');
