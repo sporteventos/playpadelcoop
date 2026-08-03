@@ -78,16 +78,16 @@
   "inscricoes": [],
   "config": {
     "tornNome": "Torneio Reentre",
-    "tornSubtitulo": "",
+    "tornSubtitulo": "Torneio Reentre",
     "tornClube": "Sport Eventos",
     "tornLocal": "Maputo",
     "tornDatas": "10 a 19 de Setembro 2026",
-    "tornDescFooter": "",
+    "tornDescFooter": "O padel que une Moçambique.",
     "tornActivo": true,
-    "scoreboardVisible": false,
-    "classificacoesVisible": false,
-    "fasefinalVisible": false,
-    "estatisticasVisible": false,
+    "scoreboardVisible": true,
+    "classificacoesVisible": true,
+    "fasefinalVisible": true,
+    "estatisticasVisible": true,
     "bannerVisible": false,
     "bannerMsg": "",
     "sbRefreshMins": "15",
@@ -10181,5 +10181,5 @@
       "ts": "2026-06-04T20:00:52.471Z"
     }
   ],
-  "_updated": "2026-08-03T19:08:52.532Z"
+  "_updated": "2026-08-03T19:10:07.635Z"
 }
