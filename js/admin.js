@@ -66,7 +66,7 @@ window.importLocalJson = function(event) {
   reader.onload = function(e) {
     try {
       const d = JSON.parse(e.target.result);
-      const KEYS = ['campos','categorias','grupos','jogadores','duplas','jogos','fasefinal','telefones'];
+      const KEYS = ['campos','categorias','grupos','jogadores','duplas','jogos','fasefinal','telefones','inscricoes'];
       KEYS.forEach(function(k) { if (d[k] !== undefined) ppSave(k, d[k]); });
       if (d._updated) localStorage.setItem('pp__updated', d._updated);
       toast('data.json importado com sucesso! A recarregar…', 'success');
@@ -178,7 +178,7 @@ window._bundleShareOne = async function(idx) {
   if (!item) return;
   const file = new File([item.blob], item.name, { type: 'image/png' });
   if (navigator.canShare && navigator.canShare({ files: [file] })) {
-    try { await navigator.share({ files: [file], title: 'Play Padel · Torneio Aniversário 2026' }); }
+    try { await navigator.share({ files: [file], title: 'Play Padel · Torneio Reentre 2026' }); }
     catch (err) { if (err.name !== 'AbortError') _bundleDownloadOne(idx); }
   } else { _bundleDownloadOne(idx); }
 };
@@ -194,7 +194,7 @@ window._bundleShareAll = async function() {
   if (!items.length) return;
   const files = items.map(b => new File([b.blob], b.name, { type: 'image/png' }));
   if (navigator.canShare && navigator.canShare({ files })) {
-    try { await navigator.share({ files, title: 'Play Padel · Torneio Aniversário 2026' }); }
+    try { await navigator.share({ files, title: 'Play Padel · Torneio Reentre 2026' }); }
     catch (err) { if (err.name !== 'AbortError') _bundleDownloadAll(); }
   } else { _bundleDownloadAll(); }
 };
@@ -231,12 +231,12 @@ window._panfletoWhatsapp = async function() {
   const file = new File([blob], filename, { type: 'image/png' });
   if (navigator.canShare && navigator.canShare({ files: [file] })) {
     try {
-      await navigator.share({ files: [file], title: 'Play Padel Coop \u00B7 Torneio Anivers\u00E1rio 2026' });
+      await navigator.share({ files: [file], title: 'Play Padel \u00B7 Torneio Anivers\u00E1rio 2026' });
     } catch (err) {
       if (err.name !== 'AbortError') _panfletoDownload();
     }
   } else {
-    window.open('https://wa.me/?text=' + encodeURIComponent('Play Padel Coop \u00B7 Torneio Anivers\u00E1rio 2026'), '_blank');
+    window.open('https://wa.me/?text=' + encodeURIComponent('Play Padel \u00B7 Torneio Anivers\u00E1rio 2026'), '_blank');
   }
 };
 
@@ -244,7 +244,7 @@ window._panfletoWhatsapp = async function() {
 //  GAME IMAGE CANVAS BUILDER (shared)
 // ============================================
 window._buildGameCanvas = function(j, onDone) {
-  const CAT_CLR = { M1:'#4A9EFF', M2:'#00C37B', M3:'#39FF8F', M4:'#F5C518', M5:'#FF9A3C', F1:'#FF6BB0', F2:'#C97BFF' };
+  const CAT_CLR = { M1:'#4A9EFF', M2:'#00C37B', M3:'#39FF8F', M4:'#F5C518', M5:'#FF9A3C', F1:'#FF6BB0', F2:'#C97BFF', F3:'#8B5CF6', F3:'#8B5CF6' };
   function draw(logoImg) {
     const W = 700, H = 820, PAD = 44;
     const LOGO_SZ = 88, LOGO_X = PAD, LOGO_Y = 20;
@@ -439,7 +439,7 @@ window._buildGameCanvas = function(j, onDone) {
     ctx.fillStyle = '#1C2620'; ctx.fillRect(0, fy, W, 1);
     ctx.fillStyle = '#4A6058'; ctx.font = '17px Arial, sans-serif';
     ctx.textAlign = 'center';
-    ctx.fillText('Play Padel  \u00B7  Torneio Aniversário 2026', W / 2, fy + 44);
+    ctx.fillText('Play Padel  \u00B7  Torneio Reentre 2026', W / 2, fy + 44);
 
     // Bottom gradient bar
     g = ctx.createLinearGradient(0, 0, W, 0);
@@ -584,7 +584,7 @@ window.gerarBannerInstalacao = function() {
     ctx.fillStyle = '#111815'; ctx.fillRect(0, by, W, 52);
     ctx.fillStyle = '#1C2620'; ctx.fillRect(0, by, W, 1);
     ctx.fillStyle = '#4A6058'; ctx.font = '15px Arial, sans-serif';
-    ctx.fillText('Play Padel Coop  ·  Torneio 2.º Aniversário 2026  ·  Maputo', W / 2, by + 32);
+    ctx.fillText('Play Padel  ·  Torneio Reentre 2026  ·  Maputo', W / 2, by + 32);
 
     // Bottom gradient bar
     g = ctx.createLinearGradient(0, 0, W, 0);
@@ -664,7 +664,7 @@ window.gerarPanfleto = function(periodo) {
   }
 
   const COURT_CLR = { 'Play Padel':'#00C37B', 'TVCabo':'#4A9EFF', 'Stella Artois':'#F5C518' };
-  const CAT_CLR   = { M1:'#4A9EFF', M2:'#00C37B', M3:'#39FF8F', M4:'#F5C518', M5:'#FF9A3C', F1:'#FF6BB0', F2:'#C97BFF' };
+  const CAT_CLR   = { M1:'#4A9EFF', M2:'#00C37B', M3:'#39FF8F', M4:'#F5C518', M5:'#FF9A3C', F1:'#FF6BB0', F2:'#C97BFF', F3:'#8B5CF6', F3:'#8B5CF6' };
 
   // ── Background ───────────────────────────────────────────
   ctx.fillStyle = '#0A0F0D';
@@ -861,7 +861,7 @@ window.gerarPanfleto = function(periodo) {
   ctx.fillStyle = '#4A6058';
   ctx.font = '17px Arial, sans-serif';
   ctx.textAlign = 'center';
-  ctx.fillText('Play Padel  \u00B7  Torneio Aniversário 2026', W / 2, fy + 38);
+  ctx.fillText('Play Padel  \u00B7  Torneio Reentre 2026', W / 2, fy + 38);
   ctx.textAlign = 'left';
 
   _panfletoShare(canvas, `jogos-${filtroData !== 'todos' ? filtroData : 'todos'}${filenameSuffix}.png`);
@@ -924,7 +924,7 @@ window.abrirPanfletoFoto = function(jogoId, isFF, catId) {
 // ============================================
 window._gerarPanfletoWO = function(jogo) {
   const W = 1080, H = 1350;
-  const CAT_CLR = { M1:'#4A9EFF', M2:'#00C37B', M3:'#39FF8F', M4:'#F5C518', M5:'#FF9A3C', F1:'#FF6BB0', F2:'#C97BFF' };
+  const CAT_CLR = { M1:'#4A9EFF', M2:'#00C37B', M3:'#39FF8F', M4:'#F5C518', M5:'#FF9A3C', F1:'#FF6BB0', F2:'#C97BFF', F3:'#8B5CF6', F3:'#8B5CF6' };
   const canvas = document.createElement('canvas');
   canvas.width = W; canvas.height = H;
   const ctx = canvas.getContext('2d');
@@ -956,9 +956,9 @@ window._gerarPanfletoWO = function(jogo) {
     }
     ctx.textAlign = 'center';
     ctx.fillStyle = '#00C37B'; ctx.font = 'bold 32px Arial, sans-serif';
-    ctx.fillText('PLAY PADEL COOP', W/2, LY + LOGO_SZ + 44);
+    ctx.fillText('PLAY PADEL', W/2, LY + LOGO_SZ + 44);
     ctx.fillStyle = '#8AA396'; ctx.font = '21px Arial, sans-serif';
-    ctx.fillText('TORNEIO ANIVERSÁRIO 2026', W/2, LY + LOGO_SZ + 76);
+    ctx.fillText('TORNEIO REENTRE 2026', W/2, LY + LOGO_SZ + 76);
     const sepY = LY + LOGO_SZ + 102;
     ctx.strokeStyle = 'rgba(255,74,74,0.35)'; ctx.lineWidth = 1;
     ctx.beginPath(); ctx.moveTo(80, sepY); ctx.lineTo(W-80, sepY); ctx.stroke();
@@ -1047,7 +1047,7 @@ window._gerarPanfletoWO = function(jogo) {
 // ── Panfleto: Jogo Suspenso ───────────────────────────────────
 window._gerarPanfletoSuspenso = function(jogo) {
   const W = 1080, H = 1350;
-  const CAT_CLR = { M1:'#4A9EFF', M2:'#00C37B', M3:'#39FF8F', M4:'#F5C518', M5:'#FF9A3C', F1:'#FF6BB0', F2:'#C97BFF' };
+  const CAT_CLR = { M1:'#4A9EFF', M2:'#00C37B', M3:'#39FF8F', M4:'#F5C518', M5:'#FF9A3C', F1:'#FF6BB0', F2:'#C97BFF', F3:'#8B5CF6', F3:'#8B5CF6' };
   const canvas = document.createElement('canvas');
   canvas.width = W; canvas.height = H;
   const ctx = canvas.getContext('2d');
@@ -1209,7 +1209,7 @@ window._gerarPanfletoSuspenso = function(jogo) {
 window._gerarPanfletoAdiado = function(jogo) {
   if (!jogo) return toast('Jogo não encontrado.', 'error');
   const W = 1080, H = 1350;
-  const CAT_CLR = { M1:'#4A9EFF', M2:'#00C37B', M3:'#39FF8F', M4:'#F5C518', M5:'#FF9A3C', F1:'#FF6BB0', F2:'#C97BFF' };
+  const CAT_CLR = { M1:'#4A9EFF', M2:'#00C37B', M3:'#39FF8F', M4:'#F5C518', M5:'#FF9A3C', F1:'#FF6BB0', F2:'#C97BFF', F3:'#8B5CF6', F3:'#8B5CF6' };
   const canvas = document.createElement('canvas');
   canvas.width = W; canvas.height = H;
   const ctx = canvas.getContext('2d');
@@ -1340,7 +1340,7 @@ function _buildFotoFlyerFF(img) {
   if (!jogo || !jogo.resultado) return;
 
   const W = 1080, H = 1350, PAD = 52, BAND_H = 420;
-  const CAT_CLR = { M1:'#4A9EFF', M2:'#00C37B', M3:'#39FF8F', M4:'#F5C518', M5:'#FF9A3C', F1:'#FF6BB0', F2:'#C97BFF' };
+  const CAT_CLR = { M1:'#4A9EFF', M2:'#00C37B', M3:'#39FF8F', M4:'#F5C518', M5:'#FF9A3C', F1:'#FF6BB0', F2:'#C97BFF', F3:'#8B5CF6', F3:'#8B5CF6' };
   const canvas = document.getElementById('fotoFlyerCanvas');
   canvas.width = W; canvas.height = H;
   const ctx = canvas.getContext('2d');
@@ -1555,7 +1555,7 @@ function _buildFotoFlyer(img) {
   if (jogo._isFF) { _buildFotoFlyerFF(img); return; }
 
   const W = 1080, H = 1350, BAND_H = 340, PAD = 52;
-  const CAT_CLR = { M1:'#4A9EFF', M2:'#00C37B', M3:'#39FF8F', M4:'#F5C518', M5:'#FF9A3C', F1:'#FF6BB0', F2:'#C97BFF' };
+  const CAT_CLR = { M1:'#4A9EFF', M2:'#00C37B', M3:'#39FF8F', M4:'#F5C518', M5:'#FF9A3C', F1:'#FF6BB0', F2:'#C97BFF', F3:'#8B5CF6', F3:'#8B5CF6' };
 
   const canvas = document.getElementById('fotoFlyerCanvas');
   canvas.width = W; canvas.height = H;
@@ -1720,7 +1720,7 @@ window._shareWhatsapp = async function() {
     const file = new File([blob], filename, { type: 'image/png' });
     if (navigator.canShare && navigator.canShare({ files: [file] })) {
       try {
-        await navigator.share({ files: [file], title: 'Resultado Play Padel Coop' });
+        await navigator.share({ files: [file], title: 'Resultado Play Padel' });
       } catch (err) {
         if (err.name !== 'AbortError') _downloadFotoFlyer();
       }
@@ -1732,7 +1732,7 @@ window._shareWhatsapp = async function() {
       const sets = r.wo ? 'W.O.' : [[r.s1eq1,r.s1eq2],[r.s2eq1,r.s2eq2],[r.s3eq1,r.s3eq2]]
         .filter(([a]) => a !== null).map(([a, b], i) => { const [ta,tb] = _tbSW[i]; return `${a}-${b}${ta != null ? ` (${ta}-${tb})` : ''}`; }).join(' / ');
       const winner = w1 > w2 ? jogo.eq1 : jogo.eq2;
-      const texto = `\u{1F3BE} *Play Padel Coop \u00B7 Torneio Anivers\u00E1rio*\n\n` +
+      const texto = `\u{1F3BE} *Play Padel \u00B7 Torneio Reentre*\n\n` +
         `\u{1F3C6} *${escHtml(jogo.grupo)}*\n` +
         `${jogo.data ? ppFormatDate(jogo.data) : ''}${jogo.hora ? ' \u00B7 ' + jogo.hora : ''}\n\n` +
         `*${jogo.eq1}*  ${w1} \u2013 ${w2}  *${jogo.eq2}*\n` +
@@ -1787,7 +1787,7 @@ window.gerarPanfletoResultados = function() {
   }
 
   const COURT_CLR = { 'Play Padel': '#00C37B', 'TVCabo': '#4A9EFF', 'Stella Artois': '#F5C518' };
-  const CAT_CLR   = { M1: '#4A9EFF', M2: '#00C37B', M3: '#39FF8F', M4: '#F5C518', M5: '#FF9A3C', F1: '#FF6BB0', F2: '#C97BFF' };
+  const CAT_CLR   = { M1: '#4A9EFF', M2: '#00C37B', M3: '#39FF8F', M4: '#F5C518', M5: '#FF9A3C', F1: '#FF6BB0', F2: '#C97BFF', F3: '#8B5CF6', F3: '#8B5CF6' };
   const CX = { data: PAD, hora: PAD + 66, campo: PAD + 148, grupo: PAD + 322, eq1r: 604, score_cx: 664, eq2: 726 };
 
   // Background
@@ -1894,7 +1894,7 @@ window.gerarPanfletoResultados = function() {
   ctx.fillStyle = '#1C2620'; ctx.fillRect(0, fy, W, 1);
   ctx.fillStyle = '#4A6058'; ctx.font = '17px Arial, sans-serif';
   ctx.textAlign = 'center';
-  ctx.fillText('Play Padel  \u00B7  Torneio Aniversário 2026', W / 2, fy + 38);
+  ctx.fillText('Play Padel  \u00B7  Torneio Reentre 2026', W / 2, fy + 38);
   ctx.textAlign = 'left';
 
   _panfletoShare(canvas, `resultados-${filtroData !== 'todos' ? filtroData : 'todos'}.png`);
@@ -2396,7 +2396,7 @@ function renderDashboard() {
   }).join('');
 
   // Category progress bars
-  const CATS = ['M1','M2','M3','M4','M5','F1','F2'];
+  const CATS = ['M1','M2','M3','M4','M5','F1','F2','F3'];
   const catProgress = document.getElementById('dashCatProgress');
   if (catProgress) {
     catProgress.innerHTML = CATS.map(cat => {
@@ -2495,10 +2495,10 @@ function renderConfigPanel() {
   el.innerHTML = `
     ${section('Identidade do Torneio')}
     ${fieldText('tornNome',      'Nome do Torneio',     'ex: Play Padel 2026',              'Play Padel 2026')}
-    ${fieldText('tornSubtitulo', 'Subtítulo',           'ex: Torneio 2.º Aniversário',      'Torneio 2.º Aniversário')}
+    ${fieldText('tornSubtitulo', 'Subtítulo',           'ex: Torneio Reentre',              'Torneio Reentre')}
     ${fieldText('tornClube',     'Clube / Organização', 'ex: Sport Eventos',                'Sport Eventos')}
     ${fieldText('tornLocal',     'Localidade',          'ex: Maputo',                       'Maputo')}
-    ${fieldText('tornDatas',     'Datas',               'ex: 05 a 14 de Junho 2026',        '05 a 14 de Junho 2026')}
+    ${fieldText('tornDatas',     'Datas',               'ex: 10 a 19 de Setembro 2026',        '10 a 19 de Setembro 2026')}
     ${fieldText('tornDescFooter','Frase do Rodapé',     'ex: O padel que une Moçambique.',  'O padel que une Moçambique.')}
 
     ${section('Visibilidade de Páginas')}
@@ -5884,7 +5884,7 @@ function uiForceLogout(sessionId, username) {
 // ============================================
 //  HELPER: category checkboxes in user modal
 // ============================================
-const _ALL_CATS = ['M1','M2','M3','M4','M5','F1','F2'];
+const _ALL_CATS = ['M1','M2','M3','M4','M5','F1','F2','F3'];
 
 function _buildCategoryCheckboxes(selectedCats) {
   const grid = document.getElementById('userCategoriesGrid');
@@ -6192,7 +6192,7 @@ window.gerarPanfletoClassificacoes = function() {
     return { id: g.id, rows, total: gJogos.length, done: gJogos.filter(j => j.resultado).length, qualMap: qualifiedByCat[gCatId] };
   });
 
-  const catColor = catId ? ({ M1:'#4A9EFF', M2:'#00C37B', M3:'#39FF8F', M4:'#F5C518', M5:'#FF9A3C', F1:'#FF6BB0', F2:'#C97BFF' }[catId] || '#00C37B') : '#00C37B';
+  const catColor = catId ? ({ M1:'#4A9EFF', M2:'#00C37B', M3:'#39FF8F', M4:'#F5C518', M5:'#FF9A3C', F1:'#FF6BB0', F2:'#C97BFF', F3:'#8B5CF6', F3:'#8B5CF6' }[catId] || '#00C37B') : '#00C37B';
   const labelTxt = catId ? catId.toUpperCase() : 'TODOS OS GRUPOS';
   const filename = catId ? `classificacoes-${catId}.png` : 'classificacoes-todos.png';
 
@@ -6217,7 +6217,7 @@ window.gerarPanfletoClassificacoes = function() {
   canvas.width = W; canvas.height = H;
   const ctx = canvas.getContext('2d');
 
-  const CAT_CLR = { M1:'#4A9EFF', M2:'#00C37B', M3:'#39FF8F', M4:'#F5C518', M5:'#FF9A3C', F1:'#FF6BB0', F2:'#C97BFF' };
+  const CAT_CLR = { M1:'#4A9EFF', M2:'#00C37B', M3:'#39FF8F', M4:'#F5C518', M5:'#FF9A3C', F1:'#FF6BB0', F2:'#C97BFF', F3:'#8B5CF6', F3:'#8B5CF6' };
   // catColor and labelTxt already computed above
 
   function cTrunc(text, maxW) {
@@ -6364,7 +6364,7 @@ window.gerarPanfletoClassificacoes = function() {
   ctx.fillStyle = '#1C2620'; ctx.fillRect(0, H - FOOT_H, W, 1);
   ctx.fillStyle = '#4A6058'; ctx.font = '20px Arial, sans-serif';
   ctx.textAlign = 'center';
-  ctx.fillText('Play Padel  \u00B7  Torneio Aniversário 2026', W / 2, H - FOOT_H + 42);
+  ctx.fillText('Play Padel  \u00B7  Torneio Reentre 2026', W / 2, H - FOOT_H + 42);
   ctx.textAlign = 'left';
 
   _panfletoShare(canvas, filename);
@@ -6382,7 +6382,7 @@ window.gerarPanfletoClassificacoes = function() {
 window.gerarPanfletoCampeoes = function() {
   const ff   = ppLoad('fasefinal') || {};
   const CATS = ['M1', 'M2', 'F1', 'F2', 'M3', 'M4', 'M5'];
-  const CAT_CLR = { M1:'#4A9EFF', M2:'#00C37B', M3:'#39FF8F', M4:'#F5C518', M5:'#FF9A3C', F1:'#FF6BB0', F2:'#C97BFF' };
+  const CAT_CLR = { M1:'#4A9EFF', M2:'#00C37B', M3:'#39FF8F', M4:'#F5C518', M5:'#FF9A3C', F1:'#FF6BB0', F2:'#C97BFF', F3:'#8B5CF6', F3:'#8B5CF6' };
 
   const champions = [];
   CATS.forEach(cat => {
@@ -6496,7 +6496,7 @@ window.gerarPanfletoCampeoes = function() {
   ctx.fillStyle = 'rgba(245,197,24,.2)'; ctx.fillRect(0, fy, W, 1);
     ctx.fillStyle = '#4A6058'; ctx.font = '17px Arial, sans-serif';
     ctx.textAlign = 'center';
-    ctx.fillText('Play Padel  ·  Torneio Aniversário 2026', W / 2, fy + 38);
+    ctx.fillText('Play Padel  ·  Torneio Reentre 2026', W / 2, fy + 38);
     ctx.textAlign = 'left';
 
     _panfletoShare(canvas, 'campeoes.png');
@@ -6516,7 +6516,7 @@ window.gerarPanfletoFinalAnuncio = function(catId) {
   const final = ff[catId]?.jogos?.find(j => j.fase === 'F');
   if (!final) return toast('Final não encontrada para ' + catId + '.', 'error');
   const W = 1080, H = 1350, PAD = 56;
-  const CAT_CLR  = { M1:'#4A9EFF', M2:'#00C37B', M3:'#39FF8F', M4:'#F5C518', M5:'#FF9A3C', F1:'#FF6BB0', F2:'#C97BFF' };
+  const CAT_CLR  = { M1:'#4A9EFF', M2:'#00C37B', M3:'#39FF8F', M4:'#F5C518', M5:'#FF9A3C', F1:'#FF6BB0', F2:'#C97BFF', F3:'#8B5CF6', F3:'#8B5CF6' };
   const CAT_NOME = { M1:'Masculino 1', M2:'Masculino 2', M3:'Masculino 3', M4:'Masculino 4', M5:'Masculino 5', F1:'Feminino 1', F2:'Feminino 2' };
   const clr = CAT_CLR[catId] || '#F5C518';
 
@@ -6633,7 +6633,7 @@ window.gerarPanfletoFinalAnuncio = function(catId) {
 window.gerarPanfletoDiaFinais = function() {
   const ff   = ffLoad();
   const CATS = ['M1', 'M2', 'F1', 'F2', 'M3', 'M4', 'M5'];
-  const CAT_CLR  = { M1:'#4A9EFF', M2:'#00C37B', M3:'#39FF8F', M4:'#F5C518', M5:'#FF9A3C', F1:'#FF6BB0', F2:'#C97BFF' };
+  const CAT_CLR  = { M1:'#4A9EFF', M2:'#00C37B', M3:'#39FF8F', M4:'#F5C518', M5:'#FF9A3C', F1:'#FF6BB0', F2:'#C97BFF', F3:'#8B5CF6', F3:'#8B5CF6' };
   const CAT_NOME = { M1:'Masculino 1', M2:'Masculino 2', M3:'Masculino 3', M4:'Masculino 4', M5:'Masculino 5', F1:'Feminino 1', F2:'Feminino 2' };
   const W = 1080, PAD = 52, CARD_H = 196, CARD_GAP = 14, LIST_Y = 490;
   const FOOTER_H = 110; // espaço abaixo dos cards: texto rodapé + barra dourada
@@ -7550,7 +7550,7 @@ function renderRelatorioJogos() {
   const el = document.getElementById('relatorioJogosContent');
   if (!el) return;
 
-  const CAT_CLR = { M1:'#4A9EFF', M2:'#00C37B', M3:'#39FF8F', M4:'#F5C518', M5:'#FF9A3C', F1:'#FF6BB0', F2:'#C97BFF' };
+  const CAT_CLR = { M1:'#4A9EFF', M2:'#00C37B', M3:'#39FF8F', M4:'#F5C518', M5:'#FF9A3C', F1:'#FF6BB0', F2:'#C97BFF', F3:'#8B5CF6', F3:'#8B5CF6' };
 
   // Merge fase-final games
   const jogos = getData('jogos') || [];

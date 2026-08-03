@@ -1,7 +1,7 @@
 {
-  "name": "Play Padel · Torneio Aniversário 2026",
+  "name": "Play Padel · Torneio Reentre 2026",
   "short_name": "Play Padel",
-  "description": "Calendário, classificações e resultados do Torneio de 2.º Aniversário Play Padel",
+  "description": "Calendário, classificações e inscrições do Torneio Reentre Play Padel",
   "start_url": "/playpadelcoop/",
   "scope": "/playpadelcoop/",
   "display": "standalone",
@@ -38,6 +38,11 @@
       "name": "Classificações",
       "url": "/playpadelcoop/classificacoes.html",
       "description": "Ver classificações"
+    },
+    {
+      "name": "Inscrições",
+      "url": "/playpadelcoop/inscricoes.html",
+      "description": "Abrir as inscrições"
     }
   ]
 }

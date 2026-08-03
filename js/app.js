@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // ---------- Countdown ao torneio ----------
   // Use the earliest game date from the schedule; fall back to a hardcoded date
-  let TARGET_DATE = new Date('2026-06-05T07:00:00');
+  let TARGET_DATE = new Date('2026-09-10T07:00:00');
   (function() {
     const jogos = ppGet('jogos');
     if (!jogos || !jogos.length) return;

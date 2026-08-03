@@ -7,8 +7,8 @@
   <meta name="theme-color" content="#00C37B">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="Play Padel">
-  <meta name="description" content="2.º Aniversário Play Padel — Torneio oficial de 5 a 14 de Junho 2026, Maputo"/>
-  <title>Play Padel · Torneio 2.º Aniversário</title>
+  <meta name="description" content="Torneio Reentre Play Padel — inscrições abertas de 10 a 19 de Setembro 2026, Maputo"/>
+  <title>Play Padel · Torneio Reentre 2026</title>
   <link rel="stylesheet" href="css/style.css"/>
   <link rel="stylesheet" href="css/pages.css"/>
   <script src="https://unpkg.com/@phosphor-icons/web@2.1.1/src/index.js" defer></script>
@@ -62,8 +62,8 @@
   <a class="nav-logo" href="#inicio">
     <img src="playpadellogo.jpg" alt="Play Padel" style="height:34px;width:34px;border-radius:7px;object-fit:cover;flex-shrink:0"/>
     <div class="nav-logo-text">
-      <span class="nav-logo-title" id="cfgNomeTorneio">Play Padel</span>
-      <span class="nav-logo-sub" id="cfgSubtituloNav">Torneio 2.º Aniléritário</span>
+      <span class="nav-logo-title">Play Padel</span>
+      <span class="nav-logo-sub">Torneio Reentre</span>
     </div>
   </a>
 
@@ -73,6 +73,7 @@
     <li id="navLiClassificacoes"><a href="classificacoes.html"><i class="ph ph-trophy nav-icon"></i> Classificações</a></li>
     <li id="navLiFasefinal"><a href="fasefinal.html"><i class="ph ph-brackets-round nav-icon"></i> Fase Final</a></li>
     <li><a href="jogadores.html"><i class="ph ph-users nav-icon"></i> Jogadores</a></li>
+    <li><a href="inscricoes.html"><i class="ph ph-clipboard-text nav-icon"></i> Inscrições</a></li>
     <li id="navLiEstatisticas"><a href="estatisticas.html"><i class="ph ph-chart-bar nav-icon"></i> Estatísticas</a></li>
     <li><a href="regulamento.html"><i class="ph ph-book-open nav-icon"></i> Regulamento</a></li>
   </ul>
@@ -90,11 +91,11 @@
     <li id="drawerLiClassificacoes"><a href="classificacoes.html"><i class="ph ph-trophy"></i> Classificações</a></li>
     <li id="drawerLiFasefinal"><a href="fasefinal.html"><i class="ph ph-brackets-round"></i> Fase Final</a></li>
     <li><a href="jogadores.html"><i class="ph ph-users"></i> Jogadores</a></li>
+    <li><a href="inscricoes.html"><i class="ph ph-clipboard-text"></i> Inscrições</a></li>
     <li id="drawerLiEstatisticas"><a href="estatisticas.html"><i class="ph ph-chart-bar"></i> Estatísticas</a></li>
     <li><a href="regulamento.html"><i class="ph ph-book-open"></i> Regulamento</a></li>
   </ul>
 </div>
-
 <!-- Banner global de aviso -->
 <div id="globalBanner" style="display:none;background:rgba(245,197,24,.15);border-bottom:1px solid rgba(245,197,24,.3);padding:.55rem 1.5rem;font-size:.85rem;color:var(--amarelo);text-align:center"></div>
 
@@ -107,17 +108,17 @@
 
     <div class="hero-badge">
       <span class="hero-badge-dot"></span>
-      <i class="ph ph-map-pin"></i>&nbsp;<span id="cfgLocal">Maputo</span> &nbsp;·&nbsp; <span id="cfgDatas">05 a 14 de Junho 2026</span>
+      <i class="ph ph-map-pin"></i>&nbsp;<span id="cfgLocal">Maputo</span> &nbsp;·&nbsp; <span id="cfgDatas">10 a 19 de Setembro 2026</span>
     </div>
 
     <h1 class="hero-title">
-      <span class="line-2" id="cfgNomeHero">Play Padel Coop</span><br/>
-      <span class="line-3" id="cfgSubtituloHero">Torneio Aniversário</span>
+      <span class="line-2" id="cfgNomeHero">Play Padel</span><br/>
+      <span class="line-3" id="cfgSubtituloHero">Torneio Reentre</span>
     </h1>
 
     <p class="hero-subtitle">
       Organizado por <strong id="cfgClube">Sport Eventos</strong><br/>
-      <strong>7 categorias · 22 grupos · 177 jogos</strong>
+      <strong>8 categorias · inscrições abertas · grupos a definir</strong>
     </p>
 
     <div class="hero-cta">
@@ -135,6 +136,9 @@
       </a>
       <a href="jogadores.html" class="btn btn-secondary">
         <i class="ph ph-users"></i> Ver Jogadores
+      </a>
+      <a href="inscricoes.html" class="btn btn-secondary">
+        <i class="ph ph-clipboard-text"></i> Inscrições
       </a>
     </div>
   </div>
@@ -157,19 +161,19 @@
       <span class="stat-label">CAMPOS</span>
     </div>
     <div class="stat-item">
-      <span class="stat-value">7</span>
+      <span class="stat-value">8</span>
       <span class="stat-label">CATEGORIAS</span>
     </div>
     <div class="stat-item">
-      <span class="stat-value">22</span>
+      <span class="stat-value">ABERTAS</span>
+      <span class="stat-label">INSCRIÇÕES</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-value">TBD</span>
       <span class="stat-label">GRUPOS</span>
     </div>
     <div class="stat-item">
-      <span class="stat-value">177</span>
-      <span class="stat-label">JOGOS</span>
-    </div>
-    <div class="stat-item">
-      <span class="stat-value">88</span>
+      <span class="stat-value">NOVAS</span>
       <span class="stat-label">DUPLAS</span>
     </div>
   </div>
@@ -247,6 +251,17 @@
         <h3 class="nav-card-title">Jogadores</h3>
         <p class="nav-card-desc">
           Pesquise qualquer jogador e veja os seus jogos, resultados e estatísticas do torneio.
+        </p>
+        <div class="nav-card-arrow">→</div>
+      </a>
+
+      <a href="inscricoes.html" class="nav-card nav-card--classificacoes" id="cardInscricoes">
+        <div class="nav-card-glow"></div>
+        <span class="nav-card-badge badge-novo">Aberto</span>
+        <div class="nav-card-icon"><i class="ph ph-clipboard-text"></i></div>
+        <h3 class="nav-card-title">Inscrições</h3>
+        <p class="nav-card-desc">
+          Registe jogadores, duplas e observações. Guarde a inscrição para o backoffice.
         </p>
         <div class="nav-card-arrow">→</div>
       </a>
@@ -364,18 +379,19 @@
           <p class="footer-logo-title">Play Padel</p>
         </div>
       </div>
-      <p class="footer-desc" id="cfgFooterDesc">O padel que une Moçambique.<br/>5 a 14 de Junho 2026 · Maputo</p>
+      <p class="footer-desc" id="cfgFooterDesc">O padel que une Moçambique.<br/>10 a 19 de Setembro 2026 · Maputo</p>
     </div>
 
     <nav class="footer-links">
       <a href="calendario.html"><i class="ph ph-calendar"></i> Calendário</a>
       <a href="classificacoes.html"><i class="ph ph-trophy"></i> Classificações</a>
       <a href="jogadores.html"><i class="ph ph-users"></i> Jogadores</a>
+      <a href="inscricoes.html"><i class="ph ph-clipboard-text"></i> Inscrições</a>
     </nav>
   </div>
 
   <div class="footer-bottom">
-    <p class="footer-copy" id="cfgFooterCopy">© 2026 <span>Play Padel</span> · Torneio 2.º Aniversário · Maputo, Moçambique</p>
+    <p class="footer-copy" id="cfgFooterCopy">© 2026 <span>Play Padel</span> · Torneio Reentre · Maputo, Moçambique</p>
   </div>
 </footer>
 
@@ -420,7 +436,7 @@
 
 // ---- Top Pares leaderboard ----
 (function() {
-  const catClr = { M1:'#4A9EFF', M2:'#00C37B', M3:'#39FF8F', M4:'#F5C518', M5:'#FF9A3C', F1:'#FF6BB0', F2:'#C97BFF' };
+  const catClr = { M1:'#4A9EFF', M2:'#00C37B', M3:'#39FF8F', M4:'#F5C518', M5:'#FF9A3C', F1:'#FF6BB0', F2:'#C97BFF', F3:'#8B5CF6' };
   function grupoClr(g) { const k = g ? g.replace(/-.*$/,'') : ''; const c = catClr[k]; return c ? `background:${c}22;color:${c};border:1px solid ${c}55` : 'background:#1C2620;color:#8AA396'; }
   // Include both group stage and fase final games (exclude WO for set stats)
   const jogosGrupos = ppGet('jogos').filter(j => j.resultado && !j.resultado.wo);
