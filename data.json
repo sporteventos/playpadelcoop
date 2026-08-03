@@ -87,12 +87,15 @@
     "scoreboardVisible": false,
     "classificacoesVisible": false,
     "fasefinalVisible": false,
-    "estatisticasVisible": true,
+    "estatisticasVisible": false,
     "bannerVisible": false,
     "bannerMsg": "",
     "sbRefreshMins": "15",
     "sbRecentCount": "16",
-    "calendarioVisible": false
+    "calendarioVisible": false,
+    "jogadoresVisible": false,
+    "inscricoesVisible": false,
+    "regulamentoVisible": false
   },
   "users": [
     {
@@ -10182,5 +10185,5 @@
       "ts": "2026-06-04T20:00:52.471Z"
     }
   ],
-  "_updated": "2026-08-03T19:16:06.762Z"
+  "_updated": "2026-08-03T19:16:13.112Z"
 }
