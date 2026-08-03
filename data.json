@@ -84,9 +84,9 @@
     "tornDatas": "10 a 19 de Setembro 2026",
     "tornDescFooter": "O padel que une Moçambique.",
     "tornActivo": true,
-    "scoreboardVisible": true,
-    "classificacoesVisible": true,
-    "fasefinalVisible": true,
+    "scoreboardVisible": false,
+    "classificacoesVisible": false,
+    "fasefinalVisible": false,
     "estatisticasVisible": true,
     "bannerVisible": false,
     "bannerMsg": "",
@@ -10182,5 +10182,5 @@
       "ts": "2026-06-04T20:00:52.471Z"
     }
   ],
-  "_updated": "2026-08-03T19:16:02.528Z"
+  "_updated": "2026-08-03T19:16:06.762Z"
 }
