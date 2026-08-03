@@ -76,6 +76,88 @@
   "fasefinal": {},
   "telefones": {},
   "inscricoes": [],
+  "patrocinadores": [
+    {
+      "id": "jetour",
+      "nome": "Jetour",
+      "logo": "patrocinadores/jetour.png",
+      "url": ""
+    },
+    {
+      "id": "stellaartois",
+      "nome": "Stella Artois",
+      "logo": "patrocinadores/stellaartois.png",
+      "url": ""
+    },
+    {
+      "id": "bonaqua",
+      "nome": "Bona Aqua",
+      "logo": "patrocinadores/bonaqua.png",
+      "url": ""
+    },
+    {
+      "id": "tvcabo",
+      "nome": "TV Cabo",
+      "logo": "patrocinadores/tvcabo.png",
+      "url": ""
+    },
+    {
+      "id": "alcanceeditores",
+      "nome": "Alcance Editores",
+      "logo": "patrocinadores/alcanceeditores.png",
+      "url": ""
+    },
+    {
+      "id": "eclipse",
+      "nome": "Eclipse",
+      "logo": "patrocinadores/Eclipse.png",
+      "url": ""
+    }
+  ],
+  "parceiros": [
+    {
+      "id": "fisiolab",
+      "nome": "Fisiolab",
+      "logo": "parceiros/fisiolab.png",
+      "url": ""
+    },
+    {
+      "id": "montebelo",
+      "nome": "Montebelo Hotéis",
+      "logo": "parceiros/montebelo hoteis.png",
+      "url": ""
+    },
+    {
+      "id": "tempo",
+      "nome": "Tempo",
+      "logo": "parceiros/tempo.png",
+      "url": ""
+    },
+    {
+      "id": "matchpoint",
+      "nome": "Match Point",
+      "logo": "parceiros/matchpoint.JPG",
+      "url": ""
+    },
+    {
+      "id": "fitclo",
+      "nome": "Fitclo",
+      "logo": "parceiros/fitclo.JPG",
+      "url": ""
+    },
+    {
+      "id": "babycity",
+      "nome": "Baby City",
+      "logo": "parceiros/babycity.JPG",
+      "url": ""
+    },
+    {
+      "id": "makimono",
+      "nome": "Makimono",
+      "logo": "parceiros/makimono.JPG",
+      "url": ""
+    }
+  ],
   "config": {
     "tornNome": "Torneio Reentre",
     "tornSubtitulo": "",
@@ -95,7 +177,8 @@
     "calendarioVisible": false,
     "jogadoresVisible": false,
     "inscricoesVisible": true,
-    "regulamentoVisible": false
+    "regulamentoVisible": false,
+    "navegarVisible": false
   },
   "users": [
     {
@@ -10185,5 +10268,5 @@
       "ts": "2026-06-04T20:00:52.471Z"
     }
   ],
-  "_updated": "2026-08-03T19:26:27.808Z"
+  "_updated": "2026-08-03T19:29:36.336Z"
 }
