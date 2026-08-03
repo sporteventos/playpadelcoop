@@ -329,10 +329,10 @@
     </div>
 
     <nav class="footer-links">
-      <a href="calendario.html"><i class="ph ph-calendar"></i> Calendário</a>
-      <a href="classificacoes.html"><i class="ph ph-trophy"></i> Classificações</a>
-      <a href="jogadores.html"><i class="ph ph-users"></i> Jogadores</a>
-      <a href="inscricoes.html"><i class="ph ph-clipboard-text"></i> Inscrições</a>
+      <a id="footerLiCalendario"    href="calendario.html"><i class="ph ph-calendar"></i> Calendário</a>
+      <a id="footerLiClassificacoes" href="classificacoes.html"><i class="ph ph-trophy"></i> Classificações</a>
+      <a id="footerLiJogadores"     href="jogadores.html"><i class="ph ph-users"></i> Jogadores</a>
+      <a id="footerLiInscricoes"    href="inscricoes.html"><i class="ph ph-clipboard-text"></i> Inscrições</a>
     </nav>
   </div>
 
@@ -551,16 +551,20 @@
         // Visibilidade páginas — nav desktop + drawer mobile + cards
         show('navLiCalendario',       cfg.calendarioVisible !== false);
         show('drawerLiCalendario',    cfg.calendarioVisible !== false);
+        show('footerLiCalendario',    cfg.calendarioVisible !== false);
         show('navLiClassificacoes',   cfg.classificacoesVisible !== false);
         show('drawerLiClassificacoes',cfg.classificacoesVisible !== false);
+        show('footerLiClassificacoes',cfg.classificacoesVisible !== false);
         show('cardClassificacoes',    cfg.classificacoesVisible !== false);
         show('navLiFasefinal',        cfg.fasefinalVisible !== false);
         show('drawerLiFasefinal',     cfg.fasefinalVisible !== false);
         show('cardFasefinal',         cfg.fasefinalVisible !== false);
         show('navLiJogadores',        cfg.jogadoresVisible !== false);
         show('drawerLiJogadores',     cfg.jogadoresVisible !== false);
+        show('footerLiJogadores',     cfg.jogadoresVisible !== false);
         show('navLiInscricoes',       cfg.inscricoesVisible !== false);
         show('drawerLiInscricoes',    cfg.inscricoesVisible !== false);
+        show('footerLiInscricoes',    cfg.inscricoesVisible !== false);
         show('cardInscricoes',        cfg.inscricoesVisible !== false);
         show('navLiEstatisticas',     cfg.estatisticasVisible !== false);
         show('drawerLiEstatisticas',  cfg.estatisticasVisible !== false);
