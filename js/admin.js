@@ -2504,6 +2504,7 @@ function renderConfigPanel() {
     ${fieldText('tornLocal',     'Localidade',          'ex: Maputo',                       'Maputo')}
     ${fieldText('tornDatas',     'Datas',               'ex: 10 a 19 de Setembro 2026',        '10 a 19 de Setembro 2026')}
     ${fieldText('tornDescFooter','Frase do Rodapé',     'ex: O padel que une Moçambique.',  'O padel que une Moçambique.')}
+    ${fieldText('tornTelOrg',   'Tel. Organizador (WhatsApp)', 'ex: 258841234567 (sem + ou espaços)', '')}
 
     ${section('Visibilidade de Páginas')}
     ${fieldToggle('calendarioVisible',    'Calendário',               'ph-calendar',          true)}

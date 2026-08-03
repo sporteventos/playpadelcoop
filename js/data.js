@@ -67,6 +67,7 @@ const DEFAULTS = {
     parceirosVisible: true,
     bannerVisible: false,
     bannerMsg: '',
+    tornTelOrg: '',
     sbRefreshMins: '15',
     sbRecentCount: '16',
   },

@@ -13,41 +13,30 @@
   <link rel="stylesheet" href="css/pages.css"/>
   <script src="https://unpkg.com/@phosphor-icons/web@2.1.1/src/index.js" defer></script>
   <style>
-    .ins-page { max-width: 1180px; margin: 0 auto; padding: 2rem 1.25rem 5rem; }
-    .ins-grid { display: grid; grid-template-columns: 1.1fr .9fr; gap: 1.1rem; align-items: start; }
-    .ins-card { background: var(--preto-card); border: 1px solid var(--preto-borda); border-radius: 16px; padding: 1.25rem; }
-    .ins-card h2 { margin: 0 0 .25rem; font-family: 'Barlow Condensed', sans-serif; font-size: 1.35rem; text-transform: uppercase; letter-spacing: .03em; }
-    .ins-card p.lead { margin: 0 0 1rem; color: var(--cinza-texto); line-height: 1.55; }
-    .ins-badges { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: .75rem; }
-    .ins-badge { display: inline-flex; align-items: center; gap: .35rem; padding: .25rem .55rem; border-radius: 999px; background: rgba(0,195,123,.12); color: var(--verde); font-size: .72rem; font-weight: 700; }
+    .ins-page { max-width: 720px; margin: 0 auto; padding: 2rem 1.25rem 5rem; }
+    .ins-form-wrap { background: var(--preto-card); border: 1px solid var(--preto-borda); border-radius: 16px; padding: 1.75rem; }
+    .ins-info-box { display:flex; gap:.75rem; background:rgba(0,195,123,.07); border:1px solid rgba(0,195,123,.2); border-radius:10px; padding:.9rem 1rem; margin-bottom:1.5rem; font-size:.85rem; color:var(--branco); line-height:1.5; }
+    .ins-section-title { font-size:.8rem; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:var(--verde-claro); margin-bottom:.75rem; display:flex; align-items:center; gap:.4rem; }
     .form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .85rem; }
     .form-field { display: flex; flex-direction: column; gap: .3rem; }
     .form-field.full { grid-column: 1 / -1; }
     .form-label { font-size: .76rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: #8AA396; }
+    .req { color: var(--verde); }
     .form-input, .form-select, .form-textarea {
       width: 100%; box-sizing: border-box; background: #0A0F0D; color: #F0F7F3;
       border: 1px solid #1C2620; border-radius: 10px; padding: .75rem .8rem; font-size: .92rem;
+      transition: border-color .15s;
     }
-    .form-textarea { min-height: 92px; resize: vertical; }
+    .form-input:focus, .form-select:focus, .form-textarea:focus { outline:none; border-color: var(--verde); }
+    .form-input.invalid, .form-select.invalid { border-color: #FF6B6B; }
+    .form-textarea { min-height: 84px; resize: vertical; }
     .form-help { font-size: .74rem; color: #64796F; line-height: 1.45; }
-    .form-actions { display: flex; gap: .6rem; flex-wrap: wrap; margin-top: 1rem; }
-    .btn-lite { background: rgba(255,255,255,.04); color: #F0F7F3; border: 1px solid #1C2620; }
     .toggle-wrap { display: flex; gap: .75rem; flex-wrap: wrap; }
-    .toggle-pill { display: inline-flex; align-items: center; gap: .35rem; padding: .45rem .7rem; border-radius: 999px; background: rgba(255,255,255,.04); border: 1px solid #1C2620; cursor: pointer; font-size: .82rem; }
-    .toggle-pill input { margin: 0; }
-    .ins-list { display: grid; gap: .7rem; margin-top: 1rem; }
-    .ins-item { padding: .85rem .95rem; border-radius: 12px; border: 1px solid #1C2620; background: #111815; }
-    .ins-item-top { display:flex; justify-content:space-between; gap:.75rem; flex-wrap:wrap; align-items:flex-start; }
-    .ins-item-name { font-weight: 700; color: #F0F7F3; }
-    .ins-item-meta { font-size: .76rem; color: #8AA396; line-height: 1.45; margin-top: .25rem; }
-    .ins-item-actions { display:flex; gap:.45rem; flex-wrap:wrap; margin-top:.75rem; }
-    .ins-empty { color: #8AA396; font-size: .9rem; padding: 1rem 0 .4rem; }
-    .ins-stats { display:grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap:.7rem; margin-bottom: .9rem; }
-    .ins-stat { background:#0A0F0D; border:1px solid #1C2620; border-radius: 12px; padding:.8rem .9rem; }
-    .ins-stat-val { font-size:1.35rem; font-weight:800; color:#F0F7F3; line-height:1; }
-    .ins-stat-lbl { font-size:.68rem; text-transform:uppercase; letter-spacing:.06em; color:#8AA396; margin-top:.25rem; }
-    @media (max-width: 900px) { .ins-grid { grid-template-columns: 1fr; } }
-    @media (max-width: 640px) { .form-grid { grid-template-columns: 1fr; } .ins-stats { grid-template-columns: 1fr; } }
+    .toggle-pill { display: inline-flex; align-items: center; gap: .35rem; padding: .55rem .85rem; border-radius: 999px; background: rgba(255,255,255,.04); border: 1px solid #1C2620; cursor: pointer; font-size: .85rem; transition: all .15s; }
+    .toggle-pill:has(input:checked) { background: rgba(0,195,123,.15); border-color: var(--verde); color: var(--verde); }
+    .toggle-pill input { display:none; }
+    .form-actions { display: flex; gap: .6rem; flex-wrap: wrap; }
+    @media (max-width: 600px) { .form-grid { grid-template-columns: 1fr; } }
   </style>
 </head>
 <body>
@@ -91,88 +80,105 @@
 
 <div class="page-hero">
   <div class="page-hero-content">
-    <p class="page-hero-tag"><i class="ph ph-clipboard-text"></i> Inscrições</p>
-    <h1 class="page-hero-title">Registar <span>Participantes</span></h1>
-    <p class="page-hero-sub">Formulário local para jogadores, duplas e observações da organização</p>
+    <p class="page-hero-tag"><i class="ph ph-clipboard-text"></i> Pré-Inscrição</p>
+    <h1 class="page-hero-title">Inscreve-te no <span>Torneio Reentre</span></h1>
+    <p class="page-hero-sub">Preenche o formulário com os teus dados. A organização irá confirmar a tua inscrição.</p>
   </div>
 </div>
 
 <main class="ins-page">
-  <div class="ins-grid">
-    <section class="ins-card">
-      <h2>Nova inscrição</h2>
-      <p class="lead">Use este formulário para registar jogadores individuais ou duplas. Os dados ficam guardados neste dispositivo e podem ser exportados para JSON ou CSV.</p>
+
+  <!-- ======= FORM STEP ======= -->
+  <div id="stepForm">
+    <div class="ins-form-wrap">
+      <div class="ins-info-box">
+        <i class="ph ph-info" style="font-size:1.25rem;color:var(--verde);flex-shrink:0"></i>
+        <div>
+          <strong>Como funciona?</strong><br/>
+          Preenche os teus dados abaixo. Após submeter, recebes um resumo para confirmares via WhatsApp com a organização. A inscrição é individual — se já tiveres parceiro(a), indica o nome no campo próprio.
+        </div>
+      </div>
 
       <form id="insForm" novalidate>
+        <div class="ins-section-title"><i class="ph ph-user"></i> Os teus dados</div>
         <div class="form-grid">
           <div class="form-field">
-            <label class="form-label" for="nome1">Nome do jogador 1</label>
-            <input class="form-input" id="nome1" name="nome1" type="text" required placeholder="Nome completo"/>
+            <label class="form-label" for="nome1">Nome completo <span class="req">*</span></label>
+            <input class="form-input" id="nome1" name="nome1" type="text" required placeholder="O teu nome completo"/>
           </div>
           <div class="form-field">
-            <label class="form-label" for="telefone">Telefone</label>
-            <input class="form-input" id="telefone" name="telefone" type="tel" placeholder="+258 ..."/>
+            <label class="form-label" for="telefone">Telefone <span class="req">*</span></label>
+            <input class="form-input" id="telefone" name="telefone" type="tel" required placeholder="+258 84 000 0000"/>
           </div>
           <div class="form-field">
             <label class="form-label" for="email">Email</label>
-            <input class="form-input" id="email" name="email" type="email" placeholder="email@exemplo.com"/>
+            <input class="form-input" id="email" name="email" type="email" placeholder="opcional"/>
           </div>
           <div class="form-field">
-            <label class="form-label" for="clube">Clube / Equipa</label>
-            <input class="form-input" id="clube" name="clube" type="text" placeholder="Opcional"/>
+            <label class="form-label" for="clube">Clube / Associação</label>
+            <input class="form-input" id="clube" name="clube" type="text" placeholder="opcional"/>
           </div>
+        </div>
+
+        <div class="ins-section-title" style="margin-top:1.25rem"><i class="ph ph-medal"></i> Categoria</div>
+        <div class="form-grid">
           <div class="form-field">
-            <label class="form-label" for="categoria">Categoria</label>
-            <select class="form-select" id="categoria" name="categoria" required></select>
-          </div>
-          <div class="form-field">
-            <label class="form-label" for="tipo">Tipo de inscrição</label>
-            <select class="form-select" id="tipo" name="tipo" required>
-              <option value="dupla">Dupla</option>
-              <option value="jogador">Jogador individual</option>
-            </select>
-          </div>
-          <div class="form-field" id="partnerWrap">
-            <label class="form-label" for="nome2">Nome do jogador 2</label>
-            <input class="form-input" id="nome2" name="nome2" type="text" placeholder="Parceiro da dupla"/>
-          </div>
-          <div class="form-field full">
-            <label class="form-label">Preferência de género</label>
-            <div class="toggle-wrap">
-              <label class="toggle-pill"><input type="radio" name="genero" value="M" checked> Masculino</label>
-              <label class="toggle-pill"><input type="radio" name="genero" value="F"> Feminino</label>
+            <label class="form-label">Género <span class="req">*</span></label>
+            <div class="toggle-wrap" id="generoWrap">
+              <label class="toggle-pill"><input type="radio" name="genero" value="M" checked> <i class="ph ph-person"></i> Masculino</label>
+              <label class="toggle-pill"><input type="radio" name="genero" value="F"> <i class="ph ph-person-simple-dress"></i> Feminino</label>
             </div>
+          </div>
+          <div class="form-field">
+            <label class="form-label" for="categoria">Nível pretendido <span class="req">*</span></label>
+            <select class="form-select" id="categoria" name="categoria" required>
+              <option value="">— selecciona —</option>
+            </select>
+            <span class="form-help" id="catHelp"></span>
+          </div>
+        </div>
+
+        <div class="ins-section-title" style="margin-top:1.25rem"><i class="ph ph-handshake"></i> Parceiro(a)</div>
+        <div class="form-grid">
+          <div class="form-field full">
+            <label class="form-label" for="parceiro">Nome do(a) parceiro(a) <span style="font-weight:400;text-transform:none;letter-spacing:0">(se já tiveres)</span></label>
+            <input class="form-input" id="parceiro" name="parceiro" type="text" placeholder="Deixa em branco se não tiveres parceiro(a)"/>
+            <span class="form-help">Se não tiveres parceiro, a organização tentará ajudar a formar dupla.</span>
           </div>
           <div class="form-field full">
             <label class="form-label" for="observacoes">Observações</label>
-            <textarea class="form-textarea" id="observacoes" name="observacoes" placeholder="Ex.: horário preferido, contacto alternativo, etc."></textarea>
+            <textarea class="form-textarea" id="observacoes" name="observacoes" placeholder="Horário preferido, lesões ou condicionantes, etc."></textarea>
           </div>
         </div>
 
-        <div class="form-actions">
-          <button class="btn btn-primary" type="submit"><i class="ph ph-check-circle"></i> Guardar inscrição</button>
-          <button class="btn btn-lite" type="button" id="btnExportJson"><i class="ph ph-download-simple"></i> Exportar JSON</button>
-          <button class="btn btn-lite" type="button" id="btnExportCsv"><i class="ph ph-table"></i> Exportar CSV</button>
-          <button class="btn btn-lite" type="button" id="btnClear"><i class="ph ph-trash"></i> Limpar registos</button>
+        <div class="form-actions" style="margin-top:1.5rem">
+          <button class="btn btn-primary" type="submit" style="font-size:1rem;padding:.75rem 2rem"><i class="ph ph-paper-plane-tilt"></i> Submeter inscrição</button>
         </div>
-        <p class="form-help" id="formHint">As inscrições ficam guardadas só neste navegador. Depois, exporte o ficheiro para o backoffice.</p>
+        <p id="formError" style="color:#FF6B6B;font-size:.83rem;margin-top:.5rem;display:none"></p>
       </form>
-    </section>
-
-    <aside class="ins-card">
-      <h2>Registos guardados</h2>
-      <p class="lead">Resumo rápido para a organização.</p>
-
-      <div class="ins-stats">
-        <div class="ins-stat"><div class="ins-stat-val" id="statTotal">0</div><div class="ins-stat-lbl">Total</div></div>
-        <div class="ins-stat"><div class="ins-stat-val" id="statDuplas">0</div><div class="ins-stat-lbl">Duplas</div></div>
-        <div class="ins-stat"><div class="ins-stat-val" id="statInd">0</div><div class="ins-stat-lbl">Individuais</div></div>
-      </div>
-
-      <div class="ins-list" id="insList"></div>
-      <div class="ins-empty" id="insEmpty">Sem inscrições guardadas ainda.</div>
-    </aside>
+    </div>
   </div>
+
+  <!-- ======= SUCCESS STEP ======= -->
+  <div id="stepSuccess" style="display:none">
+    <div class="ins-form-wrap" style="text-align:center;padding:3rem 2rem">
+      <div style="font-size:3.5rem;margin-bottom:.75rem">🎾</div>
+      <h2 style="font-family:'Barlow Condensed',sans-serif;font-size:2rem;text-transform:uppercase;margin:0 0 .5rem">Inscrição recebida!</h2>
+      <p style="color:var(--cinza-texto);max-width:480px;margin:0 auto 1.75rem;line-height:1.6" id="successMsg"></p>
+      <div style="display:flex;gap:.75rem;justify-content:center;flex-wrap:wrap">
+        <a id="btnWhatsApp" href="#" target="_blank" rel="noopener"
+           style="display:inline-flex;align-items:center;gap:.5rem;background:#25D366;color:#000;font-weight:700;padding:.75rem 1.5rem;border-radius:10px;font-size:.95rem;text-decoration:none">
+          <i class="ph ph-whatsapp-logo"></i> Confirmar via WhatsApp
+        </a>
+        <button onclick="document.getElementById('stepSuccess').style.display='none';document.getElementById('stepForm').style.display='';"
+          style="background:rgba(255,255,255,.07);color:#F0F7F3;border:1px solid #1C2620;border-radius:10px;padding:.75rem 1.25rem;font-size:.9rem;cursor:pointer">
+          <i class="ph ph-plus"></i> Nova inscrição
+        </button>
+      </div>
+      <p style="font-size:.76rem;color:#64796F;margin-top:1.25rem" id="successNoWa" style="display:none"></p>
+    </div>
+  </div>
+
 </main>
 
 <footer class="footer">
@@ -221,171 +227,111 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 
   var storageKey = 'pp_inscricoes';
-  var categorias = (ppGet('categorias') || []).filter(function (c) { return c && c.id; });
-  var categoriaEl = document.getElementById('categoria');
-  categorias.forEach(function (cat) {
-    var opt = document.createElement('option');
-    opt.value = cat.id;
-    opt.textContent = cat.id + ' · ' + cat.nome;
-    categoriaEl.appendChild(opt);
+
+  // Populate categories based on gender
+  function buildCats() {
+    var genero = document.querySelector('input[name="genero"]:checked');
+    var g = genero ? genero.value : 'M';
+    var categorias = (ppGet('categorias') || []).filter(function(c){ return c && c.id; });
+    var filtered = categorias.filter(function(c){ return c.id.charAt(0) === g; });
+    var sel = document.getElementById('categoria');
+    sel.innerHTML = '<option value="">— selecciona —</option>';
+    filtered.forEach(function(cat){
+      var o = document.createElement('option');
+      o.value = cat.id;
+      o.textContent = cat.id + ' · ' + cat.nome;
+      sel.appendChild(o);
+    });
+    var help = document.getElementById('catHelp');
+    if (help) help.textContent = filtered.length ? '' : 'Sem categorias disponíveis para este género.';
+  }
+
+  document.querySelectorAll('input[name="genero"]').forEach(function(r){
+    r.addEventListener('change', function(){ buildCats(); });
   });
+  buildCats();
 
-  var tipoEl = document.getElementById('tipo');
-  var partnerWrap = document.getElementById('partnerWrap');
-  function syncType() {
-    var isSingle = tipoEl.value === 'jogador';
-    partnerWrap.style.display = isSingle ? 'none' : '';
-    document.getElementById('nome2').required = !isSingle;
-  }
-  tipoEl.addEventListener('change', syncType);
-  syncType();
-
-  function loadEntries() {
-    try {
-      return JSON.parse(localStorage.getItem(storageKey) || '[]');
-    } catch (e) {
-      return [];
-    }
-  }
-
-  function saveEntries(entries) {
-    localStorage.setItem(storageKey, JSON.stringify(entries));
-  }
-
-  function download(filename, content, mime) {
-    var blob = new Blob([content], { type: mime });
-    var url = URL.createObjectURL(blob);
-    var a = document.createElement('a');
-    a.href = url;
-    a.download = filename;
-    a.click();
-    setTimeout(function () {
-      URL.revokeObjectURL(url);
-    }, 1000);
-  }
-
-  function esc(text) {
-    return String(text || '').replace(/[&<>"']/g, function (c) {
-      return ({
-        '&': '&amp;',
-        '<': '&lt;',
-        '>': '&gt;',
-        '"': '&quot;',
-        "'": '&#39;'
-      })[c];
-    });
-  }
-
-  function render() {
-    var entries = loadEntries();
-    var list = document.getElementById('insList');
-    var empty = document.getElementById('insEmpty');
-    var statTotal = document.getElementById('statTotal');
-    var statDuplas = document.getElementById('statDuplas');
-    var statInd = document.getElementById('statInd');
-
-    statTotal.textContent = entries.length;
-    statDuplas.textContent = entries.filter(function (e) { return e.tipo === 'dupla'; }).length;
-    statInd.textContent = entries.filter(function (e) { return e.tipo === 'jogador'; }).length;
-
-    if (!entries.length) {
-      list.innerHTML = '';
-      empty.style.display = '';
-      return;
-    }
-
-    empty.style.display = 'none';
-    list.innerHTML = entries.slice().reverse().map(function (e) {
-      var tipo = e.tipo === 'jogador' ? 'Jogador individual' : 'Dupla';
-      var genero = e.genero === 'F' ? 'Feminino' : 'Masculino';
-      var partner = e.nome2 ? '<div class="ins-item-meta"><strong>Par:</strong> ' + esc(e.nome2) + '</div>' : '';
-      return '<article class="ins-item" data-id="' + esc(e.id) + '">' +
-        '<div class="ins-item-top"><div><div class="ins-item-name">' + esc(e.nome1) + '</div>' +
-        '<div class="ins-item-meta">' + tipo + ' · ' + genero + ' · ' + esc(e.categoria) + '</div></div>' +
-        '<div class="badge badge-verde">' + esc(new Date(e.criadoEm).toLocaleDateString('pt-PT')) + '</div></div>' +
-        '<div class="ins-item-meta"><strong>Contacto:</strong> ' + esc(e.telefone || '—') + '</div>' +
-        (e.email ? '<div class="ins-item-meta"><strong>Email:</strong> ' + esc(e.email) + '</div>' : '') +
-        (e.clube ? '<div class="ins-item-meta"><strong>Clube:</strong> ' + esc(e.clube) + '</div>' : '') +
-        partner +
-        (e.observacoes ? '<div class="ins-item-meta"><strong>Obs.:</strong> ' + esc(e.observacoes) + '</div>' : '') +
-        '<div class="ins-item-actions">' +
-          '<button class="btn btn-lite" type="button" data-copy="' + esc(e.id) + '"><i class="ph ph-copy"></i> Copiar</button>' +
-          '<button class="btn btn-lite" type="button" data-del="' + esc(e.id) + '"><i class="ph ph-trash"></i> Remover</button>' +
-        '</div>' +
-      '</article>';
-    }).join('');
-
-    list.querySelectorAll('[data-del]').forEach(function (btn) {
-      btn.addEventListener('click', function () {
-        var id = btn.getAttribute('data-del');
-        var next = loadEntries().filter(function (e) { return e.id !== id; });
-        saveEntries(next);
-        render();
-      });
-    });
-
-    list.querySelectorAll('[data-copy]').forEach(function (btn) {
-      btn.addEventListener('click', function () {
-        var id = btn.getAttribute('data-copy');
-        var entry = loadEntries().find(function (e) { return e.id === id; });
-        if (!entry) return;
-        navigator.clipboard.writeText(JSON.stringify(entry, null, 2));
-      });
-    });
-  }
-
-  document.getElementById('insForm').addEventListener('submit', function (ev) {
+  // Form submit
+  document.getElementById('insForm').addEventListener('submit', function(ev){
     ev.preventDefault();
     var form = ev.target;
-    var entries = loadEntries();
+    var nome1 = form.nome1.value.trim();
+    var telefone = form.telefone.value.trim();
+    var categoria = form.categoria.value;
+    var errEl = document.getElementById('formError');
+
+    // Validation
+    [form.nome1, form.telefone, form.categoria].forEach(function(f){ f.classList.remove('invalid'); });
+    var erros = [];
+    if (!nome1) { form.nome1.classList.add('invalid'); erros.push('Nome obrigatório.'); }
+    if (!telefone) { form.telefone.classList.add('invalid'); erros.push('Telefone obrigatório.'); }
+    if (!categoria) { form.categoria.classList.add('invalid'); erros.push('Categoria obrigatória.'); }
+    if (erros.length) { errEl.textContent = erros.join(' '); errEl.style.display = ''; return; }
+    errEl.style.display = 'none';
+
     var entry = {
       id: 'ins-' + Date.now(),
       criadoEm: new Date().toISOString(),
-      tipo: form.tipo.value,
-      genero: form.genero.value,
-      categoria: form.categoria.value,
-      nome1: form.nome1.value.trim(),
-      nome2: form.nome2.value.trim(),
-      telefone: form.telefone.value.trim(),
+      tipo: 'jogador',
+      genero: form.querySelector('input[name="genero"]:checked').value,
+      categoria: categoria,
+      nome1: nome1,
+      nome2: (form.parceiro ? form.parceiro.value.trim() : ''),
+      telefone: telefone,
       email: form.email.value.trim(),
       clube: form.clube.value.trim(),
       observacoes: form.observacoes.value.trim(),
       estado: 'nova'
     };
 
-    if (!entry.nome1 || !entry.categoria) return;
-    if (entry.tipo === 'dupla' && !entry.nome2) return;
-
+    // Save to localStorage
+    var entries;
+    try { entries = JSON.parse(localStorage.getItem(storageKey) || '[]'); } catch(e){ entries = []; }
     entries.push(entry);
-    saveEntries(entries);
+    localStorage.setItem(storageKey, JSON.stringify(entries));
+
+    // Build WhatsApp message
+    var cfg = ppGet('config') || {};
+    var tel = (cfg.tornTelOrg || '').replace(/\D/g,'');
+    var generoStr = entry.genero === 'F' ? 'Feminino' : 'Masculino';
+    var msg = '🎾 *Pré-Inscrição Torneio Reentre*\n\n'
+      + '*Nome:* ' + entry.nome1 + '\n'
+      + '*Telefone:* ' + entry.telefone + '\n'
+      + (entry.email ? '*Email:* ' + entry.email + '\n' : '')
+      + '*Género:* ' + generoStr + '\n'
+      + '*Categoria:* ' + entry.categoria + '\n'
+      + (entry.nome2 ? '*Parceiro(a):* ' + entry.nome2 + '\n' : '')
+      + (entry.clube ? '*Clube:* ' + entry.clube + '\n' : '')
+      + (entry.observacoes ? '*Obs.:* ' + entry.observacoes + '\n' : '')
+      + '\n_Inscrição submetida em ' + new Date().toLocaleString('pt-PT') + '_';
+
+    var waBtn = document.getElementById('btnWhatsApp');
+    var noWa  = document.getElementById('successNoWa');
+    if (tel) {
+      waBtn.href = 'https://wa.me/' + tel + '?text=' + encodeURIComponent(msg);
+      waBtn.style.display = '';
+      if (noWa) noWa.style.display = 'none';
+    } else {
+      waBtn.style.display = 'none';
+      if (noWa) {
+        noWa.textContent = 'Não existe número WhatsApp configurado. Contacta a organização directamente.';
+        noWa.style.display = '';
+      }
+    }
+
+    var successMsg = document.getElementById('successMsg');
+    if (successMsg) {
+      successMsg.textContent = 'Olá ' + nome1 + '! A tua pré-inscrição na categoria '
+        + categoria + ' foi guardada.' + (tel ? ' Clica em "Confirmar via WhatsApp" para a organização receber os teus dados.' : '');
+    }
+
+    document.getElementById('stepForm').style.display = 'none';
+    document.getElementById('stepSuccess').style.display = '';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
     form.reset();
-    tipoEl.value = 'dupla';
-    syncType();
-    render();
+    buildCats();
   });
 
-  document.getElementById('btnExportJson').addEventListener('click', function () {
-    download('inscricoes-reentre.json', JSON.stringify(loadEntries(), null, 2), 'application/json');
-  });
-
-  document.getElementById('btnExportCsv').addEventListener('click', function () {
-    var entries = loadEntries();
-    var header = ['id', 'criadoEm', 'tipo', 'genero', 'categoria', 'nome1', 'nome2', 'telefone', 'email', 'clube', 'observacoes', 'estado'];
-    var rows = [header.join(',')].concat(entries.map(function (e) {
-      return header.map(function (k) {
-        return '"' + String(e[k] || '').replace(/"/g, '""') + '"';
-      }).join(',');
-    }));
-    download('inscricoes-reentre.csv', rows.join('\n'), 'text/csv;charset=utf-8');
-  });
-
-  document.getElementById('btnClear').addEventListener('click', function () {
-    if (!confirm('Apagar todas as inscrições guardadas neste navegador?')) return;
-    saveEntries([]);
-    render();
-  });
-
-  render();
 });
 </script>
 </body>
