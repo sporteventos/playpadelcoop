@@ -91,7 +91,8 @@
     "bannerVisible": false,
     "bannerMsg": "",
     "sbRefreshMins": "15",
-    "sbRecentCount": "16"
+    "sbRecentCount": "16",
+    "calendarioVisible": false
   },
   "users": [
     {
@@ -10181,5 +10182,5 @@
       "ts": "2026-06-04T20:00:52.471Z"
     }
   ],
-  "_updated": "2026-08-03T19:10:07.635Z"
+  "_updated": "2026-08-03T19:16:02.528Z"
 }
