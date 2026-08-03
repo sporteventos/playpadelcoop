@@ -183,7 +183,8 @@
     "liveStatsVisible": false,
     "leaderboardVisible": false,
     "patrocinadoresVisible": false,
-    "parceirosVisible": false
+    "parceirosVisible": false,
+    "tornTelOrg": "258844471740"
   },
   "users": [
     {
@@ -272,6 +273,26 @@
     }
   ],
   "auditlog": [
+    {
+      "id": "msdn1xs8wprk6uc",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "LOGIN",
+      "target": "auth",
+      "detail": "Login: admin (admin)",
+      "ts": "2026-08-03T19:44:57.416Z"
+    },
+    {
+      "id": "msdmvim1xxfkxs5",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "LOGOUT",
+      "target": "auth",
+      "detail": "Logout: admin",
+      "ts": "2026-08-03T19:39:57.817Z"
+    },
     {
       "id": "msdl9mwie289zab",
       "userId": "mpxnxlqhg3dzc1o",
@@ -10251,27 +10272,7 @@
       "target": "utilizadores",
       "detail": "Criado \"Denise Janasse\" (operator)",
       "ts": "2026-06-04T20:04:11.813Z"
-    },
-    {
-      "id": "mpzx7dameh4q91j",
-      "userId": "mpz46x5c2zupza0",
-      "username": "bgaspar",
-      "role": "operator",
-      "action": "HORARIO_DRAG",
-      "target": "jogos",
-      "detail": "Jogo #86 movido para 20:00 @ Play Padel",
-      "ts": "2026-06-04T20:00:55.822Z"
-    },
-    {
-      "id": "mpzx7apjy3kv85l",
-      "userId": "mpz46x5c2zupza0",
-      "username": "bgaspar",
-      "role": "operator",
-      "action": "HORARIO_DRAG",
-      "target": "jogos",
-      "detail": "Jogo #61 movido para 19:00 @ Play Padel",
-      "ts": "2026-06-04T20:00:52.471Z"
     }
   ],
-  "_updated": "2026-08-03T19:29:53.044Z"
+  "_updated": "2026-08-03T19:45:56.690Z"
 }
