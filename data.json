@@ -178,7 +178,10 @@
     "jogadoresVisible": false,
     "inscricoesVisible": true,
     "regulamentoVisible": false,
-    "navegarVisible": false
+    "navegarVisible": false,
+    "agendaVisible": false,
+    "liveStatsVisible": false,
+    "leaderboardVisible": false
   },
   "users": [
     {
@@ -10268,5 +10271,5 @@
       "ts": "2026-06-04T20:00:52.471Z"
     }
   ],
-  "_updated": "2026-08-03T19:29:36.336Z"
+  "_updated": "2026-08-03T19:29:40.274Z"
 }
