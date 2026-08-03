@@ -2188,6 +2188,7 @@ function navigate(view) {
     sessoes:       ['Sessões Activas', 'Utilizadores Ligados'],
     configuracoes: ['Configurações', 'Portal Público'],
     inscricoes:    ['Inscrições', 'Pré-inscrições'],
+    patrocinadores:['Patrocinadores & Parceiros', 'Configurar Logos'],
     classificacoes:['Classificações', 'Standings ao Vivo'],
     estatisticas:  ['Estatísticas', 'Resumo do Torneio'],
     importar:      ['Importar Resultados', 'Import em Lote'],
@@ -2220,6 +2221,7 @@ function renderView(view) {
     case 'logs':         renderLogs();         break;
     case 'sessoes':      renderSessoes();       break;
     case 'inscricoes':   renderInscricoes();   break;
+    case 'patrocinadores': renderPatrocinadores(); break;
     case 'configuracoes': renderConfigPanel();  break;
     case 'classificacoes': renderAdminClassificacoes(); break;
     case 'estatisticas': renderEstatisticas(); break;
@@ -2512,6 +2514,14 @@ function renderConfigPanel() {
     ${fieldToggle('inscricoesVisible',    'Inscrições',               'ph-clipboard-text',    true)}
     ${fieldToggle('estatisticasVisible',  'Estatísticas',             'ph-chart-bar',         true)}
     ${fieldToggle('regulamentoVisible',   'Regulamento',              'ph-book-open',         true)}
+
+    ${section('Visibilidade de Secções (Página Principal)')}
+    ${fieldToggle('liveStatsVisible',     'Torneio em Tempo Real',    'ph-activity',          true)}
+    ${fieldToggle('navegarVisible',       'Navegar (cards)',          'ph-squares-four',      true)}
+    ${fieldToggle('agendaVisible',        'Agenda (Próximos Jogos)',  'ph-clock',             true)}
+    ${fieldToggle('leaderboardVisible',   'Leaderboard (Top Pares)',  'ph-chart-line-up',     true)}
+    ${fieldToggle('patrocinadoresVisible','Patrocinadores Oficiais',  'ph-handshake',         true)}
+    ${fieldToggle('parceirosVisible',     'Parceiros Oficiais',       'ph-handshake',         true)}
 
     ${section('Quadro de Apuramento')}
     ${fieldSelect('sbRefreshMins', 'Auto-refresh (minutos)', [['5','5 min'],['10','10 min'],['15','15 min'],['30','30 min']], '15')}
@@ -5984,6 +5994,79 @@ window.insAdminDelete = function(id) {
     renderInscricoes();
     toast('Inscrição removida.', 'success');
   } catch(e) { toast('Erro ao remover.', 'error'); }
+};
+
+// ============================================
+//  PATROCINADORES & PARCEIROS
+// ============================================
+function renderPatrocinadores() {
+  function renderPanel(containerId, key, label) {
+    const el = document.getElementById(containerId);
+    if (!el) return;
+    const items = getData(key) || [];
+
+    function row(p, i) {
+      const logoHtml = p.logo
+        ? `<img src="${escHtml(p.logo)}" alt="${escHtml(p.nome)}" style="height:40px;max-width:80px;object-fit:contain;border-radius:4px;background:#111"/>`
+        : `<div style="width:80px;height:40px;background:#1C2620;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:.7rem;color:#8AA396">sem logo</div>`;
+      return `<div style="display:flex;align-items:center;gap:.75rem;padding:.5rem 0;border-bottom:1px solid rgba(255,255,255,.04)">
+        ${logoHtml}
+        <div style="flex:1;min-width:0">
+          <div style="font-size:.85rem;color:var(--branco);font-weight:600">${escHtml(p.nome)}</div>
+          ${p.url ? `<div style="font-size:.72rem;color:var(--cinza-texto);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${escHtml(p.url)}</div>` : ''}
+        </div>
+        <button onclick="sponsorDelete('${key}',${i})" style="border:none;background:rgba(255,60,60,.12);color:#FF6B6B;cursor:pointer;border-radius:6px;padding:.25rem .55rem;font-size:.75rem">Remover</button>
+      </div>`;
+    }
+
+    el.innerHTML = `
+      <div style="margin-bottom:1.25rem">
+        <h3 style="font-size:.95rem;margin:0 0 .75rem;color:var(--verde-claro);text-transform:uppercase;letter-spacing:.04em">${escHtml(label)}</h3>
+        <div id="${containerId}List">${items.length ? items.map((p,i) => row(p,i)).join('') : '<p style="color:#8AA396;font-size:.83rem">Nenhum item.</p>'}</div>
+      </div>
+      <details style="margin-top:.75rem">
+        <summary style="cursor:pointer;font-size:.83rem;color:var(--cinza-texto);margin-bottom:.5rem">➕ Adicionar ${escHtml(label)}</summary>
+        <div style="display:flex;flex-direction:column;gap:.5rem;padding:.75rem;background:var(--cinza-escuro);border-radius:8px;margin-top:.5rem">
+          <input id="${containerId}Nome" placeholder="Nome" style="background:#111;border:1px solid var(--preto-borda);border-radius:6px;padding:.4rem .65rem;font-size:.83rem;color:var(--branco)"/>
+          <input id="${containerId}Logo" placeholder="Logo (ex: patrocinadores/nome.png ou https://...)" style="background:#111;border:1px solid var(--preto-borda);border-radius:6px;padding:.4rem .65rem;font-size:.83rem;color:var(--branco)"/>
+          <input id="${containerId}Url" placeholder="Link (opcional)" style="background:#111;border:1px solid var(--preto-borda);border-radius:6px;padding:.4rem .65rem;font-size:.83rem;color:var(--branco)"/>
+          <button onclick="sponsorAdd('${key}','${containerId}')" style="background:var(--verde);color:#000;border:none;border-radius:6px;padding:.45rem;font-size:.83rem;font-weight:700;cursor:pointer">Adicionar</button>
+        </div>
+      </details>`;
+  }
+
+  const container = document.getElementById('view-patrocinadores');
+  if (!container) return;
+  container.innerHTML = `
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;max-width:900px">
+      <div id="patronPanel" style="background:var(--cinza-escuro);border-radius:12px;padding:1rem;border:1px solid rgba(255,255,255,.07)"></div>
+      <div id="parceirosPanel" style="background:var(--cinza-escuro);border-radius:12px;padding:1rem;border:1px solid rgba(255,255,255,.07)"></div>
+    </div>`;
+  renderPanel('patronPanel',   'patrocinadores', 'Patrocinadores');
+  renderPanel('parceirosPanel','parceiros',       'Parceiros');
+}
+
+window.sponsorAdd = function(key, containerId) {
+  const nome = document.getElementById(containerId + 'Nome').value.trim();
+  if (!nome) { toast('Nome obrigatório.', 'error'); return; }
+  const logo = document.getElementById(containerId + 'Logo').value.trim();
+  const url  = document.getElementById(containerId + 'Url').value.trim();
+  const items = getData(key) || [];
+  items.push({ id: Date.now().toString(36), nome, logo, url });
+  setData(key, items);
+  _autoSync();
+  renderPatrocinadores();
+  toast('Adicionado com sucesso.', 'success');
+};
+
+window.sponsorDelete = function(key, idx) {
+  if (!confirm('Remover este item?')) return;
+  const items = getData(key) || [];
+  items.splice(idx, 1);
+  setData(key, items);
+  _autoSync();
+  renderPatrocinadores();
+  toast('Removido com sucesso.', 'success');
 };
 
 // ============================================

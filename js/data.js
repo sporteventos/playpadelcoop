@@ -26,6 +26,23 @@ const DEFAULTS = {
   fasefinal: {},
   telefones: {},
   inscricoes: [],
+  patrocinadores: [
+    { id: 'jetour',          nome: 'Jetour',           logo: 'patrocinadores/jetour.png',           url: '' },
+    { id: 'stellaartois',    nome: 'Stella Artois',    logo: 'patrocinadores/stellaartois.png',     url: '' },
+    { id: 'bonaqua',         nome: 'Bona Aqua',        logo: 'patrocinadores/bonaqua.png',          url: '' },
+    { id: 'tvcabo',          nome: 'TV Cabo',          logo: 'patrocinadores/tvcabo.png',           url: '' },
+    { id: 'alcanceeditores', nome: 'Alcance Editores', logo: 'patrocinadores/alcanceeditores.png',  url: '' },
+    { id: 'eclipse',         nome: 'Eclipse',          logo: 'patrocinadores/Eclipse.png',          url: '' },
+  ],
+  parceiros: [
+    { id: 'fisiolab',   nome: 'Fisiolab',         logo: 'parceiros/fisiolab.png',            url: '' },
+    { id: 'montebelo',  nome: 'Montebelo Hotéis', logo: 'parceiros/montebelo hoteis.png',   url: '' },
+    { id: 'tempo',      nome: 'Tempo',            logo: 'parceiros/tempo.png',               url: '' },
+    { id: 'matchpoint', nome: 'Match Point',      logo: 'parceiros/matchpoint.JPG',         url: '' },
+    { id: 'fitclo',     nome: 'Fitclo',           logo: 'parceiros/fitclo.JPG',             url: '' },
+    { id: 'babycity',   nome: 'Baby City',        logo: 'parceiros/babycity.JPG',           url: '' },
+    { id: 'makimono',   nome: 'Makimono',         logo: 'parceiros/makimono.JPG',           url: '' },
+  ],
   config: {
     tornNome: 'Torneio Reentre',
     tornSubtitulo: 'Torneio Reentre',
@@ -42,6 +59,12 @@ const DEFAULTS = {
     inscricoesVisible: true,
     estatisticasVisible: true,
     regulamentoVisible: true,
+    liveStatsVisible: true,
+    navegarVisible: true,
+    agendaVisible: true,
+    leaderboardVisible: true,
+    patrocinadoresVisible: true,
+    parceirosVisible: true,
     bannerVisible: false,
     bannerMsg: '',
     sbRefreshMins: '15',
@@ -70,7 +93,7 @@ function ppFormatDate(d) {
 (function () {
   if (typeof window === 'undefined') return;
   if (window.location.protocol === 'file:') return; // skip when opened locally
-  var KEYS = ['campos', 'categorias', 'grupos', 'jogadores', 'duplas', 'jogos', 'fasefinal', 'telefones', 'inscricoes', 'users', 'config'];
+  var KEYS = ['campos', 'categorias', 'grupos', 'jogadores', 'duplas', 'jogos', 'fasefinal', 'telefones', 'inscricoes', 'patrocinadores', 'parceiros', 'users', 'config'];
 
   // On admin: always fetch, but only overwrite local data if remote _updated is newer.
   // Exception: 'users' is always updated from remote to ensure synced users are available on login.

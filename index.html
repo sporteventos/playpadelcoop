@@ -180,7 +180,7 @@
 </div>
 
 <!-- ===================== LIVE STATS ===================== -->
-<section class="live-stats-section">
+<section class="live-stats-section" id="sectionLiveStats">
   <div class="live-stats-inner">
     <div class="live-tag"><span class="live-tag-dot"></span> Torneio em tempo real</div>
     <div class="live-stats-grid">
@@ -290,7 +290,7 @@
 </section>
 
 <!-- ===================== TOP PARES ===================== -->
-<section class="top-pares-section">
+<section class="top-pares-section" id="sectionTopPares">
   <div class="top-pares-inner">
     <div class="top-pares-header">
       <div>
@@ -304,69 +304,15 @@
 </section>
 
 <!-- ===================== PATROCINADORES ===================== -->
-<section class="patrocinadores-section">
+<section class="patrocinadores-section" id="sectionPatrocinadores">
   <p class="patrocinadores-label">Patrocinadores Oficiais</p>
-  <div class="patrocinadores-grid">
-    <div class="patrocinador-item">
-      <img src="patrocinadores/jetour.png" alt="Jetour" class="patrocinador-logo"/>
-      <span class="patrocinador-nome">Jetour</span>
-    </div>
-    <div class="patrocinador-item">
-      <img src="patrocinadores/stellaartois.png" alt="Stella Artois" class="patrocinador-logo"/>
-      <span class="patrocinador-nome">Stella Artois</span>
-    </div>
-    <div class="patrocinador-item">
-      <img src="patrocinadores/bonaqua.png" alt="Bona Aqua" class="patrocinador-logo"/>
-      <span class="patrocinador-nome">Bona Aqua</span>
-    </div>
-    <div class="patrocinador-item">
-      <img src="patrocinadores/tvcabo.png" alt="TV Cabo" class="patrocinador-logo"/>
-      <span class="patrocinador-nome">TV Cabo</span>
-    </div>
-    <div class="patrocinador-item">
-      <img src="patrocinadores/alcanceeditores.png" alt="Alcance Editores" class="patrocinador-logo"/>
-      <span class="patrocinador-nome">Alcance Editores</span>
-    </div>
-    <div class="patrocinador-item">
-      <img src="patrocinadores/Eclipse.png" alt="Eclipse" class="patrocinador-logo"/>
-      <span class="patrocinador-nome">Eclipse</span>
-    </div>
-  </div>
+  <div class="patrocinadores-grid" id="patrocinadoresGrid"></div>
 </section>
 
 <!-- ===================== PARCEIROS ===================== -->
-<section class="patrocinadores-section parceiros-section">
+<section class="patrocinadores-section parceiros-section" id="sectionParceiros">
   <p class="patrocinadores-label">Parceiros Oficiais</p>
-  <div class="patrocinadores-grid">
-    <div class="patrocinador-item">
-      <img src="parceiros/fisiolab.png" alt="Fisiolab" class="patrocinador-logo"/>
-      <span class="patrocinador-nome">Fisiolab</span>
-    </div>
-    <div class="patrocinador-item">
-      <img src="parceiros/montebelo hoteis.png" alt="Montebelo Hot&#233;is" class="patrocinador-logo"/>
-      <span class="patrocinador-nome">Montebelo Hot&#233;is</span>
-    </div>
-    <div class="patrocinador-item">
-      <img src="parceiros/tempo.png" alt="Tempo" class="patrocinador-logo"/>
-      <span class="patrocinador-nome">Tempo</span>
-    </div>
-    <div class="patrocinador-item">
-      <img src="parceiros/matchpoint.JPG" alt="Match Point" class="patrocinador-logo"/>
-      <span class="patrocinador-nome">Match Point</span>
-    </div>
-    <div class="patrocinador-item">
-      <img src="parceiros/fitclo.JPG" alt="Fitclo" class="patrocinador-logo"/>
-      <span class="patrocinador-nome">Fitclo</span>
-    </div>
-    <div class="patrocinador-item">
-      <img src="parceiros/babycity.JPG" alt="Baby City" class="patrocinador-logo"/>
-      <span class="patrocinador-nome">Baby City</span>
-    </div>
-    <div class="patrocinador-item">
-      <img src="parceiros/makimono.JPG" alt="Makimono" class="patrocinador-logo"/>
-      <span class="patrocinador-nome">Makimono</span>
-    </div>
-  </div>
+  <div class="patrocinadores-grid" id="parceirosGrid"></div>
 </section>
 
 <!-- ===================== FOOTER ===================== -->
@@ -590,9 +536,17 @@
           if (fc) fc.textContent = '\u00a9 2026 ' + (cfg.tornNome||'Play Padel') + ' \u00b7 ' + (cfg.tornDatas||'') + ' \u00b7 ' + (cfg.tornLocal||'') + ', Mo\u00e7ambique';
         }
 
-        // Visibilidade botão scoreboard
+        // Visibilidade botões hero
         show('btnScoreboard', cfg.scoreboardVisible !== false);
         show('btnFaseFinalHero', cfg.fasefinalVisible !== false);
+
+        // Visibilidade secções da página principal
+        show('sectionLiveStats',      cfg.liveStatsVisible !== false);
+        show('modulos',               cfg.navegarVisible !== false);
+        show('proximos',              cfg.agendaVisible !== false);
+        show('sectionTopPares',       cfg.leaderboardVisible !== false);
+        show('sectionPatrocinadores', cfg.patrocinadoresVisible !== false);
+        show('sectionParceiros',      cfg.parceirosVisible !== false);
 
         // Visibilidade páginas — nav desktop + drawer mobile + cards
         show('navLiCalendario',       cfg.calendarioVisible !== false);
@@ -625,6 +579,28 @@
         }
       } catch(e) {}
     }
+    // Render patrocinadores / parceiros dinamicamente
+    function renderSponsors(key, gridId) {
+      var grid = document.getElementById(gridId);
+      if (!grid) return;
+      var items = ppGet(key) || [];
+      if (!items.length) { grid.innerHTML = ''; return; }
+      grid.innerHTML = items.map(function(p) {
+        var href = p.url ? ' onclick="window.open(\''+p.url+'\',\'_blank\')"' : '';
+        var cursor = p.url ? 'cursor:pointer' : '';
+        var img = p.logo
+          ? '<img src="'+p.logo+'" alt="'+p.nome+'" class="patrocinador-logo"/>'
+          : '<div class="patrocinador-logo" style="display:flex;align-items:center;justify-content:center;background:#1C2620;border-radius:8px;font-size:.75rem;color:#8AA396">'+p.nome+'</div>';
+        return '<div class="patrocinador-item" style="'+cursor+'"'+href+'>'+img+'<span class="patrocinador-nome">'+p.nome+'</span></div>';
+      }).join('');
+    }
+    renderSponsors('patrocinadores', 'patrocinadoresGrid');
+    renderSponsors('parceiros', 'parceirosGrid');
+    window.addEventListener('pp:datasynced', function() {
+      renderSponsors('patrocinadores', 'patrocinadoresGrid');
+      renderSponsors('parceiros', 'parceirosGrid');
+    });
+
     applyConfig();
     window.addEventListener('pp:datasynced', applyConfig);
   }());
