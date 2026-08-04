@@ -6080,6 +6080,7 @@ async function renderInscricoes() {
                       </span>
                     </td>
                     <td style="padding:.65rem .9rem;text-align:center;white-space:nowrap">
+                      <button class="btn-icon" title="Editar dados" onclick="insAdminEdit('${escHtml(e.id)}')"><i class="ph ph-pencil-simple" style="color:#8AA396"></i></button>
                       ${e.reservado ? `<button class="btn-icon" title="Anunciar parceiro (cria a pré-inscrição do parceiro)" onclick="insAdminAnnounce('${escHtml(e.id)}')"><i class="ph ph-user-plus" style="color:#7BB0FF"></i></button>` : ''}
                       ${e.estado==='confirmada'
                         ? `<button class="btn-icon" title="Reverter confirmação" onclick="insAdminUnconfirm('${escHtml(e.id)}')"><i class="ph ph-arrow-counter-clockwise" style="color:#8AA396"></i></button>`
@@ -6116,6 +6117,86 @@ async function renderInscricoes() {
     toast('Inscrições apagadas.', 'success');
   });
 }
+
+// Editar uma pré-inscrição: nome, género, categoria, contactos, parceiro (info) e reserva.
+window.insEditBuildCats = function(selected) {
+  const gen = (document.getElementById('insEditGenero') || {}).value || 'M';
+  const sel = document.getElementById('insEditCategoria');
+  if (!sel) return;
+  const cats = (getData('categorias') || []).filter(c => c && c.id && c.id.charAt(0) === gen);
+  const cur = selected !== undefined ? selected : sel.value;
+  sel.innerHTML = '<option value="">— sem categoria —</option>' +
+    cats.map(c => `<option value="${escHtml(c.id)}">${escHtml(c.id)} · ${escHtml(c.nome || '')}</option>`).join('');
+  if (cur) sel.value = cur;
+};
+
+window.insAdminEdit = function(id) {
+  const entries = JSON.parse(localStorage.getItem('pp_inscricoes') || '[]');
+  const e = entries.find(x => x.id === id);
+  if (!e) { toast('Inscrição não encontrada.', 'error'); return; }
+  document.getElementById('insEditId').value = e.id;
+  document.getElementById('insEditNome').value = e.nome1 || '';
+  document.getElementById('insEditGenero').value = e.genero === 'F' ? 'F' : 'M';
+  insEditBuildCats(e.categoria || '');
+  document.getElementById('insEditTel').value = e.telefone || '';
+  document.getElementById('insEditEmail').value = e.email || '';
+  document.getElementById('insEditParceiro').value = e.parceiro || '';
+  document.getElementById('insEditReservado').checked = !!e.reservado;
+  document.getElementById('insEditObs').value = e.observacoes || '';
+  openModal('modalInscricao');
+};
+
+window.insAdminSave = async function() {
+  try {
+    const id = document.getElementById('insEditId').value;
+    const entries = JSON.parse(localStorage.getItem('pp_inscricoes') || '[]');
+    const e = entries.find(x => x.id === id);
+    if (!e) { toast('Inscrição não encontrada.', 'error'); return; }
+    const nome = document.getElementById('insEditNome').value.trim();
+    if (!nome) { toast('O nome é obrigatório.', 'error'); return; }
+    const genero = document.getElementById('insEditGenero').value === 'F' ? 'F' : 'M';
+    const categoria = document.getElementById('insEditCategoria').value;
+    const tel = document.getElementById('insEditTel').value.trim();
+    const email = document.getElementById('insEditEmail').value.trim();
+    const parceiro = document.getElementById('insEditParceiro').value.trim();
+    const reservado = document.getElementById('insEditReservado').checked;
+    const obs = document.getElementById('insEditObs').value.trim();
+
+    e.nome1 = nome;
+    e.genero = genero;
+    e.categoria = categoria;
+    e.telefone = tel || null;
+    e.email = email || null;
+    e.parceiro = parceiro || (reservado ? '(A anunciar)' : '');
+    e.reservado = reservado;
+    e.observacoes = obs;
+    e.tipo = (parceiro && parceiro !== '(A anunciar)') || reservado || e.parid ? 'dupla' : e.tipo;
+
+    // Se está ligada a um parceiro (parid), mantém a categoria/género coerentes no par
+    if (e.parid) {
+      entries.filter(x => x.parid === e.parid && x.id !== e.id).forEach(sib => {
+        sib.categoria = categoria;
+        sib.genero = genero;
+        if (sib.parceiro && e.nome1) sib.parceiro = e.nome1;
+      });
+    }
+
+    localStorage.setItem('pp_inscricoes', JSON.stringify(entries));
+    if (window.ppCloudState && window.ppCloudState.upsertInscricao) {
+      try { await window.ppCloudState.upsertInscricao(e); } catch (_) {}
+      if (e.parid) {
+        for (const sib of entries.filter(x => x.parid === e.parid && x.id !== e.id)) {
+          try { await window.ppCloudState.upsertInscricao(sib); } catch (_) {}
+        }
+      }
+    }
+    if (window.ppCloudState && window.ppCloudState.enabled) await window.ppCloudState.pushFromLocal();
+    if (typeof Auth !== 'undefined' && Auth && Auth.log) Auth.log('EDITAR_INSCRICAO', 'inscricoes', `${nome} (${categoria || 's/ cat'})`);
+    closeModal('modalInscricao');
+    renderInscricoes();
+    toast('Pré-inscrição actualizada.', 'success');
+  } catch (err) { toast('Erro ao guardar inscrição.', 'error'); }
+};
 
 // Anuncia o parceiro de uma reserva: cria a pré-inscrição do parceiro ligada por parid.
 window.insAdminAnnounce = async function(id) {

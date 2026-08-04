@@ -1099,6 +1099,65 @@
   </div>
 </div>
 
+<!-- Modal: Editar Pré-Inscrição -->
+<div class="modal-overlay" id="modalInscricao" role="dialog" aria-modal="true" aria-labelledby="modalInscricaoTitle">
+  <div class="modal" style="max-width:520px">
+    <div class="modal-header">
+      <h2 class="modal-title" id="modalInscricaoTitle"><i class="ph ph-pencil-simple"></i> Editar Pré-Inscrição</h2>
+      <button class="modal-close" onclick="closeModal('modalInscricao')" aria-label="Fechar"><i class="ph ph-x"></i></button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="insEditId"/>
+      <div class="form-group-modal">
+        <label class="form-label" for="insEditNome">Nome</label>
+        <input class="form-input" type="text" id="insEditNome" placeholder="Nome do jogador"/>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:.6rem">
+        <div class="form-group-modal">
+          <label class="form-label" for="insEditGenero">Género</label>
+          <select class="form-input" id="insEditGenero" onchange="insEditBuildCats()">
+            <option value="M">Masculino</option>
+            <option value="F">Feminino</option>
+          </select>
+        </div>
+        <div class="form-group-modal">
+          <label class="form-label" for="insEditCategoria">Nível / Categoria</label>
+          <select class="form-input" id="insEditCategoria"></select>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:.6rem">
+        <div class="form-group-modal">
+          <label class="form-label" for="insEditTel">Telefone</label>
+          <input class="form-input" type="tel" id="insEditTel" placeholder="+258 84 123 4567"/>
+        </div>
+        <div class="form-group-modal">
+          <label class="form-label" for="insEditEmail">Email</label>
+          <input class="form-input" type="email" id="insEditEmail" placeholder="opcional"/>
+        </div>
+      </div>
+      <div class="form-group-modal">
+        <label class="form-label" for="insEditParceiro">Parceiro(a)</label>
+        <input class="form-input" type="text" id="insEditParceiro" placeholder="Nome do parceiro ou (A anunciar)"/>
+        <p class="form-hint" style="font-size:.75rem;color:var(--cinza-texto);margin-top:.3rem">Apenas informativo nesta ficha. Para criar a pré-inscrição do parceiro, usa a acção "Anunciar parceiro".</p>
+      </div>
+      <div class="form-group-modal">
+        <label style="display:flex;align-items:center;gap:.5rem;font-size:.85rem;color:var(--branco);cursor:pointer">
+          <input type="checkbox" id="insEditReservado" style="width:auto"/>
+          <span><i class="ph ph-bookmark-simple" style="color:#7BB0FF"></i> Reserva de dupla (lugar do parceiro por anunciar — ocupa 2 vagas)</span>
+        </label>
+      </div>
+      <div class="form-group-modal">
+        <label class="form-label" for="insEditObs">Observações</label>
+        <textarea class="form-input" id="insEditObs" rows="2" placeholder="Notas internas"></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modalInscricao')">Cancelar</button>
+      <button class="btn btn-primary" onclick="insAdminSave()"><i class="ph ph-floppy-disk"></i> Guardar</button>
+    </div>
+  </div>
+</div>
+
 <!-- Modal: Campo -->
 <div class="modal-overlay" id="modalCampo" role="dialog" aria-modal="true" aria-labelledby="modalCampoTitle">
   <div class="modal">
@@ -1485,9 +1544,9 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="js/data.js?v=11"></script>
-<script src="js/auth.js?v=11"></script>
-<script src="js/admin.js?v=11"></script>
+<script src="js/data.js?v=12"></script>
+<script src="js/auth.js?v=12"></script>
+<script src="js/admin.js?v=12"></script>
 <script>
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('/playpadelcoop/sw.js', { updateViaCache: 'none' })
