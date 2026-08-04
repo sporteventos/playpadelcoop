@@ -185,7 +185,8 @@
     "patrocinadoresVisible": false,
     "parceirosVisible": false,
     "tornTelOrg": "258844471740",
-    "insSyncEnabled": true
+    "insSyncEnabled": true,
+    "insSyncUrl": "https://jjtsqsumczbhfgbgjxsd.supabase.co"
   },
   "users": [
     {
@@ -10275,5 +10276,5 @@
       "ts": "2026-06-04T20:14:42.728Z"
     }
   ],
-  "_updated": "2026-08-04T10:22:33.861Z"
+  "_updated": "2026-08-04T10:32:44.801Z"
 }
