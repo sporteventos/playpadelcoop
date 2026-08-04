@@ -4003,11 +4003,17 @@ window.toggleAutoSyncPause = function() {
 function _autoSync() {
   if (_autoSyncPaused) return;
   if (!window.ppCloudState || !window.ppCloudState.enabled) return;
-  window.ppCloudState.pushFromLocal().then(() => {
-    // success — silent
-  }).catch(err => {
-    toast('⚠ Auto-sync cloud falhou — carregue em Sincronizar manualmente. (' + (err?.message || err) + ')', 'error');
-  });
+  // Debounce: setData/ffSave disparam a cada edição; agrupamos as escritas
+  // para não fazer dezenas de pedidos REST por interação.
+  if (_autoSync._t) clearTimeout(_autoSync._t);
+  _autoSync._t = setTimeout(function () {
+    _autoSync._t = null;
+    window.ppCloudState.pushFromLocal().then(() => {
+      // success — silent
+    }).catch(err => {
+      toast('⚠ Auto-sync cloud falhou — carregue em Sincronizar manualmente. (' + (err?.message || err) + ')', 'error');
+    });
+  }, 1200);
 }
 
 function salvarResultado() {

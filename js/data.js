@@ -161,23 +161,149 @@ async function ppCloudDeleteInscricao(id) {
   var r = await fetch(endpoint, { method: 'DELETE', headers: ppCloudHeaders('return=minimal') });
   if (!r.ok) throw new Error('Cloud inscricao delete failed: ' + r.status);
 }
+// ---- Normalized relational tables (Fase 3) ----
+var PP_ENTITIES = [
+  // ordem = segura para FKs (pais antes de filhos)
+  { key: 'categorias',     table: 'categorias',     idKey: 'id', map: function (r) { return { nome: r.nome, tipo: r.tipo, nivel: r.nivel }; } },
+  { key: 'campos',         table: 'campos',         idKey: 'id', map: function (r) { return { nome: r.nome, icone: r.icone, activo: r.activo }; } },
+  { key: 'jogadores',      table: 'jogadores',      idKey: 'id', map: function (r) { return { nome: r.nome }; } },
+  { key: 'grupos',         table: 'grupos',         idKey: 'id', map: function (r) { return { cat: r.cat, letra: r.letra }; } },
+  { key: 'duplas',         table: 'duplas',         idKey: 'id', map: function (r) { return { grupo: r.grupo || null, j1: r.j1 || null, j2: r.j2 || null }; } },
+  { key: 'jogos',          table: 'jogos',          idKey: 'id', map: function (r) { return { data: r.data || null, hora: r.hora || null, campo: r.campo || null, grupo: r.grupo || null, eq1: r.eq1 || null, eq2: r.eq2 || null, resultado: r.resultado || null, estado: r.estado || null }; } },
+  { key: 'patrocinadores', table: 'patrocinadores', idKey: 'id', map: function (r) { return { nome: r.nome, logo: r.logo, url: r.url, ordem: r.ordem != null ? r.ordem : null }; } },
+  { key: 'parceiros',      table: 'parceiros',      idKey: 'id', map: function (r) { return { nome: r.nome, logo: r.logo, url: r.url, ordem: r.ordem != null ? r.ordem : null }; } },
+];
+
+async function ppTableUpsert(table, rows, conflictCol) {
+  if (!rows || !rows.length) return;
+  var ep = PP_CLOUD.url + '/rest/v1/' + table + '?on_conflict=' + (conflictCol || 'id');
+  var r = await fetch(ep, { method: 'POST', headers: ppCloudHeaders('resolution=merge-duplicates,return=minimal'), body: JSON.stringify(rows) });
+  if (!r.ok) throw new Error('upsert ' + table + ' ' + r.status + ' ' + (await r.text()));
+}
+
+// Apaga apenas as linhas que já não existem localmente (diff preciso, em lotes)
+async function ppTableDeleteMissing(table, localIds, idCol) {
+  idCol = idCol || 'id';
+  var r = await fetch(PP_CLOUD.url + '/rest/v1/' + table + '?select=' + idCol, { headers: ppCloudHeaders() });
+  if (!r.ok) throw new Error('list ' + table + ' ' + r.status);
+  var existing = (await r.json()).map(function (x) { return String(x[idCol]); });
+  var localSet = {}; (localIds || []).forEach(function (id) { localSet[String(id)] = 1; });
+  var stale = existing.filter(function (id) { return !localSet[id]; });
+  for (var i = 0; i < stale.length; i += 50) {
+    var batch = stale.slice(i, i + 50).map(function (v) { return '"' + v.replace(/"/g, '') + '"'; }).join(',');
+    var ep = PP_CLOUD.url + '/rest/v1/' + table + '?' + idCol + '=in.(' + encodeURIComponent(batch) + ')';
+    var dr = await fetch(ep, { method: 'DELETE', headers: ppCloudHeaders('return=minimal') });
+    if (!dr.ok) throw new Error('delete ' + table + ' ' + dr.status);
+  }
+}
+
+async function ppTablePull(table) {
+  var r = await fetch(PP_CLOUD.url + '/rest/v1/' + table + '?select=raw', { headers: ppCloudHeaders() });
+  if (!r.ok) throw new Error('pull ' + table + ' ' + r.status);
+  return (await r.json()).map(function (x) { return x.raw; });
+}
+
+// Singletons (fasefinal / telefones / config)
+async function ppPullMap(table, keyCol, valCol) {
+  var r = await fetch(PP_CLOUD.url + '/rest/v1/' + table + '?select=' + keyCol + ',' + valCol, { headers: ppCloudHeaders() });
+  if (!r.ok) throw new Error('pull ' + table + ' ' + r.status);
+  var out = {}; (await r.json()).forEach(function (x) { out[x[keyCol]] = x[valCol]; }); return out;
+}
+async function ppUpsertMap(table, keyCol, valCol, obj, deleteMissing) {
+  var keys = Object.keys(obj || {});
+  var rows = keys.map(function (k) { var o = {}; o[keyCol] = k; o[valCol] = obj[k]; return o; });
+  await ppTableUpsert(table, rows, keyCol);
+  if (deleteMissing) await ppTableDeleteMissing(table, keys, keyCol);
+}
+
+function ppApplyNormalizedState(state) {
+  PP_ENTITIES.forEach(function (e) { if (Array.isArray(state[e.key])) ppSave(e.key, state[e.key]); });
+  if (state.fasefinal) ppSave('fasefinal', state.fasefinal);
+  if (state.telefones) ppSave('telefones', state.telefones);
+  if (state.config && Object.keys(state.config).length) {
+    var merged = Object.assign({}, DEFAULTS.config, ppLoad('config') || {}, state.config);
+    ppSave('config', merged);
+  }
+}
+
+async function ppNormalizedPull() {
+  var results = await Promise.all(PP_ENTITIES.map(function (e) { return ppTablePull(e.table); }));
+  var state = {};
+  PP_ENTITIES.forEach(function (e, i) { state[e.key] = results[i]; });
+  var trio = await Promise.all([
+    ppPullMap('fasefinal', 'categoria_id', 'data'),
+    ppPullMap('telefones', 'nome', 'numero'),
+    ppPullMap('config', 'key', 'value'),
+  ]);
+  state.fasefinal = trio[0];
+  state.telefones = trio[1];
+  state.config = trio[2];
+  var hasAny = PP_ENTITIES.some(function (e) { return (state[e.key] || []).length; })
+    || Object.keys(state.fasefinal).length || Object.keys(state.telefones).length || Object.keys(state.config).length;
+  return hasAny ? state : null;
+}
+
+async function ppNormalizedPush(state) {
+  // upserts (ordem pai->filho)
+  for (var i = 0; i < PP_ENTITIES.length; i++) {
+    var e = PP_ENTITIES[i];
+    var arr = state[e.key] || [];
+    var rows = arr.map(function (r) { var o = e.map(r); o.id = String(r[e.idKey]); o.raw = r; return o; });
+    await ppTableUpsert(e.table, rows, 'id');
+  }
+  await ppUpsertMap('fasefinal', 'categoria_id', 'data', state.fasefinal || {}, false);
+  await ppUpsertMap('telefones', 'nome', 'numero', state.telefones || {}, false);
+  await ppUpsertMap('config', 'key', 'value', state.config || {}, false);
+  // delete-missing (ordem filho->pai)
+  var rev = PP_ENTITIES.slice().reverse();
+  for (var k = 0; k < rev.length; k++) {
+    var e2 = rev[k];
+    var ids = (state[e2.key] || []).map(function (r) { return String(r[e2.idKey]); });
+    await ppTableDeleteMissing(e2.table, ids, 'id');
+  }
+  await ppTableDeleteMissing('fasefinal', Object.keys(state.fasefinal || {}), 'categoria_id');
+  await ppTableDeleteMissing('telefones', Object.keys(state.telefones || {}), 'nome');
+}
+
 window.ppCloudState = {
   enabled: true,
   collectLocalState: ppCollectLocalState,
-  pullToLocal: async function() {
-    var state = await ppCloudFetchState();
-    if (state) {
-      ppApplyCloudState(state);
-      window.dispatchEvent(new CustomEvent('pp:datasynced', { detail: state }));
-      return true;
-    }
+  pullToLocal: async function () {
+    // 1) Tabelas normalizadas (fonte de verdade)
+    try {
+      var state = await ppNormalizedPull();
+      if (state) {
+        ppApplyNormalizedState(state);
+        window.dispatchEvent(new CustomEvent('pp:datasynced', { detail: state }));
+        return true;
+      }
+    } catch (e) { /* cai para o backup app_state */ }
+    // 2) Fallback: blob app_state
+    try {
+      var legacy = await ppCloudFetchState();
+      if (legacy) {
+        ppApplyCloudState(legacy);
+        window.dispatchEvent(new CustomEvent('pp:datasynced', { detail: legacy }));
+        return true;
+      }
+    } catch (e2) {}
     return false;
   },
-  pushFromLocal: async function() {
+  pushFromLocal: async function () {
+    // Escrever exige staff autenticado (RLS)
+    if (!(window.PP_AUTH && window.PP_AUTH.token)) return false;
     var state = ppCollectLocalState();
-    var ok = await ppCloudPushState(state);
-    if (ok) localStorage.setItem('pp__updated', state._updated);
-    return ok;
+    // Salvaguarda: nunca reconciliar (apagar) a partir de um estado local em branco
+    var totalRows = PP_ENTITIES.reduce(function (n, e) { return n + ((state[e.key] || []).length); }, 0)
+      + Object.keys(state.fasefinal || {}).length + Object.keys(state.telefones || {}).length;
+    if (totalRows === 0) return false;
+    var err = null;
+    try { await ppNormalizedPush(state); }
+    catch (e) { err = e; }
+    // Backup: blob app_state (mantém users/auditlog e serve de rede de segurança)
+    try { await ppCloudPushState(state); localStorage.setItem('pp__updated', state._updated); } catch (e2) { if (!err) err = e2; }
+    if (err) throw err;
+    return true;
   },
   fetchInscricoes: ppCloudFetchInscricoes,
   upsertInscricao: ppCloudUpsertInscricao,
