@@ -5940,17 +5940,22 @@ function _insRowHtml(e, entries) {
                       ${new Date(e.criadoem || e.criadoEm).toLocaleDateString('pt-PT')}
                     </td>
                     <td style="padding:.65rem .9rem;text-align:center">
-                      <span style="font-size:.66rem;font-weight:700;text-transform:uppercase;padding:.2rem .55rem;border-radius:999px;background:${e.estado==='confirmada'?'rgba(0,195,123,.15)':'rgba(245,197,24,.12)'};color:${e.estado==='confirmada'?'var(--verde)':'var(--amarelo)'}">
+                      ${e.estado==='cancelada'
+                        ? `<span style="font-size:.66rem;font-weight:700;text-transform:uppercase;padding:.2rem .55rem;border-radius:999px;background:rgba(255,74,74,.15);color:#FF7A7A">Cancelada</span>`
+                        : `<span style="font-size:.66rem;font-weight:700;text-transform:uppercase;padding:.2rem .55rem;border-radius:999px;background:${e.estado==='confirmada'?'rgba(0,195,123,.15)':'rgba(245,197,24,.12)'};color:${e.estado==='confirmada'?'var(--verde)':'var(--amarelo)'}">
                         ${e.estado==='confirmada' ? 'Confirmada' : 'Pendente'}
-                      </span>
+                      </span>`}
                     </td>
                     <td style="padding:.65rem .9rem;text-align:center;white-space:nowrap">
                       <button class="btn-icon" title="Editar dados" onclick="insAdminEdit('${escHtml(e.id)}')"><i class="ph ph-pencil-simple" style="color:#8AA396"></i></button>
-                      ${e.reservado ? `<button class="btn-icon" title="Anunciar parceiro (cria a pré-inscrição do parceiro)" onclick="insAdminAnnounce('${escHtml(e.id)}')"><i class="ph ph-user-plus" style="color:#7BB0FF"></i></button>` : ''}
-                      ${e.estado==='confirmada'
-                        ? `<button class="btn-icon" title="Reverter confirmação" onclick="insAdminUnconfirm('${escHtml(e.id)}')"><i class="ph ph-arrow-counter-clockwise" style="color:#8AA396"></i></button>`
-                        : `<button class="btn-icon" title="Confirmar inscrição (após pagamento) e criar jogador" onclick="insAdminConfirm('${escHtml(e.id)}')"><i class="ph ph-check-circle" style="color:var(--verde)"></i></button>`}
-                      <button class="btn-icon" title="Remover" onclick="insAdminDelete('${escHtml(e.id)}')"><i class="ph ph-trash" style="color:#FF4A4A"></i></button>
+                      ${e.reservado && e.estado!=='cancelada' ? `<button class="btn-icon" title="Anunciar parceiro (cria a pré-inscrição do parceiro)" onclick="insAdminAnnounce('${escHtml(e.id)}')"><i class="ph ph-user-plus" style="color:#7BB0FF"></i></button>` : ''}
+                      ${e.estado==='cancelada'
+                        ? `<button class="btn-icon" title="Reativar inscrição (volta a pendente)" onclick="insAdminReactivate('${escHtml(e.id)}')"><i class="ph ph-arrow-u-up-left" style="color:var(--verde)"></i></button>`
+                        : (e.estado==='confirmada'
+                          ? `<button class="btn-icon" title="Reverter confirmação (volta a pendente)" style="background:rgba(245,197,24,.12);border-radius:6px" onclick="insAdminUnconfirm('${escHtml(e.id)}')"><i class="ph ph-arrow-counter-clockwise" style="color:var(--amarelo)"></i></button>`
+                          : `<button class="btn-icon" title="Confirmar inscrição (após pagamento) e criar jogador" onclick="insAdminConfirm('${escHtml(e.id)}')"><i class="ph ph-check-circle" style="color:var(--verde)"></i></button>`)}
+                      ${e.estado!=='cancelada' ? `<button class="btn-icon" title="Cancelar inscrição (mantém registo, liberta a vaga)" onclick="insAdminCancel('${escHtml(e.id)}')"><i class="ph ph-prohibit" style="color:#FF9A3D"></i></button>` : ''}
+                      <button class="btn-icon" title="Remover definitivamente" onclick="insAdminDelete('${escHtml(e.id)}')"><i class="ph ph-trash" style="color:#FF4A4A"></i></button>
                     </td>
                   </tr>`;
 }
@@ -5968,7 +5973,8 @@ window._insApplyFilters = function() {
     if (fCat === '__none__') { if (e.categoria) return false; }
     else if (fCat && e.categoria !== fCat) return false;
     if (fEst === 'confirmada' && e.estado !== 'confirmada') return false;
-    if (fEst === 'pendente' && e.estado === 'confirmada') return false;
+    if (fEst === 'pendente' && (e.estado === 'confirmada' || e.estado === 'cancelada')) return false;
+    if (fEst === 'cancelada' && e.estado !== 'cancelada') return false;
     if (fTipo === 'reserva') { if (!e.reservado) return false; }
     else if (fTipo && e.tipo !== fTipo) return false;
     if (q) {
@@ -6118,6 +6124,7 @@ async function renderInscricoes() {
               <option value="">Estado: todos</option>
               <option value="pendente">Pendentes</option>
               <option value="confirmada">Confirmadas</option>
+              <option value="cancelada">Canceladas</option>
             </select>
             <select id="insFiltroTipo" onchange="_insApplyFilters()" style="background:var(--cinza-escuro);border:1px solid var(--preto-borda);border-radius:6px;padding:.4rem .5rem;font-size:.8rem;color:var(--branco)">
               <option value="">Tipo: todos</option>
@@ -6427,6 +6434,46 @@ window.insAdminUnconfirm = async function(id) {
     renderInscricoes();
     toast('Confirmação revertida.', 'warning');
   } catch(err) { toast('Erro ao reverter.', 'error'); }
+};
+
+// Cancela a inscrição: mantém o registo (auditoria) mas liberta a vaga.
+// Não apaga jogadores nem a dupla já criada — isso pode ser feito manualmente.
+window.insAdminCancel = async function(id) {
+  try {
+    const entries = JSON.parse(localStorage.getItem('pp_inscricoes') || '[]');
+    const e = entries.find(x => x.id === id);
+    if (!e) return;
+    if (e.estado === 'cancelada') { toast('Inscrição já está cancelada.', 'warning'); return; }
+    const eraConfirmada = e.estado === 'confirmada';
+    let msg = `Cancelar a inscrição de "${e.nome1}"?\n\nO registo é mantido mas a vaga é libertada.`;
+    if (eraConfirmada) msg += '\n\n(Os jogadores e a dupla já criados NÃO são removidos — remova-os em Duplas/Jogadores se necessário.)';
+    if (!confirm(msg)) return;
+    e.estado = 'cancelada';
+    e.canceladoem = new Date().toISOString();
+    delete e.confirmadoem;
+    localStorage.setItem('pp_inscricoes', JSON.stringify(entries));
+    if (window.ppCloudState && window.ppCloudState.upsertInscricao) await window.ppCloudState.upsertInscricao(e);
+    Auth.log('CANCELAR_INSCRICAO', 'inscricoes', `${e.nome1}${e.parceiro ? ' (par: ' + e.parceiro + ')' : ''} (${e.categoria || 'Sem categoria'})`);
+    renderInscricoes();
+    toast(`Inscrição de "${e.nome1}" cancelada. Vaga libertada.`, 'warning');
+  } catch(err) { toast('Erro ao cancelar: ' + (err && err.message || err), 'error'); }
+};
+
+// Reativa uma inscrição cancelada (volta a pendente).
+window.insAdminReactivate = async function(id) {
+  if (!confirm('Reativar esta inscrição? Volta ao estado pendente e reocupa a vaga.')) return;
+  try {
+    const entries = JSON.parse(localStorage.getItem('pp_inscricoes') || '[]');
+    const e = entries.find(x => x.id === id);
+    if (!e) return;
+    e.estado = 'nova';
+    delete e.canceladoem;
+    localStorage.setItem('pp_inscricoes', JSON.stringify(entries));
+    if (window.ppCloudState && window.ppCloudState.upsertInscricao) await window.ppCloudState.upsertInscricao(e);
+    Auth.log('REATIVAR_INSCRICAO', 'inscricoes', `${e.nome1} (${e.categoria || 'Sem categoria'})`);
+    renderInscricoes();
+    toast(`Inscrição de "${e.nome1}" reativada (pendente).`, 'success');
+  } catch(err) { toast('Erro ao reativar.', 'error'); }
 };
 
 // ============================================

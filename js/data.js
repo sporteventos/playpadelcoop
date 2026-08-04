@@ -148,8 +148,13 @@ async function ppCloudFetchInscricoes() {
 }
 async function ppCloudUpsertInscricao(entry) {
   var endpoint = PP_CLOUD.url + '/rest/v1/' + encodeURIComponent(PP_CLOUD.inscricoesTable) + '?on_conflict=id';
-  var payload = Object.assign({}, entry, { criadoem: entry.criadoem || entry.criadoEm || null });
-  if (Object.prototype.hasOwnProperty.call(payload, 'criadoEm')) delete payload.criadoEm;
+  // A tabela tem colunas estritas — enviar campos locais (ex.: confirmadoem,
+  // canceladoem, clube) que não existem na BD faz o PostgREST devolver 400.
+  // Por isso enviamos apenas as colunas conhecidas.
+  var COLS = ['id','criadoem','tipo','genero','categoria','nome1','nome2','telefone','email','observacoes','estado','parceiro','parid','reservado'];
+  var payload = {};
+  COLS.forEach(function (k) { if (Object.prototype.hasOwnProperty.call(entry, k)) payload[k] = entry[k]; });
+  payload.criadoem = entry.criadoem || entry.criadoEm || null;
   var r = await fetch(endpoint, {
     method: 'POST',
     headers: ppCloudHeaders('resolution=merge-duplicates,return=minimal'),
