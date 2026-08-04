@@ -28,6 +28,7 @@
       transition: border-color .15s;
     }
     .form-input:focus, .form-select:focus, .form-textarea:focus { outline:none; border-color: var(--verde); }
+    .form-input.locked { opacity:.75; cursor:not-allowed; background:rgba(255,255,255,.03); }
     .form-input.invalid, .form-select.invalid { border-color: #FF6B6B; }
     .form-textarea { min-height: 84px; resize: vertical; }
     .form-help { font-size: .74rem; color: #64796F; line-height: 1.45; }
@@ -144,7 +145,7 @@
           <div class="form-field" id="parceiroTelField" style="display:none">
             <label class="form-label" for="parceiroTel">Telefone do(a) parceiro(a) <span class="req">*</span></label>
             <input class="form-input" id="parceiroTel" name="parceiroTel" type="tel" placeholder="+258 84 000 0000"/>
-            <span class="form-help">Necessário para o parceiro ter a sua própria pré-inscrição e confirmação individual.</span>
+            <span class="form-help" id="parceiroTelHelp">Necessário para o parceiro ter a sua própria pré-inscrição e confirmação individual.</span>
           </div>
           <div class="form-field" id="parceiroEmailField" style="display:none">
             <label class="form-label" for="parceiroEmail">Email do(a) parceiro(a)</label>
@@ -258,18 +259,26 @@ document.addEventListener('DOMContentLoaded', function () {
   buildCats();
 
   // Autocomplete de jogadores (jogadores confirmados + já pré-inscritos), filtrado por género
-  var _playerCands = null; // { nome: 'M' | 'F' | '' }
+  var _playerCands = null; // { nome: { genero, tel, email } }
+  function _mergeCand(map, nome, genero, tel, email) {
+    if (!nome) return;
+    var c = map[nome] || { genero: '', tel: '', email: '' };
+    if (genero && !c.genero) c.genero = genero;
+    if (tel && !c.tel) c.tel = tel;
+    if (email && !c.email) c.email = email;
+    map[nome] = c;
+  }
   async function loadPlayerCandidates() {
     var map = {};
     (ppGet('jogadores') || []).forEach(function(j){
-      if (j && j.nome) map[j.nome] = j.genero || map[j.nome] || '';
+      if (j && j.nome) _mergeCand(map, j.nome, j.genero, j.tel || j.telefone, j.email);
     });
     try {
       if (window.ppCloudState && window.ppCloudState.fetchInscricoes) {
         var ins = await window.ppCloudState.fetchInscricoes();
         (ins || []).forEach(function(e){
-          if (e.nome1) map[e.nome1] = e.genero || map[e.nome1] || '';
-          if (e.nome2) map[e.nome2] = e.genero || map[e.nome2] || '';
+          _mergeCand(map, e.nome1, e.genero, e.telefone, e.email);
+          if (e.nome2) _mergeCand(map, e.nome2, e.genero, '', '');
         });
       }
     } catch (_) {}
@@ -281,7 +290,7 @@ document.addEventListener('DOMContentLoaded', function () {
     var gsel = document.querySelector('input[name="genero"]:checked');
     var g = gsel ? gsel.value : 'M';
     var names = Object.keys(_playerCands).filter(function(n){
-      var cg = _playerCands[n];
+      var cg = _playerCands[n] && _playerCands[n].genero;
       return !cg || cg === g; // inclui candidatos sem género conhecido para não esconder registos antigos
     });
     dl.innerHTML = names.sort(function(a,b){ return a.localeCompare(b); })
@@ -293,12 +302,51 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // Mostrar campos de contacto do parceiro apenas quando há parceiro indicado
   var parceiroInput = document.getElementById('parceiro');
+  var _selectedPartner = null; // { tel, email } quando o parceiro é um jogador conhecido
+  function _maskTel(t){
+    var d = String(t || '').replace(/\s+/g, '');
+    if (d.length <= 4) return d;
+    return d.slice(0, 4) + ' •••• ' + d.slice(-3);
+  }
+  function _maskEmail(e){
+    e = String(e || '');
+    var at = e.indexOf('@');
+    if (at < 1) return e;
+    var user = e.slice(0, at), dom = e.slice(at + 1);
+    var uMask = user.charAt(0) + '•••';
+    return uMask + '@' + dom;
+  }
+  function applyKnownPartner(){
+    var telF = document.getElementById('parceiroTel');
+    var emailF = document.getElementById('parceiroEmail');
+    var help = document.getElementById('parceiroTelHelp');
+    var nome = parceiroInput.value.trim();
+    var cand = _playerCands && _playerCands[nome];
+    if (cand && cand.tel) {
+      _selectedPartner = { tel: cand.tel, email: cand.email || '' };
+      telF.value = _maskTel(cand.tel);
+      telF.readOnly = true; telF.classList.add('locked');
+      emailF.value = cand.email ? _maskEmail(cand.email) : '';
+      emailF.readOnly = true; emailF.classList.add('locked');
+      if (help) help.textContent = 'Parceiro(a) já registado — contactos obtidos automaticamente.';
+    } else {
+      if (_selectedPartner) { // estava bloqueado, agora nome livre → limpar
+        telF.value = ''; emailF.value = '';
+      }
+      _selectedPartner = null;
+      telF.readOnly = false; telF.classList.remove('locked');
+      emailF.readOnly = false; emailF.classList.remove('locked');
+      if (help) help.textContent = 'Necessário para o parceiro ter a sua própria pré-inscrição e confirmação individual.';
+    }
+  }
   function toggleParceiroFields(){
     var has = parceiroInput.value.trim().length > 0;
     document.getElementById('parceiroTelField').style.display = has ? '' : 'none';
     document.getElementById('parceiroEmailField').style.display = has ? '' : 'none';
+    if (has) applyKnownPartner(); else _selectedPartner = null;
   }
   parceiroInput.addEventListener('input', toggleParceiroFields);
+  parceiroInput.addEventListener('change', toggleParceiroFields);
   toggleParceiroFields();
 
   // Form submit
@@ -316,6 +364,7 @@ document.addEventListener('DOMContentLoaded', function () {
     var parceiroNome  = (form.parceiro ? form.parceiro.value.trim() : '');
     var parceiroTel   = (form.parceiroTel ? form.parceiroTel.value.trim() : '');
     var parceiroEmail = (form.parceiroEmail ? form.parceiroEmail.value.trim() : '');
+    if (_selectedPartner) { parceiroTel = _selectedPartner.tel; parceiroEmail = _selectedPartner.email || ''; }
     if (form.parceiroTel) form.parceiroTel.classList.remove('invalid');
     var erros = [];
     if (!nome1) { form.nome1.classList.add('invalid'); erros.push('Nome obrigatório.'); }
