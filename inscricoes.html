@@ -286,7 +286,10 @@ document.addEventListener('DOMContentLoaded', function () {
     localStorage.setItem(storageKey, JSON.stringify(entries));
     var syncOk = true;
     if (window.ppCloudState && window.ppCloudState.enabled) {
-      try { await window.ppCloudState.pushFromLocal(); }
+      try {
+        await window.ppCloudState.pushFromLocal();
+        if (window.ppCloudState.upsertInscricao) await window.ppCloudState.upsertInscricao(entry);
+      }
       catch (e) { syncOk = false; }
     }
 

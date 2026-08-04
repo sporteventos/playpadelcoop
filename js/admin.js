@@ -5865,6 +5865,15 @@ async function renderInscricoes() {
     catch (_) { toast('Não foi possível sincronizar com cloud. A mostrar dados locais.', 'warning'); }
   }
   let entries = loadEntries();
+  if (!entries.length && window.ppCloudState && window.ppCloudState.fetchInscricoes) {
+    try {
+      const remoteEntries = await window.ppCloudState.fetchInscricoes();
+      if (remoteEntries.length) {
+        saveEntries(remoteEntries);
+        entries = remoteEntries;
+      }
+    } catch (_) {}
+  }
   const total   = entries.length;
   const duplas  = entries.filter(e => e.tipo === 'dupla').length;
   const indiv   = entries.filter(e => e.tipo === 'jogador').length;
@@ -5971,6 +5980,9 @@ async function renderInscricoes() {
   });
   document.getElementById('insAdminClear')?.addEventListener('click', async () => {
     if (!confirm('Apagar todas as inscrições? Esta acção não pode ser desfeita.')) return;
+    if (window.ppCloudState && window.ppCloudState.deleteInscricao) {
+      await Promise.allSettled(entries.map(e => window.ppCloudState.deleteInscricao(e.id)));
+    }
     saveEntries([]);
     if (window.ppCloudState && window.ppCloudState.enabled) await window.ppCloudState.pushFromLocal();
     renderInscricoes();
@@ -5983,6 +5995,9 @@ window.insAdminDelete = async function(id) {
   try {
     const entries = JSON.parse(localStorage.getItem('pp_inscricoes') || '[]').filter(e => e.id !== id);
     localStorage.setItem('pp_inscricoes', JSON.stringify(entries));
+    if (window.ppCloudState && window.ppCloudState.deleteInscricao) {
+      await window.ppCloudState.deleteInscricao(id);
+    }
     if (window.ppCloudState && window.ppCloudState.enabled) await window.ppCloudState.pushFromLocal();
     renderInscricoes();
     toast('Inscrição removida.', 'success');

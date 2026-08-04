@@ -85,6 +85,7 @@ const PP_CLOUD = {
   url: 'https://jjtsqsumczbhfgbgjxsd.supabase.co',
   key: 'sb_publishable_LQ03yWZ4f-Mo0BYXWuinVw_kpWqbmIy',
   table: 'app_state',
+  inscricoesTable: 'inscricoes',
   rowId: 'playpadelcoop-main',
   keys: ['campos', 'categorias', 'grupos', 'jogadores', 'duplas', 'jogos', 'fasefinal', 'telefones', 'inscricoes', 'patrocinadores', 'parceiros', 'config'],
 };
@@ -134,6 +135,29 @@ async function ppCloudPushState(stateObj) {
   });
   if (!r.ok) throw new Error('Cloud push failed: ' + r.status);
 }
+async function ppCloudFetchInscricoes() {
+  var endpoint = PP_CLOUD.url + '/rest/v1/' + encodeURIComponent(PP_CLOUD.inscricoesTable) + '?select=*&order=criadoem.desc';
+  var r = await fetch(endpoint, { headers: ppCloudHeaders() });
+  if (!r.ok) throw new Error('Cloud inscricoes fetch failed: ' + r.status);
+  var rows = await r.json();
+  return Array.isArray(rows) ? rows : [];
+}
+async function ppCloudUpsertInscricao(entry) {
+  var endpoint = PP_CLOUD.url + '/rest/v1/' + encodeURIComponent(PP_CLOUD.inscricoesTable) + '?on_conflict=id';
+  var payload = Object.assign({}, entry, { criadoem: entry.criadoem || entry.criadoEm || null });
+  if (Object.prototype.hasOwnProperty.call(payload, 'criadoEm')) delete payload.criadoEm;
+  var r = await fetch(endpoint, {
+    method: 'POST',
+    headers: ppCloudHeaders('resolution=merge-duplicates,return=minimal'),
+    body: JSON.stringify([payload]),
+  });
+  if (!r.ok) throw new Error('Cloud inscricao upsert failed: ' + r.status);
+}
+async function ppCloudDeleteInscricao(id) {
+  var endpoint = PP_CLOUD.url + '/rest/v1/' + encodeURIComponent(PP_CLOUD.inscricoesTable) + '?id=eq.' + encodeURIComponent(id);
+  var r = await fetch(endpoint, { method: 'DELETE', headers: ppCloudHeaders('return=minimal') });
+  if (!r.ok) throw new Error('Cloud inscricao delete failed: ' + r.status);
+}
 window.ppCloudState = {
   enabled: true,
   collectLocalState: ppCollectLocalState,
@@ -152,6 +176,9 @@ window.ppCloudState = {
     localStorage.setItem('pp__updated', state._updated);
     return true;
   },
+  fetchInscricoes: ppCloudFetchInscricoes,
+  upsertInscricao: ppCloudUpsertInscricao,
+  deleteInscricao: ppCloudDeleteInscricao,
 };
 
 // ---- Utilitários de data ----
