@@ -90,7 +90,8 @@ const PP_CLOUD = {
   keys: ['campos', 'categorias', 'grupos', 'jogadores', 'duplas', 'jogos', 'fasefinal', 'telefones', 'inscricoes', 'patrocinadores', 'parceiros', 'config'],
 };
 function ppCloudHeaders(prefer) {
-  var h = { 'apikey': PP_CLOUD.key, 'Authorization': 'Bearer ' + PP_CLOUD.key, 'Content-Type': 'application/json' };
+  var token = (window.PP_AUTH && window.PP_AUTH.token) ? window.PP_AUTH.token : PP_CLOUD.key;
+  var h = { 'apikey': PP_CLOUD.key, 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' };
   if (prefer) h.Prefer = prefer;
   return h;
 }
@@ -121,6 +122,8 @@ async function ppCloudFetchState() {
   return state;
 }
 async function ppCloudPushState(stateObj) {
+  // Escrever o estado do torneio exige um staff autenticado (RLS).
+  if (!(window.PP_AUTH && window.PP_AUTH.token)) return false;
   var payloadState = stateObj || ppCollectLocalState();
   var endpoint = PP_CLOUD.url + '/rest/v1/' + encodeURIComponent(PP_CLOUD.table) + '?on_conflict=id';
   var body = [{
@@ -172,9 +175,9 @@ window.ppCloudState = {
   },
   pushFromLocal: async function() {
     var state = ppCollectLocalState();
-    await ppCloudPushState(state);
-    localStorage.setItem('pp__updated', state._updated);
-    return true;
+    var ok = await ppCloudPushState(state);
+    if (ok) localStorage.setItem('pp__updated', state._updated);
+    return ok;
   },
   fetchInscricoes: ppCloudFetchInscricoes,
   upsertInscricao: ppCloudUpsertInscricao,

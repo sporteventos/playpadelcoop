@@ -2085,14 +2085,14 @@ const _UNUSED_DEFAULTS = {
 // ============================================
 function isLoggedIn() { return Auth.isAuth(); }
 
-function doLogin(user, pass) {
-  const result = Auth.login(user, pass);
+async function doLogin(user, pass) {
+  const result = await Auth.login(user, pass);
   if (!result.ok) { return { ok: false, error: result.error }; }
   return { ok: true };
 }
 
-function doLogout() {
-  Auth.logout();
+async function doLogout() {
+  await Auth.logout();
   location.reload();
 }
 
@@ -2104,7 +2104,7 @@ window.abrirAlterarPasse = function() {
   openModal('modalAlterarPasse');
 };
 
-window.guardarNovaPasse = function() {
+window.guardarNovaPasse = async function() {
   const actual = document.getElementById('passeActual').value.trim();
   const nova   = document.getElementById('passeNova').value;
   const conf   = document.getElementById('passeNovaConf').value;
@@ -2119,13 +2119,11 @@ window.guardarNovaPasse = function() {
   const me = Auth.me();
   if (!me) return showErr('Sessão inválida. Faça login novamente.');
 
-  // Verify current password
-  if (!Auth.verifyPassword(me.id, actual)) return showErr('Palavra-passe actual incorrecta.');
+  const res = await Auth.changePassword(actual, nova);
+  if (!res.ok) return showErr(res.error);
 
-  Auth.updateUser(me.id, { password: nova });
   closeModal('modalAlterarPasse');
   toast('Palavra-passe alterada com sucesso.');
-  Auth.log('CHANGE_PASSWORD', 'auth', `Palavra-passe alterada: ${me.username}`);
 };
 
 function resetLocalCredentials(e) {
@@ -4396,6 +4394,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Login
   const loginForm = document.getElementById('loginForm');
   Auth.ensureDefaults();
+  await Auth.restore();
 
   if (loginForm) {
     loginForm.addEventListener('submit', async e => {
@@ -4404,7 +4403,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       const p = document.getElementById('loginPass').value;
       // Wait for remote cloud state fetch to complete so synced users are available
       if (window.ppDataReady) await window.ppDataReady;
-      const result = doLogin(u, p);
+      const result = await doLogin(u, p);
       if (result.ok) {
         document.getElementById('loginOverlay').style.display = 'none';
         document.getElementById('adminShell').classList.add('visible');
@@ -5541,9 +5540,9 @@ function setupRoleUI() {
 // ============================================
 //  UTILIZADORES VIEW
 // ============================================
-function renderUtilizadores() {
+async function renderUtilizadores() {
   if (!Auth.isAdmin()) { navigate('dashboard'); return; }
-  const users = Auth.getUsers();
+  const users = await Auth.refreshUsers();
   const me    = Auth.me();
 
   document.getElementById('tblUtilizadores').innerHTML = `
@@ -5574,18 +5573,18 @@ function renderUtilizadores() {
                   ${u.active ? 'Activo' : 'Inactivo'}
                 </span>
               </td>
-              <td style="padding:.65rem .8rem;font-size:.72rem;color:var(--cinza-texto)">${new Date(u.createdAt).toLocaleDateString('pt-PT')}</td>
+              <td style="padding:.65rem .8rem;font-size:.72rem;color:var(--cinza-texto)">${u.createdAt ? new Date(u.createdAt).toLocaleDateString('pt-PT') : '—'}</td>
               <td style="padding:.65rem .8rem">
                 <div style="display:flex;gap:.35rem;align-items:center">
                   <button class="btn btn-ghost btn-sm" onclick="uiEditUser('${u.id}')" title="Editar"><i class="ph ph-pencil"></i></button>
-                  ${u.username !== 'admin' ? `
+                  ${u.id !== me.id ? `
                     <button class="btn btn-ghost btn-sm" onclick="uiToggleUser('${u.id}')" title="${u.active ? 'Desactivar' : 'Activar'}">
                       <i class="ph ph-${u.active ? 'pause-circle' : 'play-circle'}"></i>
                     </button>
                     <button class="btn btn-ghost btn-sm" style="color:var(--vermelho)" onclick="uiDeleteUser('${u.id}','${escHtml(u.username)}')" title="Eliminar">
                       <i class="ph ph-trash"></i>
                     </button>
-                  ` : `<span style="font-size:.65rem;color:var(--cinza-texto)">protegido</span>`}
+                  ` : `<span style="font-size:.65rem;color:var(--cinza-texto)">tu</span>`}
                 </div>
               </td>
             </tr>
@@ -5627,7 +5626,7 @@ function uiEditUser(id) {
   _editUserId = id;
   document.getElementById('modalUserTitle').textContent = 'Editar Utilizador';
   document.getElementById('userUsername').value    = u.username;
-  document.getElementById('userUsername').disabled = u.username === 'admin';
+  document.getElementById('userUsername').disabled = true;
   document.getElementById('userName').value        = u.name;
   document.getElementById('userRole').value        = u.role;
   document.getElementById('userPass').value        = '';
@@ -5642,33 +5641,35 @@ function uiEditUser(id) {
   openModal('modalUser');
 }
 
-function uiSaveUser() {
+async function uiSaveUser() {
   const username = document.getElementById('userUsername').value.trim();
   const name     = document.getElementById('userName').value.trim();
   const role     = document.getElementById('userRole').value;
   const pass     = document.getElementById('userPass').value;
   const pass2    = document.getElementById('userPass2').value;
 
-  if (!username || !name) return _showUserError('Username e nome são obrigatórios.');
+  if (!username || !name) return _showUserError('Email e nome são obrigatórios.');
   if (_editUserId === null && !pass) return _showUserError('Palavra-passe obrigatória para novo utilizador.');
   if (pass && pass.length < 6) return _showUserError('Palavra-passe deve ter pelo menos 6 caracteres.');
   if (pass && pass !== pass2)  return _showUserError('As palavras-passe não coincidem.');
 
+  const categories = role === 'operator'
+    ? [...document.querySelectorAll('#userCategoriesGrid input[type=checkbox]:checked')].map(c => c.value)
+    : [];
+
+  const saveBtn = document.getElementById('userSaveBtn');
+  if (saveBtn) saveBtn.disabled = true;
+
   let result;
   if (_editUserId === null) {
-    const categories = role === 'operator'
-      ? [...document.querySelectorAll('#userCategoriesGrid input[type=checkbox]:checked')].map(c => c.value)
-      : [];
-    result = Auth.createUser(username, name, role, pass, categories);
+    result = await Auth.createUser(username, name, role, pass, categories);
   } else {
-    const categories = role === 'operator'
-      ? [...document.querySelectorAll('#userCategoriesGrid input[type=checkbox]:checked')].map(c => c.value)
-      : [];
-    const changes = { username, name, role, categories };
+    const changes = { name, role, categories };
     if (pass) changes.password = pass;
-    result = Auth.updateUser(_editUserId, changes);
+    result = await Auth.updateUser(_editUserId, changes);
   }
 
+  if (saveBtn) saveBtn.disabled = false;
   if (!result.ok) return _showUserError(result.error);
 
   closeModal('modalUser');
@@ -5676,16 +5677,16 @@ function uiSaveUser() {
   renderUtilizadores();
 }
 
-function uiToggleUser(id) {
-  const result = Auth.toggleUser(id);
+async function uiToggleUser(id) {
+  const result = await Auth.toggleUser(id);
   if (!result.ok) return toast(result.error, 'error');
   toast(result.active ? 'Utilizador activado.' : 'Utilizador desactivado.');
   renderUtilizadores();
 }
 
-function uiDeleteUser(id, username) {
-  if (!confirm(`Eliminar o utilizador "${username}"? Esta ação não pode ser desfeita.`)) return;
-  const result = Auth.deleteUser(id);
+async function uiDeleteUser(id, username) {
+  if (!confirm(`Remover o acesso do utilizador "${username}"? O perfil é eliminado e deixa de poder entrar.`)) return;
+  const result = await Auth.deleteUser(id);
   if (!result.ok) return toast(result.error, 'error');
   toast(`Utilizador "${username}" eliminado.`);
   renderUtilizadores();
