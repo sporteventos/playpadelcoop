@@ -1508,10 +1508,17 @@
   </div>
 </div>
 
-<script src="js/data.js?v=3"></script>
-<script src="js/auth.js?v=3"></script>
-<script src="js/github-sync.js?v=3"></script>
-<script src="js/admin.js?v=3"></script>
+<script src="js/data.js?v=4"></script>
+<script src="js/auth.js?v=4"></script>
+<script src="js/github-sync.js?v=4"></script>
+<script src="js/admin.js?v=4"></script>
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/playpadelcoop/sw.js', { updateViaCache: 'none' })
+      .then(function(reg) { reg.update(); })
+      .catch(function() {});
+  }
+</script>
 
 <script>
   // Actualizar badge de pendentes na sidebar
