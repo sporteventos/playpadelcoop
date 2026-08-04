@@ -68,6 +68,7 @@ const DEFAULTS = {
     bannerVisible: false,
     bannerMsg: '',
     tornTelOrg: '',
+    maxDuplas: '88',
     sbRefreshMins: '15',
     sbRecentCount: '16',
   },
