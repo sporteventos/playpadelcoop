@@ -224,10 +224,6 @@
           <i class="ph ph-magnifying-glass"></i>
           <input class="header-search" id="headerSearch" type="search" placeholder="Pesquisar jogador…"/>
         </div>
-        <input type="file" id="importJsonInput" accept=".json" style="display:none" onchange="importLocalJson(event)">
-        <button class="header-btn" title="Importar data.json local (para usar em file://)" aria-label="Importar JSON" onclick="document.getElementById('importJsonInput').click()">
-          <i class="ph ph-upload-simple"></i>
-        </button>
         <button class="header-btn" id="syncPauseBtn" title="Pausar auto-sync" aria-label="Pausar sync" onclick="toggleAutoSyncPause()">
           <i class="ph ph-play-circle" id="syncPauseIcon"></i>
         </button>
@@ -1544,9 +1540,9 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="js/data.js?v=13"></script>
-<script src="js/auth.js?v=13"></script>
-<script src="js/admin.js?v=13"></script>
+<script src="js/data.js?v=14"></script>
+<script src="js/auth.js?v=14"></script>
+<script src="js/admin.js?v=14"></script>
 <script>
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('/playpadelcoop/sw.js', { updateViaCache: 'none' })
