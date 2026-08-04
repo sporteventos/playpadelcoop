@@ -88,6 +88,22 @@ function setTelefone(nome, tel) {
   if (tel) t[nome] = tel; else delete t[nome];
   setData('telefones', t);
 }
+// Cria (ou reutiliza) um jogador no store a partir de um nome; dedup por nome (case-insensitive)
+function ensureJogador(nome, tel) {
+  nome = (nome || '').trim();
+  if (!nome || nome.toLowerCase() === 'a definir') return null;
+  const store = getData('jogadores') || [];
+  let j = store.find(x => (x.nome || '').trim().toLowerCase() === nome.toLowerCase());
+  if (!j) {
+    j = { id: _nextEntityId('jogadores', 'j'), nome, tel: tel || '' };
+    store.push(j);
+    setData('jogadores', store);
+  } else if (tel && !j.tel) {
+    j.tel = tel; setData('jogadores', store);
+  }
+  if (tel) setTelefone(nome, tel);
+  return j;
+}
 function waLink(phone, text) {
   const clean = phone.replace(/\D/g, '');
   return 'https://wa.me/' + clean + '?text=' + encodeURIComponent(text);
@@ -5884,6 +5900,7 @@ async function renderInscricoes() {
   const total   = entries.length;
   const duplas  = entries.filter(e => e.tipo === 'dupla').length;
   const indiv   = entries.filter(e => e.tipo === 'jogador').length;
+  const confirmadas = entries.filter(e => e.estado === 'confirmada').length;
 
   const catMap  = {};
   (getData('categorias') || []).forEach(c => { catMap[c.id] = c.nome; });
@@ -5918,6 +5935,10 @@ async function renderInscricoes() {
           <div style="font-size:2rem;font-weight:800;color:var(--amarelo);line-height:1">${indiv}</div>
           <div style="font-size:.68rem;text-transform:uppercase;letter-spacing:.06em;color:var(--cinza-texto);margin-top:.2rem">Individuais</div>
         </div>
+        <div class="card" style="padding:.9rem 1rem;text-align:center">
+          <div style="font-size:2rem;font-weight:800;color:var(--verde);line-height:1">${confirmadas}</div>
+          <div style="font-size:.68rem;text-transform:uppercase;letter-spacing:.06em;color:var(--cinza-texto);margin-top:.2rem">Confirmadas</div>
+        </div>
         ${Object.entries(catCounts).map(([cat, n]) => `
         <div class="card" style="padding:.9rem 1rem;text-align:center">
           <div style="font-size:2rem;font-weight:800;color:var(--branco);line-height:1">${n}</div>
@@ -5936,6 +5957,7 @@ async function renderInscricoes() {
                   <th style="padding:.65rem .9rem;text-align:left;font-weight:700;text-transform:uppercase;letter-spacing:.05em;font-size:.68rem;color:var(--cinza-texto)">Categoria</th>
                   <th style="padding:.65rem .9rem;text-align:left;font-weight:700;text-transform:uppercase;letter-spacing:.05em;font-size:.68rem;color:var(--cinza-texto)">Contacto</th>
                   <th style="padding:.65rem .9rem;text-align:left;font-weight:700;text-transform:uppercase;letter-spacing:.05em;font-size:.68rem;color:var(--cinza-texto)">Data</th>
+                  <th style="padding:.65rem .9rem;text-align:center;font-weight:700;text-transform:uppercase;letter-spacing:.05em;font-size:.68rem;color:var(--cinza-texto)">Estado</th>
                   <th style="padding:.65rem .9rem;text-align:center;font-weight:700;text-transform:uppercase;letter-spacing:.05em;font-size:.68rem;color:var(--cinza-texto)">Acções</th>
                 </tr>
               </thead>
@@ -5946,6 +5968,7 @@ async function renderInscricoes() {
                       <div style="font-weight:600;color:var(--branco)">${escHtml(e.nome1)}</div>
                       ${e.nome2 ? `<div style="font-size:.75rem;color:var(--cinza-texto)"><i class="ph ph-user"></i> ${escHtml(e.nome2)}</div>` : ''}
                       ${e.clube ? `<div style="font-size:.72rem;color:#4A6058">${escHtml(e.clube)}</div>` : ''}
+                      ${e.observacoes ? `<div style="font-size:.72rem;color:#8AA396;margin-top:.25rem;max-width:280px"><i class="ph ph-note"></i> ${escHtml(e.observacoes)}</div>` : ''}
                     </td>
                     <td style="padding:.65rem .9rem">
                       <span style="font-size:.68rem;font-weight:700;text-transform:uppercase;padding:.15rem .45rem;border-radius:4px;background:${e.tipo==='dupla'?'rgba(0,195,123,.12)':'rgba(245,197,24,.12)'};color:${e.tipo==='dupla'?'var(--verde)':'var(--amarelo)'}">
@@ -5964,6 +5987,14 @@ async function renderInscricoes() {
                       ${new Date(e.criadoem || e.criadoEm).toLocaleDateString('pt-PT')}
                     </td>
                     <td style="padding:.65rem .9rem;text-align:center">
+                      <span style="font-size:.66rem;font-weight:700;text-transform:uppercase;padding:.2rem .55rem;border-radius:999px;background:${e.estado==='confirmada'?'rgba(0,195,123,.15)':'rgba(245,197,24,.12)'};color:${e.estado==='confirmada'?'var(--verde)':'var(--amarelo)'}">
+                        ${e.estado==='confirmada' ? 'Confirmada' : 'Pendente'}
+                      </span>
+                    </td>
+                    <td style="padding:.65rem .9rem;text-align:center;white-space:nowrap">
+                      ${e.estado==='confirmada'
+                        ? `<button class="btn-icon" title="Reverter confirmação" onclick="insAdminUnconfirm('${escHtml(e.id)}')"><i class="ph ph-arrow-counter-clockwise" style="color:#8AA396"></i></button>`
+                        : `<button class="btn-icon" title="Confirmar inscrição (após pagamento) e criar jogador" onclick="insAdminConfirm('${escHtml(e.id)}')"><i class="ph ph-check-circle" style="color:var(--verde)"></i></button>`}
                       <button class="btn-icon" title="Remover" onclick="insAdminDelete('${escHtml(e.id)}')"><i class="ph ph-trash" style="color:#FF4A4A"></i></button>
                     </td>
                   </tr>
@@ -6009,6 +6040,46 @@ window.insAdminDelete = async function(id) {
     renderInscricoes();
     toast('Inscrição removida.', 'success');
   } catch(e) { toast('Erro ao remover.', 'error'); }
+};
+
+// Confirma a pré-inscrição (após pagamento) e cria automaticamente o(s) jogador(es).
+window.insAdminConfirm = async function(id) {
+  try {
+    const entries = JSON.parse(localStorage.getItem('pp_inscricoes') || '[]');
+    const e = entries.find(x => x.id === id);
+    if (!e) return;
+    if (e.estado === 'confirmada') { toast('Inscrição já confirmada.', 'warning'); return; }
+    if (!confirm(`Confirmar a inscrição de "${e.nome1}"?\n\nGeralmente feito após o pagamento. O jogador será criado automaticamente em Jogadores.`)) return;
+    e.estado = 'confirmada';
+    e.confirmadoem = new Date().toISOString();
+    // Criar jogador(es) — o próprio e o parceiro (se indicado)
+    ensureJogador(e.nome1, e.telefone);
+    if (e.nome2) ensureJogador(e.nome2, '');
+    localStorage.setItem('pp_inscricoes', JSON.stringify(entries));
+    if (window.ppCloudState) {
+      if (window.ppCloudState.upsertInscricao) await window.ppCloudState.upsertInscricao(e);
+      if (window.ppCloudState.enabled) await window.ppCloudState.pushFromLocal();
+    }
+    Auth.log('CONFIRM_INSCRICAO', 'inscricoes', `${e.nome1}${e.nome2 ? ' & ' + e.nome2 : ''} (${e.categoria})`);
+    renderInscricoes();
+    toast(`Inscrição de "${e.nome1}" confirmada. Jogador(es) criado(s).`, 'success');
+  } catch(err) { toast('Erro ao confirmar: ' + (err && err.message || err), 'error'); }
+};
+
+// Reverte a confirmação (mantém os jogadores já criados).
+window.insAdminUnconfirm = async function(id) {
+  if (!confirm('Reverter a confirmação desta inscrição?\n\n(Os jogadores já criados não são removidos.)')) return;
+  try {
+    const entries = JSON.parse(localStorage.getItem('pp_inscricoes') || '[]');
+    const e = entries.find(x => x.id === id);
+    if (!e) return;
+    e.estado = 'nova';
+    delete e.confirmadoem;
+    localStorage.setItem('pp_inscricoes', JSON.stringify(entries));
+    if (window.ppCloudState && window.ppCloudState.upsertInscricao) await window.ppCloudState.upsertInscricao(e);
+    renderInscricoes();
+    toast('Confirmação revertida.', 'warning');
+  } catch(err) { toast('Erro ao reverter.', 'error'); }
 };
 
 // ============================================

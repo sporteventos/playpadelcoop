@@ -128,13 +128,13 @@
       <a href="scoreboard.html" class="btn btn-secondary" target="_blank" id="btnScoreboard" style="display:none">
         <i class="ph ph-monitor-play"></i> Quadro de Apuramento
       </a>
-      <a href="calendario.html" class="btn btn-secondary">
+      <a href="calendario.html" class="btn btn-secondary" id="btnVerCalendario">
         <i class="ph ph-calendar"></i> Ver Calendário
       </a>
-      <a href="classificacoes.html" class="btn btn-secondary">
+      <a href="classificacoes.html" class="btn btn-secondary" id="btnVerClassificacoes">
         <i class="ph ph-chart-bar"></i> Ver Classificações
       </a>
-      <a href="jogadores.html" class="btn btn-secondary">
+      <a href="jogadores.html" class="btn btn-secondary" id="btnVerJogadores">
         <i class="ph ph-users"></i> Ver Jogadores
       </a>
       <a href="inscricoes.html" class="btn btn-secondary">
@@ -245,7 +245,7 @@
         <div class="nav-card-arrow">→</div>
       </a>
 
-      <a href="jogadores.html" class="nav-card nav-card--jogadores">
+      <a href="jogadores.html" class="nav-card nav-card--jogadores" id="cardJogadores">
         <div class="nav-card-glow"></div>
         <div class="nav-card-icon">👥</div>
         <h3 class="nav-card-title">Jogadores</h3>
@@ -539,6 +539,9 @@
         // Visibilidade botões hero
         show('btnScoreboard', cfg.scoreboardVisible !== false);
         show('btnFaseFinalHero', cfg.fasefinalVisible !== false);
+        show('btnVerCalendario',     cfg.calendarioVisible !== false);
+        show('btnVerClassificacoes', cfg.classificacoesVisible !== false);
+        show('btnVerJogadores',      cfg.jogadoresVisible !== false);
 
         // Visibilidade secções da página principal
         show('sectionLiveStats',      cfg.liveStatsVisible !== false);
@@ -562,6 +565,7 @@
         show('navLiJogadores',        cfg.jogadoresVisible !== false);
         show('drawerLiJogadores',     cfg.jogadoresVisible !== false);
         show('footerLiJogadores',     cfg.jogadoresVisible !== false);
+        show('cardJogadores',         cfg.jogadoresVisible !== false);
         show('navLiInscricoes',       cfg.inscricoesVisible !== false);
         show('drawerLiInscricoes',    cfg.inscricoesVisible !== false);
         show('footerLiInscricoes',    cfg.inscricoesVisible !== false);

@@ -104,7 +104,7 @@
         <div class="form-grid">
           <div class="form-field">
             <label class="form-label" for="nome1">Nome completo <span class="req">*</span></label>
-            <input class="form-input" id="nome1" name="nome1" type="text" required placeholder="O teu nome completo"/>
+            <input class="form-input" id="nome1" name="nome1" type="text" required placeholder="O teu nome completo" list="dlJogadores" autocomplete="off"/>
           </div>
           <div class="form-field">
             <label class="form-label" for="telefone">Telefone <span class="req">*</span></label>
@@ -138,9 +138,10 @@
         <div class="form-grid">
           <div class="form-field full">
             <label class="form-label" for="parceiro">Nome do(a) parceiro(a) <span style="font-weight:400;text-transform:none;letter-spacing:0">(se já tiveres)</span></label>
-            <input class="form-input" id="parceiro" name="parceiro" type="text" placeholder="Deixa em branco se não tiveres parceiro(a)"/>
-            <span class="form-help">Se não tiveres parceiro, a organização tentará ajudar a formar dupla.</span>
+            <input class="form-input" id="parceiro" name="parceiro" type="text" placeholder="Deixa em branco se não tiveres parceiro(a)" list="dlJogadores" autocomplete="off"/>
+            <span class="form-help">Se o teu parceiro já estiver inscrito, escolhe-o da lista. Só escreve o nome manualmente se ainda não existir.</span>
           </div>
+          <datalist id="dlJogadores"></datalist>
           <div class="form-field full">
             <label class="form-label" for="observacoes">Observações</label>
             <textarea class="form-textarea" id="observacoes" name="observacoes" placeholder="Horário preferido, lesões ou condicionantes, etc."></textarea>
@@ -247,6 +248,24 @@ document.addEventListener('DOMContentLoaded', function () {
   });
   buildCats();
 
+  // Autocomplete de jogadores (jogadores confirmados + já pré-inscritos)
+  async function buildPlayerDatalist() {
+    var names = {};
+    (ppGet('jogadores') || []).forEach(function(j){ if (j && j.nome) names[j.nome] = 1; });
+    try {
+      if (window.ppCloudState && window.ppCloudState.fetchInscricoes) {
+        var ins = await window.ppCloudState.fetchInscricoes();
+        (ins || []).forEach(function(e){ if (e.nome1) names[e.nome1] = 1; if (e.nome2) names[e.nome2] = 1; });
+      }
+    } catch (_) {}
+    var dl = document.getElementById('dlJogadores');
+    if (!dl) return;
+    dl.innerHTML = Object.keys(names).sort(function(a,b){ return a.localeCompare(b); })
+      .map(function(n){ return '<option value="' + n.replace(/"/g, '&quot;') + '"></option>'; }).join('');
+  }
+  buildPlayerDatalist();
+  window.addEventListener('pp:datasynced', function(){ buildCats(); buildPlayerDatalist(); });
+
   // Form submit
   document.getElementById('insForm').addEventListener('submit', async function(ev){
     ev.preventDefault();
@@ -279,18 +298,46 @@ document.addEventListener('DOMContentLoaded', function () {
       estado: 'nova'
     };
 
-    // Save to localStorage
+    // Anti-duplicado: mesma categoria + mesmo telefone (dígitos) ou mesmo nome
+    var telDigits = telefone.replace(/\D/g, '');
+    var nomeNorm  = nome1.toLowerCase();
+    try {
+      if (window.ppCloudState && window.ppCloudState.fetchInscricoes) {
+        var existentes = await window.ppCloudState.fetchInscricoes();
+        var dup = (existentes || []).some(function(x){
+          if (x.categoria !== categoria) return false;
+          var xtel = String(x.telefone || '').replace(/\D/g, '');
+          var xnome = String(x.nome1 || '').trim().toLowerCase();
+          return (telDigits && xtel === telDigits) || xnome === nomeNorm;
+        });
+        if (dup) {
+          errEl.textContent = 'Já existe uma pré-inscrição nesta categoria com este contacto ou nome. Se precisas de alterar algo, contacta a organização.';
+          errEl.style.display = '';
+          return;
+        }
+      }
+    } catch (_) { /* sem rede: segue e valida no servidor */ }
+
+    // Tenta gravar no servidor primeiro (a chave única evita duplicados em corrida)
+    var syncOk = true;
+    if (window.ppCloudState && window.ppCloudState.enabled && window.ppCloudState.upsertInscricao) {
+      try {
+        await window.ppCloudState.upsertInscricao(entry);
+      } catch (e) {
+        if (String((e && e.message) || e).indexOf('409') >= 0) {
+          errEl.textContent = 'Já existe uma pré-inscrição igual (mesma categoria e contacto).';
+          errEl.style.display = '';
+          return;
+        }
+        syncOk = false; // offline / outro erro: guarda localmente na mesma
+      }
+    }
+
+    // Guarda localmente
     var entries;
     try { entries = JSON.parse(localStorage.getItem(storageKey) || '[]'); } catch(e){ entries = []; }
     entries.push(entry);
     localStorage.setItem(storageKey, JSON.stringify(entries));
-    var syncOk = true;
-    if (window.ppCloudState && window.ppCloudState.enabled) {
-      try {
-        if (window.ppCloudState.upsertInscricao) await window.ppCloudState.upsertInscricao(entry);
-      }
-      catch (e) { syncOk = false; }
-    }
 
     // Build WhatsApp message
     var cfg = ppGet('config') || {};
