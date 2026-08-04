@@ -2839,8 +2839,8 @@ function renderCategorias() {
       <td><span class="badge ${c.tipo==='F' ? 'badge-amarelo':'badge-azul'}">${c.tipo === 'F' ? 'Feminino':'Masculino'}</span></td>
       <td>${nGrupos} grupos</td>
       <td>
-        <div style="display:flex;gap:0.4rem">
-          ${grupos.filter(g=>g.cat===c.id).map(g=>`<span class="badge badge-cinza">${g.letra}</span>`).join('')}
+        <div style="display:flex;gap:0.35rem;flex-wrap:wrap;align-items:center">
+          ${grupos.filter(g=>g.cat===c.id).map(g=>`<span class="badge badge-cinza" style="display:inline-flex;align-items:center;gap:.3rem">${g.letra}<button class="badge-x" onclick="removeGrupo('${g.id}')" title="Remover grupo ${g.id}" style="background:none;border:none;color:var(--vermelho);cursor:pointer;padding:0;font-size:.85rem;line-height:1;opacity:.7">&times;</button></span>`).join('')}
           <button class="btn-icon btn-edit" onclick="addGrupo('${c.id}')" title="Adicionar grupo"><i class="ph ph-plus"></i></button>
         </div>
       </td>
@@ -2863,6 +2863,30 @@ window.addGrupo = function(catId) {
   setData('grupos', grupos);
   renderCategorias();
   toast(`Grupo ${id} adicionado.`);
+};
+
+window.removeGrupo = function(grupoId) {
+  const duplas = getData('duplas') || [];
+  const nDuplas = duplas.filter(d => d.grupo === grupoId).length;
+  const jogos = getData('jogos') || [];
+  const nJogos = jogos.filter(j => j.grupo === grupoId).length;
+  let aviso = `Remover o grupo ${grupoId}?`;
+  if (nDuplas) aviso += `\n\n${nDuplas} dupla(s) ficam sem grupo (mantêm o nível).`;
+  if (nJogos) aviso += `\n⚠ Existem ${nJogos} jogo(s) neste grupo que também serão removidos.`;
+  if (!confirm(aviso)) return;
+  // Remover o grupo
+  setData('grupos', (getData('grupos') || []).filter(g => g.id !== grupoId));
+  // Desatribuir duplas (mantêm cat)
+  if (nDuplas) {
+    setData('duplas', duplas.map(d => d.grupo === grupoId ? { ...d, grupo: null } : d));
+  }
+  // Remover jogos do grupo
+  if (nJogos) {
+    setData('jogos', jogos.filter(j => j.grupo !== grupoId));
+  }
+  Auth.log('REMOVE_GRUPO', 'grupos', `${grupoId}${nDuplas ? ` (${nDuplas} duplas libertadas)` : ''}${nJogos ? ` (${nJogos} jogos removidos)` : ''}`);
+  renderCategorias();
+  toast(`Grupo ${grupoId} removido.`);
 };
 
 window.deleteGruposAll = function(catId) {
@@ -2917,7 +2941,7 @@ function renderJogadores(filter = '') {
     const nome = jog.nome;
     let grupos;
     if (jog.id && duplas.length > 0) {
-      grupos = [...new Set(duplas.filter(d => d.j1 === jog.id || d.j2 === jog.id).map(d => d.grupo))];
+      grupos = [...new Set(duplas.filter(d => d.j1 === jog.id || d.j2 === jog.id).map(d => d.grupo).filter(Boolean))];
     } else {
       grupos = [...new Set(jogos.filter(j => {
         const p1 = j.eq1.split('&').map(n => n.trim());
@@ -5935,7 +5959,8 @@ async function renderInscricoes() {
     } catch (_) {}
   }
   const total   = entries.length;
-  const duplas  = entries.filter(e => e.tipo === 'dupla').length;
+  const parIds  = new Set(entries.filter(e => e.parid).map(e => e.parid));
+  const duplas  = parIds.size + entries.filter(e => e.tipo === 'dupla' && !e.parid).length;
   const indiv   = entries.filter(e => e.tipo === 'jogador').length;
   const confirmadas = entries.filter(e => e.estado === 'confirmada').length;
 
@@ -6004,6 +6029,11 @@ async function renderInscricoes() {
                     <td style="padding:.65rem .9rem">
                       <div style="font-weight:600;color:var(--branco)">${escHtml(e.nome1)}</div>
                       ${e.nome2 ? `<div style="font-size:.75rem;color:var(--cinza-texto)"><i class="ph ph-user"></i> ${escHtml(e.nome2)}</div>` : ''}
+                      ${e.parceiro ? (function(){
+                        const sib = entries.find(x => x.parid && x.parid === e.parid && x.id !== e.id);
+                        const ok = sib && sib.estado === 'confirmada';
+                        return `<div style="font-size:.73rem;color:var(--cinza-texto)"><i class="ph ph-handshake"></i> Par: ${escHtml(e.parceiro)} <span style="color:${ok?'var(--verde)':'var(--amarelo)'}">${ok?'✓ confirmado':'pendente'}</span></div>`;
+                      })() : ''}
                       ${e.clube ? `<div style="font-size:.72rem;color:#4A6058">${escHtml(e.clube)}</div>` : ''}
                       ${e.observacoes ? `<div style="font-size:.72rem;color:#8AA396;margin-top:.25rem;max-width:280px"><i class="ph ph-note"></i> ${escHtml(e.observacoes)}</div>` : ''}
                     </td>
@@ -6089,24 +6119,37 @@ window.insAdminConfirm = async function(id) {
     if (!confirm(`Confirmar a inscrição de "${e.nome1}"?\n\nGeralmente feito após o pagamento. O jogador será criado automaticamente em Jogadores.`)) return;
     e.estado = 'confirmada';
     e.confirmadoem = new Date().toISOString();
-    // Criar jogador(es) — o próprio e o parceiro (se indicado)
+    // Criar o jogador do próprio inscrito
     const j1 = ensureJogador(e.nome1, e.telefone, e.genero);
-    let j2 = null;
-    if (e.nome2) j2 = ensureJogador(e.nome2, '', e.genero);
-    // Se for uma inscrição de dupla (dois jogadores), criar automaticamente a dupla no nível inscrito
+    // Criar a dupla quando existir par completo (nível inscrito)
     let duplaCriada = false;
-    if (j1 && j2) {
-      const d = ensureDupla(j1.id, j2.id, e.categoria);
-      duplaCriada = !!d;
+    let aguardaParceiro = false;
+    if (e.nome2) {
+      // Legado: par indicado numa só inscrição
+      const j2 = ensureJogador(e.nome2, '', e.genero);
+      if (j1 && j2) duplaCriada = !!ensureDupla(j1.id, j2.id, e.categoria);
+    } else if (e.parid) {
+      // Novo fluxo: cada membro tem a sua inscrição; a dupla nasce quando ambos confirmam
+      const sibling = entries.find(x => x.parid === e.parid && x.id !== e.id);
+      if (sibling && sibling.estado === 'confirmada') {
+        const j2 = ensureJogador(sibling.nome1, sibling.telefone, sibling.genero);
+        if (j1 && j2) duplaCriada = !!ensureDupla(j1.id, j2.id, e.categoria);
+      } else {
+        aguardaParceiro = true;
+      }
     }
     localStorage.setItem('pp_inscricoes', JSON.stringify(entries));
     if (window.ppCloudState) {
       if (window.ppCloudState.upsertInscricao) await window.ppCloudState.upsertInscricao(e);
       if (window.ppCloudState.enabled) await window.ppCloudState.pushFromLocal();
     }
-    Auth.log('CONFIRM_INSCRICAO', 'inscricoes', `${e.nome1}${e.nome2 ? ' & ' + e.nome2 : ''} (${e.categoria})`);
+    Auth.log('CONFIRM_INSCRICAO', 'inscricoes', `${e.nome1}${e.nome2 ? ' & ' + e.nome2 : (e.parceiro ? ' (par: ' + e.parceiro + ')' : '')} (${e.categoria})`);
     renderInscricoes();
-    toast(`Inscrição de "${e.nome1}" confirmada.${duplaCriada ? ' Jogadores e dupla criados.' : ' Jogador(es) criado(s).'}`, 'success');
+    let msg = `Inscrição de "${e.nome1}" confirmada.`;
+    if (duplaCriada) msg += ' Jogadores e dupla criados.';
+    else if (aguardaParceiro) msg += ' Jogador criado. A dupla será criada quando o(a) parceiro(a) for confirmado(a).';
+    else msg += ' Jogador criado.';
+    toast(msg, 'success');
   } catch(err) { toast('Erro ao confirmar: ' + (err && err.message || err), 'error'); }
 };
 

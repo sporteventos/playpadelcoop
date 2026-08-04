@@ -141,6 +141,15 @@
             <input class="form-input" id="parceiro" name="parceiro" type="text" placeholder="Deixa em branco se não tiveres parceiro(a)" list="dlJogadores" autocomplete="off"/>
             <span class="form-help">Se o teu parceiro já estiver inscrito, escolhe-o da lista. Só escreve o nome manualmente se ainda não existir.</span>
           </div>
+          <div class="form-field" id="parceiroTelField" style="display:none">
+            <label class="form-label" for="parceiroTel">Telefone do(a) parceiro(a) <span class="req">*</span></label>
+            <input class="form-input" id="parceiroTel" name="parceiroTel" type="tel" placeholder="+258 84 000 0000"/>
+            <span class="form-help">Necessário para o parceiro ter a sua própria pré-inscrição e confirmação individual.</span>
+          </div>
+          <div class="form-field" id="parceiroEmailField" style="display:none">
+            <label class="form-label" for="parceiroEmail">Email do(a) parceiro(a)</label>
+            <input class="form-input" id="parceiroEmail" name="parceiroEmail" type="email" placeholder="opcional"/>
+          </div>
           <datalist id="dlJogadores"></datalist>
           <div class="form-field full">
             <label class="form-label" for="observacoes">Observações</label>
@@ -282,6 +291,16 @@ document.addEventListener('DOMContentLoaded', function () {
   buildPlayerDatalist();
   window.addEventListener('pp:datasynced', function(){ buildCats(); buildPlayerDatalist(); });
 
+  // Mostrar campos de contacto do parceiro apenas quando há parceiro indicado
+  var parceiroInput = document.getElementById('parceiro');
+  function toggleParceiroFields(){
+    var has = parceiroInput.value.trim().length > 0;
+    document.getElementById('parceiroTelField').style.display = has ? '' : 'none';
+    document.getElementById('parceiroEmailField').style.display = has ? '' : 'none';
+  }
+  parceiroInput.addEventListener('input', toggleParceiroFields);
+  toggleParceiroFields();
+
   // Form submit
   document.getElementById('insForm').addEventListener('submit', async function(ev){
     ev.preventDefault();
@@ -293,66 +312,105 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Validation
     [form.nome1, form.telefone, form.categoria].forEach(function(f){ f.classList.remove('invalid'); });
+    var genero        = form.querySelector('input[name="genero"]:checked').value;
+    var parceiroNome  = (form.parceiro ? form.parceiro.value.trim() : '');
+    var parceiroTel   = (form.parceiroTel ? form.parceiroTel.value.trim() : '');
+    var parceiroEmail = (form.parceiroEmail ? form.parceiroEmail.value.trim() : '');
+    if (form.parceiroTel) form.parceiroTel.classList.remove('invalid');
     var erros = [];
     if (!nome1) { form.nome1.classList.add('invalid'); erros.push('Nome obrigatório.'); }
     if (!telefone) { form.telefone.classList.add('invalid'); erros.push('Telefone obrigatório.'); }
     if (!categoria) { form.categoria.classList.add('invalid'); erros.push('Categoria obrigatória.'); }
+    if (parceiroNome) {
+      if (!parceiroTel) { form.parceiroTel.classList.add('invalid'); erros.push('Telefone do(a) parceiro(a) obrigatório.'); }
+      if (parceiroNome.toLowerCase() === nome1.toLowerCase()) { erros.push('O(a) parceiro(a) tem de ser diferente de ti.'); }
+      if (parceiroTel && parceiroTel.replace(/\D/g,'') === telefone.replace(/\D/g,'')) { erros.push('O telefone do(a) parceiro(a) tem de ser diferente do teu.'); }
+    }
     if (erros.length) { errEl.textContent = erros.join(' '); errEl.style.display = ''; return; }
     errEl.style.display = 'none';
 
-    var entry = {
-      id: 'ins-' + Date.now(),
+    // Uma inscrição por pessoa: se houver parceiro(a), cria duas pré-inscrições ligadas por parId
+    var baseId = 'ins-' + Date.now();
+    var parId  = parceiroNome ? ('par-' + Date.now()) : null;
+    var novos = [{
+      id: baseId,
       criadoem: new Date().toISOString(),
-      tipo: 'jogador',
-      genero: form.querySelector('input[name="genero"]:checked').value,
+      tipo: parceiroNome ? 'dupla' : 'jogador',
+      genero: genero,
       categoria: categoria,
       nome1: nome1,
-      nome2: (form.parceiro ? form.parceiro.value.trim() : ''),
+      nome2: '',
+      parceiro: parceiroNome || '',
+      parid: parId,
       telefone: telefone,
       email: form.email.value.trim(),
       observacoes: form.observacoes.value.trim(),
       estado: 'nova'
-    };
+    }];
+    if (parceiroNome) {
+      novos.push({
+        id: baseId + '-p',
+        criadoem: new Date().toISOString(),
+        tipo: 'dupla',
+        genero: genero,
+        categoria: categoria,
+        nome1: parceiroNome,
+        nome2: '',
+        parceiro: nome1,
+        parid: parId,
+        telefone: parceiroTel,
+        email: parceiroEmail,
+        observacoes: '',
+        estado: 'nova'
+      });
+    }
+    var entry = novos[0];
 
-    // Anti-duplicado: mesma categoria + mesmo telefone (dígitos) ou mesmo nome
-    var telDigits = telefone.replace(/\D/g, '');
-    var nomeNorm  = nome1.toLowerCase();
+    // Anti-duplicado: mesma categoria + mesmo telefone (dígitos) ou mesmo nome, para cada inscrito
     try {
       if (window.ppCloudState && window.ppCloudState.fetchInscricoes) {
         var existentes = await window.ppCloudState.fetchInscricoes();
-        var dup = (existentes || []).some(function(x){
-          if (x.categoria !== categoria) return false;
-          var xtel = String(x.telefone || '').replace(/\D/g, '');
-          var xnome = String(x.nome1 || '').trim().toLowerCase();
-          return (telDigits && xtel === telDigits) || xnome === nomeNorm;
+        var dupName = null;
+        novos.forEach(function(en){
+          var telD = String(en.telefone || '').replace(/\D/g, '');
+          var nmN  = en.nome1.toLowerCase();
+          var hit  = (existentes || []).some(function(x){
+            if (x.categoria !== categoria) return false;
+            var xtel  = String(x.telefone || '').replace(/\D/g, '');
+            var xnome = String(x.nome1 || '').trim().toLowerCase();
+            return (telD && xtel === telD) || xnome === nmN;
+          });
+          if (hit && !dupName) dupName = en.nome1;
         });
-        if (dup) {
-          errEl.textContent = 'Já existe uma pré-inscrição nesta categoria com este contacto ou nome. Se precisas de alterar algo, contacta a organização.';
+        if (dupName) {
+          errEl.textContent = 'Já existe uma pré-inscrição nesta categoria com o contacto ou nome de "' + dupName + '". Se precisas de alterar algo, contacta a organização.';
           errEl.style.display = '';
           return;
         }
       }
     } catch (_) { /* sem rede: segue e valida no servidor */ }
 
-    // Tenta gravar no servidor primeiro (a chave única evita duplicados em corrida)
+    // Grava no servidor primeiro (a chave única evita duplicados em corrida)
     var syncOk = true;
     if (window.ppCloudState && window.ppCloudState.enabled && window.ppCloudState.upsertInscricao) {
-      try {
-        await window.ppCloudState.upsertInscricao(entry);
-      } catch (e) {
-        if (String((e && e.message) || e).indexOf('409') >= 0) {
-          errEl.textContent = 'Já existe uma pré-inscrição igual (mesma categoria e contacto).';
-          errEl.style.display = '';
-          return;
+      for (var ci = 0; ci < novos.length; ci++) {
+        try {
+          await window.ppCloudState.upsertInscricao(novos[ci]);
+        } catch (e) {
+          if (String((e && e.message) || e).indexOf('409') >= 0) {
+            errEl.textContent = 'Já existe uma pré-inscrição igual (mesma categoria e contacto) para "' + novos[ci].nome1 + '".';
+            errEl.style.display = '';
+            return;
+          }
+          syncOk = false; // offline / outro erro: guarda localmente na mesma
         }
-        syncOk = false; // offline / outro erro: guarda localmente na mesma
       }
     }
 
     // Guarda localmente
     var entries;
     try { entries = JSON.parse(localStorage.getItem(storageKey) || '[]'); } catch(e){ entries = []; }
-    entries.push(entry);
+    novos.forEach(function(en){ entries.push(en); });
     localStorage.setItem(storageKey, JSON.stringify(entries));
 
     // Build WhatsApp message
@@ -365,7 +423,7 @@ document.addEventListener('DOMContentLoaded', function () {
       + (entry.email ? '*Email:* ' + entry.email + '\n' : '')
       + '*Género:* ' + generoStr + '\n'
       + '*Categoria:* ' + entry.categoria + '\n'
-      + (entry.nome2 ? '*Parceiro(a):* ' + entry.nome2 + '\n' : '')
+      + (parceiroNome ? '*Parceiro(a):* ' + parceiroNome + (parceiroTel ? ' (' + parceiroTel + ')' : '') + '\n' : '')
       + (entry.observacoes ? '*Obs.:* ' + entry.observacoes + '\n' : '')
       + '\n_Inscrição submetida em ' + new Date().toLocaleString('pt-PT') + '_';
 
@@ -395,6 +453,7 @@ document.addEventListener('DOMContentLoaded', function () {
     window.scrollTo({ top: 0, behavior: 'smooth' });
     form.reset();
     buildCats();
+    toggleParceiroFields();
   });
 
 });
