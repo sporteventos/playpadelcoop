@@ -1,5 +1,5 @@
 // Play Padel · Service Worker
-const CACHE = 'playpadel-v6';
+const CACHE = 'playpadel-v12';
 const PRECACHE = [
   '/playpadelcoop/',
   '/playpadelcoop/index.html',
@@ -7,6 +7,7 @@ const PRECACHE = [
   '/playpadelcoop/classificacoes.html',
   '/playpadelcoop/fasefinal.html',
   '/playpadelcoop/jogadores.html',
+  '/playpadelcoop/inscricoes.html',
   '/playpadelcoop/estatisticas.html',
   '/playpadelcoop/regulamento.html',
   '/playpadelcoop/manifest.json',
@@ -51,6 +52,18 @@ self.addEventListener('fetch', e => {
 
   // Skip non-GET and cross-origin requests
   if (e.request.method !== 'GET' || url.origin !== self.location.origin) return;
+
+  // Admin must always be fresh (avoid stale sidebar/features from cache)
+  const isAdminRequest =
+    path === '/playpadelcoop/admin' ||
+    path === '/playpadelcoop/admin.html' ||
+    path.endsWith('/js/data.js') ||
+    path.endsWith('/js/admin.js') ||
+    path.endsWith('/js/auth.js');
+  if (isAdminRequest) {
+    e.respondWith(fetch(e.request));
+    return;
+  }
 
   // Network-first: data.json + HTML + CSS + JS
   const isNetworkFirst =

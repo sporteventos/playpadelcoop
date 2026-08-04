@@ -17,7 +17,7 @@ const APP = {
 
 // Compatibilidade interna
 const getData = ppGet;
-const setData = (k, v) => { ppSave(k, v); if (typeof GHSync !== 'undefined') GHSync.markDirty(); };
+const setData = (k, v) => { ppSave(k, v); if (typeof _autoSync === 'function') _autoSync(); };
 const formatDate = ppFormatDate;
 
 // ============================================
@@ -66,7 +66,7 @@ window.importLocalJson = function(event) {
   reader.onload = function(e) {
     try {
       const d = JSON.parse(e.target.result);
-      const KEYS = ['campos','categorias','grupos','jogadores','duplas','jogos','fasefinal','telefones'];
+      const KEYS = ['campos','categorias','grupos','jogadores','duplas','jogos','fasefinal','telefones','inscricoes'];
       KEYS.forEach(function(k) { if (d[k] !== undefined) ppSave(k, d[k]); });
       if (d._updated) localStorage.setItem('pp__updated', d._updated);
       toast('data.json importado com sucesso! A recarregar…', 'success');
@@ -178,7 +178,7 @@ window._bundleShareOne = async function(idx) {
   if (!item) return;
   const file = new File([item.blob], item.name, { type: 'image/png' });
   if (navigator.canShare && navigator.canShare({ files: [file] })) {
-    try { await navigator.share({ files: [file], title: 'Play Padel · Torneio Aniversário 2026' }); }
+    try { await navigator.share({ files: [file], title: 'Play Padel · Torneio Reentre 2026' }); }
     catch (err) { if (err.name !== 'AbortError') _bundleDownloadOne(idx); }
   } else { _bundleDownloadOne(idx); }
 };
@@ -194,7 +194,7 @@ window._bundleShareAll = async function() {
   if (!items.length) return;
   const files = items.map(b => new File([b.blob], b.name, { type: 'image/png' }));
   if (navigator.canShare && navigator.canShare({ files })) {
-    try { await navigator.share({ files, title: 'Play Padel · Torneio Aniversário 2026' }); }
+    try { await navigator.share({ files, title: 'Play Padel · Torneio Reentre 2026' }); }
     catch (err) { if (err.name !== 'AbortError') _bundleDownloadAll(); }
   } else { _bundleDownloadAll(); }
 };
@@ -231,12 +231,12 @@ window._panfletoWhatsapp = async function() {
   const file = new File([blob], filename, { type: 'image/png' });
   if (navigator.canShare && navigator.canShare({ files: [file] })) {
     try {
-      await navigator.share({ files: [file], title: 'Play Padel Coop \u00B7 Torneio Anivers\u00E1rio 2026' });
+      await navigator.share({ files: [file], title: 'Play Padel \u00B7 Torneio Anivers\u00E1rio 2026' });
     } catch (err) {
       if (err.name !== 'AbortError') _panfletoDownload();
     }
   } else {
-    window.open('https://wa.me/?text=' + encodeURIComponent('Play Padel Coop \u00B7 Torneio Anivers\u00E1rio 2026'), '_blank');
+    window.open('https://wa.me/?text=' + encodeURIComponent('Play Padel \u00B7 Torneio Anivers\u00E1rio 2026'), '_blank');
   }
 };
 
@@ -244,7 +244,7 @@ window._panfletoWhatsapp = async function() {
 //  GAME IMAGE CANVAS BUILDER (shared)
 // ============================================
 window._buildGameCanvas = function(j, onDone) {
-  const CAT_CLR = { M1:'#4A9EFF', M2:'#00C37B', M3:'#39FF8F', M4:'#F5C518', M5:'#FF9A3C', F1:'#FF6BB0', F2:'#C97BFF' };
+  const CAT_CLR = { M1:'#4A9EFF', M2:'#00C37B', M3:'#39FF8F', M4:'#F5C518', M5:'#FF9A3C', F1:'#FF6BB0', F2:'#C97BFF', F3:'#8B5CF6', F3:'#8B5CF6' };
   function draw(logoImg) {
     const W = 700, H = 820, PAD = 44;
     const LOGO_SZ = 88, LOGO_X = PAD, LOGO_Y = 20;
@@ -439,7 +439,7 @@ window._buildGameCanvas = function(j, onDone) {
     ctx.fillStyle = '#1C2620'; ctx.fillRect(0, fy, W, 1);
     ctx.fillStyle = '#4A6058'; ctx.font = '17px Arial, sans-serif';
     ctx.textAlign = 'center';
-    ctx.fillText('Play Padel  \u00B7  Torneio Aniversário 2026', W / 2, fy + 44);
+    ctx.fillText('Play Padel  \u00B7  Torneio Reentre 2026', W / 2, fy + 44);
 
     // Bottom gradient bar
     g = ctx.createLinearGradient(0, 0, W, 0);
@@ -584,7 +584,7 @@ window.gerarBannerInstalacao = function() {
     ctx.fillStyle = '#111815'; ctx.fillRect(0, by, W, 52);
     ctx.fillStyle = '#1C2620'; ctx.fillRect(0, by, W, 1);
     ctx.fillStyle = '#4A6058'; ctx.font = '15px Arial, sans-serif';
-    ctx.fillText('Play Padel Coop  ·  Torneio 2.º Aniversário 2026  ·  Maputo', W / 2, by + 32);
+    ctx.fillText('Play Padel  ·  Torneio Reentre 2026  ·  Maputo', W / 2, by + 32);
 
     // Bottom gradient bar
     g = ctx.createLinearGradient(0, 0, W, 0);
@@ -664,7 +664,7 @@ window.gerarPanfleto = function(periodo) {
   }
 
   const COURT_CLR = { 'Play Padel':'#00C37B', 'TVCabo':'#4A9EFF', 'Stella Artois':'#F5C518' };
-  const CAT_CLR   = { M1:'#4A9EFF', M2:'#00C37B', M3:'#39FF8F', M4:'#F5C518', M5:'#FF9A3C', F1:'#FF6BB0', F2:'#C97BFF' };
+  const CAT_CLR   = { M1:'#4A9EFF', M2:'#00C37B', M3:'#39FF8F', M4:'#F5C518', M5:'#FF9A3C', F1:'#FF6BB0', F2:'#C97BFF', F3:'#8B5CF6', F3:'#8B5CF6' };
 
   // ── Background ───────────────────────────────────────────
   ctx.fillStyle = '#0A0F0D';
@@ -861,7 +861,7 @@ window.gerarPanfleto = function(periodo) {
   ctx.fillStyle = '#4A6058';
   ctx.font = '17px Arial, sans-serif';
   ctx.textAlign = 'center';
-  ctx.fillText('Play Padel  \u00B7  Torneio Aniversário 2026', W / 2, fy + 38);
+  ctx.fillText('Play Padel  \u00B7  Torneio Reentre 2026', W / 2, fy + 38);
   ctx.textAlign = 'left';
 
   _panfletoShare(canvas, `jogos-${filtroData !== 'todos' ? filtroData : 'todos'}${filenameSuffix}.png`);
@@ -924,7 +924,7 @@ window.abrirPanfletoFoto = function(jogoId, isFF, catId) {
 // ============================================
 window._gerarPanfletoWO = function(jogo) {
   const W = 1080, H = 1350;
-  const CAT_CLR = { M1:'#4A9EFF', M2:'#00C37B', M3:'#39FF8F', M4:'#F5C518', M5:'#FF9A3C', F1:'#FF6BB0', F2:'#C97BFF' };
+  const CAT_CLR = { M1:'#4A9EFF', M2:'#00C37B', M3:'#39FF8F', M4:'#F5C518', M5:'#FF9A3C', F1:'#FF6BB0', F2:'#C97BFF', F3:'#8B5CF6', F3:'#8B5CF6' };
   const canvas = document.createElement('canvas');
   canvas.width = W; canvas.height = H;
   const ctx = canvas.getContext('2d');
@@ -956,9 +956,9 @@ window._gerarPanfletoWO = function(jogo) {
     }
     ctx.textAlign = 'center';
     ctx.fillStyle = '#00C37B'; ctx.font = 'bold 32px Arial, sans-serif';
-    ctx.fillText('PLAY PADEL COOP', W/2, LY + LOGO_SZ + 44);
+    ctx.fillText('PLAY PADEL', W/2, LY + LOGO_SZ + 44);
     ctx.fillStyle = '#8AA396'; ctx.font = '21px Arial, sans-serif';
-    ctx.fillText('TORNEIO ANIVERSÁRIO 2026', W/2, LY + LOGO_SZ + 76);
+    ctx.fillText('TORNEIO REENTRE 2026', W/2, LY + LOGO_SZ + 76);
     const sepY = LY + LOGO_SZ + 102;
     ctx.strokeStyle = 'rgba(255,74,74,0.35)'; ctx.lineWidth = 1;
     ctx.beginPath(); ctx.moveTo(80, sepY); ctx.lineTo(W-80, sepY); ctx.stroke();
@@ -1047,7 +1047,7 @@ window._gerarPanfletoWO = function(jogo) {
 // ── Panfleto: Jogo Suspenso ───────────────────────────────────
 window._gerarPanfletoSuspenso = function(jogo) {
   const W = 1080, H = 1350;
-  const CAT_CLR = { M1:'#4A9EFF', M2:'#00C37B', M3:'#39FF8F', M4:'#F5C518', M5:'#FF9A3C', F1:'#FF6BB0', F2:'#C97BFF' };
+  const CAT_CLR = { M1:'#4A9EFF', M2:'#00C37B', M3:'#39FF8F', M4:'#F5C518', M5:'#FF9A3C', F1:'#FF6BB0', F2:'#C97BFF', F3:'#8B5CF6', F3:'#8B5CF6' };
   const canvas = document.createElement('canvas');
   canvas.width = W; canvas.height = H;
   const ctx = canvas.getContext('2d');
@@ -1209,7 +1209,7 @@ window._gerarPanfletoSuspenso = function(jogo) {
 window._gerarPanfletoAdiado = function(jogo) {
   if (!jogo) return toast('Jogo não encontrado.', 'error');
   const W = 1080, H = 1350;
-  const CAT_CLR = { M1:'#4A9EFF', M2:'#00C37B', M3:'#39FF8F', M4:'#F5C518', M5:'#FF9A3C', F1:'#FF6BB0', F2:'#C97BFF' };
+  const CAT_CLR = { M1:'#4A9EFF', M2:'#00C37B', M3:'#39FF8F', M4:'#F5C518', M5:'#FF9A3C', F1:'#FF6BB0', F2:'#C97BFF', F3:'#8B5CF6', F3:'#8B5CF6' };
   const canvas = document.createElement('canvas');
   canvas.width = W; canvas.height = H;
   const ctx = canvas.getContext('2d');
@@ -1340,7 +1340,7 @@ function _buildFotoFlyerFF(img) {
   if (!jogo || !jogo.resultado) return;
 
   const W = 1080, H = 1350, PAD = 52, BAND_H = 420;
-  const CAT_CLR = { M1:'#4A9EFF', M2:'#00C37B', M3:'#39FF8F', M4:'#F5C518', M5:'#FF9A3C', F1:'#FF6BB0', F2:'#C97BFF' };
+  const CAT_CLR = { M1:'#4A9EFF', M2:'#00C37B', M3:'#39FF8F', M4:'#F5C518', M5:'#FF9A3C', F1:'#FF6BB0', F2:'#C97BFF', F3:'#8B5CF6', F3:'#8B5CF6' };
   const canvas = document.getElementById('fotoFlyerCanvas');
   canvas.width = W; canvas.height = H;
   const ctx = canvas.getContext('2d');
@@ -1555,7 +1555,7 @@ function _buildFotoFlyer(img) {
   if (jogo._isFF) { _buildFotoFlyerFF(img); return; }
 
   const W = 1080, H = 1350, BAND_H = 340, PAD = 52;
-  const CAT_CLR = { M1:'#4A9EFF', M2:'#00C37B', M3:'#39FF8F', M4:'#F5C518', M5:'#FF9A3C', F1:'#FF6BB0', F2:'#C97BFF' };
+  const CAT_CLR = { M1:'#4A9EFF', M2:'#00C37B', M3:'#39FF8F', M4:'#F5C518', M5:'#FF9A3C', F1:'#FF6BB0', F2:'#C97BFF', F3:'#8B5CF6', F3:'#8B5CF6' };
 
   const canvas = document.getElementById('fotoFlyerCanvas');
   canvas.width = W; canvas.height = H;
@@ -1720,7 +1720,7 @@ window._shareWhatsapp = async function() {
     const file = new File([blob], filename, { type: 'image/png' });
     if (navigator.canShare && navigator.canShare({ files: [file] })) {
       try {
-        await navigator.share({ files: [file], title: 'Resultado Play Padel Coop' });
+        await navigator.share({ files: [file], title: 'Resultado Play Padel' });
       } catch (err) {
         if (err.name !== 'AbortError') _downloadFotoFlyer();
       }
@@ -1732,7 +1732,7 @@ window._shareWhatsapp = async function() {
       const sets = r.wo ? 'W.O.' : [[r.s1eq1,r.s1eq2],[r.s2eq1,r.s2eq2],[r.s3eq1,r.s3eq2]]
         .filter(([a]) => a !== null).map(([a, b], i) => { const [ta,tb] = _tbSW[i]; return `${a}-${b}${ta != null ? ` (${ta}-${tb})` : ''}`; }).join(' / ');
       const winner = w1 > w2 ? jogo.eq1 : jogo.eq2;
-      const texto = `\u{1F3BE} *Play Padel Coop \u00B7 Torneio Anivers\u00E1rio*\n\n` +
+      const texto = `\u{1F3BE} *Play Padel \u00B7 Torneio Reentre*\n\n` +
         `\u{1F3C6} *${escHtml(jogo.grupo)}*\n` +
         `${jogo.data ? ppFormatDate(jogo.data) : ''}${jogo.hora ? ' \u00B7 ' + jogo.hora : ''}\n\n` +
         `*${jogo.eq1}*  ${w1} \u2013 ${w2}  *${jogo.eq2}*\n` +
@@ -1787,7 +1787,7 @@ window.gerarPanfletoResultados = function() {
   }
 
   const COURT_CLR = { 'Play Padel': '#00C37B', 'TVCabo': '#4A9EFF', 'Stella Artois': '#F5C518' };
-  const CAT_CLR   = { M1: '#4A9EFF', M2: '#00C37B', M3: '#39FF8F', M4: '#F5C518', M5: '#FF9A3C', F1: '#FF6BB0', F2: '#C97BFF' };
+  const CAT_CLR   = { M1: '#4A9EFF', M2: '#00C37B', M3: '#39FF8F', M4: '#F5C518', M5: '#FF9A3C', F1: '#FF6BB0', F2: '#C97BFF', F3: '#8B5CF6', F3: '#8B5CF6' };
   const CX = { data: PAD, hora: PAD + 66, campo: PAD + 148, grupo: PAD + 322, eq1r: 604, score_cx: 664, eq2: 726 };
 
   // Background
@@ -1894,7 +1894,7 @@ window.gerarPanfletoResultados = function() {
   ctx.fillStyle = '#1C2620'; ctx.fillRect(0, fy, W, 1);
   ctx.fillStyle = '#4A6058'; ctx.font = '17px Arial, sans-serif';
   ctx.textAlign = 'center';
-  ctx.fillText('Play Padel  \u00B7  Torneio Aniversário 2026', W / 2, fy + 38);
+  ctx.fillText('Play Padel  \u00B7  Torneio Reentre 2026', W / 2, fy + 38);
   ctx.textAlign = 'left';
 
   _panfletoShare(canvas, `resultados-${filtroData !== 'todos' ? filtroData : 'todos'}.png`);
@@ -2085,14 +2085,14 @@ const _UNUSED_DEFAULTS = {
 // ============================================
 function isLoggedIn() { return Auth.isAuth(); }
 
-function doLogin(user, pass) {
-  const result = Auth.login(user, pass);
+async function doLogin(user, pass) {
+  const result = await Auth.login(user, pass);
   if (!result.ok) { return { ok: false, error: result.error }; }
   return { ok: true };
 }
 
-function doLogout() {
-  Auth.logout();
+async function doLogout() {
+  await Auth.logout();
   location.reload();
 }
 
@@ -2104,7 +2104,7 @@ window.abrirAlterarPasse = function() {
   openModal('modalAlterarPasse');
 };
 
-window.guardarNovaPasse = function() {
+window.guardarNovaPasse = async function() {
   const actual = document.getElementById('passeActual').value.trim();
   const nova   = document.getElementById('passeNova').value;
   const conf   = document.getElementById('passeNovaConf').value;
@@ -2119,13 +2119,11 @@ window.guardarNovaPasse = function() {
   const me = Auth.me();
   if (!me) return showErr('Sessão inválida. Faça login novamente.');
 
-  // Verify current password
-  if (!Auth.verifyPassword(me.id, actual)) return showErr('Palavra-passe actual incorrecta.');
+  const res = await Auth.changePassword(actual, nova);
+  if (!res.ok) return showErr(res.error);
 
-  Auth.updateUser(me.id, { password: nova });
   closeModal('modalAlterarPasse');
   toast('Palavra-passe alterada com sucesso.');
-  Auth.log('CHANGE_PASSWORD', 'auth', `Palavra-passe alterada: ${me.username}`);
 };
 
 function resetLocalCredentials(e) {
@@ -2187,6 +2185,8 @@ function navigate(view) {
     logs:          ['Logs de Auditoria', 'Auditoria'],
     sessoes:       ['Sessões Activas', 'Utilizadores Ligados'],
     configuracoes: ['Configurações', 'Portal Público'],
+    inscricoes:    ['Inscrições', 'Pré-inscrições'],
+    patrocinadores:['Patrocinadores & Parceiros', 'Configurar Logos'],
     classificacoes:['Classificações', 'Standings ao Vivo'],
     estatisticas:  ['Estatísticas', 'Resumo do Torneio'],
     importar:      ['Importar Resultados', 'Import em Lote'],
@@ -2218,6 +2218,8 @@ function renderView(view) {
     case 'utilizadores': renderUtilizadores(); break;
     case 'logs':         renderLogs();         break;
     case 'sessoes':      renderSessoes();       break;
+    case 'inscricoes':   renderInscricoes();   break;
+    case 'patrocinadores': renderPatrocinadores(); break;
     case 'configuracoes': renderConfigPanel();  break;
     case 'classificacoes': renderAdminClassificacoes(); break;
     case 'estatisticas': renderEstatisticas(); break;
@@ -2396,7 +2398,7 @@ function renderDashboard() {
   }).join('');
 
   // Category progress bars
-  const CATS = ['M1','M2','M3','M4','M5','F1','F2'];
+  const CATS = ['M1','M2','M3','M4','M5','F1','F2','F3'];
   const catProgress = document.getElementById('dashCatProgress');
   if (catProgress) {
     catProgress.innerHTML = CATS.map(cat => {
@@ -2495,17 +2497,30 @@ function renderConfigPanel() {
   el.innerHTML = `
     ${section('Identidade do Torneio')}
     ${fieldText('tornNome',      'Nome do Torneio',     'ex: Play Padel 2026',              'Play Padel 2026')}
-    ${fieldText('tornSubtitulo', 'Subtítulo',           'ex: Torneio 2.º Aniversário',      'Torneio 2.º Aniversário')}
+    ${fieldText('tornSubtitulo', 'Subtítulo',           'ex: Torneio Reentre',              'Torneio Reentre')}
     ${fieldText('tornClube',     'Clube / Organização', 'ex: Sport Eventos',                'Sport Eventos')}
     ${fieldText('tornLocal',     'Localidade',          'ex: Maputo',                       'Maputo')}
-    ${fieldText('tornDatas',     'Datas',               'ex: 05 a 14 de Junho 2026',        '05 a 14 de Junho 2026')}
+    ${fieldText('tornDatas',     'Datas',               'ex: 10 a 19 de Setembro 2026',        '10 a 19 de Setembro 2026')}
     ${fieldText('tornDescFooter','Frase do Rodapé',     'ex: O padel que une Moçambique.',  'O padel que une Moçambique.')}
+    ${fieldText('tornTelOrg',   'Tel. Organizador (WhatsApp)', 'ex: 258841234567 (sem + ou espaços)', '')}
 
     ${section('Visibilidade de Páginas')}
+    ${fieldToggle('calendarioVisible',    'Calendário',               'ph-calendar',          true)}
     ${fieldToggle('scoreboardVisible',    'Quadro de Apuramento',     'ph-monitor-play',      true)}
     ${fieldToggle('classificacoesVisible','Classificações',           'ph-trophy',            true)}
     ${fieldToggle('fasefinalVisible',     'Fase Final',               'ph-brackets-round',    true)}
+    ${fieldToggle('jogadoresVisible',     'Jogadores',                'ph-users',             true)}
+    ${fieldToggle('inscricoesVisible',    'Inscrições',               'ph-clipboard-text',    true)}
     ${fieldToggle('estatisticasVisible',  'Estatísticas',             'ph-chart-bar',         true)}
+    ${fieldToggle('regulamentoVisible',   'Regulamento',              'ph-book-open',         true)}
+
+    ${section('Visibilidade de Secções (Página Principal)')}
+    ${fieldToggle('liveStatsVisible',     'Torneio em Tempo Real',    'ph-activity',          true)}
+    ${fieldToggle('navegarVisible',       'Navegar (cards)',          'ph-squares-four',      true)}
+    ${fieldToggle('agendaVisible',        'Agenda (Próximos Jogos)',  'ph-clock',             true)}
+    ${fieldToggle('leaderboardVisible',   'Leaderboard (Top Pares)',  'ph-chart-line-up',     true)}
+    ${fieldToggle('patrocinadoresVisible','Patrocinadores Oficiais',  'ph-handshake',         true)}
+    ${fieldToggle('parceirosVisible',     'Parceiros Oficiais',       'ph-handshake',         true)}
 
     ${section('Quadro de Apuramento')}
     ${fieldSelect('sbRefreshMins', 'Auto-refresh (minutos)', [['5','5 min'],['10','10 min'],['15','15 min'],['30','30 min']], '15')}
@@ -3972,7 +3987,7 @@ window.suspenderJogo = function() {
 };
 
 // Auto-sync silencioso após guardar dados críticos (resultados, adiados, suspensos)
-// Tenta push para GitHub sem bloquear o utilizador; mostra toast só se falhar.
+// Tenta push para Supabase sem bloquear o utilizador; mostra toast só se falhar.
 let _autoSyncPaused = false;
 window.toggleAutoSyncPause = function() {
   _autoSyncPaused = !_autoSyncPaused;
@@ -3987,12 +4002,18 @@ window.toggleAutoSyncPause = function() {
 
 function _autoSync() {
   if (_autoSyncPaused) return;
-  if (typeof GHSync === 'undefined' || !GHSync.isConfigured()) return;
-  GHSync.push(GHSync.getAllData()).then(() => {
-    // success — silent
-  }).catch(err => {
-    toast('⚠ Auto-sync falhou — carregue em Sincronizar manualmente. (' + (err?.message || err) + ')', 'error');
-  });
+  if (!window.ppCloudState || !window.ppCloudState.enabled) return;
+  // Debounce: setData/ffSave disparam a cada edição; agrupamos as escritas
+  // para não fazer dezenas de pedidos REST por interação.
+  if (_autoSync._t) clearTimeout(_autoSync._t);
+  _autoSync._t = setTimeout(function () {
+    _autoSync._t = null;
+    window.ppCloudState.pushFromLocal().then(() => {
+      // success — silent
+    }).catch(err => {
+      toast('⚠ Auto-sync cloud falhou — carregue em Sincronizar manualmente. (' + (err?.message || err) + ')', 'error');
+    });
+  }, 1200);
 }
 
 function salvarResultado() {
@@ -4379,30 +4400,16 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Login
   const loginForm = document.getElementById('loginForm');
   Auth.ensureDefaults();
+  await Auth.restore();
 
   if (loginForm) {
     loginForm.addEventListener('submit', async e => {
       e.preventDefault();
       const u = document.getElementById('loginUser').value.trim();
       const p = document.getElementById('loginPass').value;
-      // On file:// protocol the auto-sync is skipped; fetch users from GitHub Pages directly
-      if (window.location.protocol === 'file:') {
-        try {
-          const cfg = GHSync.getCfg();
-          if (cfg.owner && cfg.repo) {
-            const r = await fetch(
-              `https://${cfg.owner}.github.io/${cfg.repo}/data.json?_=${Date.now()}`
-            );
-            if (r.ok) {
-              const d = await r.json();
-              if (d.users && d.users.length) ppSave('users', d.users);
-            }
-          }
-        } catch (_) { /* ignore — will fall back to local localStorage */ }
-      }
-      // Wait for remote data.json fetch to complete so synced users are available
+      // Wait for remote cloud state fetch to complete so synced users are available
       if (window.ppDataReady) await window.ppDataReady;
-      const result = doLogin(u, p);
+      const result = await doLogin(u, p);
       if (result.ok) {
         document.getElementById('loginOverlay').style.display = 'none';
         document.getElementById('adminShell').classList.add('visible');
@@ -4576,7 +4583,7 @@ const FF_4G       = ['M3', 'M4'];               // 4 groups, top 2 each = 8
 const FF_2G       = ['M5'];                     // 2 groups, top 2 each = 4 (no QF)
 
 function ffLoad()       { return ppLoad('fasefinal') || {}; }
-function ffSave(data)   { ppSave('fasefinal', data); if (typeof GHSync !== 'undefined') GHSync.markDirty(); }
+function ffSave(data)   { ppSave('fasefinal', data); if (typeof _autoSync === 'function') _autoSync(); }
 
 function ffStandings(gJogos) {
   const pairs = new Set();
@@ -5539,9 +5546,9 @@ function setupRoleUI() {
 // ============================================
 //  UTILIZADORES VIEW
 // ============================================
-function renderUtilizadores() {
+async function renderUtilizadores() {
   if (!Auth.isAdmin()) { navigate('dashboard'); return; }
-  const users = Auth.getUsers();
+  const users = await Auth.refreshUsers();
   const me    = Auth.me();
 
   document.getElementById('tblUtilizadores').innerHTML = `
@@ -5572,18 +5579,18 @@ function renderUtilizadores() {
                   ${u.active ? 'Activo' : 'Inactivo'}
                 </span>
               </td>
-              <td style="padding:.65rem .8rem;font-size:.72rem;color:var(--cinza-texto)">${new Date(u.createdAt).toLocaleDateString('pt-PT')}</td>
+              <td style="padding:.65rem .8rem;font-size:.72rem;color:var(--cinza-texto)">${u.createdAt ? new Date(u.createdAt).toLocaleDateString('pt-PT') : '—'}</td>
               <td style="padding:.65rem .8rem">
                 <div style="display:flex;gap:.35rem;align-items:center">
                   <button class="btn btn-ghost btn-sm" onclick="uiEditUser('${u.id}')" title="Editar"><i class="ph ph-pencil"></i></button>
-                  ${u.username !== 'admin' ? `
+                  ${u.id !== me.id ? `
                     <button class="btn btn-ghost btn-sm" onclick="uiToggleUser('${u.id}')" title="${u.active ? 'Desactivar' : 'Activar'}">
                       <i class="ph ph-${u.active ? 'pause-circle' : 'play-circle'}"></i>
                     </button>
                     <button class="btn btn-ghost btn-sm" style="color:var(--vermelho)" onclick="uiDeleteUser('${u.id}','${escHtml(u.username)}')" title="Eliminar">
                       <i class="ph ph-trash"></i>
                     </button>
-                  ` : `<span style="font-size:.65rem;color:var(--cinza-texto)">protegido</span>`}
+                  ` : `<span style="font-size:.65rem;color:var(--cinza-texto)">tu</span>`}
                 </div>
               </td>
             </tr>
@@ -5625,7 +5632,7 @@ function uiEditUser(id) {
   _editUserId = id;
   document.getElementById('modalUserTitle').textContent = 'Editar Utilizador';
   document.getElementById('userUsername').value    = u.username;
-  document.getElementById('userUsername').disabled = u.username === 'admin';
+  document.getElementById('userUsername').disabled = true;
   document.getElementById('userName').value        = u.name;
   document.getElementById('userRole').value        = u.role;
   document.getElementById('userPass').value        = '';
@@ -5640,33 +5647,35 @@ function uiEditUser(id) {
   openModal('modalUser');
 }
 
-function uiSaveUser() {
+async function uiSaveUser() {
   const username = document.getElementById('userUsername').value.trim();
   const name     = document.getElementById('userName').value.trim();
   const role     = document.getElementById('userRole').value;
   const pass     = document.getElementById('userPass').value;
   const pass2    = document.getElementById('userPass2').value;
 
-  if (!username || !name) return _showUserError('Username e nome são obrigatórios.');
+  if (!username || !name) return _showUserError('Email e nome são obrigatórios.');
   if (_editUserId === null && !pass) return _showUserError('Palavra-passe obrigatória para novo utilizador.');
   if (pass && pass.length < 6) return _showUserError('Palavra-passe deve ter pelo menos 6 caracteres.');
   if (pass && pass !== pass2)  return _showUserError('As palavras-passe não coincidem.');
 
+  const categories = role === 'operator'
+    ? [...document.querySelectorAll('#userCategoriesGrid input[type=checkbox]:checked')].map(c => c.value)
+    : [];
+
+  const saveBtn = document.getElementById('userSaveBtn');
+  if (saveBtn) saveBtn.disabled = true;
+
   let result;
   if (_editUserId === null) {
-    const categories = role === 'operator'
-      ? [...document.querySelectorAll('#userCategoriesGrid input[type=checkbox]:checked')].map(c => c.value)
-      : [];
-    result = Auth.createUser(username, name, role, pass, categories);
+    result = await Auth.createUser(username, name, role, pass, categories);
   } else {
-    const categories = role === 'operator'
-      ? [...document.querySelectorAll('#userCategoriesGrid input[type=checkbox]:checked')].map(c => c.value)
-      : [];
-    const changes = { username, name, role, categories };
+    const changes = { name, role, categories };
     if (pass) changes.password = pass;
-    result = Auth.updateUser(_editUserId, changes);
+    result = await Auth.updateUser(_editUserId, changes);
   }
 
+  if (saveBtn) saveBtn.disabled = false;
   if (!result.ok) return _showUserError(result.error);
 
   closeModal('modalUser');
@@ -5674,16 +5683,16 @@ function uiSaveUser() {
   renderUtilizadores();
 }
 
-function uiToggleUser(id) {
-  const result = Auth.toggleUser(id);
+async function uiToggleUser(id) {
+  const result = await Auth.toggleUser(id);
   if (!result.ok) return toast(result.error, 'error');
   toast(result.active ? 'Utilizador activado.' : 'Utilizador desactivado.');
   renderUtilizadores();
 }
 
-function uiDeleteUser(id, username) {
-  if (!confirm(`Eliminar o utilizador "${username}"? Esta ação não pode ser desfeita.`)) return;
-  const result = Auth.deleteUser(id);
+async function uiDeleteUser(id, username) {
+  if (!confirm(`Remover o acesso do utilizador "${username}"? O perfil é eliminado e deixa de poder entrar.`)) return;
+  const result = await Auth.deleteUser(id);
   if (!result.ok) return toast(result.error, 'error');
   toast(`Utilizador "${username}" eliminado.`);
   renderUtilizadores();
@@ -5838,6 +5847,244 @@ window._logsClearFilters = function() {
 };
 
 // ============================================
+//  INSCRIÇÕES VIEW
+// ============================================
+async function renderInscricoes() {
+  const el = document.getElementById('listInscricoes');
+  if (!el) return;
+  el.innerHTML = `<div class="card" style="text-align:center;padding:2rem;color:var(--cinza-texto)">A sincronizar inscrições...</div>`;
+
+  const STORAGE_KEY = 'pp_inscricoes';
+  function loadEntries() {
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); } catch(e) { return []; }
+  }
+  function saveEntries(entries) { localStorage.setItem(STORAGE_KEY, JSON.stringify(entries)); }
+  function download(filename, content, mime) {
+    const blob = new Blob([content], { type: mime });
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    a.href = url; a.download = filename; a.click();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  }
+
+  if (window.ppCloudState && window.ppCloudState.enabled) {
+    try { await window.ppCloudState.pullToLocal(); }
+    catch (_) { toast('Não foi possível sincronizar com cloud. A mostrar dados locais.', 'warning'); }
+  }
+  let entries = loadEntries();
+  if (!entries.length && window.ppCloudState && window.ppCloudState.fetchInscricoes) {
+    try {
+      const remoteEntries = await window.ppCloudState.fetchInscricoes();
+      if (remoteEntries.length) {
+        saveEntries(remoteEntries);
+        entries = remoteEntries;
+      }
+    } catch (_) {}
+  }
+  const total   = entries.length;
+  const duplas  = entries.filter(e => e.tipo === 'dupla').length;
+  const indiv   = entries.filter(e => e.tipo === 'jogador').length;
+
+  const catMap  = {};
+  (getData('categorias') || []).forEach(c => { catMap[c.id] = c.nome; });
+
+  const catCounts = {};
+  entries.forEach(e => { catCounts[e.categoria] = (catCounts[e.categoria] || 0) + 1; });
+
+  el.innerHTML = `
+    <div style="max-width:1100px">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;flex-wrap:wrap;margin-bottom:1.25rem">
+        <div>
+          <h2 style="margin:0 0 .25rem;font-family:'Barlow Condensed',sans-serif;font-size:1.5rem;text-transform:uppercase">Pré-Inscrições</h2>
+          <p style="margin:0;color:var(--cinza-texto);font-size:.85rem">Registos guardados via formulário público</p>
+        </div>
+        <div style="display:flex;gap:.5rem;flex-wrap:wrap">
+          <button class="btn btn-secondary" id="insAdminExportJson"><i class="ph ph-download-simple"></i> Exportar JSON</button>
+          <button class="btn btn-secondary" id="insAdminExportCsv"><i class="ph ph-table"></i> Exportar CSV</button>
+          <button class="btn" style="background:rgba(255,74,74,.12);color:#FF4A4A;border:1px solid rgba(255,74,74,.25)" id="insAdminClear"><i class="ph ph-trash"></i> Limpar tudo</button>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:.7rem;margin-bottom:1.25rem">
+        <div class="card" style="padding:.9rem 1rem;text-align:center">
+          <div style="font-size:2rem;font-weight:800;color:var(--branco);line-height:1">${total}</div>
+          <div style="font-size:.68rem;text-transform:uppercase;letter-spacing:.06em;color:var(--cinza-texto);margin-top:.2rem">Total</div>
+        </div>
+        <div class="card" style="padding:.9rem 1rem;text-align:center">
+          <div style="font-size:2rem;font-weight:800;color:var(--verde);line-height:1">${duplas}</div>
+          <div style="font-size:.68rem;text-transform:uppercase;letter-spacing:.06em;color:var(--cinza-texto);margin-top:.2rem">Duplas</div>
+        </div>
+        <div class="card" style="padding:.9rem 1rem;text-align:center">
+          <div style="font-size:2rem;font-weight:800;color:var(--amarelo);line-height:1">${indiv}</div>
+          <div style="font-size:.68rem;text-transform:uppercase;letter-spacing:.06em;color:var(--cinza-texto);margin-top:.2rem">Individuais</div>
+        </div>
+        ${Object.entries(catCounts).map(([cat, n]) => `
+        <div class="card" style="padding:.9rem 1rem;text-align:center">
+          <div style="font-size:2rem;font-weight:800;color:var(--branco);line-height:1">${n}</div>
+          <div style="font-size:.68rem;text-transform:uppercase;letter-spacing:.06em;color:var(--cinza-texto);margin-top:.2rem">${cat}</div>
+        </div>`).join('')}
+      </div>
+
+      ${total === 0
+        ? `<div class="card" style="text-align:center;padding:3rem;color:var(--cinza-texto)"><i class="ph ph-clipboard-text" style="font-size:2.5rem;display:block;margin-bottom:.6rem"></i>Nenhuma inscrição registada ainda.</div>`
+        : `<div class="card" style="padding:0;overflow:hidden">
+            <table style="width:100%;border-collapse:collapse;font-size:.83rem">
+              <thead>
+                <tr style="background:rgba(255,255,255,.03);border-bottom:1px solid var(--preto-borda)">
+                  <th style="padding:.65rem .9rem;text-align:left;font-weight:700;text-transform:uppercase;letter-spacing:.05em;font-size:.68rem;color:var(--cinza-texto)">Nome</th>
+                  <th style="padding:.65rem .9rem;text-align:left;font-weight:700;text-transform:uppercase;letter-spacing:.05em;font-size:.68rem;color:var(--cinza-texto)">Tipo</th>
+                  <th style="padding:.65rem .9rem;text-align:left;font-weight:700;text-transform:uppercase;letter-spacing:.05em;font-size:.68rem;color:var(--cinza-texto)">Categoria</th>
+                  <th style="padding:.65rem .9rem;text-align:left;font-weight:700;text-transform:uppercase;letter-spacing:.05em;font-size:.68rem;color:var(--cinza-texto)">Contacto</th>
+                  <th style="padding:.65rem .9rem;text-align:left;font-weight:700;text-transform:uppercase;letter-spacing:.05em;font-size:.68rem;color:var(--cinza-texto)">Data</th>
+                  <th style="padding:.65rem .9rem;text-align:center;font-weight:700;text-transform:uppercase;letter-spacing:.05em;font-size:.68rem;color:var(--cinza-texto)">Acções</th>
+                </tr>
+              </thead>
+              <tbody id="insAdminTbody">
+                ${entries.slice().reverse().map(e => `
+                  <tr style="border-bottom:1px solid rgba(255,255,255,.04)" data-ins-id="${escHtml(e.id)}">
+                    <td style="padding:.65rem .9rem">
+                      <div style="font-weight:600;color:var(--branco)">${escHtml(e.nome1)}</div>
+                      ${e.nome2 ? `<div style="font-size:.75rem;color:var(--cinza-texto)"><i class="ph ph-user"></i> ${escHtml(e.nome2)}</div>` : ''}
+                      ${e.clube ? `<div style="font-size:.72rem;color:#4A6058">${escHtml(e.clube)}</div>` : ''}
+                    </td>
+                    <td style="padding:.65rem .9rem">
+                      <span style="font-size:.68rem;font-weight:700;text-transform:uppercase;padding:.15rem .45rem;border-radius:4px;background:${e.tipo==='dupla'?'rgba(0,195,123,.12)':'rgba(245,197,24,.12)'};color:${e.tipo==='dupla'?'var(--verde)':'var(--amarelo)'}">
+                        ${e.tipo === 'dupla' ? 'Dupla' : 'Individual'}
+                      </span>
+                      <span style="margin-left:.3rem;font-size:.68rem;font-weight:700;text-transform:uppercase;padding:.15rem .45rem;border-radius:4px;background:rgba(255,255,255,.06);color:var(--cinza-texto)">
+                        ${e.genero === 'F' ? 'Fem.' : 'Masc.'}
+                      </span>
+                    </td>
+                    <td style="padding:.65rem .9rem;font-weight:700;color:var(--branco)">${escHtml(e.categoria)}</td>
+                    <td style="padding:.65rem .9rem;color:var(--cinza-texto);font-size:.79rem">
+                      ${e.telefone ? `<div><i class="ph ph-phone"></i> ${escHtml(e.telefone)}</div>` : ''}
+                      ${e.email    ? `<div><i class="ph ph-envelope"></i> ${escHtml(e.email)}</div>` : ''}
+                    </td>
+                    <td style="padding:.65rem .9rem;color:var(--cinza-texto);font-size:.78rem;white-space:nowrap">
+                      ${new Date(e.criadoem || e.criadoEm).toLocaleDateString('pt-PT')}
+                    </td>
+                    <td style="padding:.65rem .9rem;text-align:center">
+                      <button class="btn-icon" title="Remover" onclick="insAdminDelete('${escHtml(e.id)}')"><i class="ph ph-trash" style="color:#FF4A4A"></i></button>
+                    </td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+          </div>`
+      }
+    </div>
+  `;
+
+  document.getElementById('insAdminExportJson')?.addEventListener('click', () => {
+    download('inscricoes-reentre.json', JSON.stringify(entries, null, 2), 'application/json');
+  });
+  document.getElementById('insAdminExportCsv')?.addEventListener('click', () => {
+    const header = ['id','criadoem','tipo','genero','categoria','nome1','nome2','telefone','email','clube','observacoes','estado'];
+    const rows = [header.join(',')].concat(entries.map(e =>
+      header.map(k => '"' + String(e[k] || '').replace(/"/g, '""') + '"').join(',')
+    ));
+    download('inscricoes-reentre.csv', rows.join('\n'), 'text/csv;charset=utf-8');
+  });
+  document.getElementById('insAdminClear')?.addEventListener('click', async () => {
+    if (!confirm('Apagar todas as inscrições? Esta acção não pode ser desfeita.')) return;
+    if (window.ppCloudState && window.ppCloudState.deleteInscricao) {
+      await Promise.allSettled(entries.map(e => window.ppCloudState.deleteInscricao(e.id)));
+    }
+    saveEntries([]);
+    if (window.ppCloudState && window.ppCloudState.enabled) await window.ppCloudState.pushFromLocal();
+    renderInscricoes();
+    toast('Inscrições apagadas.', 'success');
+  });
+}
+
+window.insAdminDelete = async function(id) {
+  if (!confirm('Remover esta inscrição?')) return;
+  try {
+    const entries = JSON.parse(localStorage.getItem('pp_inscricoes') || '[]').filter(e => e.id !== id);
+    localStorage.setItem('pp_inscricoes', JSON.stringify(entries));
+    if (window.ppCloudState && window.ppCloudState.deleteInscricao) {
+      await window.ppCloudState.deleteInscricao(id);
+    }
+    if (window.ppCloudState && window.ppCloudState.enabled) await window.ppCloudState.pushFromLocal();
+    renderInscricoes();
+    toast('Inscrição removida.', 'success');
+  } catch(e) { toast('Erro ao remover.', 'error'); }
+};
+
+// ============================================
+//  PATROCINADORES & PARCEIROS
+// ============================================
+function renderPatrocinadores() {
+  function renderPanel(containerId, key, label) {
+    const el = document.getElementById(containerId);
+    if (!el) return;
+    const items = getData(key) || [];
+
+    function row(p, i) {
+      const logoHtml = p.logo
+        ? `<img src="${escHtml(p.logo)}" alt="${escHtml(p.nome)}" style="height:40px;max-width:80px;object-fit:contain;border-radius:4px;background:#111"/>`
+        : `<div style="width:80px;height:40px;background:#1C2620;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:.7rem;color:#8AA396">sem logo</div>`;
+      return `<div style="display:flex;align-items:center;gap:.75rem;padding:.5rem 0;border-bottom:1px solid rgba(255,255,255,.04)">
+        ${logoHtml}
+        <div style="flex:1;min-width:0">
+          <div style="font-size:.85rem;color:var(--branco);font-weight:600">${escHtml(p.nome)}</div>
+          ${p.url ? `<div style="font-size:.72rem;color:var(--cinza-texto);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${escHtml(p.url)}</div>` : ''}
+        </div>
+        <button onclick="sponsorDelete('${key}',${i})" style="border:none;background:rgba(255,60,60,.12);color:#FF6B6B;cursor:pointer;border-radius:6px;padding:.25rem .55rem;font-size:.75rem">Remover</button>
+      </div>`;
+    }
+
+    el.innerHTML = `
+      <div style="margin-bottom:1.25rem">
+        <h3 style="font-size:.95rem;margin:0 0 .75rem;color:var(--verde-claro);text-transform:uppercase;letter-spacing:.04em">${escHtml(label)}</h3>
+        <div id="${containerId}List">${items.length ? items.map((p,i) => row(p,i)).join('') : '<p style="color:#8AA396;font-size:.83rem">Nenhum item.</p>'}</div>
+      </div>
+      <details style="margin-top:.75rem">
+        <summary style="cursor:pointer;font-size:.83rem;color:var(--cinza-texto);margin-bottom:.5rem">➕ Adicionar ${escHtml(label)}</summary>
+        <div style="display:flex;flex-direction:column;gap:.5rem;padding:.75rem;background:var(--cinza-escuro);border-radius:8px;margin-top:.5rem">
+          <input id="${containerId}Nome" placeholder="Nome" style="background:#111;border:1px solid var(--preto-borda);border-radius:6px;padding:.4rem .65rem;font-size:.83rem;color:var(--branco)"/>
+          <input id="${containerId}Logo" placeholder="Logo (ex: patrocinadores/nome.png ou https://...)" style="background:#111;border:1px solid var(--preto-borda);border-radius:6px;padding:.4rem .65rem;font-size:.83rem;color:var(--branco)"/>
+          <input id="${containerId}Url" placeholder="Link (opcional)" style="background:#111;border:1px solid var(--preto-borda);border-radius:6px;padding:.4rem .65rem;font-size:.83rem;color:var(--branco)"/>
+          <button onclick="sponsorAdd('${key}','${containerId}')" style="background:var(--verde);color:#000;border:none;border-radius:6px;padding:.45rem;font-size:.83rem;font-weight:700;cursor:pointer">Adicionar</button>
+        </div>
+      </details>`;
+  }
+
+  const container = document.getElementById('view-patrocinadores');
+  if (!container) return;
+  container.innerHTML = `
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;max-width:900px">
+      <div id="patronPanel" style="background:var(--cinza-escuro);border-radius:12px;padding:1rem;border:1px solid rgba(255,255,255,.07)"></div>
+      <div id="parceirosPanel" style="background:var(--cinza-escuro);border-radius:12px;padding:1rem;border:1px solid rgba(255,255,255,.07)"></div>
+    </div>`;
+  renderPanel('patronPanel',   'patrocinadores', 'Patrocinadores');
+  renderPanel('parceirosPanel','parceiros',       'Parceiros');
+}
+
+window.sponsorAdd = function(key, containerId) {
+  const nome = document.getElementById(containerId + 'Nome').value.trim();
+  if (!nome) { toast('Nome obrigatório.', 'error'); return; }
+  const logo = document.getElementById(containerId + 'Logo').value.trim();
+  const url  = document.getElementById(containerId + 'Url').value.trim();
+  const items = getData(key) || [];
+  items.push({ id: Date.now().toString(36), nome, logo, url });
+  setData(key, items);
+  _autoSync();
+  renderPatrocinadores();
+  toast('Adicionado com sucesso.', 'success');
+};
+
+window.sponsorDelete = function(key, idx) {
+  if (!confirm('Remover este item?')) return;
+  const items = getData(key) || [];
+  items.splice(idx, 1);
+  setData(key, items);
+  _autoSync();
+  renderPatrocinadores();
+  toast('Removido com sucesso.', 'success');
+};
+
+// ============================================
 //  SESSÕES VIEW
 // ============================================
 function renderSessoes() {
@@ -5884,7 +6131,7 @@ function uiForceLogout(sessionId, username) {
 // ============================================
 //  HELPER: category checkboxes in user modal
 // ============================================
-const _ALL_CATS = ['M1','M2','M3','M4','M5','F1','F2'];
+const _ALL_CATS = ['M1','M2','M3','M4','M5','F1','F2','F3'];
 
 function _buildCategoryCheckboxes(selectedCats) {
   const grid = document.getElementById('userCategoriesGrid');
@@ -6192,7 +6439,7 @@ window.gerarPanfletoClassificacoes = function() {
     return { id: g.id, rows, total: gJogos.length, done: gJogos.filter(j => j.resultado).length, qualMap: qualifiedByCat[gCatId] };
   });
 
-  const catColor = catId ? ({ M1:'#4A9EFF', M2:'#00C37B', M3:'#39FF8F', M4:'#F5C518', M5:'#FF9A3C', F1:'#FF6BB0', F2:'#C97BFF' }[catId] || '#00C37B') : '#00C37B';
+  const catColor = catId ? ({ M1:'#4A9EFF', M2:'#00C37B', M3:'#39FF8F', M4:'#F5C518', M5:'#FF9A3C', F1:'#FF6BB0', F2:'#C97BFF', F3:'#8B5CF6', F3:'#8B5CF6' }[catId] || '#00C37B') : '#00C37B';
   const labelTxt = catId ? catId.toUpperCase() : 'TODOS OS GRUPOS';
   const filename = catId ? `classificacoes-${catId}.png` : 'classificacoes-todos.png';
 
@@ -6217,7 +6464,7 @@ window.gerarPanfletoClassificacoes = function() {
   canvas.width = W; canvas.height = H;
   const ctx = canvas.getContext('2d');
 
-  const CAT_CLR = { M1:'#4A9EFF', M2:'#00C37B', M3:'#39FF8F', M4:'#F5C518', M5:'#FF9A3C', F1:'#FF6BB0', F2:'#C97BFF' };
+  const CAT_CLR = { M1:'#4A9EFF', M2:'#00C37B', M3:'#39FF8F', M4:'#F5C518', M5:'#FF9A3C', F1:'#FF6BB0', F2:'#C97BFF', F3:'#8B5CF6', F3:'#8B5CF6' };
   // catColor and labelTxt already computed above
 
   function cTrunc(text, maxW) {
@@ -6364,7 +6611,7 @@ window.gerarPanfletoClassificacoes = function() {
   ctx.fillStyle = '#1C2620'; ctx.fillRect(0, H - FOOT_H, W, 1);
   ctx.fillStyle = '#4A6058'; ctx.font = '20px Arial, sans-serif';
   ctx.textAlign = 'center';
-  ctx.fillText('Play Padel  \u00B7  Torneio Aniversário 2026', W / 2, H - FOOT_H + 42);
+  ctx.fillText('Play Padel  \u00B7  Torneio Reentre 2026', W / 2, H - FOOT_H + 42);
   ctx.textAlign = 'left';
 
   _panfletoShare(canvas, filename);
@@ -6382,7 +6629,7 @@ window.gerarPanfletoClassificacoes = function() {
 window.gerarPanfletoCampeoes = function() {
   const ff   = ppLoad('fasefinal') || {};
   const CATS = ['M1', 'M2', 'F1', 'F2', 'M3', 'M4', 'M5'];
-  const CAT_CLR = { M1:'#4A9EFF', M2:'#00C37B', M3:'#39FF8F', M4:'#F5C518', M5:'#FF9A3C', F1:'#FF6BB0', F2:'#C97BFF' };
+  const CAT_CLR = { M1:'#4A9EFF', M2:'#00C37B', M3:'#39FF8F', M4:'#F5C518', M5:'#FF9A3C', F1:'#FF6BB0', F2:'#C97BFF', F3:'#8B5CF6', F3:'#8B5CF6' };
 
   const champions = [];
   CATS.forEach(cat => {
@@ -6496,7 +6743,7 @@ window.gerarPanfletoCampeoes = function() {
   ctx.fillStyle = 'rgba(245,197,24,.2)'; ctx.fillRect(0, fy, W, 1);
     ctx.fillStyle = '#4A6058'; ctx.font = '17px Arial, sans-serif';
     ctx.textAlign = 'center';
-    ctx.fillText('Play Padel  ·  Torneio Aniversário 2026', W / 2, fy + 38);
+    ctx.fillText('Play Padel  ·  Torneio Reentre 2026', W / 2, fy + 38);
     ctx.textAlign = 'left';
 
     _panfletoShare(canvas, 'campeoes.png');
@@ -6516,7 +6763,7 @@ window.gerarPanfletoFinalAnuncio = function(catId) {
   const final = ff[catId]?.jogos?.find(j => j.fase === 'F');
   if (!final) return toast('Final não encontrada para ' + catId + '.', 'error');
   const W = 1080, H = 1350, PAD = 56;
-  const CAT_CLR  = { M1:'#4A9EFF', M2:'#00C37B', M3:'#39FF8F', M4:'#F5C518', M5:'#FF9A3C', F1:'#FF6BB0', F2:'#C97BFF' };
+  const CAT_CLR  = { M1:'#4A9EFF', M2:'#00C37B', M3:'#39FF8F', M4:'#F5C518', M5:'#FF9A3C', F1:'#FF6BB0', F2:'#C97BFF', F3:'#8B5CF6', F3:'#8B5CF6' };
   const CAT_NOME = { M1:'Masculino 1', M2:'Masculino 2', M3:'Masculino 3', M4:'Masculino 4', M5:'Masculino 5', F1:'Feminino 1', F2:'Feminino 2' };
   const clr = CAT_CLR[catId] || '#F5C518';
 
@@ -6633,7 +6880,7 @@ window.gerarPanfletoFinalAnuncio = function(catId) {
 window.gerarPanfletoDiaFinais = function() {
   const ff   = ffLoad();
   const CATS = ['M1', 'M2', 'F1', 'F2', 'M3', 'M4', 'M5'];
-  const CAT_CLR  = { M1:'#4A9EFF', M2:'#00C37B', M3:'#39FF8F', M4:'#F5C518', M5:'#FF9A3C', F1:'#FF6BB0', F2:'#C97BFF' };
+  const CAT_CLR  = { M1:'#4A9EFF', M2:'#00C37B', M3:'#39FF8F', M4:'#F5C518', M5:'#FF9A3C', F1:'#FF6BB0', F2:'#C97BFF', F3:'#8B5CF6', F3:'#8B5CF6' };
   const CAT_NOME = { M1:'Masculino 1', M2:'Masculino 2', M3:'Masculino 3', M4:'Masculino 4', M5:'Masculino 5', F1:'Feminino 1', F2:'Feminino 2' };
   const W = 1080, PAD = 52, CARD_H = 196, CARD_GAP = 14, LIST_Y = 490;
   const FOOTER_H = 110; // espaço abaixo dos cards: texto rodapé + barra dourada
@@ -7550,7 +7797,7 @@ function renderRelatorioJogos() {
   const el = document.getElementById('relatorioJogosContent');
   if (!el) return;
 
-  const CAT_CLR = { M1:'#4A9EFF', M2:'#00C37B', M3:'#39FF8F', M4:'#F5C518', M5:'#FF9A3C', F1:'#FF6BB0', F2:'#C97BFF' };
+  const CAT_CLR = { M1:'#4A9EFF', M2:'#00C37B', M3:'#39FF8F', M4:'#F5C518', M5:'#FF9A3C', F1:'#FF6BB0', F2:'#C97BFF', F3:'#8B5CF6', F3:'#8B5CF6' };
 
   // Merge fase-final games
   const jogos = getData('jogos') || [];
@@ -7856,37 +8103,17 @@ window.horarioConfirmarMoverDia = function() {
 };
 
 // ============================================
-//  GITHUB SYNC — UI
+//  CLOUD SYNC — UI
 // ============================================
-
-/** Open GitHub config modal, pre-filling saved values */
 function ghShowConfig() {
-  const c = GHSync.getCfg();
-  document.getElementById('ghOwner').value  = c.owner  || '';
-  document.getElementById('ghRepo').value   = c.repo   || '';
-  document.getElementById('ghBranch').value = c.branch || 'main';
-  document.getElementById('ghToken').value  = c.token  ? '••••••••' : '';
-  openModal('modalGHSync');
+  toast('A sincronização está centralizada na base de dados (Supabase).', 'success');
 }
-
-/** Save config and run a test push */
 async function ghSaveConfig() {
-  const owner  = document.getElementById('ghOwner').value.trim();
-  const repo   = document.getElementById('ghRepo').value.trim();
-  const branch = document.getElementById('ghBranch').value.trim() || 'main';
-  const rawToken = document.getElementById('ghToken').value.trim();
-  if (!owner || !repo || !rawToken) { toast('Preencha todos os campos obrigatórios.', 'error'); return; }
-  // Keep existing token if user left the masked placeholder
-  const existing = GHSync.getCfg().token || '';
-  const token = (rawToken === '••••••••') ? existing : rawToken;
-  GHSync.setCfg({ owner, repo, branch, token });
-  closeModal('modalGHSync');
   await ghSyncAll();
 }
-
-/** Push all data to GitHub and update button state */
+/** Push all data to cloud and update button state */
 async function ghSyncAll() {
-  if (!GHSync.isConfigured()) { ghShowConfig(); return; }
+  if (!window.ppCloudState || !window.ppCloudState.enabled) return;
   const btn   = document.getElementById('ghSyncBtn');
   const icon  = document.getElementById('ghSyncIcon');
   const label = document.getElementById('ghSyncLabel');
@@ -7896,14 +8123,14 @@ async function ghSyncAll() {
   btn.disabled = true;
   icon.className  = 'ph ph-circle-notch gh-spin';
   label.textContent = 'A sincronizar…';
-  dot.style.display = 'none';
+  if (dot) dot.style.display = 'none';
 
   try {
-    await GHSync.push(GHSync.getAllData());
+    await window.ppCloudState.pushFromLocal();
     icon.className  = 'ph ph-check-circle';
     label.textContent = 'Sincronizado';
     btn.disabled = false;
-    toast('Dados sincronizados! O site público actualiza em ~30 segundos.', 'success');
+    toast('Dados sincronizados com a base de dados.', 'success');
     setTimeout(() => {
       icon.className  = 'ph ph-cloud-arrow-up';
       label.textContent = 'Sync';
@@ -7912,7 +8139,7 @@ async function ghSyncAll() {
     icon.className  = 'ph ph-warning-circle';
     label.textContent = 'Erro';
     btn.disabled = false;
-    dot.style.display = 'block';
+    if (dot) dot.style.display = 'block';
     toast('Erro ao sincronizar: ' + err.message, 'error');
     setTimeout(() => {
       icon.className  = 'ph ph-cloud-arrow-up';
@@ -7920,13 +8147,3 @@ async function ghSyncAll() {
     }, 4000);
   }
 }
-
-/** Wire dirty indicator to ghsync events */
-document.addEventListener('ghsync:dirty', () => {
-  const dot = document.getElementById('ghDirtyDot');
-  if (dot) dot.style.display = 'block';
-});
-document.addEventListener('ghsync:clean', () => {
-  const dot = document.getElementById('ghDirtyDot');
-  if (dot) dot.style.display = 'none';
-});

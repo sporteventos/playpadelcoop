@@ -1,79 +1,98 @@
 'use strict';
 /* ================================================================
-   PlayPadel · auth.js
-   Client-side RBAC module (localStorage persistence)
+   PlayPadel · auth.js  (Fase 2 — Supabase Auth)
+   Mantém a API pública do módulo Auth (síncrona para o admin.js)
+   mas autentica contra o Supabase e guarda papéis na tabela
+   `profiles`. Um "snapshot" síncrono da sessão fica em
+   sessionStorage para que me()/isAdmin()/hasRole()/getUsers()
+   continuem a funcionar sem alterar as dezenas de chamadas.
    Roles: 'admin' | 'operator'
    ================================================================ */
 
 const Auth = (() => {
 
-  // ── Storage keys ──────────────────────────────────────────────
-  const K_USERS    = 'pp_users';
-  const K_SESSIONS = 'pp_sessions';
-  const K_LOGS     = 'pp_auditlog';
-  const K_SESSION  = 'pp_session';   // sessionStorage only
-  const TIMEOUT_MS = 45 * 60 * 1000; // 45 minutes
-  const WARN_MS    = 5  * 60 * 1000; // warn 5 min before
+  // ── Config Supabase ───────────────────────────────────────────
+  const SUPA_URL = 'https://jjtsqsumczbhfgbgjxsd.supabase.co';
+  const SUPA_KEY = 'sb_publishable_LQ03yWZ4f-Mo0BYXWuinVw_kpWqbmIy';
 
-  // ── Internal helpers ──────────────────────────────────────────
+  const K_SESSION = 'pp_session';    // snapshot síncrono (sessionStorage)
+  const K_LOGS    = 'pp_auditlog';   // registo de auditoria (local)
+  const TIMEOUT_MS = 45 * 60 * 1000; // 45 min de inactividade
+  const WARN_MS    = 5  * 60 * 1000; // aviso 5 min antes
+
+  // Cliente Supabase principal (sessão persistente + refresh automático)
+  const sb = window.supabase.createClient(SUPA_URL, SUPA_KEY, {
+    auth: { persistSession: true, autoRefreshToken: true, storageKey: 'pp_sb_auth' }
+  });
+  window.ppSb = sb;
+
+  // ── Estado em memória ─────────────────────────────────────────
+  let _snapshot   = _readSnap();  // sessão actual (síncrona)
+  let _usersCache = [];           // lista de profiles (para getUsers)
+
+  function _readSnap() {
+    try { return JSON.parse(sessionStorage.getItem(K_SESSION)); }
+    catch (e) { return null; }
+  }
+  function _writeSnap(s) {
+    _snapshot = s || null;
+    if (s) sessionStorage.setItem(K_SESSION, JSON.stringify(s));
+    else   sessionStorage.removeItem(K_SESSION);
+  }
+
+  // Token partilhado com data.js para as escritas autenticadas (RLS)
+  function _publishToken(session) {
+    window.PP_AUTH = session
+      ? { token: session.access_token, userId: session.user.id }
+      : null;
+  }
+
   function uid() {
     return Date.now().toString(36) + Math.random().toString(36).slice(2, 9);
   }
 
-  // FNV-1a 32-bit (one pass) — used for multi-round stretching
-  function _fnv(str) {
-    let h = 0x811c9dc5;
-    for (let i = 0; i < str.length; i++) {
-      h ^= str.charCodeAt(i);
-      h = Math.imul(h, 0x01000193);
-    }
-    return (h >>> 0).toString(16).padStart(8, '0');
+  // ── Perfil (papel/categorias) ─────────────────────────────────
+  async function _fetchProfile(userId) {
+    const { data, error } = await sb
+      .from('profiles').select('*').eq('id', userId).maybeSingle();
+    if (error) throw error;
+    return data;
   }
 
-  // Password hash: FNV-1a with 5 000 iterations + salt
-  function hashPwd(password, salt) {
-    let v = salt + ':' + password;
-    for (let i = 0; i < 5000; i++) {
-      v = _fnv(v + password + salt + i);
-    }
-    return v;
+  function _snapFromProfile(session, profile) {
+    return {
+      id:           session.user.id,
+      username:     profile?.username || session.user.email,
+      email:        session.user.email,
+      name:         profile?.name || session.user.email,
+      role:         profile?.role || 'operator',
+      categories:   profile?.categories || [],
+      active:       profile?.active !== false,
+      loginAt:      new Date().toISOString(),
+      lastActivity: new Date().toISOString(),
+    };
   }
 
-  // ── Storage accessors ─────────────────────────────────────────
-  function _read(key) {
-    try { return JSON.parse(localStorage.getItem(key)) || []; }
-    catch (e) { return []; }
-  }
+  // ── Acessores síncronos (a partir do snapshot) ────────────────
+  function me()               { return _snapshot; }
+  function isAuth()           { return !!_snapshot; }
+  function isAdmin()          { return _snapshot?.role === 'admin'; }
+  function hasRole(...roles)  { return roles.includes(_snapshot?.role); }
 
-  function _write(key, val) {
-    localStorage.setItem(key, JSON.stringify(val));
-  }
-
-  // ── Current session (sessionStorage) ─────────────────────────
-  function me() {
-    try { return JSON.parse(sessionStorage.getItem(K_SESSION)); }
-    catch (e) { return null; }
-  }
-
-  function isAuth()           { return !!me(); }
-  function isAdmin()          { return me()?.role === 'admin'; }
-  function hasRole(...roles)  { return roles.includes(me()?.role); }
-
-  // Can the current user manage this category? (admin = all; operator = their allowed cats)
   function canAccessCategory(catId) {
-    const u = me();
+    const u = _snapshot;
     if (!u) return false;
     if (u.role === 'admin') return true;
-    const user = getUsers().find(x => x.id === u.id);
-    if (!user) return false;
-    // If no category restriction set, operator can access all
-    if (!user.categories || user.categories.length === 0) return true;
-    return user.categories.includes(catId);
+    if (!u.categories || u.categories.length === 0) return true;
+    return u.categories.includes(catId);
   }
 
-  // ── Audit log ─────────────────────────────────────────────────
+  // ── Registo de auditoria (local, inalterado) ──────────────────
+  function _read(key)  { try { return JSON.parse(localStorage.getItem(key)) || []; } catch (e) { return []; } }
+  function _write(key, val) { localStorage.setItem(key, JSON.stringify(val)); }
+
   function log(action, target, detail) {
-    const u    = me();
+    const u    = _snapshot;
     const logs = _read(K_LOGS);
     logs.unshift({
       id:       uid(),
@@ -87,227 +106,257 @@ const Auth = (() => {
     });
     _write(K_LOGS, logs.slice(0, 1000));
   }
-
   function getLogs() { return _read(K_LOGS); }
 
-  // ── Users ─────────────────────────────────────────────────────
-  function getUsers() { return _read(K_USERS); }
-
-  function createUser(username, name, role, password, categories) {
-    const users = getUsers();
-    if (!username || !name || !role || !password)
-      return { ok: false, error: 'Todos os campos são obrigatórios.' };
-    if (users.find(u => u.username.toLowerCase() === username.toLowerCase()))
-      return { ok: false, error: 'Username já existe.' };
-    const salt = uid() + uid();
-    const u = {
-      id:           uid(),
-      username:     username.trim(),
-      name:         name.trim(),
-      role,
-      salt,
-      passwordHash: hashPwd(password, salt),
-      active:       true,
-      categories:   categories || [],   // [] = all categories
-      createdAt:    new Date().toISOString(),
-      createdBy:    me()?.username || 'system',
-    };
-    users.push(u);
-    _write(K_USERS, users);
-    log('CREATE_USER', 'utilizadores', `Criado "${username}" (${role})`);
-    return { ok: true, user: u };
+  // ── Login / Restore / Logout ──────────────────────────────────
+  function _authErr(error) {
+    const m = (error?.message || '').toLowerCase();
+    if (m.includes('invalid login'))    return 'Email ou palavra-passe incorrectos.';
+    if (m.includes('email not confirmed')) return 'Email não confirmado. Contacte o administrador.';
+    return error?.message || 'Falha na autenticação.';
   }
 
-  function updateUser(id, changes) {
-    const users = getUsers();
-    const i = users.findIndex(u => u.id === id);
-    if (i === -1) return { ok: false, error: 'Utilizador não encontrado.' };
+  async function login(email, password) {
+    const { data, error } = await sb.auth.signInWithPassword({
+      email: (email || '').trim(), password
+    });
+    if (error) return { ok: false, error: _authErr(error) };
 
-    // Check username uniqueness if changed
-    if (changes.username && changes.username.toLowerCase() !== users[i].username.toLowerCase()) {
-      if (users.find(u => u.username.toLowerCase() === changes.username.toLowerCase()))
-        return { ok: false, error: 'Username já existe.' };
+    const session = data.session;
+    let profile = null;
+    try { profile = await _fetchProfile(session.user.id); } catch (e) { profile = null; }
+
+    if (!profile) {
+      await sb.auth.signOut();
+      return { ok: false, error: 'Sem permissões de acesso. Contacte o administrador.' };
     }
-    // Block role demotion of main admin
-    if (users[i].username === 'admin' && changes.role && changes.role !== 'admin')
-      return { ok: false, error: 'Não é possível alterar o role do admin principal.' };
+    if (profile.active === false) {
+      await sb.auth.signOut();
+      return { ok: false, error: 'Conta desactivada. Contacte o administrador.' };
+    }
+
+    _publishToken(session);
+    _writeSnap(_snapFromProfile(session, profile));
+    log('LOGIN', 'auth', `Login: ${_snapshot.username} (${_snapshot.role})`);
+    return { ok: true, user: _snapshot };
+  }
+
+  // Restaura a sessão persistida (chamar no arranque, antes de isAuth())
+  async function restore() {
+    let session = null;
+    try { session = (await sb.auth.getSession()).data?.session || null; } catch (e) { session = null; }
+    if (!session) { _publishToken(null); _writeSnap(null); return false; }
+
+    let profile = null;
+    try { profile = await _fetchProfile(session.user.id); } catch (e) { profile = null; }
+    if (!profile || profile.active === false) {
+      await sb.auth.signOut();
+      _publishToken(null); _writeSnap(null);
+      return false;
+    }
+
+    _publishToken(session);
+    const snap = _snapFromProfile(session, profile);
+    const prev = _readSnap();
+    if (prev && prev.id === snap.id) {
+      snap.loginAt      = prev.loginAt      || snap.loginAt;
+      snap.lastActivity = prev.lastActivity || snap.lastActivity;
+    }
+    _writeSnap(snap);
+    return true;
+  }
+
+  async function logout() {
+    if (_snapshot) log('LOGOUT', 'auth', `Logout: ${_snapshot.username}`);
+    try { await sb.auth.signOut(); } catch (e) {}
+    _publishToken(null);
+    _writeSnap(null);
+  }
+
+  // ── Utilizadores (tabela profiles) ────────────────────────────
+  async function refreshUsers() {
+    const { data, error } = await sb
+      .from('profiles').select('*').order('created_at', { ascending: true });
+    if (!error && Array.isArray(data)) {
+      _usersCache = data.map(p => ({
+        id:         p.id,
+        username:   p.username,
+        name:       p.name,
+        role:       p.role,
+        categories: p.categories || [],
+        active:     p.active,
+        createdAt:  p.created_at,
+      }));
+    }
+    return _usersCache;
+  }
+  function getUsers() { return _usersCache; }
+
+  function _signupErr(error) {
+    const m = (error?.message || '').toLowerCase();
+    if (m.includes('already registered') || m.includes('already been registered'))
+      return 'Já existe uma conta com esse email.';
+    if (m.includes('password'))  return 'Palavra-passe demasiado fraca (mínimo 6 caracteres).';
+    if (m.includes('signups not allowed') || m.includes('signup is disabled'))
+      return 'O registo está desactivado no Supabase. Activa "Allow new users to sign up".';
+    return error?.message || 'Não foi possível criar a conta.';
+  }
+
+  // Cria a conta de login (signUp num cliente secundário para não
+  // rebentar a sessão do admin) e o respectivo profile.
+  async function createUser(username, name, role, password, categories) {
+    const mail = (username || '').trim();
+    if (!mail || !name || !role || !password)
+      return { ok: false, error: 'Todos os campos são obrigatórios.' };
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(mail))
+      return { ok: false, error: 'O utilizador deve ser um email válido.' };
+
+    const tmp = window.supabase.createClient(SUPA_URL, SUPA_KEY, {
+      auth: { persistSession: false, autoRefreshToken: false }
+    });
+    const { data, error } = await tmp.auth.signUp({ email: mail, password });
+    if (error) return { ok: false, error: _signupErr(error) };
+
+    const newId = data.user?.id;
+    if (!newId)
+      return { ok: false, error: 'Conta não criada — desactiva "Confirm email" no Supabase.' };
+
+    const { error: pErr } = await sb.from('profiles').insert({
+      id:         newId,
+      username:   mail,
+      name:       name.trim(),
+      role,
+      categories: role === 'operator' ? (categories || []) : [],
+      active:     true,
+    });
+    if (pErr) return { ok: false, error: 'Conta criada mas o perfil falhou: ' + pErr.message };
+
+    log('CREATE_USER', 'utilizadores', `Criado "${mail}" (${role})`);
+    await refreshUsers();
+    return { ok: true };
+  }
+
+  async function updateUser(id, changes) {
+    const patch = {};
+    if (changes.username   != null) patch.username   = changes.username;
+    if (changes.name       != null) patch.name       = changes.name;
+    if (changes.role       != null) patch.role       = changes.role;
+    if (changes.categories != null) patch.categories = changes.categories;
+    if (changes.active     != null) patch.active     = changes.active;
+
+    if (Object.keys(patch).length) {
+      const { error } = await sb.from('profiles').update(patch).eq('id', id);
+      if (error) return { ok: false, error: error.message };
+    }
 
     if (changes.password) {
-      users[i].salt         = uid() + uid();
-      users[i].passwordHash = hashPwd(changes.password, users[i].salt);
-      delete changes.password;
+      // A chave pública só permite alterar a própria palavra-passe.
+      if (_snapshot && _snapshot.id === id) {
+        const { error } = await sb.auth.updateUser({ password: changes.password });
+        if (error) return { ok: false, error: error.message };
+      } else {
+        return { ok: false, error: 'Só podes alterar a tua própria palavra-passe. O utilizador deve usar "Esqueci-me da palavra-passe".' };
+      }
     }
-    Object.assign(users[i], changes);
-    _write(K_USERS, users);
-    log('UPDATE_USER', 'utilizadores', `Actualizado "${users[i].username}"`);
+
+    log('UPDATE_USER', 'utilizadores', `Actualizado id=${id}`);
+    await refreshUsers();
     return { ok: true };
   }
 
-  function toggleUser(id) {
-    const users = getUsers();
-    const u = users.find(u => u.id === id);
+  async function toggleUser(id) {
+    const u = _usersCache.find(x => x.id === id);
     if (!u) return { ok: false, error: 'Não encontrado.' };
-    if (u.username === 'admin')
-      return { ok: false, error: 'Não é possível desactivar o admin principal.' };
-    u.active = !u.active;
-    _write(K_USERS, users);
-    log(u.active ? 'ENABLE_USER' : 'DISABLE_USER', 'utilizadores',
-        `"${u.username}" ${u.active ? 'activado' : 'desactivado'}`);
-    return { ok: true, active: u.active };
+    const next = !u.active;
+    const { error } = await sb.from('profiles').update({ active: next }).eq('id', id);
+    if (error) return { ok: false, error: error.message };
+    log(next ? 'ENABLE_USER' : 'DISABLE_USER', 'utilizadores',
+        `"${u.username}" ${next ? 'activado' : 'desactivado'}`);
+    await refreshUsers();
+    return { ok: true, active: next };
   }
 
-  function deleteUser(id) {
-    const users = getUsers();
-    const u = users.find(u => u.id === id);
-    if (!u) return { ok: false, error: 'Não encontrado.' };
-    if (u.username === 'admin')
-      return { ok: false, error: 'Não é possível eliminar o admin principal.' };
-    _write(K_USERS, users.filter(x => x.id !== id));
-    // Record tombstone so the merge in data.js never re-adds this user from remote data.json
-    try {
-      const tomb = JSON.parse(localStorage.getItem('pp_users_deleted') || '[]');
-      if (!tomb.includes(id)) { tomb.push(id); localStorage.setItem('pp_users_deleted', JSON.stringify(tomb)); }
-    } catch(e) {}
-    log('DELETE_USER', 'utilizadores', `Eliminado "${u.username}"`);
+  async function deleteUser(id) {
+    const u = _usersCache.find(x => x.id === id);
+    // A remoção da conta de login exige service_role; aqui removemos o
+    // profile (o que revoga o acesso — sem perfil não passa no is_staff()).
+    const { error } = await sb.from('profiles').delete().eq('id', id);
+    if (error) return { ok: false, error: error.message };
+    log('DELETE_USER', 'utilizadores', `Eliminado "${u?.username || id}"`);
+    await refreshUsers();
     return { ok: true };
   }
 
-  // ── Sessions ──────────────────────────────────────────────────
+  // Alterar a própria palavra-passe (verifica a actual por re-auth)
+  async function changePassword(oldPass, newPass) {
+    if (!_snapshot) return { ok: false, error: 'Sessão inválida.' };
+    const { error: vErr } = await sb.auth.signInWithPassword({
+      email: _snapshot.email, password: oldPass
+    });
+    if (vErr) return { ok: false, error: 'Palavra-passe actual incorrecta.' };
+    const { error } = await sb.auth.updateUser({ password: newPass });
+    if (error) return { ok: false, error: error.message };
+    log('CHANGE_PASSWORD', 'auth', `Palavra-passe alterada: ${_snapshot.username}`);
+    return { ok: true };
+  }
+
+  // ── Sessões (só a actual; multi-dispositivo não é listável no cliente) ──
   function getSessions() {
-    // Prune sessions with no activity in the last 24 h
-    const cutoff = Date.now() - 24 * 3600 * 1000;
-    const sessions = _read(K_SESSIONS).filter(
-      s => new Date(s.lastActivity).getTime() > cutoff
-    );
-    _write(K_SESSIONS, sessions);
-    return sessions;
+    if (!_snapshot) return [];
+    return [{
+      sessionId:    _snapshot.id,
+      id:           _snapshot.id,
+      username:     _snapshot.username,
+      name:         _snapshot.name,
+      role:         _snapshot.role,
+      loginAt:      _snapshot.loginAt,
+      lastActivity: _snapshot.lastActivity,
+    }];
   }
+  function forceLogout() { return { ok: true }; }
+
+  // ── Timeout de inactividade ───────────────────────────────────
+  let _timeoutTimer = null, _warnTimer = null, _onWarn = null, _onExpire = null;
 
   function updateActivity() {
-    const s = me();
-    if (!s) return;
-    const sessions = _read(K_SESSIONS);
-    const i = sessions.findIndex(x => x.sessionId === s.sessionId);
-    if (i !== -1) {
-      sessions[i].lastActivity = new Date().toISOString();
-      _write(K_SESSIONS, sessions);
-    }
+    if (!_snapshot) return;
+    _snapshot.lastActivity = new Date().toISOString();
+    _writeSnap(_snapshot);
   }
-
-  function forceLogout(sessionId) {
-    const sessions = _read(K_SESSIONS);
-    const s = sessions.find(x => x.sessionId === sessionId);
-    _write(K_SESSIONS, sessions.filter(x => x.sessionId !== sessionId));
-    if (s) log('FORCE_LOGOUT', 'sessoes', `Sessão encerrada: ${s.username}`);
-    return { ok: true };
-  }
-
-  // ── Session Timeout ───────────────────────────────────────────
-  let _timeoutTimer   = null;
-  let _warnTimer      = null;
-  let _onWarn         = null;
-  let _onExpire       = null;
 
   function startTimeoutWatch(onWarn, onExpire) {
-    _onWarn   = onWarn;
-    _onExpire = onExpire;
+    _onWarn = onWarn; _onExpire = onExpire;
     _reschedule();
   }
 
   function _reschedule() {
     clearTimeout(_timeoutTimer);
     clearTimeout(_warnTimer);
-    const s = me();
+    const s = _snapshot;
     if (!s) return;
-    const last  = new Date(s.lastActivity).getTime();
-    const now   = Date.now();
-    const elapsed = now - last;
-    const remaining = TIMEOUT_MS - elapsed;
+    const last      = new Date(s.lastActivity).getTime();
+    const remaining = TIMEOUT_MS - (Date.now() - last);
     if (remaining <= 0) { _onExpire && _onExpire(); return; }
     const warnIn = remaining - WARN_MS;
     if (warnIn > 0) _warnTimer = setTimeout(() => { _onWarn && _onWarn(Math.ceil(WARN_MS / 60000)); }, warnIn);
     _timeoutTimer = setTimeout(() => { _onExpire && _onExpire(); }, remaining);
   }
 
-  function resetTimeout() {
-    updateActivity();
-    _reschedule();
-  }
+  function resetTimeout() { updateActivity(); _reschedule(); }
 
-  // ── Login / Logout ────────────────────────────────────────────
-  function login(username, password) {
-    ensureDefaults();
-    const users = getUsers();
-    const user  = users.find(u => u.username.toLowerCase() === username.toLowerCase());
-    if (!user)        return { ok: false, error: 'Utilizador não encontrado.' };
-    if (!user.active) return { ok: false, error: 'Conta desactivada. Contacte o administrador.' };
-    if (hashPwd(password, user.salt) !== user.passwordHash)
-      return { ok: false, error: 'Palavra-passe incorrecta.' };
+  // ── Compatibilidade (já não fazem nada de útil) ───────────────
+  function ensureDefaults() { /* contas vivem no Supabase */ }
+  function verifyPassword() { return true; } // usar changePassword()
 
-    const sid = uid();
-    const session = {
-      sessionId:    sid,
-      id:           user.id,
-      username:     user.username,
-      name:         user.name,
-      role:         user.role,
-      loginAt:      new Date().toISOString(),
-      lastActivity: new Date().toISOString(),
-    };
-
-    sessionStorage.setItem(K_SESSION, JSON.stringify(session));
-
-    // Register in shared sessions list (one entry per user — replace existing)
-    const sessions = _read(K_SESSIONS).filter(s => s.id !== user.id);
-    sessions.push(session);
-    _write(K_SESSIONS, sessions);
-
-    log('LOGIN', 'auth', `Login: ${user.username} (${user.role})`);
-    return { ok: true, user: session };
-  }
-
-  function logout() {
-    const s = me();
-    if (s) {
-      log('LOGOUT', 'auth', `Logout: ${s.username}`);
-      _write(K_SESSIONS, _read(K_SESSIONS).filter(x => x.sessionId !== s.sessionId));
-    }
-    sessionStorage.removeItem(K_SESSION);
-  }
-
-  // ── Bootstrap ─────────────────────────────────────────────────
-  function ensureDefaults() {
-    if (getUsers().length === 0) {
-      const salt = uid() + uid();
-      _write(K_USERS, [{
-        id:           uid(),
-        username:     'admin',
-        name:         'Administrador',
-        role:         'admin',
-        salt,
-        passwordHash: hashPwd('playpadel2026', salt),
-        active:       true,
-        createdAt:    new Date().toISOString(),
-        createdBy:    'system',
-      }]);
-    }
-  }
-
-  // ── Public API ────────────────────────────────────────────────
-  function verifyPassword(userId, password) {
-    const users = getUsers();
-    const u = users.find(x => x.id === userId);
-    if (!u) return false;
-    return hashPwd(password, u.salt) === u.passwordHash;
-  }
-
+  // ── API pública ───────────────────────────────────────────────
   return {
     me, isAuth, isAdmin, hasRole, canAccessCategory,
-    login, logout, updateActivity, resetTimeout, startTimeoutWatch,
-    getUsers, createUser, updateUser, toggleUser, deleteUser,
+    login, logout, restore,
+    updateActivity, resetTimeout, startTimeoutWatch,
+    getUsers, refreshUsers, createUser, updateUser, toggleUser, deleteUser,
     getSessions, forceLogout,
     getLogs, log,
-    ensureDefaults, verifyPassword,
+    ensureDefaults, verifyPassword, changePassword,
     TIMEOUT_MS, WARN_MS,
   };
 

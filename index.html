@@ -7,8 +7,8 @@
   <meta name="theme-color" content="#00C37B">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="Play Padel">
-  <meta name="description" content="2.º Aniversário Play Padel — Torneio oficial de 5 a 14 de Junho 2026, Maputo"/>
-  <title>Play Padel · Torneio 2.º Aniversário</title>
+  <meta name="description" content="Torneio Reentre Play Padel — inscrições abertas de 10 a 19 de Setembro 2026, Maputo"/>
+  <title>Play Padel · Torneio Reentre 2026</title>
   <link rel="stylesheet" href="css/style.css"/>
   <link rel="stylesheet" href="css/pages.css"/>
   <script src="https://unpkg.com/@phosphor-icons/web@2.1.1/src/index.js" defer></script>
@@ -62,19 +62,20 @@
   <a class="nav-logo" href="#inicio">
     <img src="playpadellogo.jpg" alt="Play Padel" style="height:34px;width:34px;border-radius:7px;object-fit:cover;flex-shrink:0"/>
     <div class="nav-logo-text">
-      <span class="nav-logo-title" id="cfgNomeTorneio">Play Padel</span>
-      <span class="nav-logo-sub" id="cfgSubtituloNav">Torneio 2.º Aniléritário</span>
+      <span class="nav-logo-title">Play Padel</span>
+      <span class="nav-logo-sub">Torneio Reentre</span>
     </div>
   </a>
 
   <ul class="nav-links">
     <li><a href="#inicio" class="active"><i class="ph ph-house nav-icon"></i> Início</a></li>
-    <li><a href="calendario.html"><i class="ph ph-calendar nav-icon"></i> Calendário</a></li>
+    <li id="navLiCalendario"><a href="calendario.html"><i class="ph ph-calendar nav-icon"></i> Calendário</a></li>
     <li id="navLiClassificacoes"><a href="classificacoes.html"><i class="ph ph-trophy nav-icon"></i> Classificações</a></li>
     <li id="navLiFasefinal"><a href="fasefinal.html"><i class="ph ph-brackets-round nav-icon"></i> Fase Final</a></li>
-    <li><a href="jogadores.html"><i class="ph ph-users nav-icon"></i> Jogadores</a></li>
+    <li id="navLiJogadores"><a href="jogadores.html"><i class="ph ph-users nav-icon"></i> Jogadores</a></li>
+    <li id="navLiInscricoes"><a href="inscricoes.html"><i class="ph ph-clipboard-text nav-icon"></i> Inscrições</a></li>
     <li id="navLiEstatisticas"><a href="estatisticas.html"><i class="ph ph-chart-bar nav-icon"></i> Estatísticas</a></li>
-    <li><a href="regulamento.html"><i class="ph ph-book-open nav-icon"></i> Regulamento</a></li>
+    <li id="navLiRegulamento"><a href="regulamento.html"><i class="ph ph-book-open nav-icon"></i> Regulamento</a></li>
   </ul>
 
   <button class="nav-hamburger" id="hamburger" aria-label="Abrir menu" aria-expanded="false">
@@ -86,15 +87,15 @@
 <div class="nav-drawer" id="navDrawer">
   <ul>
     <li><a href="#inicio" class="active"><i class="ph ph-house"></i> Início</a></li>
-    <li><a href="calendario.html"><i class="ph ph-calendar"></i> Calendário</a></li>
+    <li id="drawerLiCalendario"><a href="calendario.html"><i class="ph ph-calendar"></i> Calendário</a></li>
     <li id="drawerLiClassificacoes"><a href="classificacoes.html"><i class="ph ph-trophy"></i> Classificações</a></li>
     <li id="drawerLiFasefinal"><a href="fasefinal.html"><i class="ph ph-brackets-round"></i> Fase Final</a></li>
-    <li><a href="jogadores.html"><i class="ph ph-users"></i> Jogadores</a></li>
+    <li id="drawerLiJogadores"><a href="jogadores.html"><i class="ph ph-users"></i> Jogadores</a></li>
+    <li id="drawerLiInscricoes"><a href="inscricoes.html"><i class="ph ph-clipboard-text"></i> Inscrições</a></li>
     <li id="drawerLiEstatisticas"><a href="estatisticas.html"><i class="ph ph-chart-bar"></i> Estatísticas</a></li>
-    <li><a href="regulamento.html"><i class="ph ph-book-open"></i> Regulamento</a></li>
+    <li id="drawerLiRegulamento"><a href="regulamento.html"><i class="ph ph-book-open"></i> Regulamento</a></li>
   </ul>
 </div>
-
 <!-- Banner global de aviso -->
 <div id="globalBanner" style="display:none;background:rgba(245,197,24,.15);border-bottom:1px solid rgba(245,197,24,.3);padding:.55rem 1.5rem;font-size:.85rem;color:var(--amarelo);text-align:center"></div>
 
@@ -107,17 +108,17 @@
 
     <div class="hero-badge">
       <span class="hero-badge-dot"></span>
-      <i class="ph ph-map-pin"></i>&nbsp;<span id="cfgLocal">Maputo</span> &nbsp;·&nbsp; <span id="cfgDatas">05 a 14 de Junho 2026</span>
+      <i class="ph ph-map-pin"></i>&nbsp;<span id="cfgLocal">Maputo</span> &nbsp;·&nbsp; <span id="cfgDatas">10 a 19 de Setembro 2026</span>
     </div>
 
     <h1 class="hero-title">
-      <span class="line-2" id="cfgNomeHero">Play Padel Coop</span><br/>
-      <span class="line-3" id="cfgSubtituloHero">Torneio Aniversário</span>
+      <span class="line-2" id="cfgNomeHero">Play Padel</span><br/>
+      <span class="line-3" id="cfgSubtituloHero">Torneio Reentre</span>
     </h1>
 
     <p class="hero-subtitle">
       Organizado por <strong id="cfgClube">Sport Eventos</strong><br/>
-      <strong>7 categorias · 22 grupos · 177 jogos</strong>
+      <strong>8 categorias · inscrições abertas · grupos a definir</strong>
     </p>
 
     <div class="hero-cta">
@@ -135,6 +136,9 @@
       </a>
       <a href="jogadores.html" class="btn btn-secondary">
         <i class="ph ph-users"></i> Ver Jogadores
+      </a>
+      <a href="inscricoes.html" class="btn btn-secondary">
+        <i class="ph ph-clipboard-text"></i> Inscrições
       </a>
     </div>
   </div>
@@ -157,26 +161,26 @@
       <span class="stat-label">CAMPOS</span>
     </div>
     <div class="stat-item">
-      <span class="stat-value">7</span>
+      <span class="stat-value">8</span>
       <span class="stat-label">CATEGORIAS</span>
     </div>
     <div class="stat-item">
-      <span class="stat-value">22</span>
+      <span class="stat-value">ABERTAS</span>
+      <span class="stat-label">INSCRIÇÕES</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-value">TBD</span>
       <span class="stat-label">GRUPOS</span>
     </div>
     <div class="stat-item">
-      <span class="stat-value">177</span>
-      <span class="stat-label">JOGOS</span>
-    </div>
-    <div class="stat-item">
-      <span class="stat-value">88</span>
+      <span class="stat-value">NOVAS</span>
       <span class="stat-label">DUPLAS</span>
     </div>
   </div>
 </div>
 
 <!-- ===================== LIVE STATS ===================== -->
-<section class="live-stats-section">
+<section class="live-stats-section" id="sectionLiveStats">
   <div class="live-stats-inner">
     <div class="live-tag"><span class="live-tag-dot"></span> Torneio em tempo real</div>
     <div class="live-stats-grid">
@@ -251,6 +255,17 @@
         <div class="nav-card-arrow">→</div>
       </a>
 
+      <a href="inscricoes.html" class="nav-card nav-card--classificacoes" id="cardInscricoes">
+        <div class="nav-card-glow"></div>
+        <span class="nav-card-badge badge-novo">Aberto</span>
+        <div class="nav-card-icon"><i class="ph ph-clipboard-text"></i></div>
+        <h3 class="nav-card-title">Inscrições</h3>
+        <p class="nav-card-desc">
+          Registe jogadores, duplas e observações. Guarde a inscrição para o backoffice.
+        </p>
+        <div class="nav-card-arrow">→</div>
+      </a>
+
 
 
 
@@ -275,7 +290,7 @@
 </section>
 
 <!-- ===================== TOP PARES ===================== -->
-<section class="top-pares-section">
+<section class="top-pares-section" id="sectionTopPares">
   <div class="top-pares-inner">
     <div class="top-pares-header">
       <div>
@@ -289,69 +304,15 @@
 </section>
 
 <!-- ===================== PATROCINADORES ===================== -->
-<section class="patrocinadores-section">
+<section class="patrocinadores-section" id="sectionPatrocinadores">
   <p class="patrocinadores-label">Patrocinadores Oficiais</p>
-  <div class="patrocinadores-grid">
-    <div class="patrocinador-item">
-      <img src="patrocinadores/jetour.png" alt="Jetour" class="patrocinador-logo"/>
-      <span class="patrocinador-nome">Jetour</span>
-    </div>
-    <div class="patrocinador-item">
-      <img src="patrocinadores/stellaartois.png" alt="Stella Artois" class="patrocinador-logo"/>
-      <span class="patrocinador-nome">Stella Artois</span>
-    </div>
-    <div class="patrocinador-item">
-      <img src="patrocinadores/bonaqua.png" alt="Bona Aqua" class="patrocinador-logo"/>
-      <span class="patrocinador-nome">Bona Aqua</span>
-    </div>
-    <div class="patrocinador-item">
-      <img src="patrocinadores/tvcabo.png" alt="TV Cabo" class="patrocinador-logo"/>
-      <span class="patrocinador-nome">TV Cabo</span>
-    </div>
-    <div class="patrocinador-item">
-      <img src="patrocinadores/alcanceeditores.png" alt="Alcance Editores" class="patrocinador-logo"/>
-      <span class="patrocinador-nome">Alcance Editores</span>
-    </div>
-    <div class="patrocinador-item">
-      <img src="patrocinadores/Eclipse.png" alt="Eclipse" class="patrocinador-logo"/>
-      <span class="patrocinador-nome">Eclipse</span>
-    </div>
-  </div>
+  <div class="patrocinadores-grid" id="patrocinadoresGrid"></div>
 </section>
 
 <!-- ===================== PARCEIROS ===================== -->
-<section class="patrocinadores-section parceiros-section">
+<section class="patrocinadores-section parceiros-section" id="sectionParceiros">
   <p class="patrocinadores-label">Parceiros Oficiais</p>
-  <div class="patrocinadores-grid">
-    <div class="patrocinador-item">
-      <img src="parceiros/fisiolab.png" alt="Fisiolab" class="patrocinador-logo"/>
-      <span class="patrocinador-nome">Fisiolab</span>
-    </div>
-    <div class="patrocinador-item">
-      <img src="parceiros/montebelo hoteis.png" alt="Montebelo Hot&#233;is" class="patrocinador-logo"/>
-      <span class="patrocinador-nome">Montebelo Hot&#233;is</span>
-    </div>
-    <div class="patrocinador-item">
-      <img src="parceiros/tempo.png" alt="Tempo" class="patrocinador-logo"/>
-      <span class="patrocinador-nome">Tempo</span>
-    </div>
-    <div class="patrocinador-item">
-      <img src="parceiros/matchpoint.JPG" alt="Match Point" class="patrocinador-logo"/>
-      <span class="patrocinador-nome">Match Point</span>
-    </div>
-    <div class="patrocinador-item">
-      <img src="parceiros/fitclo.JPG" alt="Fitclo" class="patrocinador-logo"/>
-      <span class="patrocinador-nome">Fitclo</span>
-    </div>
-    <div class="patrocinador-item">
-      <img src="parceiros/babycity.JPG" alt="Baby City" class="patrocinador-logo"/>
-      <span class="patrocinador-nome">Baby City</span>
-    </div>
-    <div class="patrocinador-item">
-      <img src="parceiros/makimono.JPG" alt="Makimono" class="patrocinador-logo"/>
-      <span class="patrocinador-nome">Makimono</span>
-    </div>
-  </div>
+  <div class="patrocinadores-grid" id="parceirosGrid"></div>
 </section>
 
 <!-- ===================== FOOTER ===================== -->
@@ -364,18 +325,19 @@
           <p class="footer-logo-title">Play Padel</p>
         </div>
       </div>
-      <p class="footer-desc" id="cfgFooterDesc">O padel que une Moçambique.<br/>5 a 14 de Junho 2026 · Maputo</p>
+      <p class="footer-desc" id="cfgFooterDesc">O padel que une Moçambique.<br/>10 a 19 de Setembro 2026 · Maputo</p>
     </div>
 
     <nav class="footer-links">
-      <a href="calendario.html"><i class="ph ph-calendar"></i> Calendário</a>
-      <a href="classificacoes.html"><i class="ph ph-trophy"></i> Classificações</a>
-      <a href="jogadores.html"><i class="ph ph-users"></i> Jogadores</a>
+      <a id="footerLiCalendario"    href="calendario.html"><i class="ph ph-calendar"></i> Calendário</a>
+      <a id="footerLiClassificacoes" href="classificacoes.html"><i class="ph ph-trophy"></i> Classificações</a>
+      <a id="footerLiJogadores"     href="jogadores.html"><i class="ph ph-users"></i> Jogadores</a>
+      <a id="footerLiInscricoes"    href="inscricoes.html"><i class="ph ph-clipboard-text"></i> Inscrições</a>
     </nav>
   </div>
 
   <div class="footer-bottom">
-    <p class="footer-copy" id="cfgFooterCopy">© 2026 <span>Play Padel</span> · Torneio 2.º Aniversário · Maputo, Moçambique</p>
+    <p class="footer-copy" id="cfgFooterCopy">© 2026 <span>Play Padel</span> · Torneio Reentre · Maputo, Moçambique</p>
   </div>
 </footer>
 
@@ -420,7 +382,7 @@
 
 // ---- Top Pares leaderboard ----
 (function() {
-  const catClr = { M1:'#4A9EFF', M2:'#00C37B', M3:'#39FF8F', M4:'#F5C518', M5:'#FF9A3C', F1:'#FF6BB0', F2:'#C97BFF' };
+  const catClr = { M1:'#4A9EFF', M2:'#00C37B', M3:'#39FF8F', M4:'#F5C518', M5:'#FF9A3C', F1:'#FF6BB0', F2:'#C97BFF', F3:'#8B5CF6' };
   function grupoClr(g) { const k = g ? g.replace(/-.*$/,'') : ''; const c = catClr[k]; return c ? `background:${c}22;color:${c};border:1px solid ${c}55` : 'background:#1C2620;color:#8AA396'; }
   // Include both group stage and fase final games (exclude WO for set stats)
   const jogosGrupos = ppGet('jogos').filter(j => j.resultado && !j.resultado.wo);
@@ -574,19 +536,40 @@
           if (fc) fc.textContent = '\u00a9 2026 ' + (cfg.tornNome||'Play Padel') + ' \u00b7 ' + (cfg.tornDatas||'') + ' \u00b7 ' + (cfg.tornLocal||'') + ', Mo\u00e7ambique';
         }
 
-        // Visibilidade botão scoreboard
+        // Visibilidade botões hero
         show('btnScoreboard', cfg.scoreboardVisible !== false);
         show('btnFaseFinalHero', cfg.fasefinalVisible !== false);
 
-        // Visibilidade páginas
-        show('navLiClassificacoes',  cfg.classificacoesVisible !== false);
-        show('drawerLiClassificacoes', cfg.classificacoesVisible !== false);
-        show('cardClassificacoes',   cfg.classificacoesVisible !== false);
-        show('navLiFasefinal',       cfg.fasefinalVisible !== false);
-        show('drawerLiFasefinal',    cfg.fasefinalVisible !== false);
-        show('cardFasefinal',        cfg.fasefinalVisible !== false);
-        show('navLiEstatisticas',    cfg.estatisticasVisible !== false);
-        show('drawerLiEstatisticas', cfg.estatisticasVisible !== false);
+        // Visibilidade secções da página principal
+        show('sectionLiveStats',      cfg.liveStatsVisible !== false);
+        show('modulos',               cfg.navegarVisible !== false);
+        show('proximos',              cfg.agendaVisible !== false);
+        show('sectionTopPares',       cfg.leaderboardVisible !== false);
+        show('sectionPatrocinadores', cfg.patrocinadoresVisible !== false);
+        show('sectionParceiros',      cfg.parceirosVisible !== false);
+
+        // Visibilidade páginas — nav desktop + drawer mobile + cards
+        show('navLiCalendario',       cfg.calendarioVisible !== false);
+        show('drawerLiCalendario',    cfg.calendarioVisible !== false);
+        show('footerLiCalendario',    cfg.calendarioVisible !== false);
+        show('navLiClassificacoes',   cfg.classificacoesVisible !== false);
+        show('drawerLiClassificacoes',cfg.classificacoesVisible !== false);
+        show('footerLiClassificacoes',cfg.classificacoesVisible !== false);
+        show('cardClassificacoes',    cfg.classificacoesVisible !== false);
+        show('navLiFasefinal',        cfg.fasefinalVisible !== false);
+        show('drawerLiFasefinal',     cfg.fasefinalVisible !== false);
+        show('cardFasefinal',         cfg.fasefinalVisible !== false);
+        show('navLiJogadores',        cfg.jogadoresVisible !== false);
+        show('drawerLiJogadores',     cfg.jogadoresVisible !== false);
+        show('footerLiJogadores',     cfg.jogadoresVisible !== false);
+        show('navLiInscricoes',       cfg.inscricoesVisible !== false);
+        show('drawerLiInscricoes',    cfg.inscricoesVisible !== false);
+        show('footerLiInscricoes',    cfg.inscricoesVisible !== false);
+        show('cardInscricoes',        cfg.inscricoesVisible !== false);
+        show('navLiEstatisticas',     cfg.estatisticasVisible !== false);
+        show('drawerLiEstatisticas',  cfg.estatisticasVisible !== false);
+        show('navLiRegulamento',      cfg.regulamentoVisible !== false);
+        show('drawerLiRegulamento',   cfg.regulamentoVisible !== false);
 
         // Banner global
         var banner = document.getElementById('globalBanner');
@@ -600,6 +583,28 @@
         }
       } catch(e) {}
     }
+    // Render patrocinadores / parceiros dinamicamente
+    function renderSponsors(key, gridId) {
+      var grid = document.getElementById(gridId);
+      if (!grid) return;
+      var items = ppGet(key) || [];
+      if (!items.length) { grid.innerHTML = ''; return; }
+      grid.innerHTML = items.map(function(p) {
+        var href = p.url ? ' onclick="window.open(\''+p.url+'\',\'_blank\')"' : '';
+        var cursor = p.url ? 'cursor:pointer' : '';
+        var img = p.logo
+          ? '<img src="'+p.logo+'" alt="'+p.nome+'" class="patrocinador-logo"/>'
+          : '<div class="patrocinador-logo" style="display:flex;align-items:center;justify-content:center;background:#1C2620;border-radius:8px;font-size:.75rem;color:#8AA396">'+p.nome+'</div>';
+        return '<div class="patrocinador-item" style="'+cursor+'"'+href+'>'+img+'<span class="patrocinador-nome">'+p.nome+'</span></div>';
+      }).join('');
+    }
+    renderSponsors('patrocinadores', 'patrocinadoresGrid');
+    renderSponsors('parceiros', 'parceirosGrid');
+    window.addEventListener('pp:datasynced', function() {
+      renderSponsors('patrocinadores', 'patrocinadoresGrid');
+      renderSponsors('parceiros', 'parceirosGrid');
+    });
+
     applyConfig();
     window.addEventListener('pp:datasynced', applyConfig);
   }());
