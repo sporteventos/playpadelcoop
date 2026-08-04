@@ -29,6 +29,16 @@
     }
     .form-input:focus, .form-select:focus, .form-textarea:focus { outline:none; border-color: var(--verde); }
     .form-input.locked { opacity:.75; cursor:not-allowed; background:rgba(255,255,255,.03); }
+    .ins-vagas { background:rgba(0,195,123,.06); border:1px solid rgba(0,195,123,.2); border-radius:12px; padding:.9rem 1.1rem; margin-bottom:1.25rem; }
+    .ins-vagas.full { background:rgba(255,74,74,.08); border-color:rgba(255,74,74,.35); }
+    .ins-vagas.low  { background:rgba(245,197,24,.08); border-color:rgba(245,197,24,.35); }
+    .ins-vagas-main { display:flex; align-items:center; gap:.7rem; }
+    .ins-vagas-num { font-size:1.5rem; font-weight:800; color:var(--branco); line-height:1.1; }
+    .ins-vagas-sub { font-size:.78rem; color:var(--cinza-texto); margin-top:.1rem; }
+    .ins-vagas-bar { height:7px; border-radius:999px; background:rgba(255,255,255,.08); margin-top:.7rem; overflow:hidden; }
+    .ins-vagas-fill { height:100%; background:var(--verde); border-radius:999px; transition:width .4s ease; }
+    .ins-vagas.low .ins-vagas-fill { background:var(--amarelo); }
+    .ins-vagas.full .ins-vagas-fill { background:#FF4A4A; }
     .form-input.invalid, .form-select.invalid { border-color: #FF6B6B; }
     .form-textarea { min-height: 84px; resize: vertical; }
     .form-help { font-size: .74rem; color: #64796F; line-height: 1.45; }
@@ -96,8 +106,19 @@
         <i class="ph ph-info" style="font-size:1.25rem;color:var(--verde);flex-shrink:0"></i>
         <div>
           <strong>Como funciona?</strong><br/>
-          Preenche os teus dados abaixo. Após submeter, recebes um resumo para confirmares via WhatsApp com a organização. A inscrição é individual — se já tiveres parceiro(a), indica o nome no campo próprio.
+          Preenche os teus dados abaixo. Após submeter, recebes um resumo para confirmares via WhatsApp com a organização. Podes inscrever-te sozinho(a), com parceiro(a), ou reservar já o lugar e anunciar o(a) parceiro(a) mais tarde.
         </div>
+      </div>
+
+      <div id="vagasBox" class="ins-vagas" style="display:none">
+        <div class="ins-vagas-main">
+          <i class="ph ph-users-three" style="font-size:1.4rem;color:var(--verde)"></i>
+          <div>
+            <div class="ins-vagas-num"><span id="vagasLivres">–</span> <span style="font-size:.8rem;font-weight:500;color:var(--cinza-texto)">de <span id="vagasTotal">–</span> vagas disponíveis</span></div>
+            <div class="ins-vagas-sub" id="vagasSub">A carregar disponibilidade…</div>
+          </div>
+        </div>
+        <div class="ins-vagas-bar"><div class="ins-vagas-fill" id="vagasFill" style="width:0%"></div></div>
       </div>
 
       <form id="insForm" novalidate>
@@ -136,8 +157,16 @@
         </div>
 
         <div class="ins-section-title" style="margin-top:1.25rem"><i class="ph ph-handshake"></i> Parceiro(a)</div>
-        <div class="form-grid">
-          <div class="form-field full">
+        <div class="form-field full" style="margin-bottom:.4rem">
+          <div class="toggle-wrap" id="modoWrap" style="flex-wrap:wrap">
+            <label class="toggle-pill"><input type="radio" name="modo" value="parceiro" checked> <i class="ph ph-handshake"></i> Com parceiro(a)</label>
+            <label class="toggle-pill"><input type="radio" name="modo" value="reserva"> <i class="ph ph-bookmark-simple"></i> Reservar (a anunciar)</label>
+            <label class="toggle-pill"><input type="radio" name="modo" value="solo"> <i class="ph ph-user"></i> Sozinho(a)</label>
+          </div>
+          <span class="form-help" id="modoHelp">Indica o(a) parceiro(a). Se ainda não o tiveres, reserva o lugar e anuncia mais tarde.</span>
+        </div>
+        <div class="form-grid" id="parceiroGrid">
+          <div class="form-field full" id="parceiroNameField">
             <label class="form-label" for="parceiro">Nome do(a) parceiro(a) <span style="font-weight:400;text-transform:none;letter-spacing:0">(se já tiveres)</span></label>
             <input class="form-input" id="parceiro" name="parceiro" type="text" placeholder="Deixa em branco se não tiveres parceiro(a)" list="dlJogadores" autocomplete="off"/>
             <span class="form-help">Se o teu parceiro já estiver inscrito, escolhe-o da lista. Só escreve o nome manualmente se ainda não existir.</span>
@@ -349,7 +378,104 @@ document.addEventListener('DOMContentLoaded', function () {
   parceiroInput.addEventListener('change', toggleParceiroFields);
   toggleParceiroFields();
 
-  // Form submit
+  // ── Modo de inscrição: parceiro | reserva | solo ──
+  function getModo(){
+    var r = document.querySelector('input[name="modo"]:checked');
+    return r ? r.value : 'parceiro';
+  }
+  function applyModo(){
+    var modo = getModo();
+    var nameField = document.getElementById('parceiroNameField');
+    var telField = document.getElementById('parceiroTelField');
+    var emailField = document.getElementById('parceiroEmailField');
+    var help = document.getElementById('modoHelp');
+    if (modo === 'parceiro') {
+      nameField.style.display = '';
+      help.textContent = 'Indica o(a) parceiro(a). Se já estiver inscrito, escolhe-o da lista.';
+      toggleParceiroFields();
+    } else if (modo === 'reserva') {
+      nameField.style.display = 'none';
+      telField.style.display = 'none';
+      emailField.style.display = 'none';
+      _selectedPartner = null;
+      help.textContent = 'Reservas o lugar da tua dupla (2 vagas). Anuncias o(a) parceiro(a) mais tarde com a organização.';
+    } else { // solo
+      nameField.style.display = 'none';
+      telField.style.display = 'none';
+      emailField.style.display = 'none';
+      _selectedPartner = null;
+      help.textContent = 'Inscreves-te sozinho(a) (1 vaga). A organização pode ajudar-te a encontrar parceiro(a).';
+    }
+  }
+  document.querySelectorAll('input[name="modo"]').forEach(function(r){
+    r.addEventListener('change', applyModo);
+  });
+  applyModo();
+
+  // ── Contador de vagas ──
+  var VAGAS = { total: 176, ocupadas: 0, livres: 176 };
+  function slotsOf(e){ return 1 + (e && e.reservado ? 1 : 0); }
+  function isActive(e){ return e && e.estado !== 'rejeitada' && e.estado !== 'cancelada'; }
+  async function refreshVagas(){
+    var cfg = (ppGet('config') || {});
+    var maxD = parseInt(cfg.maxDuplas, 10); if (!maxD || maxD < 1) maxD = 88;
+    var total = maxD * 2;
+    var entries = [];
+    try {
+      if (window.ppCloudState && window.ppCloudState.fetchInscricoes) {
+        entries = await window.ppCloudState.fetchInscricoes();
+      }
+    } catch (_) {}
+    if (!entries || !entries.length) {
+      try { entries = JSON.parse(localStorage.getItem('pp_inscricoes') || '[]'); } catch(_) { entries = []; }
+    }
+    var ocupadas = (entries || []).filter(isActive).reduce(function(n,e){ return n + slotsOf(e); }, 0);
+    var livres = Math.max(0, total - ocupadas);
+    VAGAS = { total: total, ocupadas: ocupadas, livres: livres };
+    renderVagas();
+    return VAGAS;
+  }
+  function renderVagas(){
+    var box = document.getElementById('vagasBox');
+    if (!box) return;
+    box.style.display = '';
+    document.getElementById('vagasLivres').textContent = VAGAS.livres;
+    document.getElementById('vagasTotal').textContent = VAGAS.total;
+    var duplasLivres = Math.floor(VAGAS.livres / 2);
+    var sub = document.getElementById('vagasSub');
+    var fill = document.getElementById('vagasFill');
+    var pct = VAGAS.total ? Math.round((VAGAS.ocupadas / VAGAS.total) * 100) : 0;
+    fill.style.width = Math.min(100, pct) + '%';
+    box.classList.remove('low', 'full');
+    if (VAGAS.livres <= 0) {
+      box.classList.add('full');
+      sub.textContent = 'Inscrições esgotadas — todas as vagas estão preenchidas.';
+    } else if (VAGAS.livres <= 20) {
+      box.classList.add('low');
+      sub.textContent = 'Últimas vagas! ≈ ' + duplasLivres + ' dupla(s) ainda disponível(is).';
+    } else {
+      sub.textContent = '≈ ' + duplasLivres + ' dupla(s) ainda disponível(is).';
+    }
+    // Bloquear formulário se esgotado
+    var submitBtn = document.querySelector('#insForm button[type="submit"]');
+    if (submitBtn) {
+      if (VAGAS.livres <= 0) {
+        submitBtn.disabled = true;
+        submitBtn.style.opacity = '.5';
+        submitBtn.style.cursor = 'not-allowed';
+        submitBtn.innerHTML = '<i class="ph ph-lock"></i> Inscrições esgotadas';
+      } else {
+        submitBtn.disabled = false;
+        submitBtn.style.opacity = '';
+        submitBtn.style.cursor = '';
+        submitBtn.innerHTML = '<i class="ph ph-paper-plane-tilt"></i> Submeter inscrição';
+      }
+    }
+  }
+  refreshVagas();
+  window.addEventListener('pp:datasynced', function(){ refreshVagas(); });
+
+
   document.getElementById('insForm').addEventListener('submit', async function(ev){
     ev.preventDefault();
     var form = ev.target;
@@ -360,12 +486,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Validation
     [form.nome1, form.telefone, form.categoria].forEach(function(f){ f.classList.remove('invalid'); });
+    var modo          = getModo();
     var genero        = form.querySelector('input[name="genero"]:checked').value;
-    var parceiroNome  = (form.parceiro ? form.parceiro.value.trim() : '');
+    var parceiroNome  = (modo === 'parceiro' && form.parceiro ? form.parceiro.value.trim() : '');
     var parceiroTel   = (form.parceiroTel ? form.parceiroTel.value.trim() : '');
     var parceiroEmail = (form.parceiroEmail ? form.parceiroEmail.value.trim() : '');
     if (_selectedPartner) { parceiroTel = _selectedPartner.tel; parceiroEmail = _selectedPartner.email || ''; }
     if (form.parceiroTel) form.parceiroTel.classList.remove('invalid');
+    var reserva       = (modo === 'reserva');
     var erros = [];
     if (!nome1) { form.nome1.classList.add('invalid'); erros.push('Nome obrigatório.'); }
     if (!telefone) { form.telefone.classList.add('invalid'); erros.push('Telefone obrigatório.'); }
@@ -378,19 +506,31 @@ document.addEventListener('DOMContentLoaded', function () {
     if (erros.length) { errEl.textContent = erros.join(' '); errEl.style.display = ''; return; }
     errEl.style.display = 'none';
 
-    // Uma inscrição por pessoa: se houver parceiro(a), cria duas pré-inscrições ligadas por parId
+    // Capacidade: solo=1 vaga, parceiro/reserva=2 vagas
+    var vagasNec = (modo === 'solo') ? 1 : 2;
+    await refreshVagas();
+    if (VAGAS.livres < vagasNec) {
+      errEl.textContent = VAGAS.livres <= 0
+        ? 'Inscrições esgotadas — já não há vagas disponíveis.'
+        : 'Só resta ' + VAGAS.livres + ' vaga. Para inscrever uma dupla são precisas 2 vagas — escolhe "Sozinho(a)" ou contacta a organização.';
+      errEl.style.display = '';
+      return;
+    }
+
+    // Uma inscrição por pessoa: com parceiro cria duas pré-inscrições ligadas por parId; reserva ocupa 2 vagas
     var baseId = 'ins-' + Date.now();
-    var parId  = parceiroNome ? ('par-' + Date.now()) : null;
+    var parId  = (parceiroNome || reserva) ? ('par-' + Date.now()) : null;
     var novos = [{
       id: baseId,
       criadoem: new Date().toISOString(),
-      tipo: parceiroNome ? 'dupla' : 'jogador',
+      tipo: (parceiroNome || reserva) ? 'dupla' : 'jogador',
       genero: genero,
       categoria: categoria,
       nome1: nome1,
       nome2: '',
-      parceiro: parceiroNome || '',
+      parceiro: reserva ? '(A anunciar)' : (parceiroNome || ''),
       parid: parId,
+      reservado: reserva,
       telefone: telefone,
       email: form.email.value.trim(),
       observacoes: form.observacoes.value.trim(),
@@ -407,6 +547,7 @@ document.addEventListener('DOMContentLoaded', function () {
         nome2: '',
         parceiro: nome1,
         parid: parId,
+        reservado: false,
         telefone: parceiroTel,
         email: parceiroEmail,
         observacoes: '',
@@ -473,6 +614,8 @@ document.addEventListener('DOMContentLoaded', function () {
       + '*Género:* ' + generoStr + '\n'
       + '*Categoria:* ' + entry.categoria + '\n'
       + (parceiroNome ? '*Parceiro(a):* ' + parceiroNome + (parceiroTel ? ' (' + parceiroTel + ')' : '') + '\n' : '')
+      + (reserva ? '*Parceiro(a):* (a anunciar — lugar reservado)\n' : '')
+      + (modo === 'solo' ? '*Inscrição:* individual (sem parceiro por agora)\n' : '')
       + (entry.observacoes ? '*Obs.:* ' + entry.observacoes + '\n' : '')
       + '\n_Inscrição submetida em ' + new Date().toLocaleString('pt-PT') + '_';
 
@@ -502,7 +645,9 @@ document.addEventListener('DOMContentLoaded', function () {
     window.scrollTo({ top: 0, behavior: 'smooth' });
     form.reset();
     buildCats();
+    applyModo();
     toggleParceiroFields();
+    refreshVagas();
   });
 
 });

@@ -2544,6 +2544,9 @@ function renderConfigPanel() {
     ${fieldText('tornDescFooter','Frase do Rodapé',     'ex: O padel que une Moçambique.',  'O padel que une Moçambique.')}
     ${fieldText('tornTelOrg',   'Tel. Organizador (WhatsApp)', 'ex: 258841234567 (sem + ou espaços)', '')}
 
+    ${section('Capacidade de Inscrições')}
+    ${fieldText('maxDuplas',    'Máximo de duplas',    'ex: 88',                           '88')}
+    <div style="font-size:.72rem;color:var(--cinza-texto);padding:.2rem 0 .5rem">Cada dupla ocupa 2 vagas de jogador. Ex.: 88 duplas = 176 jogadores. As inscrições são bloqueadas ao atingir o limite.</div>
     ${section('Visibilidade de Páginas')}
     ${fieldToggle('calendarioVisible',    'Calendário',               'ph-calendar',          true)}
     ${fieldToggle('scoreboardVisible',    'Quadro de Apuramento',     'ph-monitor-play',      true)}
@@ -5963,6 +5966,15 @@ async function renderInscricoes() {
   const duplas  = parIds.size + entries.filter(e => e.tipo === 'dupla' && !e.parid).length;
   const indiv   = entries.filter(e => e.tipo === 'jogador').length;
   const confirmadas = entries.filter(e => e.estado === 'confirmada').length;
+  const reservas = entries.filter(e => e.reservado).length;
+
+  const _cfg = getData('config') || {};
+  let _maxD = parseInt(_cfg.maxDuplas, 10); if (!_maxD || _maxD < 1) _maxD = 88;
+  const vagasTotal = _maxD * 2;
+  const vagasOcup  = entries
+    .filter(e => e.estado !== 'rejeitada' && e.estado !== 'cancelada')
+    .reduce((n, e) => n + 1 + (e.reservado ? 1 : 0), 0);
+  const vagasLivres = Math.max(0, vagasTotal - vagasOcup);
 
   const catMap  = {};
   (getData('categorias') || []).forEach(c => { catMap[c.id] = c.nome; });
@@ -5985,6 +5997,10 @@ async function renderInscricoes() {
       </div>
 
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:.7rem;margin-bottom:1.25rem">
+        <div class="card" style="padding:.9rem 1rem;text-align:center;grid-column:span 2;background:${vagasLivres<=0?'rgba(255,74,74,.08)':vagasLivres<=20?'rgba(245,197,24,.08)':'rgba(0,195,123,.06)'}">
+          <div style="font-size:2rem;font-weight:800;color:${vagasLivres<=0?'#FF4A4A':vagasLivres<=20?'var(--amarelo)':'var(--verde)'};line-height:1">${vagasLivres} <span style="font-size:.9rem;font-weight:600;color:var(--cinza-texto)">/ ${vagasTotal}</span></div>
+          <div style="font-size:.68rem;text-transform:uppercase;letter-spacing:.06em;color:var(--cinza-texto);margin-top:.2rem">Vagas livres · máx ${_maxD} duplas</div>
+        </div>
         <div class="card" style="padding:.9rem 1rem;text-align:center">
           <div style="font-size:2rem;font-weight:800;color:var(--branco);line-height:1">${total}</div>
           <div style="font-size:.68rem;text-transform:uppercase;letter-spacing:.06em;color:var(--cinza-texto);margin-top:.2rem">Total</div>
@@ -5996,6 +6012,10 @@ async function renderInscricoes() {
         <div class="card" style="padding:.9rem 1rem;text-align:center">
           <div style="font-size:2rem;font-weight:800;color:var(--amarelo);line-height:1">${indiv}</div>
           <div style="font-size:.68rem;text-transform:uppercase;letter-spacing:.06em;color:var(--cinza-texto);margin-top:.2rem">Individuais</div>
+        </div>
+        <div class="card" style="padding:.9rem 1rem;text-align:center">
+          <div style="font-size:2rem;font-weight:800;color:#7BB0FF;line-height:1">${reservas}</div>
+          <div style="font-size:.68rem;text-transform:uppercase;letter-spacing:.06em;color:var(--cinza-texto);margin-top:.2rem">Reservas</div>
         </div>
         <div class="card" style="padding:.9rem 1rem;text-align:center">
           <div style="font-size:2rem;font-weight:800;color:var(--verde);line-height:1">${confirmadas}</div>
@@ -6029,11 +6049,12 @@ async function renderInscricoes() {
                     <td style="padding:.65rem .9rem">
                       <div style="font-weight:600;color:var(--branco)">${escHtml(e.nome1)}</div>
                       ${e.nome2 ? `<div style="font-size:.75rem;color:var(--cinza-texto)"><i class="ph ph-user"></i> ${escHtml(e.nome2)}</div>` : ''}
-                      ${e.parceiro ? (function(){
+                      ${e.reservado ? `<div style="font-size:.73rem;color:#7BB0FF"><i class="ph ph-bookmark-simple"></i> Vaga reservada — parceiro a anunciar</div>`
+                        : (e.parceiro ? (function(){
                         const sib = entries.find(x => x.parid && x.parid === e.parid && x.id !== e.id);
                         const ok = sib && sib.estado === 'confirmada';
                         return `<div style="font-size:.73rem;color:var(--cinza-texto)"><i class="ph ph-handshake"></i> Par: ${escHtml(e.parceiro)} <span style="color:${ok?'var(--verde)':'var(--amarelo)'}">${ok?'✓ confirmado':'pendente'}</span></div>`;
-                      })() : ''}
+                      })() : '')}
                       ${e.clube ? `<div style="font-size:.72rem;color:#4A6058">${escHtml(e.clube)}</div>` : ''}
                       ${e.observacoes ? `<div style="font-size:.72rem;color:#8AA396;margin-top:.25rem;max-width:280px"><i class="ph ph-note"></i> ${escHtml(e.observacoes)}</div>` : ''}
                     </td>
@@ -6059,6 +6080,7 @@ async function renderInscricoes() {
                       </span>
                     </td>
                     <td style="padding:.65rem .9rem;text-align:center;white-space:nowrap">
+                      ${e.reservado ? `<button class="btn-icon" title="Anunciar parceiro (cria a pré-inscrição do parceiro)" onclick="insAdminAnnounce('${escHtml(e.id)}')"><i class="ph ph-user-plus" style="color:#7BB0FF"></i></button>` : ''}
                       ${e.estado==='confirmada'
                         ? `<button class="btn-icon" title="Reverter confirmação" onclick="insAdminUnconfirm('${escHtml(e.id)}')"><i class="ph ph-arrow-counter-clockwise" style="color:#8AA396"></i></button>`
                         : `<button class="btn-icon" title="Confirmar inscrição (após pagamento) e criar jogador" onclick="insAdminConfirm('${escHtml(e.id)}')"><i class="ph ph-check-circle" style="color:var(--verde)"></i></button>`}
@@ -6077,7 +6099,7 @@ async function renderInscricoes() {
     download('inscricoes-reentre.json', JSON.stringify(entries, null, 2), 'application/json');
   });
   document.getElementById('insAdminExportCsv')?.addEventListener('click', () => {
-    const header = ['id','criadoem','tipo','genero','categoria','nome1','nome2','telefone','email','clube','observacoes','estado'];
+    const header = ['id','criadoem','tipo','genero','categoria','nome1','nome2','parceiro','parid','reservado','telefone','email','clube','observacoes','estado'];
     const rows = [header.join(',')].concat(entries.map(e =>
       header.map(k => '"' + String(e[k] || '').replace(/"/g, '""') + '"').join(',')
     ));
@@ -6094,6 +6116,53 @@ async function renderInscricoes() {
     toast('Inscrições apagadas.', 'success');
   });
 }
+
+// Anuncia o parceiro de uma reserva: cria a pré-inscrição do parceiro ligada por parid.
+window.insAdminAnnounce = async function(id) {
+  try {
+    const entries = JSON.parse(localStorage.getItem('pp_inscricoes') || '[]');
+    const e = entries.find(x => x.id === id);
+    if (!e) return;
+    if (!e.reservado) { toast('Esta inscrição não é uma reserva.', 'warning'); return; }
+    const nome = (prompt('Nome do parceiro(a) a anunciar:') || '').trim();
+    if (!nome) return;
+    if (nome.toLowerCase() === String(e.nome1 || '').toLowerCase()) { toast('O parceiro tem de ser diferente do inscrito.', 'error'); return; }
+    const tel = (prompt('Telefone do parceiro(a):') || '').trim();
+    if (!tel) { toast('Telefone do parceiro obrigatório.', 'error'); return; }
+    const email = (prompt('Email do parceiro(a) (opcional):') || '').trim();
+
+    const parid = e.parid || ('par-' + Date.now());
+    e.parid = parid;
+    e.reservado = false;
+    e.parceiro = nome;
+    const sib = {
+      id: e.id + '-p',
+      criadoem: new Date().toISOString(),
+      tipo: 'dupla',
+      genero: e.genero,
+      categoria: e.categoria,
+      nome1: nome,
+      nome2: '',
+      parceiro: e.nome1,
+      parid: parid,
+      reservado: false,
+      telefone: tel,
+      email: email,
+      observacoes: '',
+      estado: 'nova'
+    };
+    entries.push(sib);
+    localStorage.setItem('pp_inscricoes', JSON.stringify(entries));
+    if (window.ppCloudState && window.ppCloudState.upsertInscricao) {
+      try { await window.ppCloudState.upsertInscricao(e); } catch (_) {}
+      try { await window.ppCloudState.upsertInscricao(sib); } catch (_) {}
+    }
+    if (window.ppCloudState && window.ppCloudState.enabled) await window.ppCloudState.pushFromLocal();
+    if (typeof Auth !== 'undefined' && Auth && Auth.log) Auth.log('ANUNCIAR_PARCEIRO', 'inscricoes', `${e.nome1} → ${nome}`);
+    renderInscricoes();
+    toast(`Parceiro "${nome}" anunciado. Confirma ambas as inscrições para criar a dupla.`, 'success');
+  } catch (err) { toast('Erro ao anunciar parceiro.', 'error'); }
+};
 
 window.insAdminDelete = async function(id) {
   if (!confirm('Remover esta inscrição?')) return;
