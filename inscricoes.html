@@ -285,8 +285,8 @@ document.addEventListener('DOMContentLoaded', function () {
     entries.push(entry);
     localStorage.setItem(storageKey, JSON.stringify(entries));
     var syncOk = true;
-    if (window.ppInscricoesCloud && window.ppInscricoesCloud.isEnabled()) {
-      try { await window.ppInscricoesCloud.upsert(entry); }
+    if (window.ppCloudState && window.ppCloudState.enabled) {
+      try { await window.ppCloudState.pushFromLocal(); }
       catch (e) { syncOk = false; }
     }
 

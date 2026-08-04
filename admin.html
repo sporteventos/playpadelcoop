@@ -227,7 +227,7 @@
         <button class="header-btn" id="syncPauseBtn" title="Pausar auto-sync" aria-label="Pausar sync" onclick="toggleAutoSyncPause()">
           <i class="ph ph-play-circle" id="syncPauseIcon"></i>
         </button>
-        <button class="header-btn gh-sync-btn" id="ghSyncBtn" title="Sincronizar com GitHub (clique direito para configurar)" aria-label="Sincronizar" onclick="ghSyncAll()" oncontextmenu="event.preventDefault();ghShowConfig()">
+        <button class="header-btn gh-sync-btn" id="ghSyncBtn" title="Sincronizar com base de dados" aria-label="Sincronizar" onclick="ghSyncAll()">
           <i class="ph ph-cloud-arrow-up" id="ghSyncIcon"></i>
           <span class="gh-sync-label" id="ghSyncLabel">Sync</span>
           <span class="gh-dirty-dot" id="ghDirtyDot" style="display:none"></span>
@@ -926,48 +926,6 @@
   </div>
 </div>
 
-<!-- Modal: GitHub Sync Config -->
-<div class="modal-overlay" id="modalGHSync" role="dialog" aria-modal="true" aria-labelledby="modalGHTitle">
-  <div class="modal" style="max-width:480px">
-    <div class="modal-header">
-      <h2 class="modal-title" id="modalGHTitle"><i class="ph ph-github-logo"></i> GitHub Sync — Configurar</h2>
-      <button class="modal-close" onclick="closeModal('modalGHSync')" aria-label="Fechar">&times;</button>
-    </div>
-    <div class="modal-body">
-      <p style="color:var(--cinza-texto);font-size:.82rem;margin-bottom:1.25rem">
-        Os dados do torneio serão guardados em <code style="color:var(--verde)">data.json</code> no seu repositório GitHub.
-        Os visitantes irão ler este ficheiro para ver os resultados em tempo real.
-      </p>
-      <div class="form-group">
-        <label class="form-label">Dono do repositório (username)</label>
-        <input class="form-input" id="ghOwner" type="text" placeholder="ex: sporteventos" autocomplete="off"/>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Nome do repositório</label>
-        <input class="form-input" id="ghRepo" type="text" placeholder="ex: playpadelcoop" autocomplete="off"/>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Branch</label>
-        <input class="form-input" id="ghBranch" type="text" placeholder="main" autocomplete="off"/>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Personal Access Token (PAT)</label>
-        <input class="form-input" id="ghToken" type="password" placeholder="ghp_xxxxxxxxxxxx" autocomplete="new-password"/>
-        <small style="color:var(--cinza-texto);font-size:.75rem">
-          Crie em GitHub → Settings → Developer settings → Personal access tokens → Fine-grained.<br>
-          Permissões necessárias: <strong>Contents: Read and write</strong> no repositório.
-        </small>
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn btn-ghost" onclick="closeModal('modalGHSync')">Cancelar</button>
-      <button class="btn btn-primary" onclick="ghSaveConfig()">
-        <i class="ph ph-floppy-disk"></i> Guardar &amp; Testar
-      </button>
-    </div>
-  </div>
-</div>
-
 <!-- Modal: Alterar Palavra-passe -->
 <div class="modal-overlay" id="modalAlterarPasse" role="dialog" aria-modal="true" aria-labelledby="modalAlterarPasseTitle">
   <div class="modal" style="max-width:420px">
@@ -1508,10 +1466,9 @@
   </div>
 </div>
 
-<script src="js/data.js?v=4"></script>
-<script src="js/auth.js?v=4"></script>
-<script src="js/github-sync.js?v=4"></script>
-<script src="js/admin.js?v=4"></script>
+<script src="js/data.js?v=5"></script>
+<script src="js/auth.js?v=5"></script>
+<script src="js/admin.js?v=5"></script>
 <script>
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('/playpadelcoop/sw.js', { updateViaCache: 'none' })

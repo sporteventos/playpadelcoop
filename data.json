@@ -101,10 +101,6 @@
     "bannerVisible": false,
     "bannerMsg": "",
     "tornTelOrg": "",
-    "insSyncEnabled": true,
-    "insSyncUrl": "https://jjtsqsumczbhfgbgjxsd.supabase.co",
-    "insSyncAnonKey": "sb_publishable_LQ03yWZ4f-Mo0BYXWuinVw_kpWqbmIy",
-    "insSyncTable": "inscricoes",
     "sbRefreshMins": "15",
     "sbRecentCount": "16"
   },

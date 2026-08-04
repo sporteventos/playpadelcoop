@@ -68,10 +68,6 @@ const DEFAULTS = {
     bannerVisible: false,
     bannerMsg: '',
     tornTelOrg: '',
-    insSyncEnabled: true,
-    insSyncUrl: 'https://jjtsqsumczbhfgbgjxsd.supabase.co',
-    insSyncAnonKey: 'sb_publishable_LQ03yWZ4f-Mo0BYXWuinVw_kpWqbmIy',
-    insSyncTable: 'inscricoes',
     sbRefreshMins: '15',
     sbRecentCount: '16',
   },
@@ -84,55 +80,77 @@ function ppLoad(key) {
 function ppSave(key, data) { localStorage.setItem('pp_' + key, JSON.stringify(data)); }
 function ppGet(key)  { return ppLoad(key) ?? JSON.parse(JSON.stringify(DEFAULTS[key] ?? [])); }
 
-// ---- Cloud sync helpers (Supabase REST for inscrições) ----
-function ppInsSyncCfg() {
-  var cfg = ppGet('config') || {};
-  return {
-    enabled: cfg.insSyncEnabled === true,
-    url: String(cfg.insSyncUrl || '').trim().replace(/\/+$/, ''),
-    key: String(cfg.insSyncAnonKey || '').trim(),
-    table: String(cfg.insSyncTable || 'inscricoes').trim() || 'inscricoes',
-  };
-}
-function ppInsSyncHeaders(key, prefer) {
-  var h = { 'apikey': key, 'Authorization': 'Bearer ' + key, 'Content-Type': 'application/json' };
-  if (prefer) h['Prefer'] = prefer;
+// ---- Cloud state (Supabase) ----
+const PP_CLOUD = {
+  url: 'https://jjtsqsumczbhfgbgjxsd.supabase.co',
+  key: 'sb_publishable_LQ03yWZ4f-Mo0BYXWuinVw_kpWqbmIy',
+  table: 'app_state',
+  rowId: 'playpadelcoop-main',
+  keys: ['campos', 'categorias', 'grupos', 'jogadores', 'duplas', 'jogos', 'fasefinal', 'telefones', 'inscricoes', 'patrocinadores', 'parceiros', 'config'],
+};
+function ppCloudHeaders(prefer) {
+  var h = { 'apikey': PP_CLOUD.key, 'Authorization': 'Bearer ' + PP_CLOUD.key, 'Content-Type': 'application/json' };
+  if (prefer) h.Prefer = prefer;
   return h;
 }
-window.ppInscricoesCloud = {
-  cfg: ppInsSyncCfg,
-  isEnabled: function() {
-    var c = ppInsSyncCfg();
-    return c.enabled && !!c.url && !!c.key && !!c.table;
+function ppCollectLocalState() {
+  var out = {};
+  PP_CLOUD.keys.forEach(function (k) { out[k] = ppGet(k); });
+  out.users = ppLoad('users') || [];
+  out.auditlog = ppLoad('auditlog') || [];
+  out._updated = new Date().toISOString();
+  return out;
+}
+function ppApplyCloudState(state) {
+  if (!state || typeof state !== 'object') return;
+  PP_CLOUD.keys.forEach(function (k) { if (state[k] !== undefined) ppSave(k, state[k]); });
+  if (Array.isArray(state.users)) ppSave('users', state.users);
+  if (Array.isArray(state.auditlog)) ppSave('auditlog', state.auditlog);
+  if (state._updated) localStorage.setItem('pp__updated', state._updated);
+}
+async function ppCloudFetchState() {
+  var endpoint = PP_CLOUD.url + '/rest/v1/' + encodeURIComponent(PP_CLOUD.table) +
+    '?select=data,updated_at&id=eq.' + encodeURIComponent(PP_CLOUD.rowId) + '&limit=1';
+  var r = await fetch(endpoint, { headers: ppCloudHeaders() });
+  if (!r.ok) throw new Error('Cloud fetch failed: ' + r.status);
+  var rows = await r.json();
+  if (!Array.isArray(rows) || !rows.length) return null;
+  var state = rows[0].data || {};
+  if (!state._updated && rows[0].updated_at) state._updated = rows[0].updated_at;
+  return state;
+}
+async function ppCloudPushState(stateObj) {
+  var payloadState = stateObj || ppCollectLocalState();
+  var endpoint = PP_CLOUD.url + '/rest/v1/' + encodeURIComponent(PP_CLOUD.table) + '?on_conflict=id';
+  var body = [{
+    id: PP_CLOUD.rowId,
+    data: payloadState,
+    updated_at: payloadState._updated || new Date().toISOString(),
+  }];
+  var r = await fetch(endpoint, {
+    method: 'POST',
+    headers: ppCloudHeaders('resolution=merge-duplicates,return=minimal'),
+    body: JSON.stringify(body),
+  });
+  if (!r.ok) throw new Error('Cloud push failed: ' + r.status);
+}
+window.ppCloudState = {
+  enabled: true,
+  collectLocalState: ppCollectLocalState,
+  pullToLocal: async function() {
+    var state = await ppCloudFetchState();
+    if (state) {
+      ppApplyCloudState(state);
+      window.dispatchEvent(new CustomEvent('pp:datasynced', { detail: state }));
+      return true;
+    }
+    return false;
   },
-  fetchAll: async function() {
-    var c = ppInsSyncCfg();
-    if (!(c.enabled && c.url && c.key)) return [];
-    var endpoint = c.url + '/rest/v1/' + encodeURIComponent(c.table) + '?select=*&order=criadoem.desc';
-    var r = await fetch(endpoint, { headers: ppInsSyncHeaders(c.key) });
-    if (!r.ok) throw new Error('Cloud fetch failed: ' + r.status);
-    var data = await r.json();
-    return Array.isArray(data) ? data : [];
-  },
-  upsert: async function(entry) {
-    var c = ppInsSyncCfg();
-    if (!(c.enabled && c.url && c.key)) return;
-    var endpoint = c.url + '/rest/v1/' + encodeURIComponent(c.table) + '?on_conflict=id';
-    var payload = Object.assign({}, entry, { criadoem: entry.criadoem || entry.criadoEm || null });
-    if (Object.prototype.hasOwnProperty.call(payload, 'criadoEm')) delete payload.criadoEm;
-    var r = await fetch(endpoint, {
-      method: 'POST',
-      headers: ppInsSyncHeaders(c.key, 'resolution=merge-duplicates,return=minimal'),
-      body: JSON.stringify([payload]),
-    });
-    if (!r.ok) throw new Error('Cloud upsert failed: ' + r.status);
-  },
-  remove: async function(id) {
-    var c = ppInsSyncCfg();
-    if (!(c.enabled && c.url && c.key)) return;
-    var endpoint = c.url + '/rest/v1/' + encodeURIComponent(c.table) + '?id=eq.' + encodeURIComponent(id);
-    var r = await fetch(endpoint, { method: 'DELETE', headers: ppInsSyncHeaders(c.key, 'return=minimal') });
-    if (!r.ok) throw new Error('Cloud delete failed: ' + r.status);
+  pushFromLocal: async function() {
+    var state = ppCollectLocalState();
+    await ppCloudPushState(state);
+    localStorage.setItem('pp__updated', state._updated);
+    return true;
   },
 };
 
@@ -144,110 +162,29 @@ function ppFormatDate(d) {
   return `${parseInt(day)} ${meses[parseInt(m)-1]}`;
 }
 
-// ── Remote data sync (Option A — GitHub Pages) ─────────────────────────────
-// Fetches data.json from the deployed site, populates localStorage,
-// then fires 'pp:datasynced' so public pages can re-render with live data.
+// ── Remote data sync (Supabase state) ───────────────────────────────────────
+// Pulls a single JSON state row from Supabase and populates localStorage.
+// Fallback: if cloud state is unavailable, reads local data.json once.
 (function () {
   if (typeof window === 'undefined') return;
   if (window.location.protocol === 'file:') return; // skip when opened locally
-  var KEYS = ['campos', 'categorias', 'grupos', 'jogadores', 'duplas', 'jogos', 'fasefinal', 'telefones', 'inscricoes', 'patrocinadores', 'parceiros', 'users', 'config'];
-  function mergeById(remoteArr, localArr) {
-    var out = [];
-    var seen = new Set();
-    (remoteArr || []).forEach(function (x) {
-      if (!x || !x.id || seen.has(x.id)) return;
-      seen.add(x.id);
-      out.push(x);
-    });
-    (localArr || []).forEach(function (x) {
-      if (!x || !x.id || seen.has(x.id)) return;
-      seen.add(x.id);
-      out.push(x);
-    });
-    return out;
-  }
-
-  // On admin: always fetch, but only overwrite local data if remote _updated is newer.
-  // Exception: 'users' is always updated from remote to ensure synced users are available on login.
-  if (window.location.pathname.includes('admin') && localStorage.getItem('pp_jogos') !== null) {
-    window.ppDataReady = fetch('data.json?_=' + Date.now())
-      .then(function (r) { return r.ok ? r.json() : Promise.reject('404'); })
-      .then(function (d) {
-        // Merge remote users into local: preserve locally-created users (not yet pushed),
-        // but add any remote users that don't exist locally (created on another device).
-        if (Array.isArray(d['users']) && d['users'].length) {
-          try {
-            var localUsers  = JSON.parse(localStorage.getItem('pp_users') || '[]');
-            var localIds    = new Set(localUsers.map(function(u) { return u.id; }));
-            var deletedIds  = new Set(JSON.parse(localStorage.getItem('pp_users_deleted') || '[]'));
-            // For users that exist in both: remote wins for auth fields (salt/passwordHash/active)
-            // so password changes on one device propagate to all others.
-            // For users only remote: add unless in tombstone.
-            var remoteMap = {};
-            d['users'].forEach(function(u) { remoteMap[u.id] = u; });
-            var merged = localUsers.map(function(u) {
-              var r = remoteMap[u.id];
-              if (!r) return u;
-              return Object.assign({}, u, { salt: r.salt, passwordHash: r.passwordHash, active: r.active, role: r.role, name: r.name });
-            }).concat(d['users'].filter(function(u) {
-              return !localIds.has(u.id) && !deletedIds.has(u.id);
-            }));
-            ppSave('users', merged);
-          } catch(e) { ppSave('users', d['users']); }
-        }
-        // Always merge remote audit logs (deduplicate by id) so all devices see all actions
-        if (Array.isArray(d.auditlog) && d.auditlog.length) {
-          try {
-            var localLogs = JSON.parse(localStorage.getItem('pp_auditlog') || '[]');
-            var localIds  = new Set(localLogs.map(function(l) { return l.id; }));
-            var merged    = localLogs.concat(d.auditlog.filter(function(r) { return !localIds.has(r.id); }));
-            merged.sort(function(a, b) { return a.ts < b.ts ? 1 : -1; });
-            localStorage.setItem('pp_auditlog', JSON.stringify(merged.slice(0, 1000)));
-          } catch(e) {}
-        }
-        var stored = localStorage.getItem('pp__updated') || '0';
-        var remote = d._updated || '0';
-        if (remote > stored) {
-          KEYS.forEach(function (k) {
-            if (k === 'users' || d[k] === undefined) return;
-            if (k === 'inscricoes') {
-              var localIns = JSON.parse(localStorage.getItem('pp_inscricoes') || '[]');
-              ppSave('inscricoes', mergeById(d[k], localIns));
-              return;
-            }
-            ppSave(k, d[k]);
-          });
-          localStorage.setItem('pp__updated', remote);
-          window.dispatchEvent(new CustomEvent('pp:datasynced', { detail: d }));
-        }
-        return true;
-      })
-      .catch(function () { return false; });
-    return;
-  }
-
-  window.ppDataReady = fetch('data.json?_=' + Date.now())
-    .then(function (r) { return r.ok ? r.json() : Promise.reject('404'); })
-    .then(function (d) {
-      KEYS.forEach(function (k) {
-        if (d[k] === undefined) return;
-        if (k === 'config') {
-          // Merge: remote config is the base, but any locally-set admin overrides take priority.
-          // This ensures visibility toggles set in the admin panel survive the remote sync.
-          var localCfg = JSON.parse(localStorage.getItem('pp_config') || 'null') || {};
-          ppSave('config', Object.assign({}, d[k], localCfg));
-        } else if (k === 'inscricoes') {
-          var localIns = JSON.parse(localStorage.getItem('pp_inscricoes') || '[]');
-          ppSave('inscricoes', mergeById(d[k], localIns));
-        } else {
-          ppSave(k, d[k]);
-        }
-      });
-      if (d._updated) localStorage.setItem('pp__updated', d._updated);
+  window.ppDataReady = (async function () {
+    try {
+      var pulled = await window.ppCloudState.pullToLocal();
+      if (pulled) return true;
+    } catch (_) {}
+    try {
+      var r = await fetch('data.json?_=' + Date.now());
+      if (!r.ok) return false;
+      var d = await r.json();
+      ppApplyCloudState(d);
       window.dispatchEvent(new CustomEvent('pp:datasynced', { detail: d }));
+      try { await window.ppCloudState.pushFromLocal(); } catch (_) {}
       return true;
-    })
-    .catch(function () { return false; });
+    } catch (_) {
+      return false;
+    }
+  }());
 }());
 
 function ppWeekday(d) {

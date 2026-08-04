@@ -17,7 +17,7 @@ const APP = {
 
 // Compatibilidade interna
 const getData = ppGet;
-const setData = (k, v) => { ppSave(k, v); if (typeof GHSync !== 'undefined') GHSync.markDirty(); };
+const setData = (k, v) => { ppSave(k, v); if (typeof _autoSync === 'function') _autoSync(); };
 const formatDate = ppFormatDate;
 
 // ============================================
@@ -2528,12 +2528,6 @@ function renderConfigPanel() {
     ${fieldSelect('sbRefreshMins', 'Auto-refresh (minutos)', [['5','5 min'],['10','10 min'],['15','15 min'],['30','30 min']], '15')}
     ${fieldSelect('sbRecentCount', 'Últimos resultados a mostrar', [['8','8'],['12','12'],['16','16'],['24','24']], '16')}
 
-    ${section('Sincronização Automática de Inscrições (Supabase)')}
-    ${fieldToggle('insSyncEnabled',    'Activar sincronização cloud', 'ph-cloud', false)}
-    ${fieldText('insSyncUrl',          'Project URL',                 'ex: https://xxxxx.supabase.co', '')}
-    ${fieldText('insSyncAnonKey',      'Anon key',                    'eyJhbGciOiJIUzI1NiIs...', '')}
-    ${fieldText('insSyncTable',        'Tabela',                      'inscricoes', 'inscricoes')}
-
     ${section('Aviso Global no Site')}
     <div style="display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:.4rem 0;border-bottom:1px solid rgba(255,255,255,.04)">
       <span style="font-size:.83rem;color:var(--branco)"><i class="ph ph-megaphone" style="color:var(--cinza-texto)"></i> Mostrar banner de aviso</span>
@@ -3995,7 +3989,7 @@ window.suspenderJogo = function() {
 };
 
 // Auto-sync silencioso após guardar dados críticos (resultados, adiados, suspensos)
-// Tenta push para GitHub sem bloquear o utilizador; mostra toast só se falhar.
+// Tenta push para Supabase sem bloquear o utilizador; mostra toast só se falhar.
 let _autoSyncPaused = false;
 window.toggleAutoSyncPause = function() {
   _autoSyncPaused = !_autoSyncPaused;
@@ -4010,11 +4004,11 @@ window.toggleAutoSyncPause = function() {
 
 function _autoSync() {
   if (_autoSyncPaused) return;
-  if (typeof GHSync === 'undefined' || !GHSync.isConfigured()) return;
-  GHSync.push(GHSync.getAllData()).then(() => {
+  if (!window.ppCloudState || !window.ppCloudState.enabled) return;
+  window.ppCloudState.pushFromLocal().then(() => {
     // success — silent
   }).catch(err => {
-    toast('⚠ Auto-sync falhou — carregue em Sincronizar manualmente. (' + (err?.message || err) + ')', 'error');
+    toast('⚠ Auto-sync cloud falhou — carregue em Sincronizar manualmente. (' + (err?.message || err) + ')', 'error');
   });
 }
 
@@ -4408,22 +4402,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       e.preventDefault();
       const u = document.getElementById('loginUser').value.trim();
       const p = document.getElementById('loginPass').value;
-      // On file:// protocol the auto-sync is skipped; fetch users from GitHub Pages directly
-      if (window.location.protocol === 'file:') {
-        try {
-          const cfg = GHSync.getCfg();
-          if (cfg.owner && cfg.repo) {
-            const r = await fetch(
-              `https://${cfg.owner}.github.io/${cfg.repo}/data.json?_=${Date.now()}`
-            );
-            if (r.ok) {
-              const d = await r.json();
-              if (d.users && d.users.length) ppSave('users', d.users);
-            }
-          }
-        } catch (_) { /* ignore — will fall back to local localStorage */ }
-      }
-      // Wait for remote data.json fetch to complete so synced users are available
+      // Wait for remote cloud state fetch to complete so synced users are available
       if (window.ppDataReady) await window.ppDataReady;
       const result = doLogin(u, p);
       if (result.ok) {
@@ -4599,7 +4578,7 @@ const FF_4G       = ['M3', 'M4'];               // 4 groups, top 2 each = 8
 const FF_2G       = ['M5'];                     // 2 groups, top 2 each = 4 (no QF)
 
 function ffLoad()       { return ppLoad('fasefinal') || {}; }
-function ffSave(data)   { ppSave('fasefinal', data); if (typeof GHSync !== 'undefined') GHSync.markDirty(); }
+function ffSave(data)   { ppSave('fasefinal', data); if (typeof _autoSync === 'function') _autoSync(); }
 
 function ffStandings(gJogos) {
   const pairs = new Set();
@@ -5873,19 +5852,6 @@ async function renderInscricoes() {
     try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); } catch(e) { return []; }
   }
   function saveEntries(entries) { localStorage.setItem(STORAGE_KEY, JSON.stringify(entries)); }
-  function mergeById(remoteArr, localArr) {
-    const out = [];
-    const seen = new Set();
-    (remoteArr || []).forEach(e => {
-      if (!e || !e.id || seen.has(e.id)) return;
-      seen.add(e.id); out.push(e);
-    });
-    (localArr || []).forEach(e => {
-      if (!e || !e.id || seen.has(e.id)) return;
-      seen.add(e.id); out.push(e);
-    });
-    return out;
-  }
   function download(filename, content, mime) {
     const blob = new Blob([content], { type: mime });
     const url  = URL.createObjectURL(blob);
@@ -5894,16 +5860,11 @@ async function renderInscricoes() {
     setTimeout(() => URL.revokeObjectURL(url), 1000);
   }
 
-  let entries = loadEntries();
-  if (window.ppInscricoesCloud && window.ppInscricoesCloud.isEnabled()) {
-    try {
-      const remote = await window.ppInscricoesCloud.fetchAll();
-      entries = mergeById(remote, entries);
-      saveEntries(entries);
-    } catch (e) {
-      toast('Não foi possível sincronizar inscrições cloud. A mostrar dados locais.', 'warning');
-    }
+  if (window.ppCloudState && window.ppCloudState.enabled) {
+    try { await window.ppCloudState.pullToLocal(); }
+    catch (_) { toast('Não foi possível sincronizar com cloud. A mostrar dados locais.', 'warning'); }
   }
+  let entries = loadEntries();
   const total   = entries.length;
   const duplas  = entries.filter(e => e.tipo === 'dupla').length;
   const indiv   = entries.filter(e => e.tipo === 'jogador').length;
@@ -6010,10 +5971,8 @@ async function renderInscricoes() {
   });
   document.getElementById('insAdminClear')?.addEventListener('click', async () => {
     if (!confirm('Apagar todas as inscrições? Esta acção não pode ser desfeita.')) return;
-    if (window.ppInscricoesCloud && window.ppInscricoesCloud.isEnabled()) {
-      await Promise.allSettled(entries.map(e => window.ppInscricoesCloud.remove(e.id)));
-    }
     saveEntries([]);
+    if (window.ppCloudState && window.ppCloudState.enabled) await window.ppCloudState.pushFromLocal();
     renderInscricoes();
     toast('Inscrições apagadas.', 'success');
   });
@@ -6022,11 +5981,9 @@ async function renderInscricoes() {
 window.insAdminDelete = async function(id) {
   if (!confirm('Remover esta inscrição?')) return;
   try {
-    if (window.ppInscricoesCloud && window.ppInscricoesCloud.isEnabled()) {
-      await window.ppInscricoesCloud.remove(id);
-    }
     const entries = JSON.parse(localStorage.getItem('pp_inscricoes') || '[]').filter(e => e.id !== id);
     localStorage.setItem('pp_inscricoes', JSON.stringify(entries));
+    if (window.ppCloudState && window.ppCloudState.enabled) await window.ppCloudState.pushFromLocal();
     renderInscricoes();
     toast('Inscrição removida.', 'success');
   } catch(e) { toast('Erro ao remover.', 'error'); }
@@ -8124,37 +8081,17 @@ window.horarioConfirmarMoverDia = function() {
 };
 
 // ============================================
-//  GITHUB SYNC — UI
+//  CLOUD SYNC — UI
 // ============================================
-
-/** Open GitHub config modal, pre-filling saved values */
 function ghShowConfig() {
-  const c = GHSync.getCfg();
-  document.getElementById('ghOwner').value  = c.owner  || '';
-  document.getElementById('ghRepo').value   = c.repo   || '';
-  document.getElementById('ghBranch').value = c.branch || 'main';
-  document.getElementById('ghToken').value  = c.token  ? '••••••••' : '';
-  openModal('modalGHSync');
+  toast('A sincronização está centralizada na base de dados (Supabase).', 'success');
 }
-
-/** Save config and run a test push */
 async function ghSaveConfig() {
-  const owner  = document.getElementById('ghOwner').value.trim();
-  const repo   = document.getElementById('ghRepo').value.trim();
-  const branch = document.getElementById('ghBranch').value.trim() || 'main';
-  const rawToken = document.getElementById('ghToken').value.trim();
-  if (!owner || !repo || !rawToken) { toast('Preencha todos os campos obrigatórios.', 'error'); return; }
-  // Keep existing token if user left the masked placeholder
-  const existing = GHSync.getCfg().token || '';
-  const token = (rawToken === '••••••••') ? existing : rawToken;
-  GHSync.setCfg({ owner, repo, branch, token });
-  closeModal('modalGHSync');
   await ghSyncAll();
 }
-
-/** Push all data to GitHub and update button state */
+/** Push all data to cloud and update button state */
 async function ghSyncAll() {
-  if (!GHSync.isConfigured()) { ghShowConfig(); return; }
+  if (!window.ppCloudState || !window.ppCloudState.enabled) return;
   const btn   = document.getElementById('ghSyncBtn');
   const icon  = document.getElementById('ghSyncIcon');
   const label = document.getElementById('ghSyncLabel');
@@ -8164,14 +8101,14 @@ async function ghSyncAll() {
   btn.disabled = true;
   icon.className  = 'ph ph-circle-notch gh-spin';
   label.textContent = 'A sincronizar…';
-  dot.style.display = 'none';
+  if (dot) dot.style.display = 'none';
 
   try {
-    await GHSync.push(GHSync.getAllData());
+    await window.ppCloudState.pushFromLocal();
     icon.className  = 'ph ph-check-circle';
     label.textContent = 'Sincronizado';
     btn.disabled = false;
-    toast('Dados sincronizados! O site público actualiza em ~30 segundos.', 'success');
+    toast('Dados sincronizados com a base de dados.', 'success');
     setTimeout(() => {
       icon.className  = 'ph ph-cloud-arrow-up';
       label.textContent = 'Sync';
@@ -8180,7 +8117,7 @@ async function ghSyncAll() {
     icon.className  = 'ph ph-warning-circle';
     label.textContent = 'Erro';
     btn.disabled = false;
-    dot.style.display = 'block';
+    if (dot) dot.style.display = 'block';
     toast('Erro ao sincronizar: ' + err.message, 'error');
     setTimeout(() => {
       icon.className  = 'ph ph-cloud-arrow-up';
@@ -8188,13 +8125,3 @@ async function ghSyncAll() {
     }, 4000);
   }
 }
-
-/** Wire dirty indicator to ghsync events */
-document.addEventListener('ghsync:dirty', () => {
-  const dot = document.getElementById('ghDirtyDot');
-  if (dot) dot.style.display = 'block';
-});
-document.addEventListener('ghsync:clean', () => {
-  const dot = document.getElementById('ghDirtyDot');
-  if (dot) dot.style.display = 'none';
-});

@@ -1,5 +1,5 @@
 // Play Padel · Service Worker
-const CACHE = 'playpadel-v8';
+const CACHE = 'playpadel-v9';
 const PRECACHE = [
   '/playpadelcoop/',
   '/playpadelcoop/index.html',
@@ -59,8 +59,7 @@ self.addEventListener('fetch', e => {
     path === '/playpadelcoop/admin.html' ||
     path.endsWith('/js/data.js') ||
     path.endsWith('/js/admin.js') ||
-    path.endsWith('/js/auth.js') ||
-    path.endsWith('/js/github-sync.js');
+    path.endsWith('/js/auth.js');
   if (isAdminRequest) {
     e.respondWith(fetch(e.request));
     return;
