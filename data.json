@@ -187,7 +187,7 @@
     "tornTelOrg": "258844471740",
     "insSyncEnabled": true,
     "insSyncUrl": "https://jjtsqsumczbhfgbgjxsd.supabase.co",
-    "insSyncAnonKey": "https://jjtsqsumczbhfgbgjxsd.supabase.co"
+    "insSyncAnonKey": "sb_publishable_LQ03yWZ4f-Mo0BYXWuinVw_kpWqbmIy"
   },
   "users": [
     {
@@ -10277,5 +10277,5 @@
       "ts": "2026-06-04T20:14:42.728Z"
     }
   ],
-  "_updated": "2026-08-04T10:33:20.710Z"
+  "_updated": "2026-08-04T10:33:43.255Z"
 }
