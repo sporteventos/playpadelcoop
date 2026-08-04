@@ -95,6 +95,21 @@ function ppFormatDate(d) {
   if (typeof window === 'undefined') return;
   if (window.location.protocol === 'file:') return; // skip when opened locally
   var KEYS = ['campos', 'categorias', 'grupos', 'jogadores', 'duplas', 'jogos', 'fasefinal', 'telefones', 'inscricoes', 'patrocinadores', 'parceiros', 'users', 'config'];
+  function mergeById(remoteArr, localArr) {
+    var out = [];
+    var seen = new Set();
+    (remoteArr || []).forEach(function (x) {
+      if (!x || !x.id || seen.has(x.id)) return;
+      seen.add(x.id);
+      out.push(x);
+    });
+    (localArr || []).forEach(function (x) {
+      if (!x || !x.id || seen.has(x.id)) return;
+      seen.add(x.id);
+      out.push(x);
+    });
+    return out;
+  }
 
   // On admin: always fetch, but only overwrite local data if remote _updated is newer.
   // Exception: 'users' is always updated from remote to ensure synced users are available on login.
@@ -137,7 +152,15 @@ function ppFormatDate(d) {
         var stored = localStorage.getItem('pp__updated') || '0';
         var remote = d._updated || '0';
         if (remote > stored) {
-          KEYS.forEach(function (k) { if (k !== 'users' && d[k] !== undefined) ppSave(k, d[k]); });
+          KEYS.forEach(function (k) {
+            if (k === 'users' || d[k] === undefined) return;
+            if (k === 'inscricoes') {
+              var localIns = JSON.parse(localStorage.getItem('pp_inscricoes') || '[]');
+              ppSave('inscricoes', mergeById(d[k], localIns));
+              return;
+            }
+            ppSave(k, d[k]);
+          });
           localStorage.setItem('pp__updated', remote);
           window.dispatchEvent(new CustomEvent('pp:datasynced', { detail: d }));
         }
@@ -157,6 +180,9 @@ function ppFormatDate(d) {
           // This ensures visibility toggles set in the admin panel survive the remote sync.
           var localCfg = JSON.parse(localStorage.getItem('pp_config') || 'null') || {};
           ppSave('config', Object.assign({}, d[k], localCfg));
+        } else if (k === 'inscricoes') {
+          var localIns = JSON.parse(localStorage.getItem('pp_inscricoes') || '[]');
+          ppSave('inscricoes', mergeById(d[k], localIns));
         } else {
           ppSave(k, d[k]);
         }
