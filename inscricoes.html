@@ -114,10 +114,6 @@
             <label class="form-label" for="email">Email</label>
             <input class="form-input" id="email" name="email" type="email" placeholder="opcional"/>
           </div>
-          <div class="form-field">
-            <label class="form-label" for="clube">Clube / Associação</label>
-            <input class="form-input" id="clube" name="clube" type="text" placeholder="opcional"/>
-          </div>
         </div>
 
         <div class="ins-section-title" style="margin-top:1.25rem"><i class="ph ph-medal"></i> Categoria</div>
@@ -279,7 +275,6 @@ document.addEventListener('DOMContentLoaded', function () {
       nome2: (form.parceiro ? form.parceiro.value.trim() : ''),
       telefone: telefone,
       email: form.email.value.trim(),
-      clube: form.clube.value.trim(),
       observacoes: form.observacoes.value.trim(),
       estado: 'nova'
     };
@@ -301,7 +296,6 @@ document.addEventListener('DOMContentLoaded', function () {
       + '*Género:* ' + generoStr + '\n'
       + '*Categoria:* ' + entry.categoria + '\n'
       + (entry.nome2 ? '*Parceiro(a):* ' + entry.nome2 + '\n' : '')
-      + (entry.clube ? '*Clube:* ' + entry.clube + '\n' : '')
       + (entry.observacoes ? '*Obs.:* ' + entry.observacoes + '\n' : '')
       + '\n_Inscrição submetida em ' + new Date().toLocaleString('pt-PT') + '_';
 
