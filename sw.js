@@ -57,6 +57,7 @@ self.addEventListener('fetch', e => {
   const isAdminRequest =
     path === '/playpadelcoop/admin' ||
     path === '/playpadelcoop/admin.html' ||
+    path.endsWith('/js/data.js') ||
     path.endsWith('/js/admin.js') ||
     path.endsWith('/js/auth.js') ||
     path.endsWith('/js/github-sync.js');

@@ -68,6 +68,10 @@ const DEFAULTS = {
     bannerVisible: false,
     bannerMsg: '',
     tornTelOrg: '',
+    insSyncEnabled: false,
+    insSyncUrl: '',
+    insSyncAnonKey: '',
+    insSyncTable: 'inscricoes',
     sbRefreshMins: '15',
     sbRecentCount: '16',
   },
@@ -79,6 +83,56 @@ function ppLoad(key) {
 }
 function ppSave(key, data) { localStorage.setItem('pp_' + key, JSON.stringify(data)); }
 function ppGet(key)  { return ppLoad(key) ?? JSON.parse(JSON.stringify(DEFAULTS[key] ?? [])); }
+
+// ---- Cloud sync helpers (Supabase REST for inscrições) ----
+function ppInsSyncCfg() {
+  var cfg = ppGet('config') || {};
+  return {
+    enabled: cfg.insSyncEnabled === true,
+    url: String(cfg.insSyncUrl || '').trim().replace(/\/+$/, ''),
+    key: String(cfg.insSyncAnonKey || '').trim(),
+    table: String(cfg.insSyncTable || 'inscricoes').trim() || 'inscricoes',
+  };
+}
+function ppInsSyncHeaders(key, prefer) {
+  var h = { 'apikey': key, 'Authorization': 'Bearer ' + key, 'Content-Type': 'application/json' };
+  if (prefer) h['Prefer'] = prefer;
+  return h;
+}
+window.ppInscricoesCloud = {
+  cfg: ppInsSyncCfg,
+  isEnabled: function() {
+    var c = ppInsSyncCfg();
+    return c.enabled && !!c.url && !!c.key && !!c.table;
+  },
+  fetchAll: async function() {
+    var c = ppInsSyncCfg();
+    if (!(c.enabled && c.url && c.key)) return [];
+    var endpoint = c.url + '/rest/v1/' + encodeURIComponent(c.table) + '?select=*&order=criadoEm.desc';
+    var r = await fetch(endpoint, { headers: ppInsSyncHeaders(c.key) });
+    if (!r.ok) throw new Error('Cloud fetch failed: ' + r.status);
+    var data = await r.json();
+    return Array.isArray(data) ? data : [];
+  },
+  upsert: async function(entry) {
+    var c = ppInsSyncCfg();
+    if (!(c.enabled && c.url && c.key)) return;
+    var endpoint = c.url + '/rest/v1/' + encodeURIComponent(c.table) + '?on_conflict=id';
+    var r = await fetch(endpoint, {
+      method: 'POST',
+      headers: ppInsSyncHeaders(c.key, 'resolution=merge-duplicates,return=minimal'),
+      body: JSON.stringify([entry]),
+    });
+    if (!r.ok) throw new Error('Cloud upsert failed: ' + r.status);
+  },
+  remove: async function(id) {
+    var c = ppInsSyncCfg();
+    if (!(c.enabled && c.url && c.key)) return;
+    var endpoint = c.url + '/rest/v1/' + encodeURIComponent(c.table) + '?id=eq.' + encodeURIComponent(id);
+    var r = await fetch(endpoint, { method: 'DELETE', headers: ppInsSyncHeaders(c.key, 'return=minimal') });
+    if (!r.ok) throw new Error('Cloud delete failed: ' + r.status);
+  },
+};
 
 // ---- Utilitários de data ----
 function ppFormatDate(d) {

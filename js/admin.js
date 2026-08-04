@@ -2528,6 +2528,12 @@ function renderConfigPanel() {
     ${fieldSelect('sbRefreshMins', 'Auto-refresh (minutos)', [['5','5 min'],['10','10 min'],['15','15 min'],['30','30 min']], '15')}
     ${fieldSelect('sbRecentCount', 'Últimos resultados a mostrar', [['8','8'],['12','12'],['16','16'],['24','24']], '16')}
 
+    ${section('Sincronização Automática de Inscrições (Supabase)')}
+    ${fieldToggle('insSyncEnabled',    'Activar sincronização cloud', 'ph-cloud', false)}
+    ${fieldText('insSyncUrl',          'Project URL',                 'ex: https://xxxxx.supabase.co', '')}
+    ${fieldText('insSyncAnonKey',      'Anon key',                    'eyJhbGciOiJIUzI1NiIs...', '')}
+    ${fieldText('insSyncTable',        'Tabela',                      'inscricoes', 'inscricoes')}
+
     ${section('Aviso Global no Site')}
     <div style="display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:.4rem 0;border-bottom:1px solid rgba(255,255,255,.04)">
       <span style="font-size:.83rem;color:var(--branco)"><i class="ph ph-megaphone" style="color:var(--cinza-texto)"></i> Mostrar banner de aviso</span>
@@ -5857,15 +5863,29 @@ window._logsClearFilters = function() {
 // ============================================
 //  INSCRIÇÕES VIEW
 // ============================================
-function renderInscricoes() {
+async function renderInscricoes() {
   const el = document.getElementById('listInscricoes');
   if (!el) return;
+  el.innerHTML = `<div class="card" style="text-align:center;padding:2rem;color:var(--cinza-texto)">A sincronizar inscrições...</div>`;
 
   const STORAGE_KEY = 'pp_inscricoes';
   function loadEntries() {
     try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); } catch(e) { return []; }
   }
   function saveEntries(entries) { localStorage.setItem(STORAGE_KEY, JSON.stringify(entries)); }
+  function mergeById(remoteArr, localArr) {
+    const out = [];
+    const seen = new Set();
+    (remoteArr || []).forEach(e => {
+      if (!e || !e.id || seen.has(e.id)) return;
+      seen.add(e.id); out.push(e);
+    });
+    (localArr || []).forEach(e => {
+      if (!e || !e.id || seen.has(e.id)) return;
+      seen.add(e.id); out.push(e);
+    });
+    return out;
+  }
   function download(filename, content, mime) {
     const blob = new Blob([content], { type: mime });
     const url  = URL.createObjectURL(blob);
@@ -5874,7 +5894,16 @@ function renderInscricoes() {
     setTimeout(() => URL.revokeObjectURL(url), 1000);
   }
 
-  const entries = loadEntries();
+  let entries = loadEntries();
+  if (window.ppInscricoesCloud && window.ppInscricoesCloud.isEnabled()) {
+    try {
+      const remote = await window.ppInscricoesCloud.fetchAll();
+      entries = mergeById(remote, entries);
+      saveEntries(entries);
+    } catch (e) {
+      toast('Não foi possível sincronizar inscrições cloud. A mostrar dados locais.', 'warning');
+    }
+  }
   const total   = entries.length;
   const duplas  = entries.filter(e => e.tipo === 'dupla').length;
   const indiv   = entries.filter(e => e.tipo === 'jogador').length;
@@ -5970,26 +5999,32 @@ function renderInscricoes() {
   `;
 
   document.getElementById('insAdminExportJson')?.addEventListener('click', () => {
-    download('inscricoes-reentre.json', JSON.stringify(loadEntries(), null, 2), 'application/json');
+    download('inscricoes-reentre.json', JSON.stringify(entries, null, 2), 'application/json');
   });
   document.getElementById('insAdminExportCsv')?.addEventListener('click', () => {
     const header = ['id','criadoEm','tipo','genero','categoria','nome1','nome2','telefone','email','clube','observacoes','estado'];
-    const rows = [header.join(',')].concat(loadEntries().map(e =>
+    const rows = [header.join(',')].concat(entries.map(e =>
       header.map(k => '"' + String(e[k] || '').replace(/"/g, '""') + '"').join(',')
     ));
     download('inscricoes-reentre.csv', rows.join('\n'), 'text/csv;charset=utf-8');
   });
-  document.getElementById('insAdminClear')?.addEventListener('click', () => {
+  document.getElementById('insAdminClear')?.addEventListener('click', async () => {
     if (!confirm('Apagar todas as inscrições? Esta acção não pode ser desfeita.')) return;
+    if (window.ppInscricoesCloud && window.ppInscricoesCloud.isEnabled()) {
+      await Promise.allSettled(entries.map(e => window.ppInscricoesCloud.remove(e.id)));
+    }
     saveEntries([]);
     renderInscricoes();
     toast('Inscrições apagadas.', 'success');
   });
 }
 
-window.insAdminDelete = function(id) {
+window.insAdminDelete = async function(id) {
   if (!confirm('Remover esta inscrição?')) return;
   try {
+    if (window.ppInscricoesCloud && window.ppInscricoesCloud.isEnabled()) {
+      await window.ppInscricoesCloud.remove(id);
+    }
     const entries = JSON.parse(localStorage.getItem('pp_inscricoes') || '[]').filter(e => e.id !== id);
     localStorage.setItem('pp_inscricoes', JSON.stringify(entries));
     renderInscricoes();
