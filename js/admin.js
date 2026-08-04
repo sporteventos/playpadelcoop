@@ -5984,7 +5984,7 @@ async function renderInscricoes() {
                       ${e.email    ? `<div><i class="ph ph-envelope"></i> ${escHtml(e.email)}</div>` : ''}
                     </td>
                     <td style="padding:.65rem .9rem;color:var(--cinza-texto);font-size:.78rem;white-space:nowrap">
-                      ${new Date(e.criadoEm).toLocaleDateString('pt-PT')}
+                      ${new Date(e.criadoem || e.criadoEm).toLocaleDateString('pt-PT')}
                     </td>
                     <td style="padding:.65rem .9rem;text-align:center">
                       <button class="btn-icon" title="Remover" onclick="insAdminDelete('${escHtml(e.id)}')"><i class="ph ph-trash" style="color:#FF4A4A"></i></button>
@@ -6002,7 +6002,7 @@ async function renderInscricoes() {
     download('inscricoes-reentre.json', JSON.stringify(entries, null, 2), 'application/json');
   });
   document.getElementById('insAdminExportCsv')?.addEventListener('click', () => {
-    const header = ['id','criadoEm','tipo','genero','categoria','nome1','nome2','telefone','email','clube','observacoes','estado'];
+    const header = ['id','criadoem','tipo','genero','categoria','nome1','nome2','telefone','email','clube','observacoes','estado'];
     const rows = [header.join(',')].concat(entries.map(e =>
       header.map(k => '"' + String(e[k] || '').replace(/"/g, '""') + '"').join(',')
     ));

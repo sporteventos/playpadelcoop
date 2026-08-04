@@ -108,7 +108,7 @@ window.ppInscricoesCloud = {
   fetchAll: async function() {
     var c = ppInsSyncCfg();
     if (!(c.enabled && c.url && c.key)) return [];
-    var endpoint = c.url + '/rest/v1/' + encodeURIComponent(c.table) + '?select=*&order=criadoEm.desc';
+    var endpoint = c.url + '/rest/v1/' + encodeURIComponent(c.table) + '?select=*&order=criadoem.desc';
     var r = await fetch(endpoint, { headers: ppInsSyncHeaders(c.key) });
     if (!r.ok) throw new Error('Cloud fetch failed: ' + r.status);
     var data = await r.json();
@@ -118,10 +118,12 @@ window.ppInscricoesCloud = {
     var c = ppInsSyncCfg();
     if (!(c.enabled && c.url && c.key)) return;
     var endpoint = c.url + '/rest/v1/' + encodeURIComponent(c.table) + '?on_conflict=id';
+    var payload = Object.assign({}, entry, { criadoem: entry.criadoem || entry.criadoEm || null });
+    if (Object.prototype.hasOwnProperty.call(payload, 'criadoEm')) delete payload.criadoEm;
     var r = await fetch(endpoint, {
       method: 'POST',
       headers: ppInsSyncHeaders(c.key, 'resolution=merge-duplicates,return=minimal'),
-      body: JSON.stringify([entry]),
+      body: JSON.stringify([payload]),
     });
     if (!r.ok) throw new Error('Cloud upsert failed: ' + r.status);
   },
