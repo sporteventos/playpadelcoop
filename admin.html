@@ -111,6 +111,10 @@
           <i class="ph ph-squares-four sl-icon"></i>
           Construtor de Grupos
         </button>
+        <button id="btnSidebarNivelamento" class="sidebar-link" data-view="nivelamento">
+          <i class="ph ph-sliders-horizontal sl-icon"></i>
+          Nivelamento de Duplas
+        </button>
         <button id="btnSidebarConstrutorJogos" class="sidebar-link" data-view="construtorJogos">
           <i class="ph ph-shuffle sl-icon"></i>
           Construtor de Jogos
@@ -825,6 +829,16 @@
         <div id="construtorGruposContent"></div>
       </section>
 
+      <section class="view" id="view-nivelamento">
+        <div class="page-header" style="margin-bottom:1.25rem">
+          <div>
+            <h1 class="page-title">Nivelamento de Duplas</h1>
+            <p class="page-desc">Visão das duplas confirmadas por nível. Arraste uma dupla para outro nível para a reclassificar (antes de criar os grupos).</p>
+          </div>
+        </div>
+        <div id="nivelamentoContent"></div>
+      </section>
+
       <section class="view" id="view-construtorJogos">
         <div class="page-header" style="margin-bottom:1.25rem">
           <div>
@@ -1191,7 +1205,11 @@
         <select class="form-select" id="duplaJ2"></select>
       </div>
       <div class="form-group-modal">
-        <label class="form-label" for="duplaGrupo">Grupo</label>
+        <label class="form-label" for="duplaCat">Nível <span style="color:var(--vermelho)">*</span></label>
+        <select class="form-select" id="duplaCat"></select>
+      </div>
+      <div class="form-group-modal">
+        <label class="form-label" for="duplaGrupo">Grupo <span style="color:var(--cinza-texto);font-weight:400">(opcional)</span></label>
         <select class="form-select" id="duplaGrupo"></select>
       </div>
     </div>
@@ -1467,9 +1485,9 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="js/data.js?v=7"></script>
-<script src="js/auth.js?v=7"></script>
-<script src="js/admin.js?v=7"></script>
+<script src="js/data.js?v=10"></script>
+<script src="js/auth.js?v=10"></script>
+<script src="js/admin.js?v=10"></script>
 <script>
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('/playpadelcoop/sw.js', { updateViaCache: 'none' })

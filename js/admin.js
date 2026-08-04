@@ -88,6 +88,42 @@ function setTelefone(nome, tel) {
   if (tel) t[nome] = tel; else delete t[nome];
   setData('telefones', t);
 }
+// Cria (ou reutiliza) um jogador no store a partir de um nome; dedup por nome (case-insensitive)
+function ensureJogador(nome, tel, genero) {
+  nome = (nome || '').trim();
+  if (!nome || nome.toLowerCase() === 'a definir') return null;
+  const store = getData('jogadores') || [];
+  let j = store.find(x => (x.nome || '').trim().toLowerCase() === nome.toLowerCase());
+  let dirty = false;
+  if (!j) {
+    j = { id: _nextEntityId('jogadores', 'j'), nome, tel: tel || '', genero: genero || '' };
+    store.push(j);
+    dirty = true;
+  } else {
+    if (tel && !j.tel) { j.tel = tel; dirty = true; }
+    if (genero && !j.genero) { j.genero = genero; dirty = true; }
+  }
+  if (dirty) setData('jogadores', store);
+  if (tel) setTelefone(nome, tel);
+  return j;
+}
+// Cria (ou reutiliza) a dupla correspondente a dois jogadores confirmados; dedup por par (não ordenado)
+function ensureDupla(j1id, j2id, cat) {
+  if (!j1id || !j2id) return null;
+  const store = getData('duplas') || [];
+  let d = store.find(x =>
+    (x.j1 === j1id && x.j2 === j2id) || (x.j1 === j2id && x.j2 === j1id));
+  let dirty = false;
+  if (!d) {
+    d = { id: _nextEntityId('duplas', 'd'), grupo: null, cat: cat || null, j1: j1id, j2: j2id };
+    store.push(d);
+    dirty = true;
+  } else if (cat && !d.cat) {
+    d.cat = cat; dirty = true;
+  }
+  if (dirty) setData('duplas', store);
+  return d;
+}
 function waLink(phone, text) {
   const clean = phone.replace(/\D/g, '');
   return 'https://wa.me/' + clean + '?text=' + encodeURIComponent(text);
@@ -2191,6 +2227,7 @@ function navigate(view) {
     estatisticas:  ['Estatísticas', 'Resumo do Torneio'],
     importar:      ['Importar Resultados', 'Import em Lote'],
     horario:       ['Construtor de Horário', 'Vista de Agenda'],
+    nivelamento:   ['Nivelamento de Duplas', 'Níveis / Categorias'],
   };
   const [title, tag] = titles[view] || [view, ''];
   document.getElementById('breadcrumbTitle').textContent = title;
@@ -2229,6 +2266,9 @@ function renderView(view) {
     case 'construtorGrupos':
       if (!Auth.isAdmin()) { toast('Acesso restrito a administradores.', 'error'); return; }
       renderConstrutorGrupos(); break;
+    case 'nivelamento':
+      if (!Auth.isAdmin()) { toast('Acesso restrito a administradores.', 'error'); return; }
+      renderNivelamento(); break;
     case 'construtorJogos':
       if (!Auth.isAdmin()) { toast('Acesso restrito a administradores.', 'error'); return; }
       renderConstrutorJogos(); break;
@@ -2799,8 +2839,8 @@ function renderCategorias() {
       <td><span class="badge ${c.tipo==='F' ? 'badge-amarelo':'badge-azul'}">${c.tipo === 'F' ? 'Feminino':'Masculino'}</span></td>
       <td>${nGrupos} grupos</td>
       <td>
-        <div style="display:flex;gap:0.4rem">
-          ${grupos.filter(g=>g.cat===c.id).map(g=>`<span class="badge badge-cinza">${g.letra}</span>`).join('')}
+        <div style="display:flex;gap:0.35rem;flex-wrap:wrap;align-items:center">
+          ${grupos.filter(g=>g.cat===c.id).map(g=>`<span class="badge badge-cinza" style="display:inline-flex;align-items:center;gap:.3rem">${g.letra}<button class="badge-x" onclick="removeGrupo('${g.id}')" title="Remover grupo ${g.id}" style="background:none;border:none;color:var(--vermelho);cursor:pointer;padding:0;font-size:.85rem;line-height:1;opacity:.7">&times;</button></span>`).join('')}
           <button class="btn-icon btn-edit" onclick="addGrupo('${c.id}')" title="Adicionar grupo"><i class="ph ph-plus"></i></button>
         </div>
       </td>
@@ -2823,6 +2863,30 @@ window.addGrupo = function(catId) {
   setData('grupos', grupos);
   renderCategorias();
   toast(`Grupo ${id} adicionado.`);
+};
+
+window.removeGrupo = function(grupoId) {
+  const duplas = getData('duplas') || [];
+  const nDuplas = duplas.filter(d => d.grupo === grupoId).length;
+  const jogos = getData('jogos') || [];
+  const nJogos = jogos.filter(j => j.grupo === grupoId).length;
+  let aviso = `Remover o grupo ${grupoId}?`;
+  if (nDuplas) aviso += `\n\n${nDuplas} dupla(s) ficam sem grupo (mantêm o nível).`;
+  if (nJogos) aviso += `\n⚠ Existem ${nJogos} jogo(s) neste grupo que também serão removidos.`;
+  if (!confirm(aviso)) return;
+  // Remover o grupo
+  setData('grupos', (getData('grupos') || []).filter(g => g.id !== grupoId));
+  // Desatribuir duplas (mantêm cat)
+  if (nDuplas) {
+    setData('duplas', duplas.map(d => d.grupo === grupoId ? { ...d, grupo: null } : d));
+  }
+  // Remover jogos do grupo
+  if (nJogos) {
+    setData('jogos', jogos.filter(j => j.grupo !== grupoId));
+  }
+  Auth.log('REMOVE_GRUPO', 'grupos', `${grupoId}${nDuplas ? ` (${nDuplas} duplas libertadas)` : ''}${nJogos ? ` (${nJogos} jogos removidos)` : ''}`);
+  renderCategorias();
+  toast(`Grupo ${grupoId} removido.`);
 };
 
 window.deleteGruposAll = function(catId) {
@@ -2877,7 +2941,7 @@ function renderJogadores(filter = '') {
     const nome = jog.nome;
     let grupos;
     if (jog.id && duplas.length > 0) {
-      grupos = [...new Set(duplas.filter(d => d.j1 === jog.id || d.j2 === jog.id).map(d => d.grupo))];
+      grupos = [...new Set(duplas.filter(d => d.j1 === jog.id || d.j2 === jog.id).map(d => d.grupo).filter(Boolean))];
     } else {
       grupos = [...new Set(jogos.filter(j => {
         const p1 = j.eq1.split('&').map(n => n.trim());
@@ -3176,7 +3240,7 @@ function renderDuplas(filter = '') {
     lista = lista.filter(d =>
       d._n1.toLowerCase().includes(q) ||
       d._n2.toLowerCase().includes(q) ||
-      d.grupo.toLowerCase().includes(q)
+      (d.grupo || d.cat || '').toLowerCase().includes(q)
     );
   }
 
@@ -3188,7 +3252,7 @@ function renderDuplas(filter = '') {
       switch (s.col) {
         case 'j1':    return dir * a._n1.localeCompare(b._n1);
         case 'j2':    return dir * a._n2.localeCompare(b._n2);
-        case 'grupo': return dir * a.grupo.localeCompare(b.grupo);
+        case 'grupo': return dir * (a.grupo || '').localeCompare(b.grupo || '');
         case 'jogos': return dir * (a._nJogos - b._nJogos);
       }
       return 0;
@@ -3211,12 +3275,17 @@ function renderDuplas(filter = '') {
     const n1     = d._n1;
     const n2     = d._n2;
     const nJogos = d._nJogos;
-    const cat = d.grupo.split('-')[0];
+    const cat = d.grupo ? d.grupo.split('-')[0] : (d.cat || '');
+    const grupoCell = d.grupo
+      ? `<span class="cat-pill cat-${cat}">${escHtml(d.grupo)}</span>`
+      : (d.cat
+          ? `<span class="cat-pill cat-${cat}" title="Nível inscrito — sem grupo atribuído">${escHtml(d.cat)} · sem grupo</span>`
+          : `<span class="td-muted">— sem grupo</span>`);
     return '<tr>' +
       `<td style="color:var(--cinza-texto);font-size:.75rem">${i+1}</td>` +
       `<td><strong>${escHtml(n1)}</strong></td>` +
       `<td><strong>${escHtml(n2)}</strong></td>` +
-      `<td><span class="cat-pill cat-${cat}">${escHtml(d.grupo)}</span></td>` +
+      `<td>${grupoCell}</td>` +
       `<td>${nJogos} <span class="td-muted">jogo${nJogos!==1?'s':''}</span></td>` +
       `<td><div style="display:flex;gap:.15rem">` +
         `<button class="btn-icon" onclick="editarDupla('${d.id}')" title="Editar"><i class="ph ph-pencil"></i></button>` +
@@ -3234,8 +3303,12 @@ function _populateDuplaModal() {
     jogadores.map(j => `<option value="${j.id}">${escHtml(j.nome)}</option>`).join('');
   document.getElementById('duplaJ1').innerHTML = opts;
   document.getElementById('duplaJ2').innerHTML = opts;
+  const cats = (getData('categorias') || []).slice().sort((a, b) =>
+    (a.tipo || '').localeCompare(b.tipo || '') || (a.nivel || 0) - (b.nivel || 0) || a.id.localeCompare(b.id));
+  document.getElementById('duplaCat').innerHTML = '<option value="">— Seleccionar —</option>' +
+    cats.map(c => `<option value="${c.id}">${c.id} · ${escHtml(c.nome)}</option>`).join('');
   const grupos = getData('grupos') || [];
-  document.getElementById('duplaGrupo').innerHTML = '<option value="">— Seleccionar —</option>' +
+  document.getElementById('duplaGrupo').innerHTML = '<option value="">— Sem grupo —</option>' +
     grupos.map(g => `<option value="${g.id}">${g.id}</option>`).join('');
 }
 
@@ -3254,6 +3327,7 @@ window.editarDupla = function(id) {
   _populateDuplaModal();
   document.getElementById('duplaJ1').value    = dupla.j1 || '';
   document.getElementById('duplaJ2').value    = dupla.j2 || '';
+  document.getElementById('duplaCat').value   = dupla.cat || (dupla.grupo ? dupla.grupo.split('-')[0] : '');
   document.getElementById('duplaGrupo').value = dupla.grupo || '';
   openModal('modalDupla');
 };
@@ -3261,9 +3335,11 @@ window.editarDupla = function(id) {
 function salvarDupla() {
   const j1    = document.getElementById('duplaJ1').value;
   const j2    = document.getElementById('duplaJ2').value;
-  const grupo = document.getElementById('duplaGrupo').value;
-  if (!j1 || !j2 || !grupo) return toast('Preencha todos os campos.', 'error');
+  const cat   = document.getElementById('duplaCat').value;
+  const grupo = document.getElementById('duplaGrupo').value || null;
+  if (!j1 || !j2 || !cat) return toast('Preencha jogadores e nível.', 'error');
   if (j1 === j2) return toast('Os dois jogadores têm de ser diferentes.', 'error');
+  if (grupo && !grupo.startsWith(cat + '-')) return toast('O grupo escolhido não pertence ao nível seleccionado.', 'error');
 
   const duplas   = getData('duplas') || [];
   const jogs     = getData('jogadores') || [];
@@ -3278,28 +3354,28 @@ function salvarDupla() {
       const oldJ1n = jogs.find(j => j.id === old.j1)?.nome || old.j1 || '';
       const oldJ2n = jogs.find(j => j.id === old.j2)?.nome || old.j2 || '';
       const oldEq  = `${oldJ1n} & ${oldJ2n}`;
-      duplas[idx] = { ...old, j1, j2, grupo };
-      if (oldEq !== newEqStr || old.grupo !== grupo) {
+      duplas[idx] = { ...old, j1, j2, cat, grupo };
+      if (old.grupo && (oldEq !== newEqStr || old.grupo !== grupo)) {
         const jogos = getData('jogos');
         jogos.forEach(j => {
           if (j.grupo === old.grupo) {
-            if (j.eq1 === oldEq) { j.eq1 = newEqStr; j.grupo = grupo; }
-            if (j.eq2 === oldEq) { j.eq2 = newEqStr; j.grupo = grupo; }
+            if (j.eq1 === oldEq) { j.eq1 = newEqStr; if (grupo) j.grupo = grupo; }
+            if (j.eq2 === oldEq) { j.eq2 = newEqStr; if (grupo) j.grupo = grupo; }
           }
         });
         setData('jogos', jogos);
       }
     }
     setData('duplas', duplas);
-    Auth.log('EDIT_DUPLA', 'duplas', `${newEqStr} → ${grupo}`);
+    Auth.log('EDIT_DUPLA', 'duplas', `${newEqStr} → ${cat}${grupo ? ' / ' + grupo : ''}`);
     toast('Dupla actualizada.', 'success');
   } else {
-    const exists = duplas.find(d => (d.j1===j1&&d.j2===j2&&d.grupo===grupo) || (d.j1===j2&&d.j2===j1&&d.grupo===grupo));
-    if (exists) return toast('Esta dupla já existe neste grupo.', 'error');
+    const exists = duplas.find(d => (d.j1===j1&&d.j2===j2) || (d.j1===j2&&d.j2===j1));
+    if (exists) return toast('Esta dupla já existe.', 'error');
     const newId = _nextEntityId('duplas', 'd');
-    duplas.push({ id: newId, j1, j2, grupo });
+    duplas.push({ id: newId, j1, j2, cat, grupo });
     setData('duplas', duplas);
-    Auth.log('CREATE_DUPLA', 'duplas', `${newEqStr} no grupo ${grupo}`);
+    Auth.log('CREATE_DUPLA', 'duplas', `${newEqStr} no nível ${cat}${grupo ? ' / grupo ' + grupo : ''}`);
     toast('Dupla criada.', 'success');
   }
   closeModal('modalDupla');
@@ -4555,6 +4631,7 @@ function initAdmin() {
     document.getElementById('btnLimparResultado')?.remove();
     document.getElementById('btnLimparTodosResultados')?.remove();
     document.getElementById('btnSidebarConstrutorGrupos')?.remove();
+    document.getElementById('btnSidebarNivelamento')?.remove();
     document.getElementById('btnSidebarConstrutorJogos')?.remove();
     document.getElementById('btnDashVerLogs')?.remove();
     document.getElementById('dangerToggleBtn')?.remove();
@@ -5882,8 +5959,10 @@ async function renderInscricoes() {
     } catch (_) {}
   }
   const total   = entries.length;
-  const duplas  = entries.filter(e => e.tipo === 'dupla').length;
+  const parIds  = new Set(entries.filter(e => e.parid).map(e => e.parid));
+  const duplas  = parIds.size + entries.filter(e => e.tipo === 'dupla' && !e.parid).length;
   const indiv   = entries.filter(e => e.tipo === 'jogador').length;
+  const confirmadas = entries.filter(e => e.estado === 'confirmada').length;
 
   const catMap  = {};
   (getData('categorias') || []).forEach(c => { catMap[c.id] = c.nome; });
@@ -5918,6 +5997,10 @@ async function renderInscricoes() {
           <div style="font-size:2rem;font-weight:800;color:var(--amarelo);line-height:1">${indiv}</div>
           <div style="font-size:.68rem;text-transform:uppercase;letter-spacing:.06em;color:var(--cinza-texto);margin-top:.2rem">Individuais</div>
         </div>
+        <div class="card" style="padding:.9rem 1rem;text-align:center">
+          <div style="font-size:2rem;font-weight:800;color:var(--verde);line-height:1">${confirmadas}</div>
+          <div style="font-size:.68rem;text-transform:uppercase;letter-spacing:.06em;color:var(--cinza-texto);margin-top:.2rem">Confirmadas</div>
+        </div>
         ${Object.entries(catCounts).map(([cat, n]) => `
         <div class="card" style="padding:.9rem 1rem;text-align:center">
           <div style="font-size:2rem;font-weight:800;color:var(--branco);line-height:1">${n}</div>
@@ -5936,6 +6019,7 @@ async function renderInscricoes() {
                   <th style="padding:.65rem .9rem;text-align:left;font-weight:700;text-transform:uppercase;letter-spacing:.05em;font-size:.68rem;color:var(--cinza-texto)">Categoria</th>
                   <th style="padding:.65rem .9rem;text-align:left;font-weight:700;text-transform:uppercase;letter-spacing:.05em;font-size:.68rem;color:var(--cinza-texto)">Contacto</th>
                   <th style="padding:.65rem .9rem;text-align:left;font-weight:700;text-transform:uppercase;letter-spacing:.05em;font-size:.68rem;color:var(--cinza-texto)">Data</th>
+                  <th style="padding:.65rem .9rem;text-align:center;font-weight:700;text-transform:uppercase;letter-spacing:.05em;font-size:.68rem;color:var(--cinza-texto)">Estado</th>
                   <th style="padding:.65rem .9rem;text-align:center;font-weight:700;text-transform:uppercase;letter-spacing:.05em;font-size:.68rem;color:var(--cinza-texto)">Acções</th>
                 </tr>
               </thead>
@@ -5945,7 +6029,13 @@ async function renderInscricoes() {
                     <td style="padding:.65rem .9rem">
                       <div style="font-weight:600;color:var(--branco)">${escHtml(e.nome1)}</div>
                       ${e.nome2 ? `<div style="font-size:.75rem;color:var(--cinza-texto)"><i class="ph ph-user"></i> ${escHtml(e.nome2)}</div>` : ''}
+                      ${e.parceiro ? (function(){
+                        const sib = entries.find(x => x.parid && x.parid === e.parid && x.id !== e.id);
+                        const ok = sib && sib.estado === 'confirmada';
+                        return `<div style="font-size:.73rem;color:var(--cinza-texto)"><i class="ph ph-handshake"></i> Par: ${escHtml(e.parceiro)} <span style="color:${ok?'var(--verde)':'var(--amarelo)'}">${ok?'✓ confirmado':'pendente'}</span></div>`;
+                      })() : ''}
                       ${e.clube ? `<div style="font-size:.72rem;color:#4A6058">${escHtml(e.clube)}</div>` : ''}
+                      ${e.observacoes ? `<div style="font-size:.72rem;color:#8AA396;margin-top:.25rem;max-width:280px"><i class="ph ph-note"></i> ${escHtml(e.observacoes)}</div>` : ''}
                     </td>
                     <td style="padding:.65rem .9rem">
                       <span style="font-size:.68rem;font-weight:700;text-transform:uppercase;padding:.15rem .45rem;border-radius:4px;background:${e.tipo==='dupla'?'rgba(0,195,123,.12)':'rgba(245,197,24,.12)'};color:${e.tipo==='dupla'?'var(--verde)':'var(--amarelo)'}">
@@ -5964,6 +6054,14 @@ async function renderInscricoes() {
                       ${new Date(e.criadoem || e.criadoEm).toLocaleDateString('pt-PT')}
                     </td>
                     <td style="padding:.65rem .9rem;text-align:center">
+                      <span style="font-size:.66rem;font-weight:700;text-transform:uppercase;padding:.2rem .55rem;border-radius:999px;background:${e.estado==='confirmada'?'rgba(0,195,123,.15)':'rgba(245,197,24,.12)'};color:${e.estado==='confirmada'?'var(--verde)':'var(--amarelo)'}">
+                        ${e.estado==='confirmada' ? 'Confirmada' : 'Pendente'}
+                      </span>
+                    </td>
+                    <td style="padding:.65rem .9rem;text-align:center;white-space:nowrap">
+                      ${e.estado==='confirmada'
+                        ? `<button class="btn-icon" title="Reverter confirmação" onclick="insAdminUnconfirm('${escHtml(e.id)}')"><i class="ph ph-arrow-counter-clockwise" style="color:#8AA396"></i></button>`
+                        : `<button class="btn-icon" title="Confirmar inscrição (após pagamento) e criar jogador" onclick="insAdminConfirm('${escHtml(e.id)}')"><i class="ph ph-check-circle" style="color:var(--verde)"></i></button>`}
                       <button class="btn-icon" title="Remover" onclick="insAdminDelete('${escHtml(e.id)}')"><i class="ph ph-trash" style="color:#FF4A4A"></i></button>
                     </td>
                   </tr>
@@ -6009,6 +6107,66 @@ window.insAdminDelete = async function(id) {
     renderInscricoes();
     toast('Inscrição removida.', 'success');
   } catch(e) { toast('Erro ao remover.', 'error'); }
+};
+
+// Confirma a pré-inscrição (após pagamento) e cria automaticamente o(s) jogador(es).
+window.insAdminConfirm = async function(id) {
+  try {
+    const entries = JSON.parse(localStorage.getItem('pp_inscricoes') || '[]');
+    const e = entries.find(x => x.id === id);
+    if (!e) return;
+    if (e.estado === 'confirmada') { toast('Inscrição já confirmada.', 'warning'); return; }
+    if (!confirm(`Confirmar a inscrição de "${e.nome1}"?\n\nGeralmente feito após o pagamento. O jogador será criado automaticamente em Jogadores.`)) return;
+    e.estado = 'confirmada';
+    e.confirmadoem = new Date().toISOString();
+    // Criar o jogador do próprio inscrito
+    const j1 = ensureJogador(e.nome1, e.telefone, e.genero);
+    // Criar a dupla quando existir par completo (nível inscrito)
+    let duplaCriada = false;
+    let aguardaParceiro = false;
+    if (e.nome2) {
+      // Legado: par indicado numa só inscrição
+      const j2 = ensureJogador(e.nome2, '', e.genero);
+      if (j1 && j2) duplaCriada = !!ensureDupla(j1.id, j2.id, e.categoria);
+    } else if (e.parid) {
+      // Novo fluxo: cada membro tem a sua inscrição; a dupla nasce quando ambos confirmam
+      const sibling = entries.find(x => x.parid === e.parid && x.id !== e.id);
+      if (sibling && sibling.estado === 'confirmada') {
+        const j2 = ensureJogador(sibling.nome1, sibling.telefone, sibling.genero);
+        if (j1 && j2) duplaCriada = !!ensureDupla(j1.id, j2.id, e.categoria);
+      } else {
+        aguardaParceiro = true;
+      }
+    }
+    localStorage.setItem('pp_inscricoes', JSON.stringify(entries));
+    if (window.ppCloudState) {
+      if (window.ppCloudState.upsertInscricao) await window.ppCloudState.upsertInscricao(e);
+      if (window.ppCloudState.enabled) await window.ppCloudState.pushFromLocal();
+    }
+    Auth.log('CONFIRM_INSCRICAO', 'inscricoes', `${e.nome1}${e.nome2 ? ' & ' + e.nome2 : (e.parceiro ? ' (par: ' + e.parceiro + ')' : '')} (${e.categoria})`);
+    renderInscricoes();
+    let msg = `Inscrição de "${e.nome1}" confirmada.`;
+    if (duplaCriada) msg += ' Jogadores e dupla criados.';
+    else if (aguardaParceiro) msg += ' Jogador criado. A dupla será criada quando o(a) parceiro(a) for confirmado(a).';
+    else msg += ' Jogador criado.';
+    toast(msg, 'success');
+  } catch(err) { toast('Erro ao confirmar: ' + (err && err.message || err), 'error'); }
+};
+
+// Reverte a confirmação (mantém os jogadores já criados).
+window.insAdminUnconfirm = async function(id) {
+  if (!confirm('Reverter a confirmação desta inscrição?\n\n(Os jogadores já criados não são removidos.)')) return;
+  try {
+    const entries = JSON.parse(localStorage.getItem('pp_inscricoes') || '[]');
+    const e = entries.find(x => x.id === id);
+    if (!e) return;
+    e.estado = 'nova';
+    delete e.confirmadoem;
+    localStorage.setItem('pp_inscricoes', JSON.stringify(entries));
+    if (window.ppCloudState && window.ppCloudState.upsertInscricao) await window.ppCloudState.upsertInscricao(e);
+    renderInscricoes();
+    toast('Confirmação revertida.', 'warning');
+  } catch(err) { toast('Erro ao reverter.', 'error'); }
 };
 
 // ============================================
@@ -7455,22 +7613,10 @@ function renderConstrutorGrupos() {
 
   const catGrupos = grupos.filter(g => g.cat === catId).sort((a,b) => a.letra.localeCompare(b.letra));
 
-  // Duplas for this cat — both assigned and unassigned
-  const catDuplas = duplas.filter(d => {
-    // A dupla belongs to cat if its grupo starts with catId or if j1/j2 players have catId
-    return d.grupo && d.grupo.startsWith(catId + '-');
-  });
-  const assignedIds = new Set(catDuplas.map(d => d.id));
-
-  // All duplas for this cat (regardless of group assignment) — look at jogadores' cat
   const jogadores = getData('jogadores') || [];
-  const allCatDuplas = duplas.filter(d => {
-    if (!d.j1 || !d.j2) return false;
-    // Check if already in a group of this cat
-    if (d.grupo && d.grupo.startsWith(catId + '-')) return true;
-    // Otherwise not in this cat
-    return false;
-  });
+
+  // Duplas por atribuir a um grupo, mas já inscritas neste nível (cat)
+  const poolDuplas = duplas.filter(d => d.j1 && d.j2 && !d.grupo && d.cat === catId);
 
   function duplaLabel(d) {
     const j1 = jogadores.find(j => j.id === d.j1);
@@ -7478,9 +7624,34 @@ function renderConstrutorGrupos() {
     return `${j1?.nome || d.j1} & ${j2?.nome || d.j2}`;
   }
 
-  // Count duplas per group
-  const grupoCount = {};
-  catGrupos.forEach(g => { grupoCount[g.id] = duplas.filter(d => d.grupo === g.id).length; });
+  function chip(d) {
+    return `<div class="cg-dupla-chip" draggable="true"
+        ondragstart="cgDragStart(event,'${d.id}')"
+        style="display:flex;align-items:center;justify-content:space-between;
+          background:var(--cinza-escuro);border:1px solid var(--preto-borda);
+          border-radius:6px;padding:.35rem .6rem;margin-bottom:.35rem;cursor:grab;font-size:.78rem">
+        <span style="color:var(--branco)">${escHtml(duplaLabel(d))}</span>
+        ${d.grupo ? `<button onclick="cgRemoverDupla('${d.id}')" style="background:none;border:none;
+          color:var(--cinza-texto);cursor:pointer;font-size:.8rem;padding:0 .2rem"
+          title="Remover do grupo">✕</button>` : ''}
+      </div>`;
+  }
+
+  const poolBlock = `
+    <div class="admin-group-card" id="cgPool"
+        ondragover="cgDragOver(event,'__pool__')" ondragleave="cgDragLeave(event,'__pool__')"
+        ondrop="cgDrop(event,'__pool__')"
+        style="margin-bottom:1rem;border-style:dashed">
+      <div class="admin-group-card-header" style="display:flex;justify-content:space-between;align-items:center">
+        <span style="font-weight:700;color:var(--branco)"><i class="ph ph-users-three"></i> Por atribuir</span>
+        <span style="font-size:.68rem;color:var(--cinza-texto)">${poolDuplas.length} duplas</span>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:.5rem;min-height:48px;padding:.5rem 0">
+        ${poolDuplas.length
+          ? poolDuplas.map(d => `<div style="min-width:200px;flex:1 1 200px">${chip(d)}</div>`).join('')
+          : `<p style="color:var(--cinza-texto);font-size:.75rem;padding:.5rem 0">Sem duplas por atribuir neste nível. Arraste aqui para remover de um grupo.</p>`}
+      </div>
+    </div>`;
 
   el.innerHTML = `
     <div style="display:flex;gap:1rem;align-items:center;margin-bottom:1rem;flex-wrap:wrap">
@@ -7498,6 +7669,8 @@ function renderConstrutorGrupos() {
       </button>
     </div>
 
+    ${poolBlock}
+
     <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1rem">
       ${catGrupos.map(g => {
         const gDuplas = duplas.filter(d => d.grupo === g.id);
@@ -7509,17 +7682,7 @@ function renderConstrutorGrupos() {
             <span style="font-size:.68rem;color:var(--cinza-texto)">${gDuplas.length} duplas</span>
           </div>
           <div id="cgSlot_${g.id}" style="min-height:60px;padding:.5rem 0">
-            ${gDuplas.map(d => `
-              <div class="cg-dupla-chip" draggable="true"
-                ondragstart="cgDragStart(event,'${d.id}')"
-                style="display:flex;align-items:center;justify-content:space-between;
-                  background:var(--cinza-escuro);border:1px solid var(--preto-borda);
-                  border-radius:6px;padding:.35rem .6rem;margin-bottom:.35rem;cursor:grab;font-size:.78rem">
-                <span style="color:var(--branco)">${escHtml(duplaLabel(d))}</span>
-                <button onclick="cgRemoverDupla('${d.id}')" style="background:none;border:none;
-                  color:var(--cinza-texto);cursor:pointer;font-size:.8rem;padding:0 .2rem"
-                  title="Remover do grupo">✕</button>
-              </div>`).join('')}
+            ${gDuplas.map(d => chip(d)).join('')}
             ${gDuplas.length === 0 ? `<p style="color:var(--cinza-texto);font-size:.75rem;text-align:center;padding:.5rem 0">Arraste duplas para aqui</p>` : ''}
           </div>
         </div>`;
@@ -7553,7 +7716,10 @@ window.cgAutoDistribuir = function() {
   const grupos = (getData('grupos') || []).filter(g => g.cat === catId).sort((a,b) => a.letra.localeCompare(b.letra));
   if (!grupos.length) return toast('Defina os grupos primeiro.', 'error');
   const duplas = getData('duplas') || [];
-  const catDuplas = duplas.filter(d => d.grupo && d.grupo.startsWith(catId + '-'));
+  // Inclui duplas já em grupos deste nível E as que estão por atribuir com cat === catId
+  const catDuplas = duplas.filter(d =>
+    (d.grupo && d.grupo.startsWith(catId + '-')) ||
+    (!d.grupo && d.j1 && d.j2 && d.cat === catId));
   if (!catDuplas.length) return toast('Sem duplas nesta categoria.', 'error');
 
   // Warn if games with results already exist
@@ -7591,6 +7757,10 @@ window.cgRemoverDupla = function(duplaId) {
   renderConstrutorGrupos();
 };
 
+const _cgCardEl = (grupoId) => grupoId === '__pool__'
+  ? document.getElementById('cgPool')
+  : document.getElementById('cgCard_' + grupoId);
+
 APP._cgDragId = null;
 window.cgDragStart = function(ev, duplaId) {
   APP._cgDragId = duplaId;
@@ -7598,24 +7768,130 @@ window.cgDragStart = function(ev, duplaId) {
 };
 window.cgDragOver = function(ev, grupoId) {
   ev.preventDefault();
-  document.getElementById('cgCard_' + grupoId)?.classList.add('drag-over');
+  _cgCardEl(grupoId)?.classList.add('drag-over');
 };
 window.cgDragLeave = function(ev, grupoId) {
-  document.getElementById('cgCard_' + grupoId)?.classList.remove('drag-over');
+  _cgCardEl(grupoId)?.classList.remove('drag-over');
 };
 window.cgDrop = function(ev, grupoId) {
   ev.preventDefault();
-  document.getElementById('cgCard_' + grupoId)?.classList.remove('drag-over');
+  _cgCardEl(grupoId)?.classList.remove('drag-over');
   const duplaId = APP._cgDragId;
   APP._cgDragId = null;
   if (!duplaId) return;
   const duplas = getData('duplas') || [];
   const idx = duplas.findIndex(d => d.id === duplaId);
   if (idx < 0) return;
-  duplas[idx] = { ...duplas[idx], grupo: grupoId };
-  setData('duplas', duplas);
-  Auth.log('CONSTRUTOR_GRUPOS', 'duplas', `Dupla ${duplaId} movida para ${grupoId}`);
+  if (grupoId === '__pool__') {
+    // Voltar ao pool: limpar grupo, manter nível (cat)
+    duplas[idx] = { ...duplas[idx], grupo: null };
+    setData('duplas', duplas);
+    Auth.log('CONSTRUTOR_GRUPOS', 'duplas', `Dupla ${duplaId} removida do grupo (por atribuir)`);
+  } else {
+    const cat = grupoId.split('-')[0];
+    duplas[idx] = { ...duplas[idx], grupo: grupoId, cat: duplas[idx].cat || cat };
+    setData('duplas', duplas);
+    Auth.log('CONSTRUTOR_GRUPOS', 'duplas', `Dupla ${duplaId} movida para ${grupoId}`);
+  }
   renderConstrutorGrupos();
+};
+
+// ── Nivelamento de Duplas (visão por nível + construtor drag-and-drop) ──
+function renderNivelamento() {
+  const el = document.getElementById('nivelamentoContent');
+  if (!el) return;
+  const cats = (getData('categorias') || []).slice().sort((a, b) =>
+    (a.tipo || '').localeCompare(b.tipo || '') || (a.nivel || 0) - (b.nivel || 0) || a.id.localeCompare(b.id));
+  const duplas = getData('duplas') || [];
+  const jogadores = getData('jogadores') || [];
+  const confirmadas = duplas.filter(d => d.j1 && d.j2);
+
+  const label = (d) => {
+    const j1 = jogadores.find(j => j.id === d.j1);
+    const j2 = jogadores.find(j => j.id === d.j2);
+    return `${j1?.nome || d.j1} & ${j2?.nome || d.j2}`;
+  };
+
+  const byCat = {}; cats.forEach(c => { byCat[c.id] = []; });
+  const semNivel = [];
+  confirmadas.forEach(d => {
+    if (d.cat && byCat[d.cat]) byCat[d.cat].push(d);
+    else semNivel.push(d);
+  });
+
+  const chip = (d) => {
+    const cat = d.grupo ? d.grupo.split('-')[0] : (d.cat || '');
+    return `<div class="cg-dupla-chip" draggable="true"
+        ondragstart="nlDragStart(event,'${d.id}')"
+        style="display:flex;align-items:center;justify-content:space-between;gap:.4rem;
+          background:var(--cinza-escuro);border:1px solid var(--preto-borda);
+          border-radius:6px;padding:.35rem .6rem;margin-bottom:.35rem;cursor:grab;font-size:.78rem">
+        <span style="color:var(--branco)">${escHtml(label(d))}</span>
+        ${d.grupo ? `<span class="cat-pill cat-${cat}" style="font-size:.6rem" title="Já atribuída ao grupo ${escHtml(d.grupo)}">${escHtml(d.grupo)}</span>` : ''}
+      </div>`;
+  };
+
+  const column = (id, titulo, sub, arr) => `
+    <div class="admin-group-card" id="nlCol_${id}"
+        ondragover="nlDragOver(event,'${id}')" ondragleave="nlDragLeave(event,'${id}')" ondrop="nlDrop(event,'${id}')">
+      <div class="admin-group-card-header" style="display:flex;justify-content:space-between;align-items:center;gap:.4rem">
+        <span style="font-weight:700;color:var(--branco)">${escHtml(titulo)}${sub ? ` <span style="font-weight:400;color:var(--cinza-texto);font-size:.7rem">${escHtml(sub)}</span>` : ''}</span>
+        <span style="font-size:.68rem;color:var(--cinza-texto)">${arr.length}</span>
+      </div>
+      <div style="min-height:60px;padding:.5rem 0">
+        ${arr.map(d => chip(d)).join('')}
+        ${arr.length === 0 ? `<p style="color:var(--cinza-texto);font-size:.72rem;text-align:center;padding:.5rem 0">Arraste duplas para aqui</p>` : ''}
+      </div>
+    </div>`;
+
+  const resumo = cats.map(c => `<span class="cat-pill cat-${c.id}" style="font-size:.7rem">${c.id}: ${byCat[c.id].length}</span>`).join(' ');
+
+  el.innerHTML = `
+    <div style="margin-bottom:1rem;padding:.75rem 1rem;background:var(--cinza-escuro);border:1px solid var(--preto-borda);border-radius:8px">
+      <div style="font-size:.78rem;color:var(--cinza-texto);margin-bottom:.4rem">
+        <i class="ph ph-chart-bar"></i> Duplas confirmadas por nível — total <strong style="color:var(--branco)">${confirmadas.length}</strong>${semNivel.length ? ` · <span style="color:var(--amarelo)">${semNivel.length} sem nível</span>` : ''}
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:.35rem">${resumo || '<span style="color:var(--cinza-texto);font-size:.75rem">Sem categorias.</span>'}</div>
+    </div>
+
+    ${confirmadas.length === 0
+      ? `<p style="color:var(--cinza-texto);padding:1rem">Ainda não há duplas confirmadas. As duplas são criadas ao confirmar uma inscrição de par em <strong>Inscrições</strong>.</p>`
+      : `<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:1rem">
+          ${semNivel.length ? column('__none__', 'Sem nível', '', semNivel) : ''}
+          ${cats.map(c => column(c.id, c.id, c.nome, byCat[c.id])).join('')}
+        </div>`}
+  `;
+}
+
+APP._nlDragId = null;
+window.nlDragStart = function(ev, duplaId) {
+  APP._nlDragId = duplaId;
+  ev.dataTransfer.effectAllowed = 'move';
+};
+window.nlDragOver = function(ev, catId) {
+  ev.preventDefault();
+  document.getElementById('nlCol_' + catId)?.classList.add('drag-over');
+};
+window.nlDragLeave = function(ev, catId) {
+  document.getElementById('nlCol_' + catId)?.classList.remove('drag-over');
+};
+window.nlDrop = function(ev, catId) {
+  ev.preventDefault();
+  document.getElementById('nlCol_' + catId)?.classList.remove('drag-over');
+  const duplaId = APP._nlDragId;
+  APP._nlDragId = null;
+  if (!duplaId) return;
+  const duplas = getData('duplas') || [];
+  const idx = duplas.findIndex(d => d.id === duplaId);
+  if (idx < 0) return;
+  const novoCat = catId === '__none__' ? null : catId;
+  if (duplas[idx].cat === novoCat) return; // sem alteração
+  // Mudar de nível invalida a atribuição de grupo anterior (grupo pertence a outra categoria)
+  const perdeuGrupo = !!duplas[idx].grupo;
+  duplas[idx] = { ...duplas[idx], cat: novoCat, grupo: null };
+  setData('duplas', duplas);
+  Auth.log('NIVELAMENTO', 'duplas', `Dupla ${duplaId} → nível ${novoCat || 'sem nível'}${perdeuGrupo ? ' (grupo removido)' : ''}`);
+  renderNivelamento();
 };
 
 // ── Construtor de Jogos (round-robin) ────────────────────────
