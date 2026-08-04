@@ -21,8 +21,8 @@
   function applyNavConfig() {
     var cfg = ppGet('config') || {};
 
-    // Hide/show nav links and drawer links based on config
-    var allLinks = document.querySelectorAll('.nav-links a, .nav-drawer a');
+    // Hide/show nav, drawer, and footer links based on config
+    var allLinks = document.querySelectorAll('.nav-links a, .nav-drawer a, .footer-links a');
     allLinks.forEach(function (a) {
       var href = a.getAttribute('href') || '';
       var file = href.split('/').pop().split('?')[0];
