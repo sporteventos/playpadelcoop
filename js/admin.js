@@ -5926,6 +5926,94 @@ window._logsClearFilters = function() {
   _logsApplyFilters();
 };
 
+// Constrói o HTML de uma linha da tabela de pré-inscrições.
+function _insRowHtml(e, entries) {
+  return `
+                  <tr style="border-bottom:1px solid rgba(255,255,255,.04)" data-ins-id="${escHtml(e.id)}">
+                    <td style="padding:.65rem .9rem">
+                      <div style="font-weight:600;color:var(--branco)">${escHtml(e.nome1)}</div>
+                      ${e.nome2 ? `<div style="font-size:.75rem;color:var(--cinza-texto)"><i class="ph ph-user"></i> ${escHtml(e.nome2)}</div>` : ''}
+                      ${e.reservado ? `<div style="font-size:.73rem;color:#7BB0FF"><i class="ph ph-bookmark-simple"></i> Vaga reservada — parceiro a anunciar</div>`
+                        : (e.parceiro ? (function(){
+                        const sib = entries.find(x => x.parid && x.parid === e.parid && x.id !== e.id);
+                        const ok = sib && sib.estado === 'confirmada';
+                        return `<div style="font-size:.73rem;color:var(--cinza-texto)"><i class="ph ph-handshake"></i> Par: ${escHtml(e.parceiro)} <span style="color:${ok?'var(--verde)':'var(--amarelo)'}">${ok?'✓ confirmado':'pendente'}</span></div>`;
+                      })() : '')}
+                      ${e.clube ? `<div style="font-size:.72rem;color:#4A6058">${escHtml(e.clube)}</div>` : ''}
+                      ${e.observacoes ? `<div style="font-size:.72rem;color:#8AA396;margin-top:.25rem;max-width:280px"><i class="ph ph-note"></i> ${escHtml(e.observacoes)}</div>` : ''}
+                    </td>
+                    <td style="padding:.65rem .9rem">
+                      <span style="font-size:.68rem;font-weight:700;text-transform:uppercase;padding:.15rem .45rem;border-radius:4px;background:${e.tipo==='dupla'?'rgba(0,195,123,.12)':'rgba(245,197,24,.12)'};color:${e.tipo==='dupla'?'var(--verde)':'var(--amarelo)'}">
+                        ${e.tipo === 'dupla' ? 'Dupla' : 'Individual'}
+                      </span>
+                      <span style="margin-left:.3rem;font-size:.68rem;font-weight:700;text-transform:uppercase;padding:.15rem .45rem;border-radius:4px;background:rgba(255,255,255,.06);color:var(--cinza-texto)">
+                        ${e.genero === 'F' ? 'Fem.' : 'Masc.'}
+                      </span>
+                    </td>
+                    <td style="padding:.65rem .9rem;font-weight:700;color:var(--branco)">${e.categoria ? escHtml(e.categoria) : '<span style="color:var(--cinza-texto);font-weight:500">Sem categoria</span>'}</td>
+                    <td style="padding:.65rem .9rem;color:var(--cinza-texto);font-size:.79rem">
+                      ${e.telefone ? `<div><i class="ph ph-phone"></i> ${escHtml(e.telefone)}</div>` : ''}
+                      ${e.email    ? `<div><i class="ph ph-envelope"></i> ${escHtml(e.email)}</div>` : ''}
+                      ${!e.telefone && !e.email ? '<span style="opacity:.5">—</span>' : ''}
+                    </td>
+                    <td style="padding:.65rem .9rem;color:var(--cinza-texto);font-size:.78rem;white-space:nowrap">
+                      ${new Date(e.criadoem || e.criadoEm).toLocaleDateString('pt-PT')}
+                    </td>
+                    <td style="padding:.65rem .9rem;text-align:center">
+                      <span style="font-size:.66rem;font-weight:700;text-transform:uppercase;padding:.2rem .55rem;border-radius:999px;background:${e.estado==='confirmada'?'rgba(0,195,123,.15)':'rgba(245,197,24,.12)'};color:${e.estado==='confirmada'?'var(--verde)':'var(--amarelo)'}">
+                        ${e.estado==='confirmada' ? 'Confirmada' : 'Pendente'}
+                      </span>
+                    </td>
+                    <td style="padding:.65rem .9rem;text-align:center;white-space:nowrap">
+                      <button class="btn-icon" title="Editar dados" onclick="insAdminEdit('${escHtml(e.id)}')"><i class="ph ph-pencil-simple" style="color:#8AA396"></i></button>
+                      ${e.reservado ? `<button class="btn-icon" title="Anunciar parceiro (cria a pré-inscrição do parceiro)" onclick="insAdminAnnounce('${escHtml(e.id)}')"><i class="ph ph-user-plus" style="color:#7BB0FF"></i></button>` : ''}
+                      ${e.estado==='confirmada'
+                        ? `<button class="btn-icon" title="Reverter confirmação" onclick="insAdminUnconfirm('${escHtml(e.id)}')"><i class="ph ph-arrow-counter-clockwise" style="color:#8AA396"></i></button>`
+                        : `<button class="btn-icon" title="Confirmar inscrição (após pagamento) e criar jogador" onclick="insAdminConfirm('${escHtml(e.id)}')"><i class="ph ph-check-circle" style="color:var(--verde)"></i></button>`}
+                      <button class="btn-icon" title="Remover" onclick="insAdminDelete('${escHtml(e.id)}')"><i class="ph ph-trash" style="color:#FF4A4A"></i></button>
+                    </td>
+                  </tr>`;
+}
+
+// Aplica os filtros/pesquisa e re-desenha o corpo da tabela.
+window._insApplyFilters = function() {
+  const all = window._insAllEntries || [];
+  const q     = (document.getElementById('insFiltroBusca')?.value || '').trim().toLowerCase();
+  const fGen  = document.getElementById('insFiltroGenero')?.value || '';
+  const fCat  = document.getElementById('insFiltroCategoria')?.value || '';
+  const fEst  = document.getElementById('insFiltroEstado')?.value || '';
+  const fTipo = document.getElementById('insFiltroTipo')?.value || '';
+  const filtered = all.filter(e => {
+    if (fGen && (e.genero || 'M') !== fGen) return false;
+    if (fCat === '__none__') { if (e.categoria) return false; }
+    else if (fCat && e.categoria !== fCat) return false;
+    if (fEst === 'confirmada' && e.estado !== 'confirmada') return false;
+    if (fEst === 'pendente' && e.estado === 'confirmada') return false;
+    if (fTipo === 'reserva') { if (!e.reservado) return false; }
+    else if (fTipo && e.tipo !== fTipo) return false;
+    if (q) {
+      const hay = [e.nome1, e.nome2, e.parceiro, e.telefone, e.email, e.categoria, e.observacoes]
+        .map(x => String(x || '').toLowerCase()).join(' ');
+      if (hay.indexOf(q) < 0) return false;
+    }
+    return true;
+  });
+  const tbody = document.getElementById('insAdminTbody');
+  const countEl = document.getElementById('insFiltroCount');
+  if (countEl) countEl.textContent = filtered.length + ' de ' + all.length;
+  if (!tbody) return;
+  tbody.innerHTML = filtered.length
+    ? filtered.slice().reverse().map(e => _insRowHtml(e, all)).join('')
+    : `<tr><td colspan="7" style="padding:2rem;text-align:center;color:var(--cinza-texto)">Nenhum resultado para os filtros aplicados.</td></tr>`;
+};
+
+window._insClearFilters = function() {
+  ['insFiltroBusca','insFiltroGenero','insFiltroCategoria','insFiltroEstado','insFiltroTipo'].forEach(id => {
+    const el = document.getElementById(id); if (el) el.value = '';
+  });
+  window._insApplyFilters();
+};
+
 // ============================================
 //  INSCRIÇÕES VIEW
 // ============================================
@@ -5990,7 +6078,7 @@ async function renderInscricoes() {
           <p style="margin:0;color:var(--cinza-texto);font-size:.85rem">Registos guardados via formulário público</p>
         </div>
         <div style="display:flex;gap:.5rem;flex-wrap:wrap">
-          <button class="btn btn-secondary" id="insAdminExportJson"><i class="ph ph-download-simple"></i> Exportar JSON</button>
+          <button class="btn btn-primary" id="insAdminNew"><i class="ph ph-plus"></i> Nova pré-inscrição</button>
           <button class="btn btn-secondary" id="insAdminExportCsv"><i class="ph ph-table"></i> Exportar CSV</button>
           <button class="btn" style="background:rgba(255,74,74,.12);color:#FF4A4A;border:1px solid rgba(255,74,74,.25)" id="insAdminClear"><i class="ph ph-trash"></i> Limpar tudo</button>
         </div>
@@ -6021,16 +6109,46 @@ async function renderInscricoes() {
           <div style="font-size:2rem;font-weight:800;color:var(--verde);line-height:1">${confirmadas}</div>
           <div style="font-size:.68rem;text-transform:uppercase;letter-spacing:.06em;color:var(--cinza-texto);margin-top:.2rem">Confirmadas</div>
         </div>
-        ${Object.entries(catCounts).map(([cat, n]) => `
+        ${Object.entries(catCounts).sort((a,b)=>String(a[0]).localeCompare(String(b[0]))).map(([cat, n]) => `
         <div class="card" style="padding:.9rem 1rem;text-align:center">
           <div style="font-size:2rem;font-weight:800;color:var(--branco);line-height:1">${n}</div>
-          <div style="font-size:.68rem;text-transform:uppercase;letter-spacing:.06em;color:var(--cinza-texto);margin-top:.2rem">${cat}</div>
+          <div style="font-size:.68rem;text-transform:uppercase;letter-spacing:.06em;color:var(--cinza-texto);margin-top:.2rem">${cat ? escHtml(cat) : 'Sem categoria'}</div>
         </div>`).join('')}
       </div>
 
       ${total === 0
         ? `<div class="card" style="text-align:center;padding:3rem;color:var(--cinza-texto)"><i class="ph ph-clipboard-text" style="font-size:2.5rem;display:block;margin-bottom:.6rem"></i>Nenhuma inscrição registada ainda.</div>`
-        : `<div class="card" style="padding:0;overflow:hidden">
+        : `<div class="card" style="padding:.7rem .8rem;margin-bottom:.8rem;display:flex;gap:.5rem;flex-wrap:wrap;align-items:center">
+            <div style="position:relative;flex:1;min-width:180px">
+              <i class="ph ph-magnifying-glass" style="position:absolute;left:.6rem;top:50%;transform:translateY(-50%);color:var(--cinza-texto)"></i>
+              <input id="insFiltroBusca" type="text" placeholder="Pesquisar nome, parceiro, telefone, email…" oninput="_insApplyFilters()"
+                style="width:100%;background:var(--cinza-escuro);border:1px solid var(--preto-borda);border-radius:6px;padding:.4rem .6rem .4rem 2rem;font-size:.82rem;color:var(--branco)"/>
+            </div>
+            <select id="insFiltroGenero" onchange="_insApplyFilters()" style="background:var(--cinza-escuro);border:1px solid var(--preto-borda);border-radius:6px;padding:.4rem .5rem;font-size:.8rem;color:var(--branco)">
+              <option value="">Género: todos</option>
+              <option value="M">Masculino</option>
+              <option value="F">Feminino</option>
+            </select>
+            <select id="insFiltroCategoria" onchange="_insApplyFilters()" style="background:var(--cinza-escuro);border:1px solid var(--preto-borda);border-radius:6px;padding:.4rem .5rem;font-size:.8rem;color:var(--branco)">
+              <option value="">Categoria: todas</option>
+              ${(getData('categorias')||[]).filter(c=>c&&c.id).map(c=>`<option value="${escHtml(c.id)}">${escHtml(c.id)}</option>`).join('')}
+              <option value="__none__">Sem categoria</option>
+            </select>
+            <select id="insFiltroEstado" onchange="_insApplyFilters()" style="background:var(--cinza-escuro);border:1px solid var(--preto-borda);border-radius:6px;padding:.4rem .5rem;font-size:.8rem;color:var(--branco)">
+              <option value="">Estado: todos</option>
+              <option value="pendente">Pendentes</option>
+              <option value="confirmada">Confirmadas</option>
+            </select>
+            <select id="insFiltroTipo" onchange="_insApplyFilters()" style="background:var(--cinza-escuro);border:1px solid var(--preto-borda);border-radius:6px;padding:.4rem .5rem;font-size:.8rem;color:var(--branco)">
+              <option value="">Tipo: todos</option>
+              <option value="dupla">Duplas</option>
+              <option value="jogador">Individuais</option>
+              <option value="reserva">Reservas</option>
+            </select>
+            <button class="btn-icon" title="Limpar filtros" onclick="_insClearFilters()"><i class="ph ph-x-circle" style="color:var(--cinza-texto)"></i></button>
+            <span id="insFiltroCount" style="font-size:.72rem;color:var(--cinza-texto);margin-left:auto">${total} de ${total}</span>
+          </div>
+          <div class="card" style="padding:0;overflow:hidden">
             <table style="width:100%;border-collapse:collapse;font-size:.83rem">
               <thead>
                 <tr style="background:rgba(255,255,255,.03);border-bottom:1px solid var(--preto-borda)">
@@ -6044,61 +6162,16 @@ async function renderInscricoes() {
                 </tr>
               </thead>
               <tbody id="insAdminTbody">
-                ${entries.slice().reverse().map(e => `
-                  <tr style="border-bottom:1px solid rgba(255,255,255,.04)" data-ins-id="${escHtml(e.id)}">
-                    <td style="padding:.65rem .9rem">
-                      <div style="font-weight:600;color:var(--branco)">${escHtml(e.nome1)}</div>
-                      ${e.nome2 ? `<div style="font-size:.75rem;color:var(--cinza-texto)"><i class="ph ph-user"></i> ${escHtml(e.nome2)}</div>` : ''}
-                      ${e.reservado ? `<div style="font-size:.73rem;color:#7BB0FF"><i class="ph ph-bookmark-simple"></i> Vaga reservada — parceiro a anunciar</div>`
-                        : (e.parceiro ? (function(){
-                        const sib = entries.find(x => x.parid && x.parid === e.parid && x.id !== e.id);
-                        const ok = sib && sib.estado === 'confirmada';
-                        return `<div style="font-size:.73rem;color:var(--cinza-texto)"><i class="ph ph-handshake"></i> Par: ${escHtml(e.parceiro)} <span style="color:${ok?'var(--verde)':'var(--amarelo)'}">${ok?'✓ confirmado':'pendente'}</span></div>`;
-                      })() : '')}
-                      ${e.clube ? `<div style="font-size:.72rem;color:#4A6058">${escHtml(e.clube)}</div>` : ''}
-                      ${e.observacoes ? `<div style="font-size:.72rem;color:#8AA396;margin-top:.25rem;max-width:280px"><i class="ph ph-note"></i> ${escHtml(e.observacoes)}</div>` : ''}
-                    </td>
-                    <td style="padding:.65rem .9rem">
-                      <span style="font-size:.68rem;font-weight:700;text-transform:uppercase;padding:.15rem .45rem;border-radius:4px;background:${e.tipo==='dupla'?'rgba(0,195,123,.12)':'rgba(245,197,24,.12)'};color:${e.tipo==='dupla'?'var(--verde)':'var(--amarelo)'}">
-                        ${e.tipo === 'dupla' ? 'Dupla' : 'Individual'}
-                      </span>
-                      <span style="margin-left:.3rem;font-size:.68rem;font-weight:700;text-transform:uppercase;padding:.15rem .45rem;border-radius:4px;background:rgba(255,255,255,.06);color:var(--cinza-texto)">
-                        ${e.genero === 'F' ? 'Fem.' : 'Masc.'}
-                      </span>
-                    </td>
-                    <td style="padding:.65rem .9rem;font-weight:700;color:var(--branco)">${escHtml(e.categoria)}</td>
-                    <td style="padding:.65rem .9rem;color:var(--cinza-texto);font-size:.79rem">
-                      ${e.telefone ? `<div><i class="ph ph-phone"></i> ${escHtml(e.telefone)}</div>` : ''}
-                      ${e.email    ? `<div><i class="ph ph-envelope"></i> ${escHtml(e.email)}</div>` : ''}
-                    </td>
-                    <td style="padding:.65rem .9rem;color:var(--cinza-texto);font-size:.78rem;white-space:nowrap">
-                      ${new Date(e.criadoem || e.criadoEm).toLocaleDateString('pt-PT')}
-                    </td>
-                    <td style="padding:.65rem .9rem;text-align:center">
-                      <span style="font-size:.66rem;font-weight:700;text-transform:uppercase;padding:.2rem .55rem;border-radius:999px;background:${e.estado==='confirmada'?'rgba(0,195,123,.15)':'rgba(245,197,24,.12)'};color:${e.estado==='confirmada'?'var(--verde)':'var(--amarelo)'}">
-                        ${e.estado==='confirmada' ? 'Confirmada' : 'Pendente'}
-                      </span>
-                    </td>
-                    <td style="padding:.65rem .9rem;text-align:center;white-space:nowrap">
-                      <button class="btn-icon" title="Editar dados" onclick="insAdminEdit('${escHtml(e.id)}')"><i class="ph ph-pencil-simple" style="color:#8AA396"></i></button>
-                      ${e.reservado ? `<button class="btn-icon" title="Anunciar parceiro (cria a pré-inscrição do parceiro)" onclick="insAdminAnnounce('${escHtml(e.id)}')"><i class="ph ph-user-plus" style="color:#7BB0FF"></i></button>` : ''}
-                      ${e.estado==='confirmada'
-                        ? `<button class="btn-icon" title="Reverter confirmação" onclick="insAdminUnconfirm('${escHtml(e.id)}')"><i class="ph ph-arrow-counter-clockwise" style="color:#8AA396"></i></button>`
-                        : `<button class="btn-icon" title="Confirmar inscrição (após pagamento) e criar jogador" onclick="insAdminConfirm('${escHtml(e.id)}')"><i class="ph ph-check-circle" style="color:var(--verde)"></i></button>`}
-                      <button class="btn-icon" title="Remover" onclick="insAdminDelete('${escHtml(e.id)}')"><i class="ph ph-trash" style="color:#FF4A4A"></i></button>
-                    </td>
-                  </tr>
-                `).join('')}
+                ${entries.slice().reverse().map(e => _insRowHtml(e, entries)).join('')}
               </tbody>
             </table>
           </div>`
       }
     </div>
   `;
+  window._insAllEntries = entries;
 
-  document.getElementById('insAdminExportJson')?.addEventListener('click', () => {
-    download('inscricoes-reentre.json', JSON.stringify(entries, null, 2), 'application/json');
-  });
+  document.getElementById('insAdminNew')?.addEventListener('click', () => insAdminNew());
   document.getElementById('insAdminExportCsv')?.addEventListener('click', () => {
     const header = ['id','criadoem','tipo','genero','categoria','nome1','nome2','parceiro','parid','reservado','telefone','email','clube','observacoes','estado'];
     const rows = [header.join(',')].concat(entries.map(e =>
@@ -6130,10 +6203,27 @@ window.insEditBuildCats = function(selected) {
   if (cur) sel.value = cur;
 };
 
+window.insAdminNew = function() {
+  document.getElementById('insEditId').value = '';
+  document.getElementById('insEditNome').value = '';
+  document.getElementById('insEditGenero').value = 'M';
+  insEditBuildCats('');
+  document.getElementById('insEditTel').value = '';
+  document.getElementById('insEditEmail').value = '';
+  document.getElementById('insEditParceiro').value = '';
+  document.getElementById('insEditReservado').checked = false;
+  document.getElementById('insEditObs').value = '';
+  const t = document.getElementById('modalInscricaoTitle');
+  if (t) t.innerHTML = '<i class="ph ph-plus"></i> Nova Pré-Inscrição';
+  openModal('modalInscricao');
+};
+
 window.insAdminEdit = function(id) {
   const entries = JSON.parse(localStorage.getItem('pp_inscricoes') || '[]');
   const e = entries.find(x => x.id === id);
   if (!e) { toast('Inscrição não encontrada.', 'error'); return; }
+  const t = document.getElementById('modalInscricaoTitle');
+  if (t) t.innerHTML = '<i class="ph ph-pencil-simple"></i> Editar Pré-Inscrição';
   document.getElementById('insEditId').value = e.id;
   document.getElementById('insEditNome').value = e.nome1 || '';
   document.getElementById('insEditGenero').value = e.genero === 'F' ? 'F' : 'M';
@@ -6150,8 +6240,6 @@ window.insAdminSave = async function() {
   try {
     const id = document.getElementById('insEditId').value;
     const entries = JSON.parse(localStorage.getItem('pp_inscricoes') || '[]');
-    const e = entries.find(x => x.id === id);
-    if (!e) { toast('Inscrição não encontrada.', 'error'); return; }
     const nome = document.getElementById('insEditNome').value.trim();
     if (!nome) { toast('O nome é obrigatório.', 'error'); return; }
     const genero = document.getElementById('insEditGenero').value === 'F' ? 'F' : 'M';
@@ -6161,6 +6249,48 @@ window.insAdminSave = async function() {
     const parceiro = document.getElementById('insEditParceiro').value.trim();
     const reservado = document.getElementById('insEditReservado').checked;
     const obs = document.getElementById('insEditObs').value.trim();
+
+    // ── Criar nova pré-inscrição (organização) ──
+    if (!id) {
+      const parReal = parceiro && parceiro !== '(A anunciar)' ? parceiro : '';
+      const temPar = !!parReal || reservado;
+      const parid = temPar ? ('par-' + Date.now()) : null;
+      const base = {
+        id: 'ins-' + Date.now(),
+        criadoem: new Date().toISOString(),
+        tipo: temPar ? 'dupla' : 'jogador',
+        genero: genero, categoria: categoria,
+        nome1: nome, nome2: '',
+        parceiro: reservado ? '(A anunciar)' : parReal,
+        parid: parid, reservado: reservado,
+        telefone: tel || null, email: email || null,
+        observacoes: obs, estado: 'nova'
+      };
+      const novos = [base];
+      if (parReal && !reservado) {
+        novos.push({
+          id: base.id + '-p', criadoem: new Date().toISOString(),
+          tipo: 'dupla', genero: genero, categoria: categoria,
+          nome1: parReal, nome2: '', parceiro: nome, parid: parid, reservado: false,
+          telefone: null, email: null, observacoes: '', estado: 'nova'
+        });
+      }
+      novos.forEach(n => entries.push(n));
+      localStorage.setItem('pp_inscricoes', JSON.stringify(entries));
+      if (window.ppCloudState && window.ppCloudState.upsertInscricao) {
+        for (const n of novos) { try { await window.ppCloudState.upsertInscricao(n); } catch (_) {} }
+      }
+      if (window.ppCloudState && window.ppCloudState.enabled) await window.ppCloudState.pushFromLocal();
+      if (typeof Auth !== 'undefined' && Auth && Auth.log) Auth.log('CRIAR_INSCRICAO', 'inscricoes', `${nome} (${categoria || 's/ cat'})`);
+      closeModal('modalInscricao');
+      renderInscricoes();
+      toast('Pré-inscrição criada.', 'success');
+      return;
+    }
+
+    // ── Editar existente ──
+    const e = entries.find(x => x.id === id);
+    if (!e) { toast('Inscrição não encontrada.', 'error'); return; }
 
     e.nome1 = nome;
     e.genero = genero;
