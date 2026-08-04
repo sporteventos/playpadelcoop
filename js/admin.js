@@ -3279,8 +3279,12 @@ function _populateDuplaModal() {
     jogadores.map(j => `<option value="${j.id}">${escHtml(j.nome)}</option>`).join('');
   document.getElementById('duplaJ1').innerHTML = opts;
   document.getElementById('duplaJ2').innerHTML = opts;
+  const cats = (getData('categorias') || []).slice().sort((a, b) =>
+    (a.tipo || '').localeCompare(b.tipo || '') || (a.nivel || 0) - (b.nivel || 0) || a.id.localeCompare(b.id));
+  document.getElementById('duplaCat').innerHTML = '<option value="">— Seleccionar —</option>' +
+    cats.map(c => `<option value="${c.id}">${c.id} · ${escHtml(c.nome)}</option>`).join('');
   const grupos = getData('grupos') || [];
-  document.getElementById('duplaGrupo').innerHTML = '<option value="">— Seleccionar —</option>' +
+  document.getElementById('duplaGrupo').innerHTML = '<option value="">— Sem grupo —</option>' +
     grupos.map(g => `<option value="${g.id}">${g.id}</option>`).join('');
 }
 
@@ -3299,6 +3303,7 @@ window.editarDupla = function(id) {
   _populateDuplaModal();
   document.getElementById('duplaJ1').value    = dupla.j1 || '';
   document.getElementById('duplaJ2').value    = dupla.j2 || '';
+  document.getElementById('duplaCat').value   = dupla.cat || (dupla.grupo ? dupla.grupo.split('-')[0] : '');
   document.getElementById('duplaGrupo').value = dupla.grupo || '';
   openModal('modalDupla');
 };
@@ -3306,9 +3311,11 @@ window.editarDupla = function(id) {
 function salvarDupla() {
   const j1    = document.getElementById('duplaJ1').value;
   const j2    = document.getElementById('duplaJ2').value;
-  const grupo = document.getElementById('duplaGrupo').value;
-  if (!j1 || !j2 || !grupo) return toast('Preencha todos os campos.', 'error');
+  const cat   = document.getElementById('duplaCat').value;
+  const grupo = document.getElementById('duplaGrupo').value || null;
+  if (!j1 || !j2 || !cat) return toast('Preencha jogadores e nível.', 'error');
   if (j1 === j2) return toast('Os dois jogadores têm de ser diferentes.', 'error');
+  if (grupo && !grupo.startsWith(cat + '-')) return toast('O grupo escolhido não pertence ao nível seleccionado.', 'error');
 
   const duplas   = getData('duplas') || [];
   const jogs     = getData('jogadores') || [];
@@ -3323,28 +3330,28 @@ function salvarDupla() {
       const oldJ1n = jogs.find(j => j.id === old.j1)?.nome || old.j1 || '';
       const oldJ2n = jogs.find(j => j.id === old.j2)?.nome || old.j2 || '';
       const oldEq  = `${oldJ1n} & ${oldJ2n}`;
-      duplas[idx] = { ...old, j1, j2, grupo };
-      if (oldEq !== newEqStr || old.grupo !== grupo) {
+      duplas[idx] = { ...old, j1, j2, cat, grupo };
+      if (old.grupo && (oldEq !== newEqStr || old.grupo !== grupo)) {
         const jogos = getData('jogos');
         jogos.forEach(j => {
           if (j.grupo === old.grupo) {
-            if (j.eq1 === oldEq) { j.eq1 = newEqStr; j.grupo = grupo; }
-            if (j.eq2 === oldEq) { j.eq2 = newEqStr; j.grupo = grupo; }
+            if (j.eq1 === oldEq) { j.eq1 = newEqStr; if (grupo) j.grupo = grupo; }
+            if (j.eq2 === oldEq) { j.eq2 = newEqStr; if (grupo) j.grupo = grupo; }
           }
         });
         setData('jogos', jogos);
       }
     }
     setData('duplas', duplas);
-    Auth.log('EDIT_DUPLA', 'duplas', `${newEqStr} → ${grupo}`);
+    Auth.log('EDIT_DUPLA', 'duplas', `${newEqStr} → ${cat}${grupo ? ' / ' + grupo : ''}`);
     toast('Dupla actualizada.', 'success');
   } else {
-    const exists = duplas.find(d => (d.j1===j1&&d.j2===j2&&d.grupo===grupo) || (d.j1===j2&&d.j2===j1&&d.grupo===grupo));
-    if (exists) return toast('Esta dupla já existe neste grupo.', 'error');
+    const exists = duplas.find(d => (d.j1===j1&&d.j2===j2) || (d.j1===j2&&d.j2===j1));
+    if (exists) return toast('Esta dupla já existe.', 'error');
     const newId = _nextEntityId('duplas', 'd');
-    duplas.push({ id: newId, j1, j2, grupo });
+    duplas.push({ id: newId, j1, j2, cat, grupo });
     setData('duplas', duplas);
-    Auth.log('CREATE_DUPLA', 'duplas', `${newEqStr} no grupo ${grupo}`);
+    Auth.log('CREATE_DUPLA', 'duplas', `${newEqStr} no nível ${cat}${grupo ? ' / grupo ' + grupo : ''}`);
     toast('Dupla criada.', 'success');
   }
   closeModal('modalDupla');
