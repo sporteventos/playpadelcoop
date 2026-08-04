@@ -27,9 +27,10 @@ create table if not exists public.campos (
 
 -- 3) Jogadores
 create table if not exists public.jogadores (
-  id    text primary key,
-  nome  text,
-  raw   jsonb not null default '{}'
+  id     text primary key,
+  nome   text,
+  genero text,
+  raw    jsonb not null default '{}'
 );
 
 -- 4) Grupos  (relação real: grupos.cat -> categorias.id)
@@ -41,15 +42,17 @@ create table if not exists public.grupos (
 );
 create index if not exists grupos_cat_idx on public.grupos(cat);
 
--- 5) Duplas  (relações: duplas.grupo -> grupos.id, j1/j2 -> jogadores.id)
+-- 5) Duplas  (relações: duplas.grupo -> grupos.id, duplas.cat -> categorias.id, j1/j2 -> jogadores.id)
 create table if not exists public.duplas (
   id     text primary key,
   grupo  text references public.grupos(id) on delete cascade,
+  cat    text references public.categorias(id) on delete set null,
   j1     text references public.jogadores(id) on delete set null,
   j2     text references public.jogadores(id) on delete set null,
   raw    jsonb not null default '{}'
 );
 create index if not exists duplas_grupo_idx on public.duplas(grupo);
+create index if not exists duplas_cat_idx on public.duplas(cat);
 
 -- 6) Jogos  (grupo = referência "soft" a grupos.id — mantida como texto
 --            porque a app usa strings de equipa/grupo e cria jogos fora do grupo)

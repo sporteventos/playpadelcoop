@@ -244,25 +244,41 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   document.querySelectorAll('input[name="genero"]').forEach(function(r){
-    r.addEventListener('change', function(){ buildCats(); });
+    r.addEventListener('change', function(){ buildCats(); renderPlayerDatalist(); });
   });
   buildCats();
 
-  // Autocomplete de jogadores (jogadores confirmados + já pré-inscritos)
-  async function buildPlayerDatalist() {
-    var names = {};
-    (ppGet('jogadores') || []).forEach(function(j){ if (j && j.nome) names[j.nome] = 1; });
+  // Autocomplete de jogadores (jogadores confirmados + já pré-inscritos), filtrado por género
+  var _playerCands = null; // { nome: 'M' | 'F' | '' }
+  async function loadPlayerCandidates() {
+    var map = {};
+    (ppGet('jogadores') || []).forEach(function(j){
+      if (j && j.nome) map[j.nome] = j.genero || map[j.nome] || '';
+    });
     try {
       if (window.ppCloudState && window.ppCloudState.fetchInscricoes) {
         var ins = await window.ppCloudState.fetchInscricoes();
-        (ins || []).forEach(function(e){ if (e.nome1) names[e.nome1] = 1; if (e.nome2) names[e.nome2] = 1; });
+        (ins || []).forEach(function(e){
+          if (e.nome1) map[e.nome1] = e.genero || map[e.nome1] || '';
+          if (e.nome2) map[e.nome2] = e.genero || map[e.nome2] || '';
+        });
       }
     } catch (_) {}
+    _playerCands = map;
+  }
+  function renderPlayerDatalist() {
     var dl = document.getElementById('dlJogadores');
-    if (!dl) return;
-    dl.innerHTML = Object.keys(names).sort(function(a,b){ return a.localeCompare(b); })
+    if (!dl || !_playerCands) return;
+    var gsel = document.querySelector('input[name="genero"]:checked');
+    var g = gsel ? gsel.value : 'M';
+    var names = Object.keys(_playerCands).filter(function(n){
+      var cg = _playerCands[n];
+      return !cg || cg === g; // inclui candidatos sem género conhecido para não esconder registos antigos
+    });
+    dl.innerHTML = names.sort(function(a,b){ return a.localeCompare(b); })
       .map(function(n){ return '<option value="' + n.replace(/"/g, '&quot;') + '"></option>'; }).join('');
   }
+  async function buildPlayerDatalist() { await loadPlayerCandidates(); renderPlayerDatalist(); }
   buildPlayerDatalist();
   window.addEventListener('pp:datasynced', function(){ buildCats(); buildPlayerDatalist(); });
 

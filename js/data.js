@@ -166,9 +166,9 @@ var PP_ENTITIES = [
   // ordem = segura para FKs (pais antes de filhos)
   { key: 'categorias',     table: 'categorias',     idKey: 'id', map: function (r) { return { nome: r.nome, tipo: r.tipo, nivel: r.nivel }; } },
   { key: 'campos',         table: 'campos',         idKey: 'id', map: function (r) { return { nome: r.nome, icone: r.icone, activo: r.activo }; } },
-  { key: 'jogadores',      table: 'jogadores',      idKey: 'id', map: function (r) { return { nome: r.nome }; } },
+  { key: 'jogadores',      table: 'jogadores',      idKey: 'id', map: function (r) { return { nome: r.nome, genero: r.genero || null }; } },
   { key: 'grupos',         table: 'grupos',         idKey: 'id', map: function (r) { return { cat: r.cat, letra: r.letra }; } },
-  { key: 'duplas',         table: 'duplas',         idKey: 'id', map: function (r) { return { grupo: r.grupo || null, j1: r.j1 || null, j2: r.j2 || null }; } },
+  { key: 'duplas',         table: 'duplas',         idKey: 'id', map: function (r) { return { grupo: r.grupo || null, cat: r.cat || null, j1: r.j1 || null, j2: r.j2 || null }; } },
   { key: 'jogos',          table: 'jogos',          idKey: 'id', map: function (r) { return { data: r.data || null, hora: r.hora || null, campo: r.campo || null, grupo: r.grupo || null, eq1: r.eq1 || null, eq2: r.eq2 || null, resultado: r.resultado || null, estado: r.estado || null }; } },
   { key: 'patrocinadores', table: 'patrocinadores', idKey: 'id', map: function (r) { return { nome: r.nome, logo: r.logo, url: r.url, ordem: r.ordem != null ? r.ordem : null }; } },
   { key: 'parceiros',      table: 'parceiros',      idKey: 'id', map: function (r) { return { nome: r.nome, logo: r.logo, url: r.url, ordem: r.ordem != null ? r.ordem : null }; } },
