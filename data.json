@@ -76,6 +76,88 @@
   "fasefinal": {},
   "telefones": {},
   "inscricoes": [],
+  "patrocinadores": [
+    {
+      "id": "jetour",
+      "nome": "Jetour",
+      "logo": "patrocinadores/jetour.png",
+      "url": ""
+    },
+    {
+      "id": "stellaartois",
+      "nome": "Stella Artois",
+      "logo": "patrocinadores/stellaartois.png",
+      "url": ""
+    },
+    {
+      "id": "bonaqua",
+      "nome": "Bona Aqua",
+      "logo": "patrocinadores/bonaqua.png",
+      "url": ""
+    },
+    {
+      "id": "tvcabo",
+      "nome": "TV Cabo",
+      "logo": "patrocinadores/tvcabo.png",
+      "url": ""
+    },
+    {
+      "id": "alcanceeditores",
+      "nome": "Alcance Editores",
+      "logo": "patrocinadores/alcanceeditores.png",
+      "url": ""
+    },
+    {
+      "id": "eclipse",
+      "nome": "Eclipse",
+      "logo": "patrocinadores/Eclipse.png",
+      "url": ""
+    }
+  ],
+  "parceiros": [
+    {
+      "id": "fisiolab",
+      "nome": "Fisiolab",
+      "logo": "parceiros/fisiolab.png",
+      "url": ""
+    },
+    {
+      "id": "montebelo",
+      "nome": "Montebelo Hotéis",
+      "logo": "parceiros/montebelo hoteis.png",
+      "url": ""
+    },
+    {
+      "id": "tempo",
+      "nome": "Tempo",
+      "logo": "parceiros/tempo.png",
+      "url": ""
+    },
+    {
+      "id": "matchpoint",
+      "nome": "Match Point",
+      "logo": "parceiros/matchpoint.JPG",
+      "url": ""
+    },
+    {
+      "id": "fitclo",
+      "nome": "Fitclo",
+      "logo": "parceiros/fitclo.JPG",
+      "url": ""
+    },
+    {
+      "id": "babycity",
+      "nome": "Baby City",
+      "logo": "parceiros/babycity.JPG",
+      "url": ""
+    },
+    {
+      "id": "makimono",
+      "nome": "Makimono",
+      "logo": "parceiros/makimono.JPG",
+      "url": ""
+    }
+  ],
   "config": {
     "tornNome": "Torneio Reentre",
     "tornSubtitulo": "Torneio Reentre",
@@ -100,9 +182,12 @@
     "parceirosVisible": true,
     "bannerVisible": false,
     "bannerMsg": "",
-    "tornTelOrg": "",
+    "tornTelOrg": "258844471740",
     "sbRefreshMins": "15",
-    "sbRecentCount": "16"
+    "sbRecentCount": "16",
+    "insSyncEnabled": true,
+    "insSyncUrl": "https://jjtsqsumczbhfgbgjxsd.supabase.co",
+    "insSyncAnonKey": "sb_publishable_LQ03yWZ4f-Mo0BYXWuinVw_kpWqbmIy"
   },
   "users": [
     {
@@ -191,6 +276,136 @@
     }
   ],
   "auditlog": [
+    {
+      "id": "mseidfa17uxbpf0",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "LOGIN",
+      "target": "auth",
+      "detail": "Login: admin (admin)",
+      "ts": "2026-08-04T10:21:41.401Z"
+    },
+    {
+      "id": "msehzv7epo7hc4p",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "LOGIN",
+      "target": "auth",
+      "detail": "Login: admin (admin)",
+      "ts": "2026-08-04T10:11:08.858Z"
+    },
+    {
+      "id": "msebuvx1xz3sbzy",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "LOGOUT",
+      "target": "auth",
+      "detail": "Logout: admin",
+      "ts": "2026-08-04T07:19:18.805Z"
+    },
+    {
+      "id": "msea90j7rv1j5zu",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "LOGIN",
+      "target": "auth",
+      "detail": "Login: admin (admin)",
+      "ts": "2026-08-04T06:34:18.739Z"
+    },
+    {
+      "id": "msea1rsnjeqmjgz",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "LOGOUT",
+      "target": "auth",
+      "detail": "Logout: admin",
+      "ts": "2026-08-04T06:28:40.824Z"
+    },
+    {
+      "id": "msdn1xs8wprk6uc",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "LOGIN",
+      "target": "auth",
+      "detail": "Login: admin (admin)",
+      "ts": "2026-08-03T19:44:57.416Z"
+    },
+    {
+      "id": "msdmvim1xxfkxs5",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "LOGOUT",
+      "target": "auth",
+      "detail": "Logout: admin",
+      "ts": "2026-08-03T19:39:57.817Z"
+    },
+    {
+      "id": "msdl9mwie289zab",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "LOGIN",
+      "target": "auth",
+      "detail": "Login: admin (admin)",
+      "ts": "2026-08-03T18:54:57.330Z"
+    },
+    {
+      "id": "msdl7xfxehoqimy",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "LOGOUT",
+      "target": "auth",
+      "detail": "Logout: admin",
+      "ts": "2026-08-03T18:53:37.677Z"
+    },
+    {
+      "id": "msdg67yz5wk39ac",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "LOGIN",
+      "target": "auth",
+      "detail": "Login: admin (admin)",
+      "ts": "2026-08-03T16:32:19.931Z"
+    },
+    {
+      "id": "mqfo74irdyb0037",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "LOGOUT",
+      "target": "auth",
+      "detail": "Logout: euamusse",
+      "ts": "2026-06-15T20:33:06.723Z"
+    },
+    {
+      "id": "mqfmhgbw93ta149",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "LOGIN",
+      "target": "auth",
+      "detail": "Login: euamusse (admin)",
+      "ts": "2026-06-15T19:45:09.356Z"
+    },
+    {
+      "id": "mqfm4tsdcnwrxss",
+      "userId": "mpz8aq9sg983ubo",
+      "username": "euamusse",
+      "role": "admin",
+      "action": "LOGOUT",
+      "target": "auth",
+      "detail": "Logout: euamusse",
+      "ts": "2026-06-15T19:35:20.269Z"
+    },
     {
       "id": "mqfkixstf80xihd",
       "userId": "mpz8aq9sg983ubo",
@@ -10060,137 +10275,7 @@
       "target": "utilizadores",
       "detail": "Criado \"smonjane\" (operator)",
       "ts": "2026-06-04T20:14:42.728Z"
-    },
-    {
-      "id": "mpzxoo2afzxyxom",
-      "userId": "mpz8aq9sg983ubo",
-      "username": "euamusse",
-      "role": "admin",
-      "action": "CREATE_USER",
-      "target": "utilizadores",
-      "detail": "Criado \"djanasse\" (operator)",
-      "ts": "2026-06-04T20:14:22.930Z"
-    },
-    {
-      "id": "mpzxlxrs4ltuwsb",
-      "userId": "mpz46x5c2zupza0",
-      "username": "bgaspar",
-      "role": "operator",
-      "action": "HORARIO_DRAG",
-      "target": "jogos",
-      "detail": "Jogo #127 movido para 18:00 @ Play Padel",
-      "ts": "2026-06-04T20:12:15.544Z"
-    },
-    {
-      "id": "mpzxdeycq1qgaao",
-      "userId": "mpz8aq9sg983ubo",
-      "username": "euamusse",
-      "role": "admin",
-      "action": "CREATE_USER",
-      "target": "utilizadores",
-      "detail": "Criado \"smonjane\" (operator)",
-      "ts": "2026-06-04T20:05:37.908Z"
-    },
-    {
-      "id": "mpzxcmt2r8765f0",
-      "userId": "mpz8aq9sg983ubo",
-      "username": "euamusse",
-      "role": "admin",
-      "action": "UPDATE_USER",
-      "target": "utilizadores",
-      "detail": "Actualizado \"djanasse\"",
-      "ts": "2026-06-04T20:05:01.430Z"
-    },
-    {
-      "id": "mpzxbkitmy38anh",
-      "userId": "mpz8aq9sg983ubo",
-      "username": "euamusse",
-      "role": "admin",
-      "action": "CREATE_USER",
-      "target": "utilizadores",
-      "detail": "Criado \"Denise Janasse\" (operator)",
-      "ts": "2026-06-04T20:04:11.813Z"
-    },
-    {
-      "id": "mpzx7dameh4q91j",
-      "userId": "mpz46x5c2zupza0",
-      "username": "bgaspar",
-      "role": "operator",
-      "action": "HORARIO_DRAG",
-      "target": "jogos",
-      "detail": "Jogo #86 movido para 20:00 @ Play Padel",
-      "ts": "2026-06-04T20:00:55.822Z"
-    },
-    {
-      "id": "mpzx7apjy3kv85l",
-      "userId": "mpz46x5c2zupza0",
-      "username": "bgaspar",
-      "role": "operator",
-      "action": "HORARIO_DRAG",
-      "target": "jogos",
-      "detail": "Jogo #61 movido para 19:00 @ Play Padel",
-      "ts": "2026-06-04T20:00:52.471Z"
-    },
-    {
-      "id": "mpzx6vf7g9330xo",
-      "userId": "mpz46x5c2zupza0",
-      "username": "bgaspar",
-      "role": "operator",
-      "action": "HORARIO_MOVER_DIA",
-      "target": "jogos",
-      "detail": "Jogo #39 de 2026-06-10 21:30 TVCabo → 2026-06-07 18:00 Play Padel",
-      "ts": "2026-06-04T20:00:32.659Z"
-    },
-    {
-      "id": "mpzx6ix1rq86qur",
-      "userId": "mpz8aq9sg983ubo",
-      "username": "euamusse",
-      "role": "admin",
-      "action": "LOGIN",
-      "target": "auth",
-      "detail": "Login: euamusse (admin)",
-      "ts": "2026-06-04T20:00:16.454Z"
-    },
-    {
-      "id": "mpzx696rrsbejmw",
-      "userId": "mpz46x5c2zupza0",
-      "username": "bgaspar",
-      "role": "operator",
-      "action": "HORARIO_MOVER_DIA",
-      "target": "jogos",
-      "detail": "Jogo #39 de 2026-06-06 20:00 TVCabo → 2026-06-10 21:30 TVCabo",
-      "ts": "2026-06-04T20:00:03.843Z"
-    },
-    {
-      "id": "mpzx5pn5e0z3pfa",
-      "userId": "mpz8aq9sg983ubo",
-      "username": "euamusse",
-      "role": "admin",
-      "action": "DELETE_USER",
-      "target": "utilizadores",
-      "detail": "Eliminado \"hzandamela\"",
-      "ts": "2026-06-04T19:59:38.514Z"
-    },
-    {
-      "id": "mpzx20w1jaziybd",
-      "userId": "mpz46x5c2zupza0",
-      "username": "bgaspar",
-      "role": "operator",
-      "action": "HORARIO_MOVER_DIA",
-      "target": "jogos",
-      "detail": "Jogo #127 de 2026-06-10 21:30 TVCabo → 2026-06-07 17:00 Play Padel",
-      "ts": "2026-06-04T19:56:46.465Z"
-    },
-    {
-      "id": "mpzx0zcjofdkmgk",
-      "userId": "mpz46x5c2zupza0",
-      "username": "bgaspar",
-      "role": "operator",
-      "action": "HORARIO_DRAG",
-      "target": "jogos",
-      "detail": "Jogo #59 movido para 16:00 @ Play Padel",
-      "ts": "2026-06-04T19:55:57.811Z"
     }
   ],
-  "_updated": "2026-08-03T15:00:12.230Z"
+  "_updated": "2026-08-04T10:33:49.423Z"
 }
