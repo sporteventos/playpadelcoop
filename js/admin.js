@@ -59,26 +59,6 @@ function _eqStrToDuplaId(eqStr, grupoId) {
 // ============================================
 //  IMPORT LOCAL JSON (for file:// protocol)
 // ============================================
-window.importLocalJson = function(event) {
-  const file = event.target.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = function(e) {
-    try {
-      const d = JSON.parse(e.target.result);
-      const KEYS = ['campos','categorias','grupos','jogadores','duplas','jogos','fasefinal','telefones','inscricoes'];
-      KEYS.forEach(function(k) { if (d[k] !== undefined) ppSave(k, d[k]); });
-      if (d._updated) localStorage.setItem('pp__updated', d._updated);
-      toast('data.json importado com sucesso! A recarregar…', 'success');
-      setTimeout(function() { location.reload(); }, 1200);
-    } catch(err) {
-      toast('Erro ao ler JSON: ' + err.message, 'error');
-    }
-  };
-  reader.readAsText(file);
-  event.target.value = '';
-};
-
 // ============================================
 //  WHATSAPP HELPERS
 // ============================================
