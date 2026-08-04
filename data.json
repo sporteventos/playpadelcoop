@@ -184,7 +184,8 @@
     "leaderboardVisible": false,
     "patrocinadoresVisible": false,
     "parceirosVisible": false,
-    "tornTelOrg": "258844471740"
+    "tornTelOrg": "258844471740",
+    "insSyncEnabled": true
   },
   "users": [
     {
@@ -273,6 +274,56 @@
     }
   ],
   "auditlog": [
+    {
+      "id": "mseidfa17uxbpf0",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "LOGIN",
+      "target": "auth",
+      "detail": "Login: admin (admin)",
+      "ts": "2026-08-04T10:21:41.401Z"
+    },
+    {
+      "id": "msehzv7epo7hc4p",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "LOGIN",
+      "target": "auth",
+      "detail": "Login: admin (admin)",
+      "ts": "2026-08-04T10:11:08.858Z"
+    },
+    {
+      "id": "msebuvx1xz3sbzy",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "LOGOUT",
+      "target": "auth",
+      "detail": "Logout: admin",
+      "ts": "2026-08-04T07:19:18.805Z"
+    },
+    {
+      "id": "msea90j7rv1j5zu",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "LOGIN",
+      "target": "auth",
+      "detail": "Login: admin (admin)",
+      "ts": "2026-08-04T06:34:18.739Z"
+    },
+    {
+      "id": "msea1rsnjeqmjgz",
+      "userId": "mpxnxlqhg3dzc1o",
+      "username": "admin",
+      "role": "admin",
+      "action": "LOGOUT",
+      "target": "auth",
+      "detail": "Logout: admin",
+      "ts": "2026-08-04T06:28:40.824Z"
+    },
     {
       "id": "msdn1xs8wprk6uc",
       "userId": "mpxnxlqhg3dzc1o",
@@ -10222,57 +10273,7 @@
       "target": "utilizadores",
       "detail": "Criado \"smonjane\" (operator)",
       "ts": "2026-06-04T20:14:42.728Z"
-    },
-    {
-      "id": "mpzxoo2afzxyxom",
-      "userId": "mpz8aq9sg983ubo",
-      "username": "euamusse",
-      "role": "admin",
-      "action": "CREATE_USER",
-      "target": "utilizadores",
-      "detail": "Criado \"djanasse\" (operator)",
-      "ts": "2026-06-04T20:14:22.930Z"
-    },
-    {
-      "id": "mpzxlxrs4ltuwsb",
-      "userId": "mpz46x5c2zupza0",
-      "username": "bgaspar",
-      "role": "operator",
-      "action": "HORARIO_DRAG",
-      "target": "jogos",
-      "detail": "Jogo #127 movido para 18:00 @ Play Padel",
-      "ts": "2026-06-04T20:12:15.544Z"
-    },
-    {
-      "id": "mpzxdeycq1qgaao",
-      "userId": "mpz8aq9sg983ubo",
-      "username": "euamusse",
-      "role": "admin",
-      "action": "CREATE_USER",
-      "target": "utilizadores",
-      "detail": "Criado \"smonjane\" (operator)",
-      "ts": "2026-06-04T20:05:37.908Z"
-    },
-    {
-      "id": "mpzxcmt2r8765f0",
-      "userId": "mpz8aq9sg983ubo",
-      "username": "euamusse",
-      "role": "admin",
-      "action": "UPDATE_USER",
-      "target": "utilizadores",
-      "detail": "Actualizado \"djanasse\"",
-      "ts": "2026-06-04T20:05:01.430Z"
-    },
-    {
-      "id": "mpzxbkitmy38anh",
-      "userId": "mpz8aq9sg983ubo",
-      "username": "euamusse",
-      "role": "admin",
-      "action": "CREATE_USER",
-      "target": "utilizadores",
-      "detail": "Criado \"Denise Janasse\" (operator)",
-      "ts": "2026-06-04T20:04:11.813Z"
     }
   ],
-  "_updated": "2026-08-03T19:46:07.545Z"
+  "_updated": "2026-08-04T10:22:33.861Z"
 }
