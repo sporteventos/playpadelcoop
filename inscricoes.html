@@ -242,7 +242,7 @@
   </div>
 </footer>
 
-<script src="js/data.js"></script>
+<script src="js/data.js?v=20"></script>
 <script src="js/nav-config.js" defer></script>
 <script>
 document.addEventListener('DOMContentLoaded', function () {
@@ -285,7 +285,7 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   document.querySelectorAll('input[name="genero"]').forEach(function(r){
-    r.addEventListener('change', function(){ buildCats(); renderPlayerDatalist(); });
+    r.addEventListener('change', function(){ buildCats(); renderPlayerDatalist(); if (typeof renderVagas === 'function') renderVagas(); });
   });
   buildCats();
 
@@ -414,14 +414,17 @@ document.addEventListener('DOMContentLoaded', function () {
   });
   applyModo();
 
-  // ── Contador de vagas ──
-  var VAGAS = { total: 176, ocupadas: 0, livres: 176 };
+  // ── Contador de vagas (por género) ──
+  var VAGAS = { M: { total: 120, ocupadas: 0, livres: 120 }, F: { total: 48, ocupadas: 0, livres: 48 } };
   function slotsOf(e){ return 1 + (e && e.reservado ? 1 : 0); }
   function isActive(e){ return e && e.estado !== 'rejeitada' && e.estado !== 'cancelada' && e.estado !== 'espera'; }
+  function selGenero(){ var g = document.querySelector('input[name="genero"]:checked'); return g && g.value === 'F' ? 'F' : 'M'; }
+  function vagasG(){ return VAGAS[selGenero()]; }
   async function refreshVagas(){
     var cfg = (ppGet('config') || {});
-    var maxD = parseInt(cfg.maxDuplas, 10); if (!maxD || maxD < 1) maxD = 88;
-    var total = maxD * 2;
+    var cfgInt = function(k, d){ var v = parseInt(cfg[k], 10); return (!v || v < 1) ? d : v; };
+    var totalM = cfgInt('maxJogadoresM', 120);
+    var totalF = cfgInt('maxJogadoresF', 48);
     var entries = [];
     try {
       if (window.ppCloudState && window.ppCloudState.fetchInscricoes) {
@@ -431,32 +434,39 @@ document.addEventListener('DOMContentLoaded', function () {
     if (!entries || !entries.length) {
       try { entries = JSON.parse(localStorage.getItem('pp_inscricoes') || '[]'); } catch(_) { entries = []; }
     }
-    var ocupadas = (entries || []).filter(isActive).reduce(function(n,e){ return n + slotsOf(e); }, 0);
-    var livres = Math.max(0, total - ocupadas);
-    VAGAS = { total: total, ocupadas: ocupadas, livres: livres };
+    var active = (entries || []).filter(isActive);
+    var ocupM = active.filter(function(e){ return (e.genero || 'M') !== 'F'; }).reduce(function(n,e){ return n + slotsOf(e); }, 0);
+    var ocupF = active.filter(function(e){ return (e.genero || 'M') === 'F'; }).reduce(function(n,e){ return n + slotsOf(e); }, 0);
+    VAGAS = {
+      M: { total: totalM, ocupadas: ocupM, livres: Math.max(0, totalM - ocupM) },
+      F: { total: totalF, ocupadas: ocupF, livres: Math.max(0, totalF - ocupF) },
+    };
     renderVagas();
     return VAGAS;
   }
   function renderVagas(){
     var box = document.getElementById('vagasBox');
     if (!box) return;
+    var v = vagasG();
+    var gLabel = selGenero() === 'F' ? 'Feminino' : 'Masculino';
     box.style.display = '';
-    document.getElementById('vagasLivres').textContent = VAGAS.livres;
-    document.getElementById('vagasTotal').textContent = VAGAS.total;
-    var duplasLivres = Math.floor(VAGAS.livres / 2);
+    document.getElementById('vagasLivres').textContent = v.livres;
+    document.getElementById('vagasTotal').textContent = v.total;
+    var duplasLivres = Math.floor(v.livres / 2);
     var sub = document.getElementById('vagasSub');
     var fill = document.getElementById('vagasFill');
-    var pct = VAGAS.total ? Math.round((VAGAS.ocupadas / VAGAS.total) * 100) : 0;
+    var pct = v.total ? Math.round((v.ocupadas / v.total) * 100) : 0;
     fill.style.width = Math.min(100, pct) + '%';
     box.classList.remove('low', 'full');
-    if (VAGAS.livres <= 0) {
+    var lowThreshold = Math.max(4, Math.round(v.total * 0.12));
+    if (v.livres <= 0) {
       box.classList.add('full');
-      sub.textContent = 'Vagas esgotadas — podes entrar na lista de espera e a organização contacta-te se abrir vaga.';
-    } else if (VAGAS.livres <= 20) {
+      sub.textContent = gLabel + ': vagas esgotadas — podes entrar na lista de espera e a organização contacta-te se abrir vaga.';
+    } else if (v.livres <= lowThreshold) {
       box.classList.add('low');
-      sub.textContent = 'Últimas vagas! ≈ ' + duplasLivres + ' dupla(s) ainda disponível(is).';
+      sub.textContent = gLabel + ': últimas vagas! ≈ ' + duplasLivres + ' dupla(s) ainda disponível(is).';
     } else {
-      sub.textContent = '≈ ' + duplasLivres + ' dupla(s) ainda disponível(is).';
+      sub.textContent = gLabel + ': ≈ ' + duplasLivres + ' dupla(s) ainda disponível(is).';
     }
     // Quando esgotado, o formulário passa a inscrever em lista de espera (não bloqueia).
     var submitBtn = document.querySelector('#insForm button[type="submit"]');
@@ -464,7 +474,7 @@ document.addEventListener('DOMContentLoaded', function () {
       submitBtn.disabled = false;
       submitBtn.style.opacity = '';
       submitBtn.style.cursor = '';
-      submitBtn.innerHTML = (VAGAS.livres <= 0)
+      submitBtn.innerHTML = (v.livres <= 0)
         ? '<i class="ph ph-hourglass-medium"></i> Entrar na lista de espera'
         : '<i class="ph ph-paper-plane-tilt"></i> Submeter inscrição';
     }
@@ -503,13 +513,14 @@ document.addEventListener('DOMContentLoaded', function () {
     if (erros.length) { errEl.textContent = erros.join(' '); errEl.style.display = ''; return; }
     errEl.style.display = 'none';
 
-    // Capacidade: solo=1 vaga, parceiro/reserva=2 vagas.
-    // Se não houver vagas suficientes, a inscrição entra em LISTA DE ESPERA (estado 'espera').
+    // Capacidade por género: solo=1 vaga, parceiro/reserva=2 vagas.
+    // Se não houver vagas suficientes no género, a inscrição entra em LISTA DE ESPERA.
     var vagasNec = (modo === 'solo') ? 1 : 2;
     await refreshVagas();
-    var waitlist = (VAGAS.livres < vagasNec);
+    var vGen = VAGAS[genero === 'F' ? 'F' : 'M'];
+    var waitlist = (vGen.livres < vagasNec);
     if (waitlist) {
-      if (!confirm('As vagas estão esgotadas. Queres entrar na lista de espera? A organização contacta-te se abrir uma vaga.')) return;
+      if (!confirm('As vagas ' + (genero === 'F' ? 'Femininas' : 'Masculinas') + ' estão esgotadas. Queres entrar na lista de espera? A organização contacta-te se abrir uma vaga.')) return;
     }
     var estadoInicial = waitlist ? 'espera' : 'nova';
 

@@ -70,6 +70,8 @@ const DEFAULTS = {
     bannerMsg: '',
     tornTelOrg: '',
     maxDuplas: '88',
+    maxJogadoresM: '120',
+    maxJogadoresF: '48',
     sbRefreshMins: '15',
     sbRecentCount: '16',
   },
