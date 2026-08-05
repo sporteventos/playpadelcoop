@@ -5907,13 +5907,81 @@ window._logsClearFilters = function() {
 };
 
 // Constrói o HTML de uma linha da tabela de pré-inscrições.
+// Mensagem WhatsApp contextual para uma inscrição (lembrete/confirmação).
+function _insWaMsg(e) {
+  const nome = (e.nome1 || '').split(' ')[0] || 'olá';
+  const cat  = e.categoria || 'sem categoria';
+  if (e.estado === 'confirmada') {
+    return `Olá ${nome}! A tua inscrição no Torneio Reentre (${cat}) está *confirmada* ✅. Até breve nos courts! 🎾`;
+  }
+  return `Olá ${nome}! A tua pré-inscrição no Torneio Reentre (${cat}) está registada. Para garantir a vaga falta apenas o pagamento — podes confirmar connosco? Obrigado! 🎾`;
+}
+
+// Painel de dashboard (enchimento por nível/género + ritmo de inscrições).
+function _insDashboardHtml(entries) {
+  const active = entries.filter(e => e.estado !== 'cancelada');
+  if (!active.length) return '';
+  const groups = {};
+  active.forEach(e => {
+    const k = e.categoria || '';
+    const g = (groups[k] = groups[k] || { conf: 0, pend: 0, res: 0, M: 0, F: 0, tot: 0 });
+    g.tot++;
+    if (e.estado === 'confirmada') g.conf++; else g.pend++;
+    if (e.reservado) g.res++;
+    if ((e.genero || 'M') === 'F') g.F++; else g.M++;
+  });
+  const keys = Object.keys(groups).sort((a, b) => a.localeCompare(b));
+  const maxTot = Math.max(1, ...keys.map(k => groups[k].tot));
+  const bars = keys.map(k => {
+    const g = groups[k];
+    const label = k || 'Sem categoria';
+    const confW = Math.round(g.conf / maxTot * 100);
+    const pendW = Math.round(g.pend / maxTot * 100);
+    return `<div style="display:flex;align-items:center;gap:.5rem;margin:.25rem 0">
+      <div style="width:90px;font-size:.72rem;color:var(--branco);font-weight:600">${escHtml(label)}</div>
+      <div style="flex:1;height:16px;background:rgba(255,255,255,.05);border-radius:4px;overflow:hidden;display:flex" title="${g.conf} confirmadas · ${g.pend} pendentes">
+        <div style="width:${confW}%;background:var(--verde)"></div><div style="width:${pendW}%;background:var(--amarelo)"></div>
+      </div>
+      <div style="width:140px;font-size:.68rem;color:var(--cinza-texto);text-align:right">${g.conf}✓ ${g.pend}⏳${g.res?' · '+g.res+'🔖':''} · ${g.M}M/${g.F}F</div>
+    </div>`;
+  }).join('');
+  const byDay = {};
+  active.forEach(e => { const d = String(e.criadoem || e.criadoEm || '').slice(0, 10); if (d) byDay[d] = (byDay[d] || 0) + 1; });
+  const days = [];
+  const today = new Date();
+  for (let i = 13; i >= 0; i--) { const dt = new Date(today); dt.setDate(dt.getDate() - i); days.push(dt.toISOString().slice(0, 10)); }
+  const maxDay = Math.max(1, ...days.map(d => byDay[d] || 0));
+  const dayBars = days.map(d => {
+    const n = byDay[d] || 0;
+    const h = Math.round(n / maxDay * 42);
+    return `<div title="${d}: ${n} inscrição(ões)" style="flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center">
+      <div style="font-size:.55rem;color:var(--cinza-texto)">${n || ''}</div>
+      <div style="width:65%;height:${h}px;min-height:${n?3:0}px;background:var(--verde);border-radius:2px 2px 0 0"></div>
+      <div style="font-size:.55rem;color:var(--cinza-texto);margin-top:2px">${d.slice(8, 10)}</div>
+    </div>`;
+  }).join('');
+  return `<details class="card" style="padding:1rem;margin-bottom:1rem">
+    <summary style="cursor:pointer;font-weight:700;text-transform:uppercase;font-size:.8rem;letter-spacing:.05em;color:var(--branco)"><i class="ph ph-chart-bar"></i> Dashboard de inscrições</summary>
+    <div style="margin-top:1rem">
+      <div style="font-size:.72rem;text-transform:uppercase;letter-spacing:.05em;color:var(--cinza-texto);margin-bottom:.4rem">Enchimento por nível <span style="color:var(--verde)">■</span> confirmadas <span style="color:var(--amarelo)">■</span> pendentes</div>
+      ${bars}
+      <div style="font-size:.72rem;text-transform:uppercase;letter-spacing:.05em;color:var(--cinza-texto);margin:1rem 0 .4rem">Ritmo — inscrições nos últimos 14 dias</div>
+      <div style="display:flex;align-items:flex-end;gap:3px;height:70px">${dayBars}</div>
+    </div>
+  </details>`;
+}
+
 function _insRowHtml(e, entries) {
   return `
                   <tr style="border-bottom:1px solid rgba(255,255,255,.04)" data-ins-id="${escHtml(e.id)}">
                     <td style="padding:.65rem .9rem">
                       <div style="font-weight:600;color:var(--branco)">${escHtml(e.nome1)}</div>
                       ${e.nome2 ? `<div style="font-size:.75rem;color:var(--cinza-texto)"><i class="ph ph-user"></i> ${escHtml(e.nome2)}</div>` : ''}
-                      ${e.reservado ? `<div style="font-size:.73rem;color:#7BB0FF"><i class="ph ph-bookmark-simple"></i> Vaga reservada — parceiro a anunciar</div>`
+                      ${e.reservado ? (function(){
+                        const dias = Math.floor((Date.now() - new Date(e.criadoem || e.criadoEm || Date.now()).getTime()) / 86400000);
+                        const alerta = e.estado !== 'cancelada' && dias >= 3;
+                        return `<div style="font-size:.73rem;color:${alerta?'#FFB020':'#7BB0FF'};font-weight:${alerta?'600':'400'}"><i class="ph ph-bookmark-simple"></i> Vaga reservada — parceiro a anunciar${dias>0?` · há ${dias} dia(s)`:''}${alerta?' ⚠':''}</div>`;
+                      })()
                         : (e.parceiro ? (function(){
                         const sib = entries.find(x => x.parid && x.parid === e.parid && x.id !== e.id);
                         const ok = sib && sib.estado === 'confirmada';
@@ -5948,6 +6016,7 @@ function _insRowHtml(e, entries) {
                     </td>
                     <td style="padding:.65rem .9rem;text-align:center;white-space:nowrap">
                       <button class="btn-icon" title="Editar dados" onclick="insAdminEdit('${escHtml(e.id)}')"><i class="ph ph-pencil-simple" style="color:#8AA396"></i></button>
+                      ${e.telefone && e.estado!=='cancelada' ? `<a class="btn-icon" style="color:#25D366" target="_blank" title="Contactar por WhatsApp (${e.estado==='confirmada'?'confirmação':'lembrete de pagamento'})" href="${waLink(e.telefone, _insWaMsg(e))}"><i class="ph ph-whatsapp-logo"></i></a>` : ''}
                       ${e.reservado && e.estado!=='cancelada' ? `<button class="btn-icon" title="Anunciar parceiro (cria a pré-inscrição do parceiro)" onclick="insAdminAnnounce('${escHtml(e.id)}')"><i class="ph ph-user-plus" style="color:#7BB0FF"></i></button>` : ''}
                       ${e.estado==='cancelada'
                         ? `<button class="btn-icon" title="Reativar inscrição (volta a pendente)" onclick="insAdminReactivate('${escHtml(e.id)}')"><i class="ph ph-arrow-u-up-left" style="color:var(--verde)"></i></button>`
@@ -6041,6 +6110,7 @@ async function renderInscricoes() {
   const indiv   = entries.filter(e => e.tipo === 'jogador').length;
   const confirmadas = entries.filter(e => e.estado === 'confirmada').length;
   const reservas = entries.filter(e => e.reservado).length;
+  const reservasPend = entries.filter(e => e.reservado && e.estado !== 'cancelada').length;
 
   const _cfg = getData('config') || {};
   let _maxD = parseInt(_cfg.maxDuplas, 10); if (!_maxD || _maxD < 1) _maxD = 88;
@@ -6101,6 +6171,13 @@ async function renderInscricoes() {
           <div style="font-size:.68rem;text-transform:uppercase;letter-spacing:.06em;color:var(--cinza-texto);margin-top:.2rem">${cat ? escHtml(cat) : 'Sem categoria'}</div>
         </div>`).join('')}
       </div>
+
+      ${reservasPend > 0 ? `<div class="card" style="padding:.7rem 1rem;margin-bottom:1rem;background:rgba(255,176,32,.08);border:1px solid rgba(255,176,32,.25);display:flex;align-items:center;gap:.6rem">
+        <i class="ph ph-warning" style="color:#FFB020;font-size:1.3rem"></i>
+        <div style="font-size:.82rem;color:var(--branco)"><strong>${reservasPend}</strong> reserva(s) com parceiro por anunciar. <span style="color:var(--cinza-texto)">Usa o filtro "Reservas" e a acção <i class="ph ph-user-plus"></i> para anunciar o parceiro.</span></div>
+      </div>` : ''}
+
+      ${total > 0 ? _insDashboardHtml(entries) : ''}
 
       ${total === 0
         ? `<div class="card" style="text-align:center;padding:3rem;color:var(--cinza-texto)"><i class="ph ph-clipboard-text" style="font-size:2.5rem;display:block;margin-bottom:.6rem"></i>Nenhuma inscrição registada ainda.</div>`
