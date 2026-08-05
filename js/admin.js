@@ -5989,7 +5989,7 @@ function _insRowHtml(e, entries) {
                         return `<div style="font-size:.73rem;color:var(--cinza-texto)"><i class="ph ph-handshake"></i> Par: ${escHtml(e.parceiro)} <span style="color:${ok?'var(--verde)':'var(--amarelo)'}">${ok?'✓ confirmado':'pendente'}</span></div>`;
                       })() : '')}
                       ${e.clube ? `<div style="font-size:.72rem;color:#4A6058">${escHtml(e.clube)}</div>` : ''}
-                      ${e.observacoes ? `<div style="font-size:.72rem;color:#8AA396;margin-top:.25rem;max-width:280px"><i class="ph ph-note"></i> ${escHtml(e.observacoes)}</div>` : ''}
+                      ${e.observacoes && e.observacoes !== 'Importado da lista provisória do clube' ? `<div style="font-size:.72rem;color:#8AA396;margin-top:.25rem;max-width:280px"><i class="ph ph-note"></i> ${escHtml(e.observacoes)}</div>` : ''}
                     </td>
                     <td style="padding:.65rem .9rem">
                       <span style="font-size:.68rem;font-weight:700;text-transform:uppercase;padding:.15rem .45rem;border-radius:4px;background:${e.tipo==='dupla'?'rgba(0,195,123,.12)':'rgba(245,197,24,.12)'};color:${e.tipo==='dupla'?'var(--verde)':'var(--amarelo)'}">
