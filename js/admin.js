@@ -2525,8 +2525,9 @@ function renderConfigPanel() {
     ${fieldText('tornTelOrg',   'Tel. Organizador (WhatsApp)', 'ex: 258841234567 (sem + ou espaços)', '')}
 
     ${section('Capacidade de Inscrições')}
-    ${fieldText('maxDuplas',    'Máximo de duplas',    'ex: 88',                           '88')}
-    <div style="font-size:.72rem;color:var(--cinza-texto);padding:.2rem 0 .5rem">Cada dupla ocupa 2 vagas de jogador. Ex.: 88 duplas = 176 jogadores. As inscrições são bloqueadas ao atingir o limite.</div>
+    ${fieldText('maxJogadoresM', 'Máx. jogadores Masculino', 'ex: 120', '120')}
+    ${fieldText('maxJogadoresF', 'Máx. jogadores Feminino',  'ex: 48',  '48')}
+    <div style="font-size:.72rem;color:var(--cinza-texto);padding:.2rem 0 .5rem">Limites independentes por género (cada dupla ocupa 2 vagas). Ex.: 120 masc. = 60 duplas · 48 fem. = 24 duplas. Ao atingir o limite de um género, as inscrições desse género entram em lista de espera.</div>
     ${section('Visibilidade de Páginas')}
     ${fieldToggle('calendarioVisible',    'Calendário',               'ph-calendar',          true)}
     ${fieldToggle('scoreboardVisible',    'Quadro de Apuramento',     'ph-monitor-play',      true)}
@@ -6160,12 +6161,19 @@ async function renderInscricoes() {
   const emEspera = entries.filter(e => e.estado === 'espera').length;
 
   const _cfg = getData('config') || {};
-  let _maxD = parseInt(_cfg.maxDuplas, 10); if (!_maxD || _maxD < 1) _maxD = 88;
-  const vagasTotal = _maxD * 2;
-  const vagasOcup  = entries
-    .filter(e => e.estado !== 'rejeitada' && e.estado !== 'cancelada' && e.estado !== 'espera')
-    .reduce((n, e) => n + 1 + (e.reservado ? 1 : 0), 0);
-  const vagasLivres = Math.max(0, vagasTotal - vagasOcup);
+  const _cfgInt = (k, d) => { const v = parseInt(_cfg[k], 10); return (!v || v < 1) ? d : v; };
+  const vagasTotM = _cfgInt('maxJogadoresM', 120);
+  const vagasTotF = _cfgInt('maxJogadoresF', 48);
+  const vagasTotal = vagasTotM + vagasTotF;
+  const _slots = e => 1 + (e.reservado ? 1 : 0);
+  const _activeOcc = entries.filter(e => e.estado !== 'rejeitada' && e.estado !== 'cancelada' && e.estado !== 'espera');
+  const ocupM = _activeOcc.filter(e => (e.genero || 'M') !== 'F').reduce((n, e) => n + _slots(e), 0);
+  const ocupF = _activeOcc.filter(e => (e.genero || 'M') === 'F').reduce((n, e) => n + _slots(e), 0);
+  const livresM = Math.max(0, vagasTotM - ocupM);
+  const livresF = Math.max(0, vagasTotF - ocupF);
+  const vagasLivres = livresM + livresF;
+  const _vagaBg = (l, t) => l <= 0 ? 'rgba(255,74,74,.08)' : l <= Math.max(4, t * 0.12) ? 'rgba(245,197,24,.08)' : 'rgba(0,195,123,.06)';
+  const _vagaFg = (l, t) => l <= 0 ? '#FF4A4A' : l <= Math.max(4, t * 0.12) ? 'var(--amarelo)' : 'var(--verde)';
 
   const catMap  = {};
   (getData('categorias') || []).forEach(c => { catMap[c.id] = c.nome; });
@@ -6188,9 +6196,17 @@ async function renderInscricoes() {
       </div>
 
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:.7rem;margin-bottom:1.25rem">
-        <div class="card" style="padding:.9rem 1rem;text-align:center;grid-column:span 2;background:${vagasLivres<=0?'rgba(255,74,74,.08)':vagasLivres<=20?'rgba(245,197,24,.08)':'rgba(0,195,123,.06)'}">
-          <div style="font-size:2rem;font-weight:800;color:${vagasLivres<=0?'#FF4A4A':vagasLivres<=20?'var(--amarelo)':'var(--verde)'};line-height:1">${vagasLivres} <span style="font-size:.9rem;font-weight:600;color:var(--cinza-texto)">/ ${vagasTotal}</span></div>
-          <div style="font-size:.68rem;text-transform:uppercase;letter-spacing:.06em;color:var(--cinza-texto);margin-top:.2rem">Vagas livres · máx ${_maxD} duplas</div>
+        <div class="card" style="padding:.9rem 1rem;text-align:center;background:${_vagaBg(livresM,vagasTotM)}">
+          <div style="font-size:2rem;font-weight:800;color:${_vagaFg(livresM,vagasTotM)};line-height:1">${livresM} <span style="font-size:.9rem;font-weight:600;color:var(--cinza-texto)">/ ${vagasTotM}</span></div>
+          <div style="font-size:.68rem;text-transform:uppercase;letter-spacing:.06em;color:var(--cinza-texto);margin-top:.2rem">Vagas Masc. · ${Math.floor(vagasTotM/2)} duplas</div>
+        </div>
+        <div class="card" style="padding:.9rem 1rem;text-align:center;background:${_vagaBg(livresF,vagasTotF)}">
+          <div style="font-size:2rem;font-weight:800;color:${_vagaFg(livresF,vagasTotF)};line-height:1">${livresF} <span style="font-size:.9rem;font-weight:600;color:var(--cinza-texto)">/ ${vagasTotF}</span></div>
+          <div style="font-size:.68rem;text-transform:uppercase;letter-spacing:.06em;color:var(--cinza-texto);margin-top:.2rem">Vagas Fem. · ${Math.floor(vagasTotF/2)} duplas</div>
+        </div>
+        <div class="card" style="padding:.9rem 1rem;text-align:center">
+          <div style="font-size:2rem;font-weight:800;color:var(--branco);line-height:1">${vagasLivres} <span style="font-size:.9rem;font-weight:600;color:var(--cinza-texto)">/ ${vagasTotal}</span></div>
+          <div style="font-size:.68rem;text-transform:uppercase;letter-spacing:.06em;color:var(--cinza-texto);margin-top:.2rem">Vagas livres (total)</div>
         </div>
         <div class="card" style="padding:.9rem 1rem;text-align:center">
           <div style="font-size:2rem;font-weight:800;color:var(--branco);line-height:1">${total}</div>
@@ -6612,15 +6628,17 @@ window.insAdminPromote = async function(id) {
     const e = entries.find(x => x.id === id);
     if (!e) return;
     if (e.estado !== 'espera') { toast('Esta inscrição não está em lista de espera.', 'warning'); return; }
-    // Aviso se não houver vagas livres, mas permitir forçar.
+    // Aviso se não houver vagas livres nesse género, mas permitir forçar.
     const _cfg = getData('config') || {};
-    let _maxD = parseInt(_cfg.maxDuplas, 10); if (!_maxD || _maxD < 1) _maxD = 88;
-    const ocup = entries.filter(x => x.estado !== 'rejeitada' && x.estado !== 'cancelada' && x.estado !== 'espera')
+    const _cfgInt = (k, d) => { const v = parseInt(_cfg[k], 10); return (!v || v < 1) ? d : v; };
+    const _isF = (e.genero || 'M') === 'F';
+    const _cap = _isF ? _cfgInt('maxJogadoresF', 48) : _cfgInt('maxJogadoresM', 120);
+    const ocup = entries.filter(x => x.estado !== 'rejeitada' && x.estado !== 'cancelada' && x.estado !== 'espera' && ((x.genero || 'M') === 'F') === _isF)
       .reduce((n, x) => n + 1 + (x.reservado ? 1 : 0), 0);
-    const livres = (_maxD * 2) - ocup;
+    const livres = _cap - ocup;
     const nec = 1 + (e.reservado ? 1 : 0);
     let msg = `Promover "${e.nome1}" da lista de espera para pendente?`;
-    if (livres < nec) msg += `\n\n⚠ Não há vagas livres suficientes (livres: ${Math.max(0, livres)}, necessárias: ${nec}). Vais exceder a capacidade.`;
+    if (livres < nec) msg += `\n\n⚠ Não há vagas ${_isF ? 'Femininas' : 'Masculinas'} suficientes (livres: ${Math.max(0, livres)}, necessárias: ${nec}). Vais exceder a capacidade.`;
     if (!confirm(msg)) return;
     e.estado = 'nova';
     localStorage.setItem('pp_inscricoes', JSON.stringify(entries));
