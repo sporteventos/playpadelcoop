@@ -94,7 +94,7 @@ const Auth = (() => {
   function log(action, target, detail) {
     const u    = _snapshot;
     const logs = _read(K_LOGS);
-    logs.unshift({
+    const entry = {
       id:       uid(),
       userId:   u?.id       || 'system',
       username: u?.username || 'system',
@@ -103,8 +103,16 @@ const Auth = (() => {
       target:   target || '',
       detail:   detail || '',
       ts:       new Date().toISOString(),
-    });
+    };
+    logs.unshift(entry);
     _write(K_LOGS, logs.slice(0, 1000));
+    // Write-through best-effort para o registo partilhado (audit_logs).
+    // Falhas (ex.: sem sessão) são ignoradas — o log local mantém-se.
+    try {
+      if (typeof window.ppCloudInsertLog === 'function') {
+        window.ppCloudInsertLog(entry).catch(function () {});
+      }
+    } catch (e) { /* ignore */ }
   }
   function getLogs() { return _read(K_LOGS); }
 
