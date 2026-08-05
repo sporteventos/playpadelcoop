@@ -2534,6 +2534,7 @@ function renderConfigPanel() {
     ${fieldToggle('fasefinalVisible',     'Fase Final',               'ph-brackets-round',    true)}
     ${fieldToggle('jogadoresVisible',     'Jogadores',                'ph-users',             true)}
     ${fieldToggle('inscricoesVisible',    'Inscrições',               'ph-clipboard-text',    true)}
+    ${fieldToggle('inscritosVisible',     'Inscritos (duplas confirmadas)', 'ph-list-checks',   true)}
     ${fieldToggle('estatisticasVisible',  'Estatísticas',             'ph-chart-bar',         true)}
     ${fieldToggle('regulamentoVisible',   'Regulamento',              'ph-book-open',         true)}
 
@@ -5919,7 +5920,7 @@ function _insWaMsg(e) {
 
 // Painel de dashboard (enchimento por nível/género + ritmo de inscrições).
 function _insDashboardHtml(entries) {
-  const active = entries.filter(e => e.estado !== 'cancelada');
+  const active = entries.filter(e => e.estado !== 'cancelada' && e.estado !== 'espera');
   if (!active.length) return '';
   const groups = {};
   active.forEach(e => {
@@ -6010,19 +6011,23 @@ function _insRowHtml(e, entries) {
                     <td style="padding:.65rem .9rem;text-align:center">
                       ${e.estado==='cancelada'
                         ? `<span style="font-size:.66rem;font-weight:700;text-transform:uppercase;padding:.2rem .55rem;border-radius:999px;background:rgba(255,74,74,.15);color:#FF7A7A">Cancelada</span>`
-                        : `<span style="font-size:.66rem;font-weight:700;text-transform:uppercase;padding:.2rem .55rem;border-radius:999px;background:${e.estado==='confirmada'?'rgba(0,195,123,.15)':'rgba(245,197,24,.12)'};color:${e.estado==='confirmada'?'var(--verde)':'var(--amarelo)'}">
+                        : (e.estado==='espera'
+                          ? `<span style="font-size:.66rem;font-weight:700;text-transform:uppercase;padding:.2rem .55rem;border-radius:999px;background:rgba(255,176,32,.15);color:#FFB020">Em espera</span>`
+                          : `<span style="font-size:.66rem;font-weight:700;text-transform:uppercase;padding:.2rem .55rem;border-radius:999px;background:${e.estado==='confirmada'?'rgba(0,195,123,.15)':'rgba(245,197,24,.12)'};color:${e.estado==='confirmada'?'var(--verde)':'var(--amarelo)'}">
                         ${e.estado==='confirmada' ? 'Confirmada' : 'Pendente'}
-                      </span>`}
+                      </span>`)}
                     </td>
                     <td style="padding:.65rem .9rem;text-align:center;white-space:nowrap">
                       <button class="btn-icon" title="Editar dados" onclick="insAdminEdit('${escHtml(e.id)}')"><i class="ph ph-pencil-simple" style="color:#8AA396"></i></button>
                       ${e.telefone && e.estado!=='cancelada' ? `<a class="btn-icon" style="color:#25D366" target="_blank" title="Contactar por WhatsApp (${e.estado==='confirmada'?'confirmação':'lembrete de pagamento'})" href="${waLink(e.telefone, _insWaMsg(e))}"><i class="ph ph-whatsapp-logo"></i></a>` : ''}
                       ${e.reservado && e.estado!=='cancelada' ? `<button class="btn-icon" title="Anunciar parceiro (cria a pré-inscrição do parceiro)" onclick="insAdminAnnounce('${escHtml(e.id)}')"><i class="ph ph-user-plus" style="color:#7BB0FF"></i></button>` : ''}
-                      ${e.estado==='cancelada'
-                        ? `<button class="btn-icon" title="Reativar inscrição (volta a pendente)" onclick="insAdminReactivate('${escHtml(e.id)}')"><i class="ph ph-arrow-u-up-left" style="color:var(--verde)"></i></button>`
-                        : (e.estado==='confirmada'
-                          ? `<button class="btn-icon" title="Reverter confirmação (volta a pendente)" style="background:rgba(245,197,24,.12);border-radius:6px" onclick="insAdminUnconfirm('${escHtml(e.id)}')"><i class="ph ph-arrow-counter-clockwise" style="color:var(--amarelo)"></i></button>`
-                          : `<button class="btn-icon" title="Confirmar inscrição (após pagamento) e criar jogador" onclick="insAdminConfirm('${escHtml(e.id)}')"><i class="ph ph-check-circle" style="color:var(--verde)"></i></button>`)}
+                      ${e.estado==='espera'
+                        ? `<button class="btn-icon" title="Promover da lista de espera (passa a pendente e ocupa vaga)" onclick="insAdminPromote('${escHtml(e.id)}')"><i class="ph ph-arrow-fat-up" style="color:var(--verde)"></i></button>`
+                        : (e.estado==='cancelada'
+                          ? `<button class="btn-icon" title="Reativar inscrição (volta a pendente)" onclick="insAdminReactivate('${escHtml(e.id)}')"><i class="ph ph-arrow-u-up-left" style="color:var(--verde)"></i></button>`
+                          : (e.estado==='confirmada'
+                            ? `<button class="btn-icon" title="Reverter confirmação (volta a pendente)" style="background:rgba(245,197,24,.12);border-radius:6px" onclick="insAdminUnconfirm('${escHtml(e.id)}')"><i class="ph ph-arrow-counter-clockwise" style="color:var(--amarelo)"></i></button>`
+                            : `<button class="btn-icon" title="Confirmar inscrição (após pagamento) e criar jogador" onclick="insAdminConfirm('${escHtml(e.id)}')"><i class="ph ph-check-circle" style="color:var(--verde)"></i></button>`))}
                       ${e.estado!=='cancelada' ? `<button class="btn-icon" title="Cancelar inscrição (mantém registo, liberta a vaga)" onclick="insAdminCancel('${escHtml(e.id)}')"><i class="ph ph-prohibit" style="color:#FF9A3D"></i></button>` : ''}
                       <button class="btn-icon" title="Remover definitivamente" onclick="insAdminDelete('${escHtml(e.id)}')"><i class="ph ph-trash" style="color:#FF4A4A"></i></button>
                     </td>
@@ -6042,8 +6047,9 @@ window._insApplyFilters = function() {
     if (fCat === '__none__') { if (e.categoria) return false; }
     else if (fCat && e.categoria !== fCat) return false;
     if (fEst === 'confirmada' && e.estado !== 'confirmada') return false;
-    if (fEst === 'pendente' && (e.estado === 'confirmada' || e.estado === 'cancelada')) return false;
+    if (fEst === 'pendente' && (e.estado === 'confirmada' || e.estado === 'cancelada' || e.estado === 'espera')) return false;
     if (fEst === 'cancelada' && e.estado !== 'cancelada') return false;
+    if (fEst === 'espera' && e.estado !== 'espera') return false;
     if (fTipo === 'reserva') { if (!e.reservado) return false; }
     else if (fTipo && e.tipo !== fTipo) return false;
     if (q) {
@@ -6111,12 +6117,13 @@ async function renderInscricoes() {
   const confirmadas = entries.filter(e => e.estado === 'confirmada').length;
   const reservas = entries.filter(e => e.reservado).length;
   const reservasPend = entries.filter(e => e.reservado && e.estado !== 'cancelada').length;
+  const emEspera = entries.filter(e => e.estado === 'espera').length;
 
   const _cfg = getData('config') || {};
   let _maxD = parseInt(_cfg.maxDuplas, 10); if (!_maxD || _maxD < 1) _maxD = 88;
   const vagasTotal = _maxD * 2;
   const vagasOcup  = entries
-    .filter(e => e.estado !== 'rejeitada' && e.estado !== 'cancelada')
+    .filter(e => e.estado !== 'rejeitada' && e.estado !== 'cancelada' && e.estado !== 'espera')
     .reduce((n, e) => n + 1 + (e.reservado ? 1 : 0), 0);
   const vagasLivres = Math.max(0, vagasTotal - vagasOcup);
 
@@ -6165,6 +6172,10 @@ async function renderInscricoes() {
           <div style="font-size:2rem;font-weight:800;color:var(--verde);line-height:1">${confirmadas}</div>
           <div style="font-size:.68rem;text-transform:uppercase;letter-spacing:.06em;color:var(--cinza-texto);margin-top:.2rem">Confirmadas</div>
         </div>
+        ${emEspera > 0 ? `<div class="card" style="padding:.9rem 1rem;text-align:center;background:rgba(255,176,32,.06)">
+          <div style="font-size:2rem;font-weight:800;color:#FFB020;line-height:1">${emEspera}</div>
+          <div style="font-size:.68rem;text-transform:uppercase;letter-spacing:.06em;color:var(--cinza-texto);margin-top:.2rem">Em espera</div>
+        </div>` : ''}
         ${Object.entries(catCounts).sort((a,b)=>String(a[0]).localeCompare(String(b[0]))).map(([cat, n]) => `
         <div class="card" style="padding:.9rem 1rem;text-align:center">
           <div style="font-size:2rem;font-weight:800;color:var(--branco);line-height:1">${n}</div>
@@ -6201,6 +6212,7 @@ async function renderInscricoes() {
               <option value="">Estado: todos</option>
               <option value="pendente">Pendentes</option>
               <option value="confirmada">Confirmadas</option>
+              <option value="espera">Em espera</option>
               <option value="cancelada">Canceladas</option>
             </select>
             <select id="insFiltroTipo" onchange="_insApplyFilters()" style="background:var(--cinza-escuro);border:1px solid var(--preto-borda);border-radius:6px;padding:.4rem .5rem;font-size:.8rem;color:var(--branco)">
@@ -6551,6 +6563,32 @@ window.insAdminReactivate = async function(id) {
     renderInscricoes();
     toast(`Inscrição de "${e.nome1}" reativada (pendente).`, 'success');
   } catch(err) { toast('Erro ao reativar.', 'error'); }
+};
+
+// Promove uma inscrição da lista de espera para pendente (passa a ocupar vaga).
+window.insAdminPromote = async function(id) {
+  try {
+    const entries = JSON.parse(localStorage.getItem('pp_inscricoes') || '[]');
+    const e = entries.find(x => x.id === id);
+    if (!e) return;
+    if (e.estado !== 'espera') { toast('Esta inscrição não está em lista de espera.', 'warning'); return; }
+    // Aviso se não houver vagas livres, mas permitir forçar.
+    const _cfg = getData('config') || {};
+    let _maxD = parseInt(_cfg.maxDuplas, 10); if (!_maxD || _maxD < 1) _maxD = 88;
+    const ocup = entries.filter(x => x.estado !== 'rejeitada' && x.estado !== 'cancelada' && x.estado !== 'espera')
+      .reduce((n, x) => n + 1 + (x.reservado ? 1 : 0), 0);
+    const livres = (_maxD * 2) - ocup;
+    const nec = 1 + (e.reservado ? 1 : 0);
+    let msg = `Promover "${e.nome1}" da lista de espera para pendente?`;
+    if (livres < nec) msg += `\n\n⚠ Não há vagas livres suficientes (livres: ${Math.max(0, livres)}, necessárias: ${nec}). Vais exceder a capacidade.`;
+    if (!confirm(msg)) return;
+    e.estado = 'nova';
+    localStorage.setItem('pp_inscricoes', JSON.stringify(entries));
+    if (window.ppCloudState && window.ppCloudState.upsertInscricao) await window.ppCloudState.upsertInscricao(e);
+    Auth.log('PROMOVER_INSCRICAO', 'inscricoes', `${e.nome1} (${e.categoria || 'Sem categoria'})`);
+    renderInscricoes();
+    toast(`Inscrição de "${e.nome1}" promovida (pendente).`, 'success');
+  } catch(err) { toast('Erro ao promover: ' + (err && err.message || err), 'error'); }
 };
 
 // ============================================

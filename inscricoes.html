@@ -68,6 +68,7 @@
     <li><a href="fasefinal.html"><i class="ph ph-brackets-round nav-icon"></i> Fase Final</a></li>
     <li><a href="jogadores.html"><i class="ph ph-users nav-icon"></i> Jogadores</a></li>
     <li><a href="inscricoes.html" class="active"><i class="ph ph-clipboard-text nav-icon"></i> Inscrições</a></li>
+    <li><a href="inscritos.html"><i class="ph ph-list-checks nav-icon"></i> Inscritos</a></li>
     <li><a href="estatisticas.html"><i class="ph ph-chart-bar nav-icon"></i> Estatísticas</a></li>
     <li><a href="regulamento.html"><i class="ph ph-book-open nav-icon"></i> Regulamento</a></li>
   </ul>
@@ -84,6 +85,7 @@
     <li><a href="fasefinal.html"><i class="ph ph-brackets-round"></i> Fase Final</a></li>
     <li><a href="jogadores.html"><i class="ph ph-users"></i> Jogadores</a></li>
     <li><a href="inscricoes.html" class="active"><i class="ph ph-clipboard-text"></i> Inscrições</a></li>
+    <li><a href="inscritos.html"><i class="ph ph-list-checks"></i> Inscritos</a></li>
     <li><a href="estatisticas.html"><i class="ph ph-chart-bar"></i> Estatísticas</a></li>
     <li><a href="regulamento.html"><i class="ph ph-book-open"></i> Regulamento</a></li>
   </ul>
@@ -415,7 +417,7 @@ document.addEventListener('DOMContentLoaded', function () {
   // ── Contador de vagas ──
   var VAGAS = { total: 176, ocupadas: 0, livres: 176 };
   function slotsOf(e){ return 1 + (e && e.reservado ? 1 : 0); }
-  function isActive(e){ return e && e.estado !== 'rejeitada' && e.estado !== 'cancelada'; }
+  function isActive(e){ return e && e.estado !== 'rejeitada' && e.estado !== 'cancelada' && e.estado !== 'espera'; }
   async function refreshVagas(){
     var cfg = (ppGet('config') || {});
     var maxD = parseInt(cfg.maxDuplas, 10); if (!maxD || maxD < 1) maxD = 88;
@@ -449,27 +451,22 @@ document.addEventListener('DOMContentLoaded', function () {
     box.classList.remove('low', 'full');
     if (VAGAS.livres <= 0) {
       box.classList.add('full');
-      sub.textContent = 'Inscrições esgotadas — todas as vagas estão preenchidas.';
+      sub.textContent = 'Vagas esgotadas — podes entrar na lista de espera e a organização contacta-te se abrir vaga.';
     } else if (VAGAS.livres <= 20) {
       box.classList.add('low');
       sub.textContent = 'Últimas vagas! ≈ ' + duplasLivres + ' dupla(s) ainda disponível(is).';
     } else {
       sub.textContent = '≈ ' + duplasLivres + ' dupla(s) ainda disponível(is).';
     }
-    // Bloquear formulário se esgotado
+    // Quando esgotado, o formulário passa a inscrever em lista de espera (não bloqueia).
     var submitBtn = document.querySelector('#insForm button[type="submit"]');
     if (submitBtn) {
-      if (VAGAS.livres <= 0) {
-        submitBtn.disabled = true;
-        submitBtn.style.opacity = '.5';
-        submitBtn.style.cursor = 'not-allowed';
-        submitBtn.innerHTML = '<i class="ph ph-lock"></i> Inscrições esgotadas';
-      } else {
-        submitBtn.disabled = false;
-        submitBtn.style.opacity = '';
-        submitBtn.style.cursor = '';
-        submitBtn.innerHTML = '<i class="ph ph-paper-plane-tilt"></i> Submeter inscrição';
-      }
+      submitBtn.disabled = false;
+      submitBtn.style.opacity = '';
+      submitBtn.style.cursor = '';
+      submitBtn.innerHTML = (VAGAS.livres <= 0)
+        ? '<i class="ph ph-hourglass-medium"></i> Entrar na lista de espera'
+        : '<i class="ph ph-paper-plane-tilt"></i> Submeter inscrição';
     }
   }
   refreshVagas();
@@ -506,16 +503,15 @@ document.addEventListener('DOMContentLoaded', function () {
     if (erros.length) { errEl.textContent = erros.join(' '); errEl.style.display = ''; return; }
     errEl.style.display = 'none';
 
-    // Capacidade: solo=1 vaga, parceiro/reserva=2 vagas
+    // Capacidade: solo=1 vaga, parceiro/reserva=2 vagas.
+    // Se não houver vagas suficientes, a inscrição entra em LISTA DE ESPERA (estado 'espera').
     var vagasNec = (modo === 'solo') ? 1 : 2;
     await refreshVagas();
-    if (VAGAS.livres < vagasNec) {
-      errEl.textContent = VAGAS.livres <= 0
-        ? 'Inscrições esgotadas — já não há vagas disponíveis.'
-        : 'Só resta ' + VAGAS.livres + ' vaga. Para inscrever uma dupla são precisas 2 vagas — escolhe "Sozinho(a)" ou contacta a organização.';
-      errEl.style.display = '';
-      return;
+    var waitlist = (VAGAS.livres < vagasNec);
+    if (waitlist) {
+      if (!confirm('As vagas estão esgotadas. Queres entrar na lista de espera? A organização contacta-te se abrir uma vaga.')) return;
     }
+    var estadoInicial = waitlist ? 'espera' : 'nova';
 
     // Uma inscrição por pessoa: com parceiro cria duas pré-inscrições ligadas por parId; reserva ocupa 2 vagas
     var baseId = 'ins-' + Date.now();
@@ -534,7 +530,7 @@ document.addEventListener('DOMContentLoaded', function () {
       telefone: telefone,
       email: form.email.value.trim(),
       observacoes: form.observacoes.value.trim(),
-      estado: 'nova'
+      estado: estadoInicial
     }];
     if (parceiroNome) {
       novos.push({
@@ -551,7 +547,7 @@ document.addEventListener('DOMContentLoaded', function () {
         telefone: parceiroTel,
         email: parceiroEmail,
         observacoes: '',
-        estado: 'nova'
+        estado: estadoInicial
       });
     }
     var entry = novos[0];
@@ -616,6 +612,7 @@ document.addEventListener('DOMContentLoaded', function () {
       + (parceiroNome ? '*Parceiro(a):* ' + parceiroNome + (parceiroTel ? ' (' + parceiroTel + ')' : '') + '\n' : '')
       + (reserva ? '*Parceiro(a):* (a anunciar — lugar reservado)\n' : '')
       + (modo === 'solo' ? '*Inscrição:* individual (sem parceiro por agora)\n' : '')
+      + (waitlist ? '*⏳ LISTA DE ESPERA* (vagas esgotadas)\n' : '')
       + (entry.observacoes ? '*Obs.:* ' + entry.observacoes + '\n' : '')
       + '\n_Inscrição submetida em ' + new Date().toLocaleString('pt-PT') + '_';
 
@@ -635,8 +632,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
     var successMsg = document.getElementById('successMsg');
     if (successMsg) {
-      successMsg.textContent = 'Olá ' + nome1 + '! A tua pré-inscrição na categoria '
-        + categoria + ' foi guardada.' + (tel ? ' Clica em "Confirmar via WhatsApp" para a organização receber os teus dados.' : '')
+      successMsg.textContent = 'Olá ' + nome1 + '! '
+        + (waitlist
+            ? 'Entraste na LISTA DE ESPERA da categoria ' + categoria + '. A organização contacta-te se abrir uma vaga.'
+            : 'A tua pré-inscrição na categoria ' + categoria + ' foi guardada.')
+        + (tel ? ' Clica em "Confirmar via WhatsApp" para a organização receber os teus dados.' : '')
         + (syncOk ? '' : ' Nota: a sincronização automática falhou neste envio.');
     }
 
