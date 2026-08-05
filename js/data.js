@@ -88,6 +88,7 @@ const PP_CLOUD = {
   key: 'sb_publishable_LQ03yWZ4f-Mo0BYXWuinVw_kpWqbmIy',
   table: 'app_state',
   inscricoesTable: 'inscricoes',
+  logsTable: 'audit_logs',
   rowId: 'playpadelcoop-main',
   keys: ['campos', 'categorias', 'grupos', 'jogadores', 'duplas', 'jogos', 'fasefinal', 'telefones', 'inscricoes', 'patrocinadores', 'parceiros', 'config'],
 };
@@ -167,6 +168,37 @@ async function ppCloudDeleteInscricao(id) {
   var endpoint = PP_CLOUD.url + '/rest/v1/' + encodeURIComponent(PP_CLOUD.inscricoesTable) + '?id=eq.' + encodeURIComponent(id);
   var r = await fetch(endpoint, { method: 'DELETE', headers: ppCloudHeaders('return=minimal') });
   if (!r.ok) throw new Error('Cloud inscricao delete failed: ' + r.status);
+}
+// ---- Registo de auditoria partilhado (audit_logs) ----
+async function ppCloudInsertLog(entry) {
+  // Só staff autenticado pode inserir (RLS). Sem token, guardamos só local.
+  if (!(window.PP_AUTH && window.PP_AUTH.token)) return false;
+  var payload = {
+    user_id:  (window.PP_AUTH && window.PP_AUTH.userId) || null,
+    username: entry.username || null,
+    role:     entry.role || null,
+    action:   entry.action || '',
+    target:   entry.target || null,
+    detail:   entry.detail || null,
+    ts:       entry.ts || new Date().toISOString(),
+  };
+  var endpoint = PP_CLOUD.url + '/rest/v1/' + encodeURIComponent(PP_CLOUD.logsTable);
+  var r = await fetch(endpoint, {
+    method: 'POST',
+    headers: ppCloudHeaders('return=minimal'),
+    body: JSON.stringify([payload]),
+  });
+  if (!r.ok) throw new Error('Cloud log insert failed: ' + r.status);
+  return true;
+}
+async function ppCloudFetchLogs(limit) {
+  var lim = limit || 1000;
+  var endpoint = PP_CLOUD.url + '/rest/v1/' + encodeURIComponent(PP_CLOUD.logsTable) +
+    '?select=*&order=ts.desc&limit=' + lim;
+  var r = await fetch(endpoint, { headers: ppCloudHeaders() });
+  if (!r.ok) throw new Error('Cloud logs fetch failed: ' + r.status);
+  var rows = await r.json();
+  return Array.isArray(rows) ? rows : [];
 }
 // ---- Normalized relational tables (Fase 3) ----
 var PP_ENTITIES = [

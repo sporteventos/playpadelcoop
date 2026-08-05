@@ -5808,6 +5808,46 @@ function renderLogs() {
   }
 
   window._logsApplyFilters();
+
+  // Buscar o registo partilhado (audit_logs) e fundir com o local, para o
+  // admin ver também as acções de outros utilizadores (ex.: operadores).
+  if (typeof window.ppCloudFetchLogs === 'function') {
+    window.ppCloudFetchLogs(1000).then(function (rows) {
+      const norm = rows.map(function (r) {
+        return {
+          id:       r.id,
+          userId:   r.user_id || 'system',
+          username: r.username || 'system',
+          role:     r.role || '-',
+          action:   r.action || '',
+          target:   r.target || '',
+          detail:   r.detail || '',
+          ts:       r.ts,
+        };
+      });
+      // Fundir com o local, removendo duplicados (mesma acção/ts/utilizador).
+      const seen = new Set();
+      const key = (l) => [l.ts, l.action, l.username, l.target, l.detail].join('|');
+      const merged = [];
+      norm.concat(APP._logsAll || []).forEach(function (l) {
+        const k = key(l);
+        if (seen.has(k)) return;
+        seen.add(k);
+        merged.push(l);
+      });
+      merged.sort(function (a, b) { return new Date(b.ts) - new Date(a.ts); });
+      APP._logsAll = merged.slice(0, 1000);
+
+      const actionSel2 = document.getElementById('logsFilterAction');
+      if (actionSel2) {
+        const actions = [...new Set(APP._logsAll.map(l => l.action))].sort();
+        const cur = actionSel2.value;
+        actionSel2.innerHTML = '<option value="">Todas as acções</option>' +
+          actions.map(a => `<option value="${a}"${a === cur ? ' selected' : ''}>${a}</option>`).join('');
+      }
+      window._logsApplyFilters();
+    }).catch(function () { /* offline / sem permissões: fica só com o local */ });
+  }
 }
 
 window._logsApplyFilters = function() {
