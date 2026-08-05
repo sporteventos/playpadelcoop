@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#00C37B">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Play Padel">
+  <title>Inscritos · Torneio Reentre</title>
+  <link rel="stylesheet" href="css/style.css"/>
+  <link rel="stylesheet" href="css/pages.css"/>
+  <script src="https://unpkg.com/@phosphor-icons/web@2.1.1/src/index.js" defer></script>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar" id="navbar">
+  <a class="nav-logo" href="index.html">
+    <img src="playpadellogo.jpg" alt="Play Padel" style="height:34px;width:34px;border-radius:7px;object-fit:cover;flex-shrink:0"/>
+    <div class="nav-logo-text">
+      <span class="nav-logo-title">Play Padel</span>
+      <span class="nav-logo-sub">Torneio Reentre</span>
+    </div>
+  </a>
+
+  <ul class="nav-links">
+    <li><a href="index.html"><i class="ph ph-house nav-icon"></i> Início</a></li>
+    <li><a href="calendario.html"><i class="ph ph-calendar nav-icon"></i> Calendário</a></li>
+    <li><a href="classificacoes.html"><i class="ph ph-trophy nav-icon"></i> Classificações</a></li>
+    <li><a href="fasefinal.html"><i class="ph ph-brackets-round nav-icon"></i> Fase Final</a></li>
+    <li><a href="jogadores.html"><i class="ph ph-users nav-icon"></i> Jogadores</a></li>
+    <li><a href="inscricoes.html"><i class="ph ph-clipboard-text nav-icon"></i> Inscrições</a></li>
+    <li><a href="inscritos.html" class="active"><i class="ph ph-list-checks nav-icon"></i> Inscritos</a></li>
+    <li><a href="estatisticas.html"><i class="ph ph-chart-bar nav-icon"></i> Estatísticas</a></li>
+    <li><a href="regulamento.html"><i class="ph ph-book-open nav-icon"></i> Regulamento</a></li>
+  </ul>
+
+  <button class="nav-hamburger" id="hamburger" aria-label="Abrir menu" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- Drawer mobile -->
+<div class="nav-drawer" id="navDrawer">
+  <ul>
+    <li><a href="index.html"><i class="ph ph-house"></i> Início</a></li>
+    <li><a href="calendario.html"><i class="ph ph-calendar"></i> Calendário</a></li>
+    <li><a href="classificacoes.html"><i class="ph ph-trophy"></i> Classificações</a></li>
+    <li><a href="fasefinal.html"><i class="ph ph-brackets-round"></i> Fase Final</a></li>
+    <li><a href="jogadores.html"><i class="ph ph-users"></i> Jogadores</a></li>
+    <li><a href="inscricoes.html"><i class="ph ph-clipboard-text"></i> Inscrições</a></li>
+    <li><a href="inscritos.html" class="active"><i class="ph ph-list-checks"></i> Inscritos</a></li>
+    <li><a href="estatisticas.html"><i class="ph ph-chart-bar"></i> Estatísticas</a></li>
+    <li><a href="regulamento.html"><i class="ph ph-book-open"></i> Regulamento</a></li>
+  </ul>
+</div>
+
+<!-- PAGE HERO -->
+<div class="page-hero">
+  <div class="page-hero-content">
+    <p class="page-hero-tag"><i class="ph ph-list-checks"></i> Confirmados</p>
+    <h1 class="page-hero-title">Duplas <span>Inscritas</span></h1>
+    <p class="page-hero-sub">Duplas com inscrição confirmada, organizadas por nível</p>
+  </div>
+</div>
+
+<!-- FILTROS -->
+<div class="filters-bar" id="filtersBar">
+  <div class="filters-inner" style="display:flex;gap:.6rem;flex-wrap:wrap;align-items:center">
+    <div class="search-wrap search-wrap--large">
+      <i class="ph ph-magnifying-glass"></i>
+      <input type="search" id="searchInscrito" class="search-input" placeholder="Pesquisar dupla ou jogador…" autocomplete="off"/>
+      <span class="search-count" id="searchCount"></span>
+    </div>
+    <select id="filtroGenero" style="background:var(--cinza-escuro,#1a1a1a);border:1px solid var(--preto-borda,#333);border-radius:8px;padding:.55rem .7rem;color:var(--branco,#fff);font-size:.9rem">
+      <option value="">Todos</option>
+      <option value="M">Masculino</option>
+      <option value="F">Feminino</option>
+    </select>
+  </div>
+</div>
+
+<!-- CONTEÚDO -->
+<main class="page-main" id="inscritosMain">
+  <div id="loadingBox" style="text-align:center;padding:3rem;color:var(--cinza-texto,#888)">
+    <i class="ph ph-circle-notch" style="font-size:2rem;display:inline-block;animation:spin 1s linear infinite"></i>
+    <p style="margin-top:.6rem">A carregar inscritos…</p>
+  </div>
+  <div id="inscritosContent"></div>
+  <div class="empty-state hidden" id="emptyState">
+    <div class="empty-icon">🎾</div>
+    <p class="empty-title">Ainda não há duplas confirmadas</p>
+    <p class="empty-sub">As duplas aparecem aqui assim que a organização confirmar as inscrições.</p>
+  </div>
+</main>
+
+<footer class="footer">
+  <div class="footer-bottom" style="max-width:1200px;margin:0 auto">
+    <p class="footer-copy">© 2026 <span>Play Padel</span> · Torneio Reentre</p>
+    <a href="index.html" class="footer-copy" style="color:var(--verde);text-decoration:none">← Voltar ao início</a>
+  </div>
+</footer>
+
+<style>
+@keyframes spin { to { transform: rotate(360deg); } }
+.ins-cat-block { max-width:1100px; margin:0 auto 2rem; }
+.ins-cat-head { display:flex; align-items:center; gap:.6rem; margin:1.4rem 0 .8rem; }
+.ins-cat-title { font-family:'Barlow Condensed',sans-serif; font-size:1.5rem; text-transform:uppercase; letter-spacing:.03em; margin:0; }
+.ins-cat-count { font-size:.75rem; color:var(--cinza-texto,#888); background:rgba(255,255,255,.05); padding:.2rem .6rem; border-radius:999px; }
+.ins-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:.7rem; }
+.ins-card { background:var(--cinza-escuro,#161616); border:1px solid var(--preto-borda,#2a2a2a); border-radius:12px; padding:.9rem 1rem; }
+.ins-card-num { font-size:.7rem; color:var(--cinza-texto,#888); font-weight:700; }
+.ins-player { display:flex; align-items:center; gap:.5rem; margin-top:.35rem; }
+.ins-player i { color:var(--verde,#00C37B); }
+.ins-player span { color:var(--branco,#fff); font-weight:600; font-size:.92rem; }
+.ins-genero-tag { font-size:.62rem; font-weight:700; text-transform:uppercase; padding:.12rem .45rem; border-radius:4px; }
+</style>
+
+<script src="js/data.js"></script>
+<script src="js/nav-config.js" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+  // Navbar scroll
+  var navbar = document.getElementById('navbar');
+  window.addEventListener('scroll', function () { navbar.classList.toggle('scrolled', scrollY > 20); });
+
+  // Hamburger
+  var hamburger = document.getElementById('hamburger');
+  var drawer = document.getElementById('navDrawer');
+  hamburger.addEventListener('click', function () {
+    var open = drawer.classList.toggle('open');
+    hamburger.setAttribute('aria-expanded', open);
+  });
+
+  var ALL = [];
+
+  function catName(id) {
+    if (!id) return 'Sem categoria';
+    var cats = (typeof ppGet === 'function' ? ppGet('categorias') : null) || [];
+    var c = cats.find(function (x) { return x && x.id === id; });
+    return c && c.nome ? (id + ' · ' + c.nome) : id;
+  }
+
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function (m) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m];
+    });
+  }
+
+  // Constrói a lista de duplas confirmadas a partir das inscrições.
+  function buildDuplas(entries) {
+    var confirmadas = (entries || []).filter(function (e) { return e && e.estado === 'confirmada'; });
+    var seenPar = {};
+    var duplas = [];
+    confirmadas.forEach(function (e) {
+      if (e.parid) {
+        if (seenPar[e.parid]) return;
+        seenPar[e.parid] = true;
+        var sib = confirmadas.find(function (x) { return x.parid === e.parid && x.id !== e.id; });
+        var n2 = sib ? sib.nome1 : (e.reservado ? '(a anunciar)' : (e.parceiro || '(a anunciar)'));
+        duplas.push({ cat: e.categoria || '', genero: e.genero || 'M', n1: e.nome1, n2: n2 });
+      } else if (e.nome2) {
+        duplas.push({ cat: e.categoria || '', genero: e.genero || 'M', n1: e.nome1, n2: e.nome2 });
+      } else {
+        duplas.push({ cat: e.categoria || '', genero: e.genero || 'M', n1: e.nome1, n2: null });
+      }
+    });
+    return duplas;
+  }
+
+  function render() {
+    var q = (document.getElementById('searchInscrito').value || '').trim().toLowerCase();
+    var fg = document.getElementById('filtroGenero').value || '';
+    var list = ALL.filter(function (d) {
+      if (fg && d.genero !== fg) return false;
+      if (q) {
+        var hay = (d.n1 + ' ' + (d.n2 || '') + ' ' + d.cat).toLowerCase();
+        if (hay.indexOf(q) < 0) return false;
+      }
+      return true;
+    });
+
+    var content = document.getElementById('inscritosContent');
+    var empty = document.getElementById('emptyState');
+    document.getElementById('searchCount').textContent = list.length + ' dupla(s)';
+
+    if (!list.length) {
+      content.innerHTML = '';
+      empty.classList.remove('hidden');
+      return;
+    }
+    empty.classList.add('hidden');
+
+    // Agrupar por categoria (nível), ordenado
+    var groups = {};
+    list.forEach(function (d) { (groups[d.cat] = groups[d.cat] || []).push(d); });
+    var keys = Object.keys(groups).sort(function (a, b) {
+      if (!a) return 1; if (!b) return -1; return a.localeCompare(b);
+    });
+
+    content.innerHTML = keys.map(function (k) {
+      var arr = groups[k];
+      var cards = arr.map(function (d, i) {
+        var gTag = d.genero === 'F'
+          ? '<span class="ins-genero-tag" style="background:rgba(255,105,180,.15);color:#FF9AC9">Fem</span>'
+          : '<span class="ins-genero-tag" style="background:rgba(123,176,255,.15);color:#7BB0FF">Masc</span>';
+        return '<div class="ins-card">'
+          + '<div style="display:flex;justify-content:space-between;align-items:center">'
+          + '<span class="ins-card-num">Dupla ' + (i + 1) + '</span>' + gTag + '</div>'
+          + '<div class="ins-player"><i class="ph ph-user"></i><span>' + esc(d.n1) + '</span></div>'
+          + (d.n2 ? '<div class="ins-player"><i class="ph ph-user"></i><span>' + esc(d.n2) + '</span></div>'
+                  : '<div class="ins-player"><i class="ph ph-user-circle-dashed" style="color:#888"></i><span style="color:#888;font-weight:500">individual</span></div>')
+          + '</div>';
+      }).join('');
+      return '<div class="ins-cat-block">'
+        + '<div class="ins-cat-head"><h2 class="ins-cat-title">' + esc(catName(k)) + '</h2>'
+        + '<span class="ins-cat-count">' + arr.length + ' dupla(s)</span></div>'
+        + '<div class="ins-grid">' + cards + '</div></div>';
+    }).join('');
+  }
+
+  async function load() {
+    var entries = [];
+    try {
+      if (window.ppCloudState && window.ppCloudState.fetchInscricoes) {
+        entries = await window.ppCloudState.fetchInscricoes();
+      }
+    } catch (_) {}
+    if (!entries || !entries.length) {
+      try { entries = JSON.parse(localStorage.getItem('pp_inscricoes') || '[]'); } catch (_) { entries = []; }
+    }
+    ALL = buildDuplas(entries);
+    document.getElementById('loadingBox').style.display = 'none';
+    render();
+  }
+
+  document.getElementById('searchInscrito').addEventListener('input', render);
+  document.getElementById('filtroGenero').addEventListener('change', render);
+  window.addEventListener('pp:datasynced', load);
+  load();
+});
+</script>
+</body>
+</html>

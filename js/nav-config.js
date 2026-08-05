@@ -14,6 +14,7 @@
     'fasefinal.html':     'fasefinalVisible',
     'jogadores.html':     'jogadoresVisible',
     'inscricoes.html':    'inscricoesVisible',
+    'inscritos.html':     'inscritosVisible',
     'estatisticas.html':  'estatisticasVisible',
     'regulamento.html':   'regulamentoVisible',
   };

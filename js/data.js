@@ -57,6 +57,7 @@ const DEFAULTS = {
     fasefinalVisible: true,
     jogadoresVisible: true,
     inscricoesVisible: true,
+    inscritosVisible: true,
     estatisticasVisible: true,
     regulamentoVisible: true,
     liveStatsVisible: true,

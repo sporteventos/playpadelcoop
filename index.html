@@ -74,6 +74,7 @@
     <li id="navLiFasefinal"><a href="fasefinal.html"><i class="ph ph-brackets-round nav-icon"></i> Fase Final</a></li>
     <li id="navLiJogadores"><a href="jogadores.html"><i class="ph ph-users nav-icon"></i> Jogadores</a></li>
     <li id="navLiInscricoes"><a href="inscricoes.html"><i class="ph ph-clipboard-text nav-icon"></i> Inscrições</a></li>
+    <li id="navLiInscritos"><a href="inscritos.html"><i class="ph ph-list-checks nav-icon"></i> Inscritos</a></li>
     <li id="navLiEstatisticas"><a href="estatisticas.html"><i class="ph ph-chart-bar nav-icon"></i> Estatísticas</a></li>
     <li id="navLiRegulamento"><a href="regulamento.html"><i class="ph ph-book-open nav-icon"></i> Regulamento</a></li>
   </ul>
@@ -92,6 +93,7 @@
     <li id="drawerLiFasefinal"><a href="fasefinal.html"><i class="ph ph-brackets-round"></i> Fase Final</a></li>
     <li id="drawerLiJogadores"><a href="jogadores.html"><i class="ph ph-users"></i> Jogadores</a></li>
     <li id="drawerLiInscricoes"><a href="inscricoes.html"><i class="ph ph-clipboard-text"></i> Inscrições</a></li>
+    <li id="drawerLiInscritos"><a href="inscritos.html"><i class="ph ph-list-checks"></i> Inscritos</a></li>
     <li id="drawerLiEstatisticas"><a href="estatisticas.html"><i class="ph ph-chart-bar"></i> Estatísticas</a></li>
     <li id="drawerLiRegulamento"><a href="regulamento.html"><i class="ph ph-book-open"></i> Regulamento</a></li>
   </ul>
@@ -333,6 +335,7 @@
       <a id="footerLiClassificacoes" href="classificacoes.html"><i class="ph ph-trophy"></i> Classificações</a>
       <a id="footerLiJogadores"     href="jogadores.html"><i class="ph ph-users"></i> Jogadores</a>
       <a id="footerLiInscricoes"    href="inscricoes.html"><i class="ph ph-clipboard-text"></i> Inscrições</a>
+      <a id="footerLiInscritos"     href="inscritos.html"><i class="ph ph-list-checks"></i> Inscritos</a>
     </nav>
   </div>
 
@@ -570,6 +573,9 @@
         show('drawerLiInscricoes',    cfg.inscricoesVisible !== false);
         show('footerLiInscricoes',    cfg.inscricoesVisible !== false);
         show('cardInscricoes',        cfg.inscricoesVisible !== false);
+        show('navLiInscritos',        cfg.inscritosVisible !== false);
+        show('drawerLiInscritos',     cfg.inscritosVisible !== false);
+        show('footerLiInscritos',     cfg.inscritosVisible !== false);
         show('navLiEstatisticas',     cfg.estatisticasVisible !== false);
         show('drawerLiEstatisticas',  cfg.estatisticasVisible !== false);
         show('navLiRegulamento',      cfg.regulamentoVisible !== false);
