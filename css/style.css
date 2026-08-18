@@ -940,6 +940,20 @@ body {
 
 .footer-copy span { color: var(--verde); }
 
+.footer-credit {
+  flex-basis: 100%;
+  text-align: center;
+  font-size: 0.72rem;
+  color: var(--cinza-texto);
+  margin-top: .35rem;
+}
+.footer-credit a {
+  color: var(--verde);
+  text-decoration: none;
+  font-weight: 600;
+}
+.footer-credit a:hover { text-decoration: underline; }
+
 /* ============================================
    MOBILE DRAWER
    ============================================ */
