@@ -243,7 +243,7 @@
   </div>
 </footer>
 
-<script src="js/data.js?v=20"></script>
+<script src="js/data.js?v=22"></script>
 <script src="js/nav-config.js" defer></script>
 <script>
 document.addEventListener('DOMContentLoaded', function () {
@@ -424,8 +424,8 @@ document.addEventListener('DOMContentLoaded', function () {
   async function refreshVagas(){
     var cfg = (ppGet('config') || {});
     var cfgInt = function(k, d){ var v = parseInt(cfg[k], 10); return (!v || v < 1) ? d : v; };
-    var totalM = cfgInt('maxJogadoresM', 120);
-    var totalF = cfgInt('maxJogadoresF', 48);
+    var totalM = cfgInt('maxJogadoresM', 144);
+    var totalF = cfgInt('maxJogadoresF', 30);
     var entries = [];
     try {
       if (window.ppCloudState && window.ppCloudState.fetchInscricoes) {
