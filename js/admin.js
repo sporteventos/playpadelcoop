@@ -6141,16 +6141,19 @@ async function renderInscricoes() {
     try { await window.ppCloudState.pullToLocal(); }
     catch (_) { toast('Não foi possível sincronizar com cloud. A mostrar dados locais.', 'warning'); }
   }
-  let entries = loadEntries();
-  if (!entries.length && window.ppCloudState && window.ppCloudState.fetchInscricoes) {
+  // A cloud é a fonte de verdade: buscar sempre do Supabase e espelhar em local.
+  // O cache local só é usado como recurso offline (cloud inacessível / file://).
+  let entries = null;
+  if (window.ppCloudState && window.ppCloudState.fetchInscricoes) {
     try {
       const remoteEntries = await window.ppCloudState.fetchInscricoes();
-      if (remoteEntries.length) {
-        saveEntries(remoteEntries);
+      if (Array.isArray(remoteEntries)) {
         entries = remoteEntries;
+        saveEntries(remoteEntries);
       }
     } catch (_) {}
   }
+  if (entries === null) entries = loadEntries();
   const total   = entries.length;
   const parIds  = new Set(entries.filter(e => e.parid).map(e => e.parid));
   const duplas  = parIds.size + entries.filter(e => e.tipo === 'dupla' && !e.parid).length;
