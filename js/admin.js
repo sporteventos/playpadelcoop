@@ -2525,8 +2525,8 @@ function renderConfigPanel() {
     ${fieldText('tornTelOrg',   'Tel. Organizador (WhatsApp)', 'ex: 258841234567 (sem + ou espaços)', '')}
 
     ${section('Capacidade de Inscrições')}
-    ${fieldText('maxJogadoresM', 'Máx. jogadores Masculino', 'ex: 120', '120')}
-    ${fieldText('maxJogadoresF', 'Máx. jogadores Feminino',  'ex: 48',  '48')}
+    ${fieldText('maxJogadoresM', 'Máx. jogadores Masculino', 'ex: 144', '144')}
+    ${fieldText('maxJogadoresF', 'Máx. jogadores Feminino',  'ex: 30',  '30')}
     <div style="font-size:.72rem;color:var(--cinza-texto);padding:.2rem 0 .5rem">Limites independentes por género (cada dupla ocupa 2 vagas). Ex.: 120 masc. = 60 duplas · 48 fem. = 24 duplas. Ao atingir o limite de um género, as inscrições desse género entram em lista de espera.</div>
     ${section('Visibilidade de Páginas')}
     ${fieldToggle('calendarioVisible',    'Calendário',               'ph-calendar',          true)}
@@ -6165,8 +6165,8 @@ async function renderInscricoes() {
 
   const _cfg = getData('config') || {};
   const _cfgInt = (k, d) => { const v = parseInt(_cfg[k], 10); return (!v || v < 1) ? d : v; };
-  const vagasTotM = _cfgInt('maxJogadoresM', 120);
-  const vagasTotF = _cfgInt('maxJogadoresF', 48);
+  const vagasTotM = _cfgInt('maxJogadoresM', 144);
+  const vagasTotF = _cfgInt('maxJogadoresF', 30);
   const vagasTotal = vagasTotM + vagasTotF;
   const _slots = e => 1 + (e.reservado ? 1 : 0);
   const _activeOcc = entries.filter(e => e.estado !== 'rejeitada' && e.estado !== 'cancelada' && e.estado !== 'espera');
@@ -6635,7 +6635,7 @@ window.insAdminPromote = async function(id) {
     const _cfg = getData('config') || {};
     const _cfgInt = (k, d) => { const v = parseInt(_cfg[k], 10); return (!v || v < 1) ? d : v; };
     const _isF = (e.genero || 'M') === 'F';
-    const _cap = _isF ? _cfgInt('maxJogadoresF', 48) : _cfgInt('maxJogadoresM', 120);
+    const _cap = _isF ? _cfgInt('maxJogadoresF', 30) : _cfgInt('maxJogadoresM', 144);
     const ocup = entries.filter(x => x.estado !== 'rejeitada' && x.estado !== 'cancelada' && x.estado !== 'espera' && ((x.genero || 'M') === 'F') === _isF)
       .reduce((n, x) => n + 1 + (x.reservado ? 1 : 0), 0);
     const livres = _cap - ocup;
