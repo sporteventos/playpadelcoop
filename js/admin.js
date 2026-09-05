@@ -146,10 +146,12 @@ window.notificarDia = function() {
   const filtroData  = document.getElementById('filtroDataJogos').value;
   const filtroCampo = document.getElementById('filtroCampoJogos').value;
   const filtroGrupo = document.getElementById('filtroGrupoJogos')?.value || 'todos';
+  const filtroDupla = document.getElementById('filtroDuplaJogos')?.value || 'todos';
   let jogos = getAllJogosNormalized().filter(j => !j.resultado);
   if (filtroData  !== 'todos') jogos = jogos.filter(j => j.data  === filtroData);
   if (filtroCampo !== 'todos') jogos = jogos.filter(j => j.campo === filtroCampo);
   if (filtroGrupo !== 'todos') jogos = jogos.filter(j => j.grupo === filtroGrupo);
+  if (filtroDupla !== 'todos') jogos = jogos.filter(j => j.eq1 === filtroDupla || j.eq2 === filtroDupla);
   if (!jogos.length) return toast('Sem jogos pendentes para o filtro actual.', 'error');
   toast('A gerar ' + jogos.length + ' imagem(ns)…', 'success');
   const items = new Array(jogos.length).fill(null);
@@ -620,10 +622,12 @@ window.gerarPanfleto = function(periodo) {
   const filtroData  = document.getElementById('filtroDataJogos').value;
   const filtroCampo = document.getElementById('filtroCampoJogos').value;
   const filtroGrupo = document.getElementById('filtroGrupoJogos')?.value || 'todos';
+  const filtroDupla = document.getElementById('filtroDuplaJogos')?.value || 'todos';
   let jogos = getAllJogosNormalized();
   if (filtroData  !== 'todos') jogos = jogos.filter(j => j.data  === filtroData);
   if (filtroCampo !== 'todos') jogos = jogos.filter(j => j.campo === filtroCampo);
   if (filtroGrupo !== 'todos') jogos = jogos.filter(j => j.grupo === filtroGrupo);
+  if (filtroDupla !== 'todos') jogos = jogos.filter(j => j.eq1 === filtroDupla || j.eq2 === filtroDupla);
 
   // Split by morning / afternoon
   if (periodo === 'manha')  jogos = jogos.filter(j => j.hora && j.hora < '12:00');
@@ -2229,7 +2233,7 @@ function renderView(view) {
     case 'categorias':   renderCategorias();   break;
     case 'jogadores':    renderJogadores();    break;
     case 'duplas':       renderDuplas();       break;
-    case 'jogos':        populateDataSelects(); populateCampoSelects(); populateGrupoSelects(); renderJogos();        break;
+    case 'jogos':        populateDataSelects(); populateCampoSelects(); populateGrupoSelects(); populateDuplaSelects(); renderJogos();        break;
     case 'resultados':   populateDataSelects(); renderResultados();   break;
     case 'fasefinal':    renderFaseFinal();    break;
     case 'utilizadores': renderUtilizadores(); break;
@@ -3455,12 +3459,13 @@ function getAllJogosNormalized() {
     .sort((a, b) => (a.data + a.hora).localeCompare(b.data + b.hora) || String(a.id).localeCompare(String(b.id)));
 }
 
-function renderJogos(filtroData = 'todos', filtroCampo = 'todos', filtroGrupo = 'todos', filtroResultado = 'todos') {
+function renderJogos(filtroData = 'todos', filtroCampo = 'todos', filtroGrupo = 'todos', filtroResultado = 'todos', filtroDupla = 'todos') {
   let jogos = getAllJogosNormalized();
 
   if (filtroData !== 'todos')   jogos = jogos.filter(j => j.data === filtroData);
   if (filtroCampo !== 'todos')  jogos = jogos.filter(j => j.campo === filtroCampo);
   if (filtroGrupo !== 'todos')  jogos = jogos.filter(j => j.grupo === filtroGrupo);
+  if (filtroDupla !== 'todos')  jogos = jogos.filter(j => j.eq1 === filtroDupla || j.eq2 === filtroDupla);
   if (filtroResultado !== 'todos') {
     jogos = jogos.filter(j => {
       if (filtroResultado === 'pendente')      return !j.resultado && !j.suspenso && !j.adiado;
@@ -4337,6 +4342,15 @@ function populateGrupoSelects() {
   document.querySelectorAll('.filter-grupo').forEach(s => _repopulateSelect(s, opts));
 }
 
+function populateDuplaSelects() {
+  const jogos = getAllJogosNormalized();
+  const duplas = [...new Set(jogos.flatMap(j => [j.eq1, j.eq2]).filter(Boolean))]
+    .sort((a, b) => a.localeCompare(b, 'pt'));
+  const opts = `<option value="todos">Todas as duplas</option>` +
+    duplas.map(d => `<option value="${escHtml(d)}">${escHtml(d)}</option>`).join('');
+  document.querySelectorAll('.filter-dupla').forEach(s => _repopulateSelect(s, opts));
+}
+
 function populateDataSelects() {
   const datas = [...new Set(getAllJogosNormalized().map(j => j.data).filter(Boolean))].sort();
   const opts = `<option value="todos">Todas as datas</option>` +
@@ -4569,6 +4583,7 @@ function initAdmin() {
   populateCampoSelects();
   populateDataSelects();
   populateGrupoSelects();
+  populateDuplaSelects();
 
   // Limites de data dos seletores a partir da config do torneio
   try { applyDateBounds(); } catch {}
@@ -4582,31 +4597,18 @@ function initAdmin() {
   document.getElementById('jogadoresSearch')?.addEventListener('input', e => renderJogadores(e.target.value));
 
   // Jogos filters
-  document.getElementById('filtroDataJogos')?.addEventListener('change', e => {
-    const d = e.target.value;
-    const c = document.getElementById('filtroCampoJogos')?.value || 'todos';
-    const g = document.getElementById('filtroGrupoJogos')?.value || 'todos';
-    const r = document.getElementById('filtroResultadoJogos')?.value || 'todos';
-    renderJogos(d, c, g, r);
-  });
-  document.getElementById('filtroCampoJogos')?.addEventListener('change', e => {
-    const d = document.getElementById('filtroDataJogos')?.value || 'todos';
-    const g = document.getElementById('filtroGrupoJogos')?.value || 'todos';
-    const r = document.getElementById('filtroResultadoJogos')?.value || 'todos';
-    renderJogos(d, e.target.value, g, r);
-  });
-  document.getElementById('filtroGrupoJogos')?.addEventListener('change', e => {
-    const d = document.getElementById('filtroDataJogos')?.value || 'todos';
-    const c = document.getElementById('filtroCampoJogos')?.value || 'todos';
-    const r = document.getElementById('filtroResultadoJogos')?.value || 'todos';
-    renderJogos(d, c, e.target.value, r);
-  });
-  document.getElementById('filtroResultadoJogos')?.addEventListener('change', e => {
-    const d = document.getElementById('filtroDataJogos')?.value || 'todos';
-    const c = document.getElementById('filtroCampoJogos')?.value || 'todos';
-    const g = document.getElementById('filtroGrupoJogos')?.value || 'todos';
-    renderJogos(d, c, g, e.target.value);
-  });
+  const _renderJogosFromFilters = () => renderJogos(
+    document.getElementById('filtroDataJogos')?.value || 'todos',
+    document.getElementById('filtroCampoJogos')?.value || 'todos',
+    document.getElementById('filtroGrupoJogos')?.value || 'todos',
+    document.getElementById('filtroResultadoJogos')?.value || 'todos',
+    document.getElementById('filtroDuplaJogos')?.value || 'todos',
+  );
+  document.getElementById('filtroDataJogos')?.addEventListener('change', _renderJogosFromFilters);
+  document.getElementById('filtroCampoJogos')?.addEventListener('change', _renderJogosFromFilters);
+  document.getElementById('filtroGrupoJogos')?.addEventListener('change', _renderJogosFromFilters);
+  document.getElementById('filtroDuplaJogos')?.addEventListener('change', _renderJogosFromFilters);
+  document.getElementById('filtroResultadoJogos')?.addEventListener('change', _renderJogosFromFilters);
 
   // Resultados filter
   document.getElementById('filtroDataRes')?.addEventListener('change', e => renderResultados(e.target.value));
