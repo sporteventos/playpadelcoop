@@ -283,11 +283,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // ---- Helpers ----
 
-  function computeStandings(gJogos) {
-    const pairs = new Set();
-    gJogos.forEach(j => { pairs.add(j.eq1); pairs.add(j.eq2); });
+  function computeStandings(gJogos, grupoId) {
     const st = {};
-    pairs.forEach(p => { st[p] = { par: p, j: 0, v: 0, d: 0, sv: 0, sd: 0, gv: 0, gd: 0 }; });
+    const mk = p => { if (!st[p]) st[p] = { par: p, j: 0, v: 0, d: 0, sv: 0, sd: 0, gv: 0, gd: 0 }; };
+    // Semear com as duplas já atribuídas ao grupo, para aparecerem mesmo sem jogos
+    if (grupoId) {
+      const jogs = ppGet('jogadores');
+      ppGet('duplas').filter(d => d.grupo === grupoId).forEach(d => {
+        const j1 = jogs.find(x => x.id === d.j1);
+        const j2 = jogs.find(x => x.id === d.j2);
+        mk(`${j1?.nome || d.j1} & ${j2?.nome || d.j2}`);
+      });
+    }
+    gJogos.forEach(j => { mk(j.eq1); mk(j.eq2); });
     gJogos.forEach(j => {
       if (!j.resultado) return;
       const r = j.resultado;
@@ -381,7 +389,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // 1. Computar standings de todos os grupos
     const allGroupData = grupos.map(g => {
       const gJogos = jogos.filter(j => j.grupo === g.id);
-      const st     = computeStandings(gJogos);
+      const st     = computeStandings(gJogos, g.id);
       const rows   = sortRows(Object.values(st), gJogos);
       return { group: g, gJogos, rows };
     });
