@@ -8566,8 +8566,31 @@ function _cjSlotsForDate(ds) {
   return ['17:30', '18:30', '19:30', '20:30', '21:30', '22:30']; // fim 23:30
 }
 
+// Round-robin pelo método do círculo: devolve as rondas (cada ronda = lista de
+// pares de índices), garantindo que cada dupla joga no máximo uma vez por ronda.
+function _cjRounds(n) {
+  const idx = [];
+  for (let i = 0; i < n; i++) idx.push(i);
+  if (idx.length % 2) idx.push(-1); // bye
+  const m = idx.length, half = m / 2, arr = idx.slice(), rounds = [];
+  for (let r = 0; r < m - 1; r++) {
+    const rd = [];
+    for (let i = 0; i < half; i++) {
+      const a = arr[i], b = arr[m - 1 - i];
+      if (a !== -1 && b !== -1) rd.push([a, b]);
+    }
+    rounds.push(rd);
+    arr.splice(1, 0, arr.pop()); // rodar mantendo o primeiro fixo
+  }
+  return rounds;
+}
+
 // Gera + agenda os jogos round-robin para um conjunto de grupos, evitando
-// conflitos com os jogos que se mantêm. Devolve { novos, keep, unplaced }.
+// conflitos com os jogos que se mantêm. Estratégia: cada ronda de um grupo é
+// mapeada para um DIA distinto (garante que nenhuma dupla joga 2x no mesmo dia),
+// equilibrando a carga por fração de capacidade (o fim de semana absorve o
+// excedente). Depois empacota cada dia em slots/campos livres maximizando a
+// cobertura de campos por dupla. Devolve { novos, keep, unplaced }.
 function _cjBuildSchedule(targetGroupIds) {
   const cfg       = getData('config') || {};
   const duplas    = getData('duplas') || [];
@@ -8582,77 +8605,67 @@ function _cjBuildSchedule(targetGroupIds) {
     return `${j1?.nome || d.j1} & ${j2?.nome || d.j2}`;
   };
 
+  const days = _cjDateRange(cfg.dataGruposInicio || '2026-09-10', cfg.dataGruposFim || '2026-09-16');
+  const cap = {}, slotsByDay = {};
+  days.forEach(d => { slotsByDay[d] = _cjSlotsForDate(d); cap[d] = slotsByDay[d].length * (campos.length || 1); });
+
   // Jogos que se mantêm (de grupos não regenerados) → ocupação inicial
   const keep = allJogos.filter(j => !targetSet.has(j.grupo));
-  const courtBusy = new Set();          // `${data}|${hora}|${campo}`
-  const duplaBusy = new Set();          // `${data}|${hora}|${nome}`
-  const playsOnDay = {};                // `${data}|${nome}` -> true
+  const dayCourtSlot = {}; days.forEach(d => dayCourtSlot[d] = new Set()); // `${hora}|${campo}`
+  const dayLoad = {}; days.forEach(d => dayLoad[d] = 0);
+  const courtUse = {}; // nome -> {campo: count}
+  const useOf = nome => (courtUse[nome] || (courtUse[nome] = Object.fromEntries(campos.map(c => [c, 0]))));
   keep.forEach(j => {
-    if (j.data && j.hora && j.campo) courtBusy.add(`${j.data}|${j.hora}|${j.campo}`);
-    if (j.data && j.hora) {
-      duplaBusy.add(`${j.data}|${j.hora}|${j.eq1}`);
-      duplaBusy.add(`${j.data}|${j.hora}|${j.eq2}`);
-    }
-    if (j.data) { playsOnDay[`${j.data}|${j.eq1}`] = true; playsOnDay[`${j.data}|${j.eq2}`] = true; }
+    if (j.data && dayLoad[j.data] != null) dayLoad[j.data]++;
+    if (j.data && j.hora && j.campo && dayCourtSlot[j.data]) dayCourtSlot[j.data].add(`${j.hora}|${j.campo}`);
+    if (j.campo) { useOf(j.eq1)[j.campo] = (useOf(j.eq1)[j.campo] || 0) + 1; useOf(j.eq2)[j.campo] = (useOf(j.eq2)[j.campo] || 0) + 1; }
   });
 
-  const days = _cjDateRange(cfg.dataGruposInicio || '2026-09-10', cfg.dataGruposFim || '2026-09-16');
-  const dayLoad = {}; days.forEach(d => dayLoad[d] = 0);
-  keep.forEach(j => { if (j.data && dayLoad[j.data] != null) dayLoad[j.data]++; });
-
-  // Construir jogos com atribuição de campo (cobertura por dupla)
-  const novos = [];
-  let maxId = allJogos.reduce((m, j) => Math.max(m, typeof j.id === 'number' ? j.id : parseInt(j.id) || 0), 0);
-
-  targetGroupIds.forEach(gid => {
+  // 1) Construir rondas por grupo e mapear cada ronda a um dia distinto.
+  //    Grupos com mais rondas primeiro (precisam de mais dias distintos).
+  const groupsInfo = targetGroupIds.map(gid => {
     const gd = duplas.filter(d => d.grupo === gid);
     const names = gd.map(label);
-    const pairs = [];
-    for (let i = 0; i < gd.length; i++)
-      for (let k = i + 1; k < gd.length; k++) pairs.push([i, k]);
+    const rounds = _cjRounds(gd.length).map(rd => rd.map(([a, b]) => [names[a], names[b]]));
+    return { gid, rounds };
+  }).sort((a, b) => b.rounds.length - a.rounds.length);
 
-    // Atribuição gulosa de campos: cada dupla joga o mais possível em campos distintos
-    const usage = gd.map(() => Object.fromEntries(campos.map(c => [c, 0])));
-    const courtGlobal = Object.fromEntries(campos.map(c => [c, 0]));
-    pairs.forEach(([a, b]) => {
-      let best = campos[0], bestScore = Infinity;
-      campos.forEach(c => {
-        const s = usage[a][c] + usage[b][c] + courtGlobal[c] * 0.001;
-        if (s < bestScore) { bestScore = s; best = c; }
-      });
-      if (best != null) { usage[a][best]++; usage[b][best]++; courtGlobal[best]++; }
-      novos.push({ grupo: gid, eq1: names[a], eq2: names[b], campo: best || null, resultado: null });
+  const dayGames = {}; days.forEach(d => dayGames[d] = []); // jogos atribuídos a cada dia
+  groupsInfo.forEach(({ gid, rounds }) => {
+    const need = rounds.length;
+    const cand = days.slice().sort((x, y) => (dayLoad[x] / cap[x]) - (dayLoad[y] / cap[y]) || x.localeCompare(y));
+    const chosen = [];
+    for (const d of cand) { if (chosen.length >= need) break; if (dayLoad[d] + 2 <= cap[d]) chosen.push(d); }
+    for (const d of cand) { if (chosen.length >= need) break; if (!chosen.includes(d)) chosen.push(d); }
+    rounds.forEach((rd, i) => {
+      const d = chosen[i];
+      rd.forEach(([e1, e2]) => { dayGames[d].push({ grupo: gid, eq1: e1, eq2: e2, resultado: null }); dayLoad[d]++; });
     });
   });
 
-  // Agendar cada jogo num slot livre, equilibrando a carga por dia e
-  // preferindo dias em que nenhuma das duplas ainda joga.
-  const unplaced = [];
-  novos.forEach(g => {
-    const scored = days.map(d => ({
-      d,
-      conflict: (playsOnDay[`${d}|${g.eq1}`] || playsOnDay[`${d}|${g.eq2}`]) ? 1 : 0,
-      load: dayLoad[d] || 0,
-    })).sort((x, y) => x.conflict - y.conflict || x.load - y.load || x.d.localeCompare(y.d));
-
-    let placed = false;
-    for (const { d } of scored) {
-      for (const t of _cjSlotsForDate(d)) {
-        if (g.campo && courtBusy.has(`${d}|${t}|${g.campo}`)) continue;
-        if (duplaBusy.has(`${d}|${t}|${g.eq1}`) || duplaBusy.has(`${d}|${t}|${g.eq2}`)) continue;
-        g.data = d; g.hora = t;
-        if (g.campo) courtBusy.add(`${d}|${t}|${g.campo}`);
-        duplaBusy.add(`${d}|${t}|${g.eq1}`); duplaBusy.add(`${d}|${t}|${g.eq2}`);
-        playsOnDay[`${d}|${g.eq1}`] = true; playsOnDay[`${d}|${g.eq2}`] = true;
-        dayLoad[d] = (dayLoad[d] || 0) + 1;
-        placed = true;
-        break;
+  // 2) Empacotar cada dia: para cada jogo escolher o campo que melhora a
+  //    cobertura das duplas e um slot livre desse campo.
+  const novos = [], unplaced = [];
+  days.forEach(d => {
+    const busy = dayCourtSlot[d];
+    dayGames[d].forEach(g => {
+      const order = campos.slice().sort((c1, c2) =>
+        (useOf(g.eq1)[c1] + useOf(g.eq2)[c1]) - (useOf(g.eq1)[c2] + useOf(g.eq2)[c2]));
+      let placed = false;
+      for (const c of order) {
+        for (const t of slotsByDay[d]) {
+          if (busy.has(`${t}|${c}`)) continue;
+          g.data = d; g.hora = t; g.campo = c; busy.add(`${t}|${c}`);
+          useOf(g.eq1)[c]++; useOf(g.eq2)[c]++; placed = true; break;
+        }
+        if (placed) break;
       }
-      if (placed) break;
-    }
-    if (!placed) { g.data = null; g.hora = null; unplaced.push(g); }
+      if (!placed) { g.data = d; g.hora = null; g.campo = null; unplaced.push(g); }
+      novos.push(g);
+    });
   });
 
+  let maxId = allJogos.reduce((m, j) => Math.max(m, typeof j.id === 'number' ? j.id : parseInt(j.id) || 0), 0);
   novos.forEach(g => { maxId++; g.id = maxId; });
   return { novos, keep, unplaced };
 }
