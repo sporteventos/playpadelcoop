@@ -2229,8 +2229,8 @@ function renderView(view) {
     case 'categorias':   renderCategorias();   break;
     case 'jogadores':    renderJogadores();    break;
     case 'duplas':       renderDuplas();       break;
-    case 'jogos':        renderJogos();        break;
-    case 'resultados':   renderResultados();   break;
+    case 'jogos':        populateDataSelects(); populateCampoSelects(); populateGrupoSelects(); renderJogos();        break;
+    case 'resultados':   populateDataSelects(); renderResultados();   break;
     case 'fasefinal':    renderFaseFinal();    break;
     case 'utilizadores': renderUtilizadores(); break;
     case 'logs':         renderLogs();         break;
@@ -4316,25 +4316,32 @@ function limparResultado() {
 // ============================================
 // formatDate delegado para ppFormatDate em data.js
 
+function _repopulateSelect(sel, opts) {
+  const prev = sel.value;
+  sel.innerHTML = opts;
+  // Preserve current selection if still available, else fall back to "todos"
+  if (prev && sel.querySelector(`option[value="${CSS.escape(prev)}"]`)) sel.value = prev;
+}
+
 function populateCampoSelects() {
   const campos = getData('campos');
   const opts = `<option value="todos">Todos os campos</option>` +
     campos.map(c => `<option value="${c.nome}">${c.nome}</option>`).join('');
-  document.querySelectorAll('.filter-campo').forEach(s => { s.innerHTML = opts; });
+  document.querySelectorAll('.filter-campo').forEach(s => _repopulateSelect(s, opts));
 }
 
 function populateGrupoSelects() {
   const grupos = [...new Set(getAllJogosNormalized().map(j => j.grupo))].sort();
   const opts = `<option value="todos">Todos os grupos</option>` +
     grupos.map(g => `<option value="${g}">${g}</option>`).join('');
-  document.querySelectorAll('.filter-grupo').forEach(s => { s.innerHTML = opts; });
+  document.querySelectorAll('.filter-grupo').forEach(s => _repopulateSelect(s, opts));
 }
 
 function populateDataSelects() {
   const datas = [...new Set(getAllJogosNormalized().map(j => j.data).filter(Boolean))].sort();
   const opts = `<option value="todos">Todas as datas</option>` +
     datas.map(d => `<option value="${d}">${formatDateFull(d)}</option>`).join('');
-  document.querySelectorAll('.filter-data').forEach(s => { s.innerHTML = opts; });
+  document.querySelectorAll('.filter-data').forEach(s => _repopulateSelect(s, opts));
 }
 
 function formatDateFull(d) {
