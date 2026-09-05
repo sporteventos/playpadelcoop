@@ -8101,19 +8101,23 @@ function renderConstrutorGrupos() {
   // Duplas por atribuir a um grupo, mas já inscritas neste nível (cat)
   const poolDuplas = duplas.filter(d => d.j1 && d.j2 && !d.grupo && d.cat === catId);
 
-  function duplaLabel(d) {
+  function duplaNomes(d) {
     const j1 = jogadores.find(j => j.id === d.j1);
     const j2 = jogadores.find(j => j.id === d.j2);
-    return `${j1?.nome || d.j1} & ${j2?.nome || d.j2}`;
+    return [j1?.nome || d.j1, j2?.nome || d.j2];
   }
 
   function chip(d) {
+    const [n1, n2] = duplaNomes(d);
     return `<div class="cg-dupla-chip" draggable="true"
         ondragstart="cgDragStart(event,'${d.id}')"
         style="display:flex;align-items:center;justify-content:space-between;
           background:var(--cinza-escuro);border:1px solid var(--preto-borda);
           border-radius:6px;padding:.35rem .6rem;margin-bottom:.35rem;cursor:grab;font-size:.78rem">
-        <span style="color:var(--branco)">${escHtml(duplaLabel(d))}</span>
+        <span style="color:var(--branco);display:flex;flex-direction:column;line-height:1.3">
+          <span>${escHtml(n1)}</span>
+          <span>${escHtml(n2)}</span>
+        </span>
         ${d.grupo ? `<button onclick="cgRemoverDupla('${d.id}')" style="background:none;border:none;
           color:var(--cinza-texto);cursor:pointer;font-size:.8rem;padding:0 .2rem"
           title="Remover do grupo">✕</button>` : ''}
@@ -8289,11 +8293,12 @@ function renderNivelamento() {
   const jogadores = getData('jogadores') || [];
   const confirmadas = duplas.filter(d => d.j1 && d.j2);
 
-  const label = (d) => {
+  const nomesDupla = (d) => {
     const j1 = jogadores.find(j => j.id === d.j1);
     const j2 = jogadores.find(j => j.id === d.j2);
-    return `${j1?.nome || d.j1} & ${j2?.nome || d.j2}`;
+    return [j1?.nome || d.j1, j2?.nome || d.j2];
   };
+  const label = (d) => nomesDupla(d).join(' & ');
 
   const byCat = {}; cats.forEach(c => { byCat[c.id] = []; });
   const semNivel = [];
@@ -8304,12 +8309,16 @@ function renderNivelamento() {
 
   const chip = (d) => {
     const cat = d.grupo ? d.grupo.split('-')[0] : (d.cat || '');
+    const [n1, n2] = nomesDupla(d);
     return `<div class="cg-dupla-chip" draggable="true"
         ondragstart="nlDragStart(event,'${d.id}')"
         style="display:flex;align-items:center;justify-content:space-between;gap:.4rem;
           background:var(--cinza-escuro);border:1px solid var(--preto-borda);
           border-radius:6px;padding:.35rem .6rem;margin-bottom:.35rem;cursor:grab;font-size:.78rem">
-        <span style="color:var(--branco)">${escHtml(label(d))}</span>
+        <span style="color:var(--branco);display:flex;flex-direction:column;line-height:1.3">
+          <span>${escHtml(n1)}</span>
+          <span>${escHtml(n2)}</span>
+        </span>
         ${d.grupo ? `<span class="cat-pill cat-${cat}" style="font-size:.6rem" title="Já atribuída ao grupo ${escHtml(d.grupo)}">${escHtml(d.grupo)}</span>` : ''}
       </div>`;
   };
