@@ -2511,6 +2511,16 @@ function renderConfigPanel() {
     </div>`;
   };
 
+  const fieldDate = (key, label, def) => {
+    const val = str(key, def);
+    return `<div style="display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:.45rem 0;border-bottom:1px solid rgba(255,255,255,.04)">
+      <label style="font-size:.82rem;color:var(--branco);min-width:200px">${label}</label>
+      <input type="date" value="${escHtml(val)}"
+        onchange="saveConfigField('${key}', this.value)"
+        style="flex:1;background:var(--cinza-escuro);border:1px solid var(--preto-borda);border-radius:6px;padding:.3rem .6rem;font-size:.8rem;color:var(--branco);min-width:0;max-width:200px"/>
+    </div>`;
+  };
+
   const bannerVal = str('bannerMsg', '');
   const bannerOn  = bool('bannerVisible', false);
 
@@ -2523,6 +2533,14 @@ function renderConfigPanel() {
     ${fieldText('tornDatas',     'Datas',               'ex: 10 a 19 de Setembro 2026',        '10 a 19 de Setembro 2026')}
     ${fieldText('tornDescFooter','Frase do Rodapé',     'ex: O padel que une Moçambique.',  'O padel que une Moçambique.')}
     ${fieldText('tornTelOrg',   'Tel. Organizador (WhatsApp)', 'ex: 258841234567 (sem + ou espaços)', '')}
+
+    ${section('Datas do Torneio')}
+    ${fieldDate('dataGruposInicio', 'Fase de Grupos — início', '2026-09-10')}
+    ${fieldDate('dataGruposFim',    'Fase de Grupos — fim',    '2026-09-16')}
+    ${fieldDate('dataQuartos',      'Quartos de Final',         '2026-09-17')}
+    ${fieldDate('dataMeias',        'Meias-Finais',             '2026-09-18')}
+    ${fieldDate('dataFinais',       'Finais',                   '2026-09-19')}
+    <div style="font-size:.72rem;color:var(--cinza-texto);padding:.2rem 0 .5rem">Estas datas definem os limites do calendário de jogos e a alocação automática das fases finais. O intervalo geral (${escHtml(str('dataGruposInicio','2026-09-10'))} a ${escHtml(str('dataFinais','2026-09-19'))}) é aplicado aos seletores de data.</div>
 
     ${section('Capacidade de Inscrições')}
     ${fieldText('maxJogadoresM', 'Máx. jogadores Masculino', 'ex: 144', '144')}
@@ -2585,7 +2603,25 @@ function saveConfigField(key, val) {
   cfg[key] = val;
   setData('config', cfg);
   _autoSync();
+  if (key && key.startsWith('data')) { try { applyDateBounds(); } catch {} }
 }
+
+// Aplica os limites (min/max) dos seletores de data a partir da config do torneio
+function applyDateBounds() {
+  const cfg = getData('config') || {};
+  const ini = cfg.dataGruposInicio || cfg.tornInicio || '2026-09-10';
+  const fim = cfg.dataFinais || cfg.tornFim || '2026-09-19';
+  const setB = (id, min, max) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    if (min) el.min = min; else el.removeAttribute('min');
+    if (max) el.max = max; else el.removeAttribute('max');
+  };
+  ['jogoData', 'jogoAdiadoData', 'resData', 'moverDiaData'].forEach(id => setB(id, ini, fim));
+  // Fase final: dos quartos às finais
+  setB('ffSchedData', cfg.dataQuartos || '2026-09-17', fim);
+}
+window.applyDateBounds = applyDateBounds;
 
 function _timeAgo(iso) {
   const diff = Date.now() - new Date(iso).getTime();
@@ -4527,6 +4563,9 @@ function initAdmin() {
   populateDataSelects();
   populateGrupoSelects();
 
+  // Limites de data dos seletores a partir da config do torneio
+  try { applyDateBounds(); } catch {}
+
   // Header search
   document.getElementById('headerSearch')?.addEventListener('input', e => {
     if (APP.currentView === 'jogadores') renderJogadores(e.target.value);
@@ -4718,22 +4757,24 @@ function ffGetQualified(catId) {
   return q;
 }
 
-const FF_QF_DATE = '2026-06-12'; // Sexta-feira — Quartos de Final (fallback)
-const FF_SF_DATE = '2026-06-13'; // Sábado — Meias-Finais
-const FF_F_DATE  = '2026-06-14'; // Domingo — Finais
+// Datas das fases finais — lidas da config do torneio (editáveis no admin)
+function _tornCfg() { return getData('config') || {}; }
+function ffQfDate() { return _tornCfg().dataQuartos || '2026-09-17'; } // Quartos de Final
+function ffSfDate() { return _tornCfg().dataMeias   || '2026-09-18'; } // Meias-Finais
+function ffFDate()  { return _tornCfg().dataFinais  || '2026-09-19'; } // Finais
 const FF_QF_SLOTS = ['17:30', '18:30', '19:30', '20:30', '21:30'];
 const FF_SF_SLOTS = ['15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00', '22:00'];
 const FF_F_SLOT   = '15:00';
 const FF_FINAL_CAMPOS = { M1:'Play Padel', M2:'Play Padel', F1:'Play Padel', F2:'Play Padel', M3:'TVCabo', M4:'TVCabo', M5:'TVCabo' };
 
-// Auto-alocação de QF nos slots livres de 5a/6a feira (11 e 12 Jun)
+// Auto-alocação de QF nos slots livres do dia dos Quartos de Final
 function ffAutoAllocateQF(qfJogos) {
-  const QF_DAYS   = ['2026-06-11', '2026-06-12'];
+  const QF_DAYS   = [ffQfDate()];
   const QF_HORAS  = ['17:30', '18:30', '19:30', '20:30', '21:30'];
   const campos    = (getData('campos') || []).sort((a,b) => (a.id||0)-(b.id||0)).map(c => c.nome);
   if (!campos.length) {
-    // fallback: assign all to FF_QF_DATE with sequential slots
-    qfJogos.forEach((j, i) => { j.data = FF_QF_DATE; j.hora = FF_QF_SLOTS[i % FF_QF_SLOTS.length]; });
+    // fallback: assign all to QF date with sequential slots
+    qfJogos.forEach((j, i) => { j.data = ffQfDate(); j.hora = FF_QF_SLOTS[i % FF_QF_SLOTS.length]; });
     return;
   }
   // Build occupied map from jogos (grupos) on these days
@@ -4753,7 +4794,7 @@ function ffAutoAllocateQF(qfJogos) {
         if (!occupied.has(`${d}|${h}|${c}`)) available.push({ data: d, hora: h, campo: c });
   qfJogos.forEach((j, i) => {
     if (!available.length) {
-      j.data = FF_QF_DATE; j.hora = FF_QF_SLOTS[i % FF_QF_SLOTS.length]; j.campo = campos[0] || '';
+      j.data = ffQfDate(); j.hora = FF_QF_SLOTS[i % FF_QF_SLOTS.length]; j.campo = campos[0] || '';
       return;
     }
     const slot = available.shift();
@@ -4839,18 +4880,18 @@ function ffGenerateBracket(catId) {
     const bg = {};
     q.forEach(t => { (bg[t.grupo] = bg[t.grupo] || []).push(t); });
     const [gA, gB] = Object.keys(bg).sort();
-    jogos.push(ffMakeJogo(catId, 'SF', 1, bg[gA][0], bg[gB][1], null, FF_SF_DATE, FF_SF_SLOTS[0]));
-    jogos.push(ffMakeJogo(catId, 'SF', 2, bg[gB][0], bg[gA][1], null, FF_SF_DATE, FF_SF_SLOTS[1]));
-    jogos.push(ffMakeJogo(catId, 'F',  1, null, null, [`${catId}-SF1`, `${catId}-SF2`], FF_F_DATE, FF_F_SLOT, FF_FINAL_CAMPOS[catId] || null));
+    jogos.push(ffMakeJogo(catId, 'SF', 1, bg[gA][0], bg[gB][1], null, ffSfDate(), FF_SF_SLOTS[0]));
+    jogos.push(ffMakeJogo(catId, 'SF', 2, bg[gB][0], bg[gA][1], null, ffSfDate(), FF_SF_SLOTS[1]));
+    jogos.push(ffMakeJogo(catId, 'F',  1, null, null, [`${catId}-SF1`, `${catId}-SF2`], ffFDate(), FF_F_SLOT, FF_FINAL_CAMPOS[catId] || null));
 
   } else if (FF_4G.includes(catId)) {
     // 4 grupos: S1-S4 = vencedores, S5-S8 = segundos. Mesmo esquema de cruzamento.
     const { pairs: pairs4, collisionNote: cn4 } = _ffBuildPairs(q);
     pairs4.forEach(([e1, e2], i) => jogos.push(ffMakeJogo(catId, 'QF', i + 1, e1, e2, null)));
     ffAutoAllocateQF(jogos.filter(j => j.fase === 'QF'));
-    jogos.push(ffMakeJogo(catId, 'SF', 1, null, null, [`${catId}-QF1`, `${catId}-QF2`], FF_SF_DATE, FF_SF_SLOTS[0]));
-    jogos.push(ffMakeJogo(catId, 'SF', 2, null, null, [`${catId}-QF3`, `${catId}-QF4`], FF_SF_DATE, FF_SF_SLOTS[1]));
-    jogos.push(ffMakeJogo(catId, 'F',  1, null, null, [`${catId}-SF1`, `${catId}-SF2`], FF_F_DATE, FF_F_SLOT, FF_FINAL_CAMPOS[catId] || null));
+    jogos.push(ffMakeJogo(catId, 'SF', 1, null, null, [`${catId}-QF1`, `${catId}-QF2`], ffSfDate(), FF_SF_SLOTS[0]));
+    jogos.push(ffMakeJogo(catId, 'SF', 2, null, null, [`${catId}-QF3`, `${catId}-QF4`], ffSfDate(), FF_SF_SLOTS[1]));
+    jogos.push(ffMakeJogo(catId, 'F',  1, null, null, [`${catId}-SF1`, `${catId}-SF2`], ffFDate(), FF_F_SLOT, FF_FINAL_CAMPOS[catId] || null));
     return { generated: true, jogos, collisionNote: cn4 };
 
   } else {
@@ -4858,9 +4899,9 @@ function ffGenerateBracket(catId) {
     const { pairs, collisionNote: cn } = _ffBuildPairs(q);
     pairs.forEach(([e1, e2], i) => jogos.push(ffMakeJogo(catId, 'QF', i + 1, e1, e2, null)));
     ffAutoAllocateQF(jogos.filter(j => j.fase === 'QF'));
-    jogos.push(ffMakeJogo(catId, 'SF', 1, null, null, [`${catId}-QF1`, `${catId}-QF2`], FF_SF_DATE, FF_SF_SLOTS[0]));
-    jogos.push(ffMakeJogo(catId, 'SF', 2, null, null, [`${catId}-QF3`, `${catId}-QF4`], FF_SF_DATE, FF_SF_SLOTS[1]));
-    jogos.push(ffMakeJogo(catId, 'F',  1, null, null, [`${catId}-SF1`, `${catId}-SF2`], FF_F_DATE, FF_F_SLOT, FF_FINAL_CAMPOS[catId] || null));
+    jogos.push(ffMakeJogo(catId, 'SF', 1, null, null, [`${catId}-QF1`, `${catId}-QF2`], ffSfDate(), FF_SF_SLOTS[0]));
+    jogos.push(ffMakeJogo(catId, 'SF', 2, null, null, [`${catId}-QF3`, `${catId}-QF4`], ffSfDate(), FF_SF_SLOTS[1]));
+    jogos.push(ffMakeJogo(catId, 'F',  1, null, null, [`${catId}-SF1`, `${catId}-SF2`], ffFDate(), FF_F_SLOT, FF_FINAL_CAMPOS[catId] || null));
     return { generated: true, jogos, collisionNote: cn };
   }
 }
@@ -8445,19 +8486,20 @@ function renderConstrutorJogos() {
           para os <strong style="color:var(--branco)">${catGrupos.length}</strong> grupos de <strong style="color:var(--verde)">${catId}</strong>.
           ${totalExiste > 0 ? `<br><span style="color:var(--amarelo)">⚠ Já existem ${totalExiste} jogos para este grupo — serão substituídos.</span>` : ''}
         </p>
-        <div style="display:flex;gap:.6rem;flex-wrap:wrap;margin-bottom:.75rem">
-          <div>
-            <label style="color:var(--cinza-texto);font-size:.75rem;display:block;margin-bottom:.2rem">Data por omissão</label>
-            <input id="cjDataOmissao" type="date" class="form-input" style="padding:.3rem .5rem;font-size:.82rem"/>
-          </div>
-          <div>
-            <label style="color:var(--cinza-texto);font-size:.75rem;display:block;margin-bottom:.2rem">Hora por omissão</label>
-            <input id="cjHoraOmissao" type="time" class="form-input" style="padding:.3rem .5rem;font-size:.82rem"/>
-          </div>
+        <div style="background:rgba(0,195,123,.07);border:1px solid rgba(0,195,123,.2);border-radius:6px;padding:.6rem .75rem;margin-bottom:.75rem;font-size:.75rem;color:var(--cinza-texto);line-height:1.5">
+          <i class="ph ph-calendar-check" style="color:var(--verde)"></i>
+          Os jogos são <strong style="color:var(--branco)">agendados automaticamente</strong> na fase de grupos
+          (<strong style="color:var(--branco)">${escHtml(_cjGrupoInicio())}</strong> a <strong style="color:var(--branco)">${escHtml(_cjGrupoFim())}</strong>),
+          distribuídos pelos ${(getData('campos')||[]).length} campos — cada dupla joga pelo menos uma vez em cada campo.
+          Jogos de 1h · dias úteis 17:30–23:30 · fim de semana 07:00–23:30.
+          <br>Datas configuráveis em <strong style="color:var(--branco)">Configurações → Datas do Torneio</strong>.
         </div>
-        <div style="display:flex;gap:.6rem">
+        <div style="display:flex;gap:.6rem;flex-wrap:wrap">
           <button class="btn btn-primary danger-btn" onclick="cjGerarJogos()">
-            <i class="ph ph-play"></i> Gerar jogos
+            <i class="ph ph-play"></i> Gerar + agendar ${catId}
+          </button>
+          <button class="btn btn-primary" style="background:var(--verde)" onclick="cjGerarTodos()">
+            <i class="ph ph-calendar-plus"></i> Gerar + agendar TODAS as categorias
           </button>
           ${totalExiste > 0 ? `<button class="btn btn-ghost danger-btn" style="color:var(--vermelho);border-color:rgba(255,74,74,.3)" onclick="cjLimparJogos('${catId}')">
             <i class="ph ph-trash"></i> Limpar jogos de ${catId}
@@ -8488,11 +8530,130 @@ function renderConstrutorJogos() {
     </div>`;
 }
 
+// ── Agendamento automático da fase de grupos ─────────────────
+function _cjGrupoInicio() { return (getData('config') || {}).dataGruposInicio || '2026-09-10'; }
+function _cjGrupoFim()    { return (getData('config') || {}).dataGruposFim    || '2026-09-16'; }
+
+function _cjDateRange(ini, fim) {
+  const out = [];
+  const d = new Date(ini + 'T12:00:00');
+  const end = new Date(fim + 'T12:00:00');
+  if (isNaN(d) || isNaN(end) || d > end) return out;
+  let guard = 0;
+  while (d <= end && guard++ < 400) {
+    out.push(d.toISOString().slice(0, 10));
+    d.setDate(d.getDate() + 1);
+  }
+  return out;
+}
+
+// Slots de 1h para uma data: dias úteis 17:30–23:30 · fim de semana 07:00–23:30
+function _cjSlotsForDate(ds) {
+  const wd = new Date(ds + 'T12:00:00').getDay(); // 0=Dom .. 6=Sáb
+  const weekend = (wd === 0 || wd === 6);
+  if (weekend) {
+    const out = [];
+    for (let h = 7; h <= 22; h++) out.push(`${String(h).padStart(2, '0')}:00`); // 07:00 … 22:00 (fim 23:00)
+    return out;
+  }
+  return ['17:30', '18:30', '19:30', '20:30', '21:30', '22:30']; // fim 23:30
+}
+
+// Gera + agenda os jogos round-robin para um conjunto de grupos, evitando
+// conflitos com os jogos que se mantêm. Devolve { novos, keep, unplaced }.
+function _cjBuildSchedule(targetGroupIds) {
+  const cfg       = getData('config') || {};
+  const duplas    = getData('duplas') || [];
+  const jogadores = getData('jogadores') || [];
+  const allJogos  = getData('jogos') || [];
+  const campos    = (getData('campos') || []).sort((a, b) => (a.id || 0) - (b.id || 0)).map(c => c.nome);
+  const targetSet = new Set(targetGroupIds);
+
+  const label = d => {
+    const j1 = jogadores.find(j => j.id === d.j1);
+    const j2 = jogadores.find(j => j.id === d.j2);
+    return `${j1?.nome || d.j1} & ${j2?.nome || d.j2}`;
+  };
+
+  // Jogos que se mantêm (de grupos não regenerados) → ocupação inicial
+  const keep = allJogos.filter(j => !targetSet.has(j.grupo));
+  const courtBusy = new Set();          // `${data}|${hora}|${campo}`
+  const duplaBusy = new Set();          // `${data}|${hora}|${nome}`
+  const playsOnDay = {};                // `${data}|${nome}` -> true
+  keep.forEach(j => {
+    if (j.data && j.hora && j.campo) courtBusy.add(`${j.data}|${j.hora}|${j.campo}`);
+    if (j.data && j.hora) {
+      duplaBusy.add(`${j.data}|${j.hora}|${j.eq1}`);
+      duplaBusy.add(`${j.data}|${j.hora}|${j.eq2}`);
+    }
+    if (j.data) { playsOnDay[`${j.data}|${j.eq1}`] = true; playsOnDay[`${j.data}|${j.eq2}`] = true; }
+  });
+
+  const days = _cjDateRange(cfg.dataGruposInicio || '2026-09-10', cfg.dataGruposFim || '2026-09-16');
+  const dayLoad = {}; days.forEach(d => dayLoad[d] = 0);
+  keep.forEach(j => { if (j.data && dayLoad[j.data] != null) dayLoad[j.data]++; });
+
+  // Construir jogos com atribuição de campo (cobertura por dupla)
+  const novos = [];
+  let maxId = allJogos.reduce((m, j) => Math.max(m, typeof j.id === 'number' ? j.id : parseInt(j.id) || 0), 0);
+
+  targetGroupIds.forEach(gid => {
+    const gd = duplas.filter(d => d.grupo === gid);
+    const names = gd.map(label);
+    const pairs = [];
+    for (let i = 0; i < gd.length; i++)
+      for (let k = i + 1; k < gd.length; k++) pairs.push([i, k]);
+
+    // Atribuição gulosa de campos: cada dupla joga o mais possível em campos distintos
+    const usage = gd.map(() => Object.fromEntries(campos.map(c => [c, 0])));
+    const courtGlobal = Object.fromEntries(campos.map(c => [c, 0]));
+    pairs.forEach(([a, b]) => {
+      let best = campos[0], bestScore = Infinity;
+      campos.forEach(c => {
+        const s = usage[a][c] + usage[b][c] + courtGlobal[c] * 0.001;
+        if (s < bestScore) { bestScore = s; best = c; }
+      });
+      if (best != null) { usage[a][best]++; usage[b][best]++; courtGlobal[best]++; }
+      novos.push({ grupo: gid, eq1: names[a], eq2: names[b], campo: best || null, resultado: null });
+    });
+  });
+
+  // Agendar cada jogo num slot livre, equilibrando a carga por dia e
+  // preferindo dias em que nenhuma das duplas ainda joga.
+  const unplaced = [];
+  novos.forEach(g => {
+    const scored = days.map(d => ({
+      d,
+      conflict: (playsOnDay[`${d}|${g.eq1}`] || playsOnDay[`${d}|${g.eq2}`]) ? 1 : 0,
+      load: dayLoad[d] || 0,
+    })).sort((x, y) => x.conflict - y.conflict || x.load - y.load || x.d.localeCompare(y.d));
+
+    let placed = false;
+    for (const { d } of scored) {
+      for (const t of _cjSlotsForDate(d)) {
+        if (g.campo && courtBusy.has(`${d}|${t}|${g.campo}`)) continue;
+        if (duplaBusy.has(`${d}|${t}|${g.eq1}`) || duplaBusy.has(`${d}|${t}|${g.eq2}`)) continue;
+        g.data = d; g.hora = t;
+        if (g.campo) courtBusy.add(`${d}|${t}|${g.campo}`);
+        duplaBusy.add(`${d}|${t}|${g.eq1}`); duplaBusy.add(`${d}|${t}|${g.eq2}`);
+        playsOnDay[`${d}|${g.eq1}`] = true; playsOnDay[`${d}|${g.eq2}`] = true;
+        dayLoad[d] = (dayLoad[d] || 0) + 1;
+        placed = true;
+        break;
+      }
+      if (placed) break;
+    }
+    if (!placed) { g.data = null; g.hora = null; unplaced.push(g); }
+  });
+
+  novos.forEach(g => { maxId++; g.id = maxId; });
+  return { novos, keep, unplaced };
+}
+
 window.cjGerarJogos = function() {
   const catId = document.getElementById('cjFiltroCategoria')?.value;
   if (!catId) return;
 
-  // Count games with results
   const jogosExist = getData('jogos') || [];
   const comResultado = jogosExist.filter(j => j.grupo?.startsWith(catId + '-') && j.resultado).length;
 
@@ -8500,51 +8661,37 @@ window.cjGerarJogos = function() {
     const conf = prompt(`⚠ ATENÇÃO CRÍTICA: Existem ${comResultado} jogo(s) com resultado registado para ${catId}.\nGerar novos jogos irá ELIMINAR permanentemente todos os resultados desta categoria.\n\nEscreva CONFIRMAR para continuar:`);
     if (conf?.trim().toUpperCase() !== 'CONFIRMAR') return toast('Operação cancelada.', 'error');
   } else {
-    if (!confirm(`Gerar todos os jogos round-robin para ${catId}?\nJogos existentes desta categoria serão removidos.`)) return;
+    if (!confirm(`Gerar e agendar todos os jogos round-robin para ${catId}?\nJogos existentes desta categoria serão removidos.`)) return;
   }
 
-  const grupos   = (getData('grupos')   || []).filter(g => g.cat === catId);
-  const duplas   = getData('duplas')    || [];
-  const jogos    = getData('jogos')     || [];
-  const jogadores = getData('jogadores') || [];
-  const dataOm  = document.getElementById('cjDataOmissao')?.value  || '';
-  const horaOm  = document.getElementById('cjHoraOmissao')?.value  || '';
+  const targetGroups = (getData('grupos') || []).filter(g => g.cat === catId).map(g => g.id);
+  const { novos, keep, unplaced } = _cjBuildSchedule(targetGroups);
 
-  function duplaLabel(d) {
-    const j1 = jogadores.find(j => j.id === d.j1);
-    const j2 = jogadores.find(j => j.id === d.j2);
-    return `${j1?.nome || d.j1} & ${j2?.nome || d.j2}`;
+  setData('jogos', [...keep, ...novos]);
+  Auth.log('CONSTRUTOR_JOGOS', 'jogos', `${catId}: gerados ${novos.length} jogos round-robin (agendados)`);
+  toast(`${novos.length} jogos gerados e agendados para ${catId}` + (unplaced.length ? ` · ${unplaced.length} sem slot livre` : ''), unplaced.length ? 'error' : 'success');
+  renderConstrutorJogos();
+};
+
+window.cjGerarTodos = function() {
+  const grupos = getData('grupos') || [];
+  if (!grupos.length) return toast('Sem grupos definidos.', 'error');
+  const jogosExist = getData('jogos') || [];
+  const comResultado = jogosExist.filter(j => j.resultado).length;
+
+  if (comResultado > 0) {
+    const conf = prompt(`⚠ ATENÇÃO CRÍTICA: Existem ${comResultado} jogo(s) com resultado registado.\nGerar o calendário completo irá ELIMINAR permanentemente todos os resultados da fase de grupos.\n\nEscreva CONFIRMAR para continuar:`);
+    if (conf?.trim().toUpperCase() !== 'CONFIRMAR') return toast('Operação cancelada.', 'error');
+  } else {
+    if (!confirm('Gerar e agendar o calendário completo da fase de grupos para TODAS as categorias?\nTodos os jogos de fase de grupos existentes serão substituídos.')) return;
   }
 
-  // Remove existing games for this cat
-  const outros = jogos.filter(j => !j.grupo?.startsWith(catId + '-'));
+  const targetGroups = grupos.map(g => g.id);
+  const { novos, keep, unplaced } = _cjBuildSchedule(targetGroups);
 
-  // Generate round-robin per group
-  const novos = [];
-  let maxId = jogos.reduce((m, j) => Math.max(m, typeof j.id === 'number' ? j.id : parseInt(j.id) || 0), 0);
-
-  grupos.sort((a, b) => a.letra.localeCompare(b.letra)).forEach(g => {
-    const gDuplas = duplas.filter(d => d.grupo === g.id);
-    for (let i = 0; i < gDuplas.length; i++) {
-      for (let k = i + 1; k < gDuplas.length; k++) {
-        maxId++;
-        novos.push({
-          id:     maxId,
-          grupo:  g.id,
-          eq1:    duplaLabel(gDuplas[i]),
-          eq2:    duplaLabel(gDuplas[k]),
-          data:   dataOm || null,
-          hora:   horaOm || null,
-          campo:  null,
-          resultado: null,
-        });
-      }
-    }
-  });
-
-  setData('jogos', [...outros, ...novos]);
-  Auth.log('CONSTRUTOR_JOGOS', 'jogos', `${catId}: gerados ${novos.length} jogos round-robin`);
-  toast(`${novos.length} jogos gerados para ${catId}`);
+  setData('jogos', [...keep, ...novos]);
+  Auth.log('CONSTRUTOR_JOGOS', 'jogos', `Calendário completo: ${novos.length} jogos agendados`);
+  toast(`${novos.length} jogos gerados e agendados` + (unplaced.length ? ` · ${unplaced.length} sem slot livre` : ''), unplaced.length ? 'error' : 'success');
   renderConstrutorJogos();
 };
 
