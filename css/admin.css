@@ -403,7 +403,7 @@ tbody tr:hover { background: var(--cinza-escuro); }
   letter-spacing: 0.04em;
 }
 .cat-M1,.cat-M2,.cat-M3,.cat-M4,.cat-M5 { background: var(--azul-bg); color: var(--azul); }
-.cat-F1,.cat-F2 { background: rgba(245,197,24,0.12); color: var(--amarelo); }
+.cat-F1,.cat-F2,.cat-F3 { background: rgba(245,197,24,0.12); color: var(--amarelo); }
 
 /* ============================================
    BUTTONS

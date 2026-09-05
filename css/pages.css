@@ -211,6 +211,7 @@ mark { background: rgba(245,197,24,.25); color: var(--amarelo); border-radius: 2
 .cat-M5 { color: #4af0c4; background: rgba(74,240,196,.12); border-color: rgba(74,240,196,.25) !important; }
 .cat-F1 { color: #ff6fd8; background: rgba(255,111,216,.12); border-color: rgba(255,111,216,.25) !important; }
 .cat-F2 { color: #f5c518; background: rgba(245,197,24,.12); border-color: rgba(245,197,24,.25) !important; }
+.cat-F3 { color: #4ad0ff; background: rgba(74,208,255,.12); border-color: rgba(74,208,255,.25) !important; }
 
 /* ---- Classificações ---- */
 .groups-grid {
