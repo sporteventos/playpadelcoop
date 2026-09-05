@@ -6884,6 +6884,11 @@ function _adminClassCatGroups(catId, grupos) {
 function _adminClassStandings(grupo, jogos) {
   const gJogos = jogos.filter(j => j.grupo === grupo.id);
   const pairs = {};
+  // Semear com as duplas já atribuídas ao grupo, para aparecerem mesmo sem jogos
+  (getData('duplas') || []).filter(d => d.grupo === grupo.id).forEach(d => {
+    const par = getDuplaLabel(d);
+    if (!pairs[par]) pairs[par] = { par, pj:0, v:0, d:0, pts:0, sv:0, sl:0, gv:0, gl:0 };
+  });
   gJogos.forEach(j => {
     if (!pairs[j.eq1]) pairs[j.eq1] = { par: j.eq1, pj:0, v:0, d:0, pts:0, sv:0, sl:0, gv:0, gl:0 };
     if (!pairs[j.eq2]) pairs[j.eq2] = { par: j.eq2, pj:0, v:0, d:0, pts:0, sv:0, sl:0, gv:0, gl:0 };
