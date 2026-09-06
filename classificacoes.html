@@ -440,8 +440,8 @@ document.addEventListener('DOMContentLoaded', () => {
           <span class="group-match-count">${gJogos.length} jogo${gJogos.length !== 1 ? 's' : ''}</span>
         </div>`;
 
-      if (!hasResults) {
-        html += `<div class="group-no-results"><i class="ph ph-clock"></i> Sem resultados ainda</div>`;
+      if (!rows.length) {
+        html += `<div class="group-no-results"><i class="ph ph-clock"></i> Sem duplas atribuídas</div>`;
       } else {
         html += `<div class="standings-table-wrap">
           <table class="standings-table">
