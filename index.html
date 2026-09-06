@@ -166,12 +166,12 @@
       <span class="stat-label">CATEGORIAS</span>
     </div>
     <div class="stat-item">
-      <span class="stat-value">FECHADAS</span>
-      <span class="stat-label">INSCRIÇÕES</span>
+      <span class="stat-value" id="cfgStatDuplas">86</span>
+      <span class="stat-label">DUPLAS</span>
     </div>
     <div class="stat-item">
-      <span class="stat-value">SORTEADOS</span>
-      <span class="stat-label">GRUPOS</span>
+      <span class="stat-value" id="cfgStatJogadores">174</span>
+      <span class="stat-label">JOGADORES</span>
     </div>
   </div>
 </div>
@@ -526,6 +526,14 @@
         s('cfgClube',          cfg.tornClube);
         s('cfgLocal',          cfg.tornLocal);
         s('cfgDatas',          cfg.tornDatas);
+
+        // Estatísticas dinâmicas (duplas / jogadores)
+        try {
+          var nD = (ppGet('duplas') || []).length;
+          var nJ = (ppGet('jogadores') || []).length;
+          if (nD) s('cfgStatDuplas', String(nD));
+          if (nJ) s('cfgStatJogadores', String(nJ));
+        } catch (e) {}
         if (cfg.tornDescFooter) {
           var fd = document.getElementById('cfgFooterDesc');
           if (fd) fd.innerHTML = cfg.tornDescFooter.replace(/\n/g,'<br/>');
