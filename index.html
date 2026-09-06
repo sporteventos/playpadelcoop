@@ -193,7 +193,7 @@
       </div>
       <div class="live-stat-card">
         <div class="live-stat-val" id="lsHoje">&mdash;</div>
-        <div class="live-stat-lbl">Jogos fase final</div>
+        <div class="live-stat-lbl">Jogos fase de grupos</div>
         <div class="live-stat-sub" id="lsHojeSub"></div>
       </div>
     </div>
@@ -362,17 +362,16 @@
     if (r.s3eq1 != null) sets++;
   });
 
-  // Fase final games counter
-  const hoje = jogosFF;
-  const hojeDisputados = hoje.filter(j => !!j.resultado).length;
+  // Fase de grupos games counter
+  const grupoDisputados = jogos.filter(j => !!j.resultado).length;
 
   document.getElementById('lsDisputados').textContent = disputados;
   document.getElementById('lsProgressFill').style.width = pct + '%';
   document.getElementById('lsProgressSub').textContent = total ? disputados + ' de ' + total + ' jogos' : '';
   document.getElementById('lsSets').textContent = sets;
   document.getElementById('lsPct').textContent = pct + '%';
-  document.getElementById('lsHoje').textContent = hoje.length;
-  document.getElementById('lsHojeSub').textContent = hoje.length ? hojeDisputados + ' conclu\u00eddos' : 'a decorrer';
+  document.getElementById('lsHoje').textContent = jogos.length;
+  document.getElementById('lsHojeSub').textContent = jogos.length ? grupoDisputados + ' conclu\u00eddos' : 'a decorrer';
 })();
 
 // ---- Top Pares leaderboard ----
