@@ -272,9 +272,13 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     return out;
   }
-  // Show all tournament dates Jun 5-14, regardless of games existing yet
+  // Datas do torneio a partir da config (fallback: intervalo completo Set 10–19)
+  const _cfg = ppGet('config') || {};
+  const _ini = _cfg.tornInicio || '2026-09-10';
+  const _fim = _cfg.tornFim || '2026-09-19';
   const tournamentDates = [];
-  for (let d = new Date('2026-06-05'); d <= new Date('2026-06-14'); d.setDate(d.getDate() + 1)) {
+  for (let d = new Date(_ini + 'T12:00:00'), end = new Date(_fim + 'T12:00:00'), guard = 0;
+       d <= end && guard < 400; d.setDate(d.getDate() + 1), guard++) {
     tournamentDates.push(d.toISOString().slice(0, 10));
   }
 
