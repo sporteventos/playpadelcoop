@@ -4688,9 +4688,11 @@ function initAdmin() {
 //  FASE FINAL — Bracket Logic
 // ============================================
 
-const FF_WILDCARD = ['M1', 'F1', 'M2', 'F2']; // 3 groups, needs 2 best 3rds
-const FF_4G       = ['M3', 'M4'];               // 4 groups, top 2 each = 8
-const FF_2G       = ['M5'];                     // 2 groups, top 2 each = 4 (no QF)
+const FF_1G       = ['F1', 'F2', 'F3']; // 1 grupo único, top 4 → Meias-Finais (sem QF)
+const FF_2G       = ['M1'];             // 2 grupos, top 2 cada = 4 → Meias-Finais (sem QF)
+const FF_4G       = ['M2', 'M4'];       // 4 grupos, top 2 cada = 8 → Quartos
+const FF_WILDCARD = ['M5'];             // 3 grupos, top 2 + 2 melhores 3.ºs = 8 → Quartos
+const FF_5G       = ['M3'];             // 5 grupos, 5 vencedores + 3 melhores 2.ºs = 8 → Quartos
 
 function ffLoad()       { return ppLoad('fasefinal') || {}; }
 function ffSave(data)   { ppSave('fasefinal', data); if (typeof _autoSync === 'function') _autoSync(); }
@@ -4743,6 +4745,17 @@ function ffSortByPerf(a, b) {
 function ffGetQualified(catId) {
   const allJogos = getData('jogos');
   const grupos   = getData('grupos').filter(g => g.cat === catId);
+
+  // FF_1G: grupo único → apuram as 4 melhores (S1..S4 por posição no grupo)
+  if (FF_1G.includes(catId)) {
+    const g = grupos[0];
+    if (!g) return [];
+    const sorted = _adminClassStandings(g, allJogos);
+    return sorted.slice(0, 4).map((r, i) => ({
+      ...r, grupo: g.id, pos: i + 1, sd: r.sl, gd: r.gl, tier: i + 1, seed: i + 1,
+    }));
+  }
+
   const firsts = [], seconds = [], thirds = [];
   grupos.forEach(g => {
     // Use _adminClassStandings: handles WOs correctly + mini-group circular tiebreak
@@ -4756,10 +4769,19 @@ function ffGetQualified(catId) {
     });
   });
   firsts.sort(ffSortByPerf); seconds.sort(ffSortByPerf); thirds.sort(ffSortByPerf);
+
+  // FF_5G (M3): 5 vencedores de grupo + 3 melhores 2.ºs classificados
+  if (FF_5G.includes(catId)) {
+    const q = firsts.map((t, i) => ({ ...t, tier: 1, seed: i + 1 }));
+    seconds.slice(0, 3).forEach((t, i) => q.push({ ...t, tier: 2, seed: firsts.length + i + 1 }));
+    return q;
+  }
+
   const q = [
     ...firsts.map((t, i)  => ({ ...t, tier: 1, seed: i + 1 })),
     ...seconds.map((t, i) => ({ ...t, tier: 2, seed: firsts.length + i + 1 })),
   ];
+  // FF_WILDCARD (M5): top 2 de cada grupo + 2 melhores 3.ºs classificados
   if (FF_WILDCARD.includes(catId)) {
     thirds.slice(0, 2).forEach((t, i) => q.push({ ...t, tier: 3, seed: firsts.length + seconds.length + i + 1 }));
   }
@@ -4774,7 +4796,7 @@ function ffFDate()  { return _tornCfg().dataFinais  || '2026-09-19'; } // Finais
 const FF_QF_SLOTS = ['17:30', '18:30', '19:30', '20:30', '21:30'];
 const FF_SF_SLOTS = ['15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00', '22:00'];
 const FF_F_SLOT   = '15:00';
-const FF_FINAL_CAMPOS = { M1:'Play Padel', M2:'Play Padel', F1:'Play Padel', F2:'Play Padel', M3:'TVCabo', M4:'TVCabo', M5:'TVCabo' };
+const FF_FINAL_CAMPOS = { M1:'Play Padel', M2:'Play Padel', F1:'Play Padel', F2:'Play Padel', F3:'Play Padel', M3:'TVCabo', M4:'TVCabo', M5:'TVCabo' };
 
 // Auto-alocação de QF nos slots livres do dia dos Quartos de Final
 function ffAutoAllocateQF(qfJogos) {
@@ -4885,33 +4907,33 @@ function ffGenerateBracket(catId) {
   const q = ffGetQualified(catId);
   const jogos = [];
 
-  if (FF_2G.includes(catId)) {
+  if (FF_1G.includes(catId)) {
+    // Grupo único: 4 melhores → Meias-Finais (S1 vs S4, S2 vs S3) → Final
+    jogos.push(ffMakeJogo(catId, 'SF', 1, q[0], q[3], null, ffSfDate(), FF_SF_SLOTS[0]));
+    jogos.push(ffMakeJogo(catId, 'SF', 2, q[1], q[2], null, ffSfDate(), FF_SF_SLOTS[1]));
+    jogos.push(ffMakeJogo(catId, 'F',  1, null, null, [`${catId}-SF1`, `${catId}-SF2`], ffFDate(), FF_F_SLOT, FF_FINAL_CAMPOS[catId] || null));
+    return { generated: true, jogos, collisionNote: null };
+
+  } else if (FF_2G.includes(catId)) {
+    // 2 grupos: top 2 cada → Meias-Finais (1ºA vs 2ºB, 1ºB vs 2ºA) → Final
     const bg = {};
     q.forEach(t => { (bg[t.grupo] = bg[t.grupo] || []).push(t); });
     const [gA, gB] = Object.keys(bg).sort();
     jogos.push(ffMakeJogo(catId, 'SF', 1, bg[gA][0], bg[gB][1], null, ffSfDate(), FF_SF_SLOTS[0]));
     jogos.push(ffMakeJogo(catId, 'SF', 2, bg[gB][0], bg[gA][1], null, ffSfDate(), FF_SF_SLOTS[1]));
     jogos.push(ffMakeJogo(catId, 'F',  1, null, null, [`${catId}-SF1`, `${catId}-SF2`], ffFDate(), FF_F_SLOT, FF_FINAL_CAMPOS[catId] || null));
-
-  } else if (FF_4G.includes(catId)) {
-    // 4 grupos: S1-S4 = vencedores, S5-S8 = segundos. Mesmo esquema de cruzamento.
-    const { pairs: pairs4, collisionNote: cn4 } = _ffBuildPairs(q);
-    pairs4.forEach(([e1, e2], i) => jogos.push(ffMakeJogo(catId, 'QF', i + 1, e1, e2, null)));
-    ffAutoAllocateQF(jogos.filter(j => j.fase === 'QF'));
-    jogos.push(ffMakeJogo(catId, 'SF', 1, null, null, [`${catId}-QF1`, `${catId}-QF2`], ffSfDate(), FF_SF_SLOTS[0]));
-    jogos.push(ffMakeJogo(catId, 'SF', 2, null, null, [`${catId}-QF3`, `${catId}-QF4`], ffSfDate(), FF_SF_SLOTS[1]));
-    jogos.push(ffMakeJogo(catId, 'F',  1, null, null, [`${catId}-SF1`, `${catId}-SF2`], ffFDate(), FF_F_SLOT, FF_FINAL_CAMPOS[catId] || null));
-    return { generated: true, jogos, collisionNote: cn4 };
+    return { generated: true, jogos, collisionNote: null };
 
   } else {
-    // 3 grupos (WILDCARD): S1-S3 = vencedores, S4-S6 = segundos, S7-S8 = melhores 3.ºs
-    const { pairs, collisionNote: cn } = _ffBuildPairs(q);
+    // 8 duplas → Quartos: FF_4G (top 2×4), FF_WILDCARD (top 2 + 2 melhores 3.ºs),
+    // FF_5G (5 vencedores + 3 melhores 2.ºs). Todos produzem q com 8 seeds (S1..S8).
+    const { pairs, collisionNote } = _ffBuildPairs(q);
     pairs.forEach(([e1, e2], i) => jogos.push(ffMakeJogo(catId, 'QF', i + 1, e1, e2, null)));
     ffAutoAllocateQF(jogos.filter(j => j.fase === 'QF'));
     jogos.push(ffMakeJogo(catId, 'SF', 1, null, null, [`${catId}-QF1`, `${catId}-QF2`], ffSfDate(), FF_SF_SLOTS[0]));
     jogos.push(ffMakeJogo(catId, 'SF', 2, null, null, [`${catId}-QF3`, `${catId}-QF4`], ffSfDate(), FF_SF_SLOTS[1]));
     jogos.push(ffMakeJogo(catId, 'F',  1, null, null, [`${catId}-SF1`, `${catId}-SF2`], ffFDate(), FF_F_SLOT, FF_FINAL_CAMPOS[catId] || null));
-    return { generated: true, jogos, collisionNote: cn };
+    return { generated: true, jogos, collisionNote };
   }
 }
 
@@ -4921,7 +4943,7 @@ function ffRecalcBracket(catId) {
   if (!Auth.hasRole('admin', 'operator')) return toast('Apenas administradores ou operadores.', 'error');
   const ff = ffLoad();
   if (!ff[catId]?.generated) { alert('Bracket não gerado para ' + catId); return; }
-  if (FF_2G.includes(catId)) { alert(catId + ' não tem QF (2 grupos)'); return; }
+  if (FF_2G.includes(catId) || FF_1G.includes(catId)) { alert(catId + ' não tem Quartos de Final (apura directo para as Meias).'); return; }
 
   const q = ffGetQualified(catId);
   const { pairs: newPairs, collisionNote } = _ffBuildPairs(q);
@@ -5034,7 +5056,7 @@ function renderFaseFinal() {
   Object.keys(_ffProp).forEach(c => { if (_ffProp[c]?.generated) ffPropagate(c); });
 
   const ff   = ffLoad();
-  const cats = ['M1', 'M2', 'F1', 'F2', 'M3', 'M4', 'M5'];
+  const cats = ['M1', 'M2', 'F1', 'F2', 'F3', 'M3', 'M4', 'M5'];
   document.getElementById('ffCatTabs').innerHTML = [
     ...cats.map(c =>
       `<button class="btn btn-sm ${c === ffCurrentCat ? 'btn-primary' : 'btn-ghost'}" onclick="ffSetCat('${c}')" style="min-width:3rem">${c}</button>`
@@ -5358,7 +5380,7 @@ window.ffReset = function(catId) {
 
 // ---- Global view (all categories) ----
 function ffRenderGlobal() {
-  const cats = ['M1', 'M2', 'F1', 'F2', 'M3', 'M4', 'M5'];
+  const cats = ['M1', 'M2', 'F1', 'F2', 'F3', 'M3', 'M4', 'M5'];
   const container = document.getElementById('ffBracket');
   const phaseLabel = { QF: 'Quartos', SF: 'Meias', F: 'Final' };
 
@@ -5446,7 +5468,7 @@ function ffRenderGlobal() {
 }
 
 window.ffGerarTodosBrackets = function() {
-  const cats = ['M1', 'M2', 'F1', 'F2', 'M3', 'M4', 'M5'];
+  const cats = ['M1', 'M2', 'F1', 'F2', 'F3', 'M3', 'M4', 'M5'];
   const ff = ffLoad();
   const ready = cats.filter(c => !ff[c]?.generated && allGroupGamesDone(c));
   if (ready.length === 0) return toast('Nenhum bracket disponível para gerar (fase de grupos incompleta ou já gerados).', 'error');
@@ -5462,7 +5484,7 @@ window.ffGerarTodosBrackets = function() {
 
 window.ffGerarAleatoriosTodos = function() {
   if (!Auth.isAdmin()) return toast('Apenas administradores podem executar esta acção.', 'error');
-  const cats = ['M1', 'M2', 'F1', 'F2', 'M3', 'M4', 'M5'];
+  const cats = ['M1', 'M2', 'F1', 'F2', 'F3', 'M3', 'M4', 'M5'];
   const generated = cats.filter(c => ffLoad()[c]?.generated);
   if (generated.length === 0) return toast('Nenhum bracket gerado. Gera os brackets primeiro.', 'error');
   if (!confirm(`Preencher resultados aleatórios em todos os brackets gerados (${generated.join(', ')})? (Apenas para testes)`)) return;
@@ -5498,7 +5520,7 @@ window.ffGerarAleatoriosTodos = function() {
 
 window.ffLimparResultadosTodos = function() {
   if (!Auth.isAdmin()) return toast('Apenas administradores podem executar esta acção.', 'error');
-  const cats = ['M1', 'M2', 'F1', 'F2', 'M3', 'M4', 'M5'];
+  const cats = ['M1', 'M2', 'F1', 'F2', 'F3', 'M3', 'M4', 'M5'];
   const ff = ffLoad();
   const generated = cats.filter(c => ff[c]?.generated);
   if (generated.length === 0) return toast('Nenhum bracket gerado.', 'error');
@@ -5516,7 +5538,7 @@ window.ffLimparResultadosTodos = function() {
 
 window.ffResetarTodos = function() {
   if (!Auth.isAdmin()) return toast('Apenas administradores podem executar esta acção.', 'error');
-  const cats = ['M1', 'M2', 'F1', 'F2', 'M3', 'M4', 'M5'];
+  const cats = ['M1', 'M2', 'F1', 'F2', 'F3', 'M3', 'M4', 'M5'];
   const ff = ffLoad();
   const generated = cats.filter(c => ff[c]?.generated);
   if (generated.length === 0) return toast('Nenhum bracket gerado.', 'error');
@@ -6881,33 +6903,48 @@ function _adminClassTab(catId, btn) {
 }
 
 function _adminQualifiedMap(catId, grupos, jogos) {
-  const WILDCARD_CATS = new Set(['M1','F1','M2','F2']);
   const catGroups = _adminClassCatGroups(catId, grupos);
   const qualified = new Map();
-  const allGroupData = catGroups.map(g => {
-    const rows = _adminClassStandings(g, jogos);
+  const groupDone = g => {
+    const gJogos = jogos.filter(j => j.grupo === g.id);
+    return gJogos.length > 0 && gJogos.every(j => !!j.resultado);
+  };
+  const allDone = catGroups.length > 0 && catGroups.every(groupDone);
+  const perfSort = (a,b) => b.v-a.v || (b.sv-b.sl)-(a.sv-a.sl) || (b.gv-b.gl)-(a.gv-a.gl) || b.gv-a.gv;
+
+  // FF_1G (F1/F2/F3): grupo único → as 4 melhores apuram directo para as Meias
+  if (FF_1G.includes(catId)) {
+    const g = catGroups[0];
+    if (g) _adminClassStandings(g, jogos).slice(0, 4).forEach(r => { if (r.pj > 0) qualified.set(r.par, 'direto'); });
+    return qualified;
+  }
+
+  const allGroupData = catGroups.map(g => ({ g, rows: _adminClassStandings(g, jogos) }));
+
+  // FF_5G (M3): 1.º de cada grupo directo + 3 melhores 2.ºs classificados (wildcard)
+  if (FF_5G.includes(catId)) {
+    allGroupData.forEach(({ rows }) => { if (rows[0] && rows[0].pj > 0) qualified.set(rows[0].par, 'direto'); });
+    const segundos = allGroupData.flatMap(({ rows }) => rows[1] && rows[1].pj > 0 ? [rows[1]] : []);
+    if (allDone && segundos.length === catGroups.length) {
+      segundos.sort(perfSort);
+      segundos.forEach((t, i) => { if (!qualified.has(t.par)) qualified.set(t.par, i < 3 ? 'wildcard' : 'eliminated'); });
+    }
+    return qualified;
+  }
+
+  // FF_2G / FF_4G / FF_WILDCARD: top 2 de cada grupo apuram directo
+  allGroupData.forEach(({ rows }) => {
     if (rows[0] && rows[0].pj > 0) qualified.set(rows[0].par, 'direto');
     if (rows[1] && rows[1].pj > 0) qualified.set(rows[1].par, 'direto');
-    return { rows };
   });
-  if (WILDCARD_CATS.has(catId)) {
+
+  // FF_WILDCARD (M5): + 2 melhores 3.ºs classificados (wildcard)
+  if (FF_WILDCARD.includes(catId)) {
     const terceiros = allGroupData.flatMap(({ rows }) => rows[2] && rows[2].pj > 0 ? [rows[2]] : []);
-    // Só atribui wildcards definitivamente quando TODOS os grupos têm 3.º lugar candidato
-    // E todos os jogos do grupo estão disputados
-    const allGroupsDone = terceiros.length === catGroups.length && catGroups.every(g => {
-      const gJogos = jogos.filter(j => j.grupo === g.id);
-      return gJogos.length > 0 && gJogos.every(j => !!j.resultado);
-    });
-    if (allGroupsDone) {
-      terceiros.sort((a,b) => b.v-a.v || (b.sv-b.sl)-(a.sv-a.sl) || (b.gv-b.gl)-(a.gv-a.gl) || b.gv-a.gv);
-      const nWc = Math.max(0, 8 - 2*catGroups.length);
-      terceiros.forEach((t, i) => {
-        if (!qualified.has(t.par)) {
-          qualified.set(t.par, i < nWc ? 'wildcard' : 'eliminated');
-        }
-      });
+    if (allDone && terceiros.length === catGroups.length) {
+      terceiros.sort(perfSort);
+      terceiros.forEach((t, i) => { if (!qualified.has(t.par)) qualified.set(t.par, i < 2 ? 'wildcard' : 'eliminated'); });
     }
-    // Se nem todos os grupos terminaram: 3.ºs mostrados sem badge WC/eliminado
   }
   return qualified;
 }
@@ -7019,8 +7056,6 @@ function _renderAdminClassCat(catId, grupos, jogos, el) {
 }
 
 function _adminGroupCardHTML(g, rows, gJogos, done, catId, qualifiedSet) {
-  const WILDCARD_CATS = new Set(['M1','F1','M2','F2']);
-  const hasWc = WILDCARD_CATS.has(catId);
   return `<div class="admin-group-card">
         <div class="admin-group-card-header">
           <span style="font-weight:700;color:var(--branco)">${g.id}</span>
@@ -7324,7 +7359,7 @@ window.gerarPanfletoClassificacoes = function() {
 // ============================================
 window.gerarPanfletoCampeoes = function() {
   const ff   = ppLoad('fasefinal') || {};
-  const CATS = ['M1', 'M2', 'F1', 'F2', 'M3', 'M4', 'M5'];
+  const CATS = ['M1', 'M2', 'F1', 'F2', 'F3', 'M3', 'M4', 'M5'];
   const CAT_CLR = { M1:'#4A9EFF', M2:'#00C37B', M3:'#39FF8F', M4:'#F5C518', M5:'#FF9A3C', F1:'#FF6BB0', F2:'#C97BFF', F3:'#8B5CF6', F3:'#8B5CF6' };
 
   const champions = [];
@@ -7575,7 +7610,7 @@ window.gerarPanfletoFinalAnuncio = function(catId) {
 // ============================================
 window.gerarPanfletoDiaFinais = function() {
   const ff   = ffLoad();
-  const CATS = ['M1', 'M2', 'F1', 'F2', 'M3', 'M4', 'M5'];
+  const CATS = ['M1', 'M2', 'F1', 'F2', 'F3', 'M3', 'M4', 'M5'];
   const CAT_CLR  = { M1:'#4A9EFF', M2:'#00C37B', M3:'#39FF8F', M4:'#F5C518', M5:'#FF9A3C', F1:'#FF6BB0', F2:'#C97BFF', F3:'#8B5CF6', F3:'#8B5CF6' };
   const CAT_NOME = { M1:'Masculino 1', M2:'Masculino 2', M3:'Masculino 3', M4:'Masculino 4', M5:'Masculino 5', F1:'Feminino 1', F2:'Feminino 2' };
   const W = 1080, PAD = 52, CARD_H = 196, CARD_GAP = 14, LIST_Y = 490;
