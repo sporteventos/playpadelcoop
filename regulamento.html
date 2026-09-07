@@ -342,15 +342,31 @@
       </div>
     </div>
 
-    <p style="font-size:.8rem;color:var(--cinza-texto);margin-bottom:.85rem;text-transform:uppercase;letter-spacing:.07em;font-weight:600;">Quem apura</p>
-    <ul class="reg-list">
-      <li>Os <strong>1.º e 2.º classificados</strong> de cada grupo apuram directamente para a Fase Final.</li>
-      <li>Nas categorias com 3 grupos, os <strong>2 melhores 3.ºs classificados</strong> (wildcards) também apuram, perfazendo um total de 8 equipas.</li>
-    </ul>
+    <p style="font-size:.8rem;color:var(--cinza-texto);margin-bottom:.85rem;text-transform:uppercase;letter-spacing:.07em;font-weight:600;">Formato por categoria</p>
+    <p style="font-size:.875rem;color:var(--cinza-texto);margin-bottom:.75rem;line-height:1.6">
+      Cada categoria tem um número diferente de grupos, por isso o apuramento varia. A regra base é sempre a mesma: <strong>vence-se o grupo, apura-se</strong>. As duplas seguintes disputam os lugares restantes.
+    </p>
+    <div style="display:flex;flex-direction:column;gap:.5rem;margin-bottom:1rem;font-size:.85rem">
+      <div style="padding:.55rem .75rem;background:rgba(255,107,176,.06);border:1px solid rgba(255,107,176,.22);border-radius:8px;line-height:1.55">
+        <strong style="color:#FF6BB0">F1 · F2 · F3</strong> — Grupo único → <strong>Meias-Finais</strong> → Final. Apuram as <strong>4 melhores</strong> do grupo. Meias: <strong>1.º vs 4.º</strong> e <strong>2.º vs 3.º</strong>.
+      </div>
+      <div style="padding:.55rem .75rem;background:rgba(74,158,255,.06);border:1px solid rgba(74,158,255,.22);border-radius:8px;line-height:1.55">
+        <strong style="color:#4A9EFF">M1</strong> — 2 grupos → <strong>Meias-Finais</strong> → Final. Apuram o <strong>1.º e 2.º</strong> de cada grupo (4 duplas). Meias: 1.ºA vs 2.ºB e 1.ºB vs 2.ºA.
+      </div>
+      <div style="padding:.55rem .75rem;background:rgba(0,195,123,.06);border:1px solid rgba(0,195,123,.22);border-radius:8px;line-height:1.55">
+        <strong style="color:var(--verde)">M2 · M4</strong> — 4 grupos → <strong>Quartos-de-Final</strong> → Meias → Final. Apuram o <strong>1.º e 2.º</strong> de cada grupo (8 duplas).
+      </div>
+      <div style="padding:.55rem .75rem;background:rgba(245,197,24,.06);border:1px solid rgba(245,197,24,.22);border-radius:8px;line-height:1.55">
+        <strong style="color:var(--amarelo)">M3</strong> — 5 grupos → <strong>Quartos-de-Final</strong> → Meias → Final. Apuram os <strong>5 vencedores de grupo</strong> + os <strong>3 melhores 2.ºs classificados</strong> (8 duplas).
+      </div>
+      <div style="padding:.55rem .75rem;background:rgba(255,154,60,.06);border:1px solid rgba(255,154,60,.22);border-radius:8px;line-height:1.55">
+        <strong style="color:#FF9A3C">M5</strong> — 3 grupos → <strong>Quartos-de-Final</strong> → Meias → Final. Apuram o <strong>1.º e 2.º</strong> de cada grupo + os <strong>2 melhores 3.ºs classificados</strong> (8 duplas).
+      </div>
+    </div>
 
-    <p style="font-size:.8rem;color:var(--cinza-texto);margin:.85rem 0 .6rem;text-transform:uppercase;letter-spacing:.07em;font-weight:600;">Seleção dos melhores 3.ºs classificados (Wildcards)</p>
+    <p style="font-size:.8rem;color:var(--cinza-texto);margin:.85rem 0 .6rem;text-transform:uppercase;letter-spacing:.07em;font-weight:600;">Seleção dos melhores classificados (Wildcards)</p>
     <p style="font-size:.875rem;color:var(--cinza-texto);margin-bottom:.6rem;line-height:1.6">
-      Os 3.ºs classificados de grupos diferentes são comparados <em>apenas pelos seus jogos dentro do respectivo grupo</em>, pelos seguintes critérios por ordem de prioridade:
+      Aplica-se às categorias <strong>M3</strong> (melhores 2.ºs classificados) e <strong>M5</strong> (melhores 3.ºs classificados). Os candidatos de grupos diferentes são comparados <em>apenas pelos seus jogos dentro do respectivo grupo</em>, pelos seguintes critérios por ordem de prioridade:
     </p>
     <ul class="reg-list reg-desempate">
       <li>Maior número de <strong>vitórias / pontos somados</strong></li>
@@ -360,22 +376,22 @@
       <li><strong>Sorteio</strong> em caso de igualdade absoluta</li>
     </ul>
 
-    <p style="font-size:.8rem;color:var(--cinza-texto);margin:.85rem 0 .6rem;text-transform:uppercase;letter-spacing:.07em;font-weight:600;">Ranking geral S1 – S8</p>
+    <p style="font-size:.8rem;color:var(--cinza-texto);margin:.85rem 0 .6rem;text-transform:uppercase;letter-spacing:.07em;font-weight:600;">Ranking geral S1 – S8 <span style="text-transform:none;font-weight:400">(categorias com Quartos: M2, M3, M4, M5)</span></p>
     <p style="font-size:.875rem;color:var(--cinza-texto);margin-bottom:.6rem;line-height:1.6">
-      As 8 equipas apuradas são ordenadas de <strong>S1</strong> (melhor) a <strong>S8</strong> (pior), usando os mesmos critérios de desempate da fase de grupos (excluindo confronto directo, pois as equipas vêm de grupos diferentes):
+      As 8 equipas apuradas são ordenadas de <strong>S1</strong> (melhor) a <strong>S8</strong> (pior), usando os mesmos critérios de desempate da fase de grupos (excluindo confronto directo, pois as equipas vêm de grupos diferentes). A ordem é sempre: <strong>vencedores de grupo</strong>, depois <strong>2.ºs classificados</strong>, e por fim os <strong>wildcards</strong>:
     </p>
     <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:.4rem;margin-bottom:.85rem;font-size:.8rem">
       <div style="padding:.5rem .7rem;background:rgba(0,195,123,.07);border:1px solid rgba(0,195,123,.2);border-radius:8px;text-align:center">
-        <div style="font-weight:800;color:var(--verde);font-size:.95rem">S1 · S2 · S3</div>
-        <div style="color:var(--cinza-texto);margin-top:.2rem">Vencedores de grupo<br>ordenados por desempenho</div>
+        <div style="font-weight:800;color:var(--verde);font-size:.95rem">Vencedores</div>
+        <div style="color:var(--cinza-texto);margin-top:.2rem">1.ºs de grupo<br>ordenados por desempenho</div>
       </div>
       <div style="padding:.5rem .7rem;background:rgba(56,182,255,.07);border:1px solid rgba(56,182,255,.2);border-radius:8px;text-align:center">
-        <div style="font-weight:800;color:#4A9EFF;font-size:.95rem">S4 · S5 · S6</div>
-        <div style="color:var(--cinza-texto);margin-top:.2rem">Segundos classificados<br>ordenados por desempenho</div>
+        <div style="font-weight:800;color:#4A9EFF;font-size:.95rem">Segundos</div>
+        <div style="color:var(--cinza-texto);margin-top:.2rem">2.ºs classificados<br>ordenados por desempenho</div>
       </div>
       <div style="padding:.5rem .7rem;background:rgba(245,197,24,.07);border:1px solid rgba(245,197,24,.2);border-radius:8px;text-align:center">
-        <div style="font-weight:800;color:var(--amarelo);font-size:.95rem">S7 · S8</div>
-        <div style="color:var(--cinza-texto);margin-top:.2rem">Melhores 3.ºs classificados<br>(wildcards)</div>
+        <div style="font-weight:800;color:var(--amarelo);font-size:.95rem">Wildcards</div>
+        <div style="color:var(--cinza-texto);margin-top:.2rem">Melhores 2.ºs (M3)<br>ou melhores 3.ºs (M5)</div>
       </div>
     </div>
 
