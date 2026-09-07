@@ -758,6 +758,11 @@ body {
   gap: 0.2rem;
 }
 
+.jogo-card > .jogo-equipa:nth-child(2) {
+  text-align: right;
+  align-items: flex-end;
+}
+
 .jogo-equipa-nomes {
   font-size: 0.9rem;
   font-weight: 600;
@@ -1028,6 +1033,7 @@ body {
   /* Próximos jogos */
   .jogo-card { grid-template-columns: 1fr; gap: .5rem; }
   .jogo-vs { text-align: left; }
+  .jogo-card > .jogo-equipa:nth-child(2) { text-align: left; align-items: flex-start; }
   .jogo-teams { gap: .3rem; }
 
   /* Nav cards */
