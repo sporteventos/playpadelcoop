@@ -17,6 +17,9 @@ const APP = {
 
 // Compatibilidade interna
 const getData = ppGet;
+// Nome do torneio (dinâmico via config) para panfletos e mensagens
+function ppTornNome() { try { return (ppGet('config') || {}).tornNome || 'Play Padel 2026'; } catch (e) { return 'Play Padel 2026'; } }
+function ppTornNomeUpper() { return ppTornNome().toUpperCase(); }
 const setData = (k, v) => { ppSave(k, v); if (typeof _autoSync === 'function') _autoSync(); };
 const formatDate = ppFormatDate;
 
@@ -109,21 +112,21 @@ function waLink(phone, text) {
   return 'https://wa.me/' + clean + '?text=' + encodeURIComponent(text);
 }
 function waMsgJogo(j) {
-  return '\u{1F3BE} *Play Padel \u00b7 Torneio 2.\u00ba Anivers\u00e1rio*\n\n' +
+  return '\u{1F3BE} *Play Padel \u00b7 ' + ppTornNome() + '*\n\n' +
     '\ud83d\udcc5 ' + ppWeekday(j.data) + ', ' + formatDate(j.data) + ' | \u23f0 ' + j.hora + '\n' +
     '\ud83c\udfd9\ufe0f Campo: ' + j.campo + ' | \ud83c\udff7\ufe0f ' + j.grupo + '\n\n' +
     '\ud83c\udfc6 *' + j.eq1 + '*\nvs\n*' + j.eq2 + '*\n\nBoa sorte! \ud83c\udfc6';
 }
 function waMsgFFJogo(j, catId) {
   const fase = j.fase === 'F' ? 'Final' : j.fase === 'SF' ? 'Meia-Final ' + j.num : 'Quarto de Final ' + j.num;
-  return '\u{1F3BE} *Play Padel \u00b7 Torneio 2.\u00ba Anivers\u00e1rio*\n\ud83c\udfc6 *' + catId + ' \u2014 ' + fase + '*\n\n' +
+  return '\u{1F3BE} *Play Padel \u00b7 ' + ppTornNome() + '*\n\ud83c\udfc6 *' + catId + ' \u2014 ' + fase + '*\n\n' +
     '\ud83d\udcc5 ' + (j.data ? ppWeekday(j.data) + ', ' + formatDate(j.data) : 'A definir') + ' | \u23f0 ' + (j.hora || 'A definir') + '\n\n' +
     '\ud83c\udfc6 *' + (j.eq1 || 'A definir') + '*\nvs\n*' + (j.eq2 || 'A definir') + '*\n\nBoa sorte! \ud83c\udfc6';
 }
 function waMsgBundle(jogos) {
   const byData = {};
   jogos.forEach(j => { byData[j.data] = byData[j.data] || []; byData[j.data].push(j); });
-  let msg = '\u{1F3BE} *Play Padel \u00b7 Torneio 2.\u00ba Anivers\u00e1rio*\n\ud83d\udccb *Programa de Jogos*\n';
+  let msg = '\u{1F3BE} *Play Padel \u00b7 ' + ppTornNome() + '*\n\ud83d\udccb *Programa de Jogos*\n';
   Object.keys(byData).sort().forEach(d => {
     msg += '\n\ud83d\udcc5 *' + ppWeekday(d) + ', ' + formatDate(d) + '*\n';
     byData[d].sort((a, b) => a.hora.localeCompare(b.hora)).forEach(j => {
@@ -249,12 +252,12 @@ window._panfletoWhatsapp = async function() {
   const file = new File([blob], filename, { type: 'image/png' });
   if (navigator.canShare && navigator.canShare({ files: [file] })) {
     try {
-      await navigator.share({ files: [file], title: 'Play Padel \u00B7 Torneio Anivers\u00E1rio 2026' });
+      await navigator.share({ files: [file], title: 'Play Padel \u00B7 ' + ppTornNome() });
     } catch (err) {
       if (err.name !== 'AbortError') _panfletoDownload();
     }
   } else {
-    window.open('https://wa.me/?text=' + encodeURIComponent('Play Padel \u00B7 Torneio Anivers\u00E1rio 2026'), '_blank');
+    window.open('https://wa.me/?text=' + encodeURIComponent('Play Padel \u00B7 ' + ppTornNome()), '_blank');
   }
 };
 
@@ -313,7 +316,7 @@ window._buildGameCanvas = function(j, onDone) {
     // Subtitle
     ctx.fillStyle = '#8AA396';
     ctx.font = '18px Arial, sans-serif';
-    ctx.fillText('TORNEIO ANIVERSÁRIO 2026', TEXT_X, 100);
+    ctx.fillText(ppTornNomeUpper(), TEXT_X, 100);
 
     // Category / phase pill (top right) + ID badge
     const grpText = j.grupo.toUpperCase();
@@ -529,7 +532,7 @@ window.gerarBannerInstalacao = function() {
     ctx.fillStyle = '#00C37B'; ctx.font = 'bold 36px Arial, sans-serif'; ctx.textAlign = 'left';
     ctx.fillText('PLAY PADEL', PAD + 104, 65);
     ctx.fillStyle = '#8AA396'; ctx.font = '17px Arial, sans-serif';
-    ctx.fillText('TORNEIO 2.º ANIVERSÁRIO 2026', PAD + 104, 94);
+    ctx.fillText(ppTornNomeUpper(), PAD + 104, 94);
 
     // Separator
     ctx.fillStyle = '#1C2620'; ctx.fillRect(0, 128, W, 2);
@@ -702,7 +705,7 @@ window.gerarPanfleto = function(periodo) {
   ctx.fillText('PLAY PADEL', PAD, 72);
   ctx.fillStyle = '#F0F7F3';
   ctx.font = '32px Arial, sans-serif';
-  ctx.fillText('TORNEIO ANIVERSÁRIO 2026', PAD, 112);
+  ctx.fillText(ppTornNomeUpper(), PAD, 112);
 
   const dayLabel = filtroData !== 'todos'
     ? (typeof ppWeekday === 'function' ? ppWeekday(filtroData).toUpperCase() + '  \u00B7  ' : '')
@@ -1101,7 +1104,7 @@ window._gerarPanfletoSuspenso = function(jogo) {
     ctx.fillStyle = '#00C37B'; ctx.font = 'bold 32px Arial, sans-serif';
     ctx.fillText('PLAY PADEL COOP', W/2, LY + LOGO_SZ + 44);
     ctx.fillStyle = '#8AA396'; ctx.font = '21px Arial, sans-serif';
-    ctx.fillText('TORNEIO ANIVERSÁRIO 2026', W/2, LY + LOGO_SZ + 76);
+    ctx.fillText(ppTornNomeUpper(), W/2, LY + LOGO_SZ + 76);
     const sepY = LY + LOGO_SZ + 102;
     ctx.strokeStyle = 'rgba(255,154,60,0.35)'; ctx.lineWidth = 1;
     ctx.beginPath(); ctx.moveTo(80, sepY); ctx.lineTo(W-80, sepY); ctx.stroke();
@@ -1263,7 +1266,7 @@ window._gerarPanfletoAdiado = function(jogo) {
     ctx.fillStyle = '#00C37B'; ctx.font = 'bold 32px Arial, sans-serif';
     ctx.fillText('PLAY PADEL COOP', W/2, LY + LOGO_SZ + 44);
     ctx.fillStyle = '#8AA396'; ctx.font = '21px Arial, sans-serif';
-    ctx.fillText('TORNEIO ANIVERSÁRIO 2026', W/2, LY + LOGO_SZ + 76);
+    ctx.fillText(ppTornNomeUpper(), W/2, LY + LOGO_SZ + 76);
     const sepY = LY + LOGO_SZ + 102;
     ctx.strokeStyle = 'rgba(107,156,247,0.35)'; ctx.lineWidth = 1;
     ctx.beginPath(); ctx.moveTo(80, sepY); ctx.lineTo(W-80, sepY); ctx.stroke();
@@ -1445,7 +1448,7 @@ function _buildFotoFlyerFF(img) {
     ctx.fillText('PLAY PADEL COOP', textX, bandY + 46);
     const ppw = ctx.measureText('PLAY PADEL COOP').width;
     ctx.fillStyle = '#8AA396'; ctx.font = '17px Arial, sans-serif';
-    ctx.fillText('\u00B7 TORNEIO ANIVERS\u00C1RIO 2026', textX + ppw + 10, bandY + 46);
+    ctx.fillText('\u00B7 ' + ppTornNomeUpper(), textX + ppw + 10, bandY + 46);
 
     // Cat pill + date
     const bw = ctx.measureText(cat.toUpperCase()).width + 30;
@@ -1643,7 +1646,7 @@ function _buildFotoFlyer(img) {
     const ppw = ctx.measureText('PLAY PADEL COOP').width;
     ctx.fillStyle = '#8AA396';
     ctx.font = '20px Arial, sans-serif';
-    ctx.fillText('· TORNEIO ANIVERSÁRIO 2026', textX + ppw + 12, bandY + 50);
+    ctx.fillText('\u00B7 ' + ppTornNomeUpper(), textX + ppw + 12, bandY + 50);
 
     // Category badge
     const cat = (jogo.grupo || 'M1').split('-')[0];
@@ -1825,7 +1828,7 @@ window.gerarPanfletoResultados = function() {
   ctx.fillText('PLAY PADEL', PAD, 72);
   ctx.fillStyle = '#F0F7F3';
   ctx.font = '32px Arial, sans-serif';
-  ctx.fillText('TORNEIO ANIVERSÁRIO 2026', PAD, 112);
+  ctx.fillText(ppTornNomeUpper(), PAD, 112);
   const dayStr = filtroData !== 'todos'
     ? filtroData.split('-').reverse().join('/')
     : 'TODOS OS DIAS';
@@ -3016,7 +3019,7 @@ function renderJogadores(filter = '') {
     const comRes       = jog._res;
     const nomeEnc = encodeURIComponent(nome);
     const tel = jog.tel || getTelefone(nome);
-    const confMsg = encodeURIComponent('\u{1F3BE} Ol\u00e1 ' + nome + '!\n\nA tua inscri\u00e7\u00e3o no torneio *Play Padel \u00b7 2.\u00ba Anivers\u00e1rio* est\u00e1 confirmada. Bom jogo! \ud83c\udfc6');
+    const confMsg = encodeURIComponent('\u{1F3BE} Ol\u00e1 ' + nome + '!\n\nA tua inscri\u00e7\u00e3o no torneio *Play Padel \u00b7 ' + ppTornNome() + '* est\u00e1 confirmada. Bom jogo! \ud83c\udfc6');
     const waBtn = tel
       ? '<a class="btn-icon" style="color:#25D366" href="https://wa.me/' + tel.replace(/\D/g,'') + '?text=' + confMsg + '" target="_blank" title="WhatsApp"><i class="ph ph-whatsapp-logo"></i></a>'
       : '';
@@ -7218,7 +7221,7 @@ window.gerarPanfletoClassificacoes = function() {
   ctx.fillText('PLAY PADEL', PAD, 86);
   ctx.fillStyle = '#F0F7F3';
   ctx.font = '40px Arial, sans-serif';
-  ctx.fillText('TORNEIO ANIVERSÁRIO 2026', PAD, 136);
+  ctx.fillText(ppTornNomeUpper(), PAD, 136);
   ctx.fillStyle = '#8AA396';
   ctx.font = '27px Arial, sans-serif';
   ctx.fillText('CLASSIFICAÇÕES', PAD, 176);
@@ -7412,7 +7415,7 @@ window.gerarPanfletoCampeoes = function() {
     ctx.fillText('PLAY PADEL', TEXT_X, 72);
     ctx.fillStyle = '#F0F7F3';
     ctx.font = '30px Arial, sans-serif';
-    ctx.fillText('TORNEIO ANIVERSÁRIO 2026', TEXT_X, 112);
+    ctx.fillText(ppTornNomeUpper(), TEXT_X, 112);
     ctx.fillStyle = '#F5C518';
     ctx.font = 'bold 28px Arial, sans-serif';
     ctx.fillText('🏆  CAMPEÕES', TEXT_X, 155);
@@ -7530,7 +7533,7 @@ window.gerarPanfletoFinalAnuncio = function(catId) {
     const brdX = PAD + LOGO_SZ + 14;
     ctx.textAlign = 'left';
     ctx.fillStyle = '#00C37B'; ctx.font = 'bold 26px Arial, sans-serif'; ctx.fillText('PLAY PADEL COOP', brdX, 52);
-    ctx.fillStyle = '#8AA396'; ctx.font = '18px Arial, sans-serif'; ctx.fillText('TORNEIO ANIVERSÁRIO 2026', brdX, 76);
+    ctx.fillStyle = '#8AA396'; ctx.font = '18px Arial, sans-serif'; ctx.fillText(ppTornNomeUpper(), brdX, 76);
     // GRANDE FINAL badge
     const badgeY = 118, badgeW = 430, badgeH = 80, badgeX = (W - badgeW) / 2;
     const bGrad = ctx.createLinearGradient(badgeX, 0, badgeX + badgeW, 0);
@@ -7662,7 +7665,7 @@ window.gerarPanfletoDiaFinais = function() {
     const brdBY = logoImg ? logoY + LOGO_SZ + 22 : 90;
     ctx.textAlign = 'center';
     ctx.fillStyle = '#00C37B'; ctx.font = 'bold 32px Arial, sans-serif'; ctx.fillText('PLAY PADEL COOP', W/2, brdBY);
-    ctx.fillStyle = '#8AA396'; ctx.font = '22px Arial, sans-serif'; ctx.fillText('TORNEIO ANIVERSÁRIO 2026', W/2, brdBY + 36);
+    ctx.fillStyle = '#8AA396'; ctx.font = '22px Arial, sans-serif'; ctx.fillText(ppTornNomeUpper(), W/2, brdBY + 36);
     // Trophy + DIA DAS FINAIS
     ctx.fillStyle = '#F5C518'; ctx.font = 'bold 88px Arial, sans-serif'; ctx.fillText('\uD83C\uDFC6', W/2, brdBY + 140);
     const hGrad = ctx.createLinearGradient(0, brdBY + 156, W, brdBY + 220);
