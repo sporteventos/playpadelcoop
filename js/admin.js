@@ -4152,6 +4152,7 @@ function salvarResultado() {
     }
     jogos[idx].resultado = resultado;
     setData('jogos', jogos);
+    try { ffAutoMaintain({ render: false }); } catch (e) {}
     closeModal('modalResultado');
     renderView(APP.currentView);
     Auth.log('SAVE_RESULT', 'resultados', `WO registado: jogo #${APP.editingId} \u2014 ${APP._woSelection}`);
@@ -4276,6 +4277,7 @@ function salvarResultado() {
     if (eq2Id)    jogos[idx].eq2   = getDuplaLabel(eq2Id);
   }
   setData('jogos', jogos);
+  try { ffAutoMaintain({ render: false }); } catch (e) {}
   closeModal('modalResultado');
   renderView(APP.currentView);
   Auth.log('SAVE_RESULT', 'resultados', `Resultado guardado: jogo #${APP.editingId}`);
@@ -4311,7 +4313,7 @@ function limparResultado() {
   if (!confirm('Limpar o resultado deste jogo?')) return;
   const jogos = getData('jogos');
   const idx = jogos.findIndex(j => j.id === APP.editingId);
-  if (idx >= 0) { jogos[idx].resultado = null; jogos[idx].suspenso = null; setData('jogos', jogos); }
+  if (idx >= 0) { jogos[idx].resultado = null; jogos[idx].suspenso = null; setData('jogos', jogos); try { ffAutoMaintain({ render: false }); } catch (e) {} }
   closeModal('modalResultado');
   renderView(APP.currentView);
   Auth.log('CLEAR_RESULT', 'resultados', `Resultado removido: jogo #${APP.editingId}`);
@@ -4685,6 +4687,12 @@ function initAdmin() {
   // Ir para view inicial — restaurar da hash se disponível
   const _hashView = location.hash.slice(1);
   navigate(_hashView && document.getElementById('view-' + _hashView) ? _hashView : 'dashboard');
+
+  // (A) Auto-gerar esqueletos da fase final + preencher seeds à medida que os
+  // grupos fecham, para que os jogos apareçam e sejam agendáveis desde já.
+  if (Auth.hasRole('admin', 'operator')) {
+    try { ffAutoMaintain({ render: false }); } catch (e) { console.warn('ffAutoMaintain init falhou', e); }
+  }
 }
 
 // ============================================
@@ -4942,60 +4950,125 @@ function ffGenerateBracket(catId) {
 
 // Recalculates QF seedings for an already-generated bracket.
 // Preserves existing data/hora/campo/resultado — only updates eq1/eq2/seeds.
+// Anula, mantendo os SEEDS visíveis, as equipas cujo grupo de origem ainda tem
+// jogos por disputar. Aplica-se a jogos alimentados directamente pela fase de
+// grupos (feedFrom nulo) — Quartos (cats de 8) e Meias directas (F1/F2/F3, M1).
+// Define catObj.incomplete. Mantém os labels de seed (S1..S8) para leitura do bracket.
+function _ffApplyIncompleteNulls(catId, catObj) {
+  const grupos    = getData('grupos').filter(g => g.cat === catId);
+  const numGroups = grupos.length;
+  const allJogos  = getData('jogos') || [];
+  const pendingGroups = new Set(
+    grupos.filter(g => allJogos.some(j => j.grupo === g.id && !j.resultado)).map(g => g.id)
+  );
+  const allDone = allGroupGamesDone(catId);
+  if (!allDone) {
+    catObj.jogos.forEach(j => {
+      if (j.feedFrom && j.feedFrom.length) return; // alimentado por vencedores → propaga
+      // Anula apenas seeds cross-group (2.º/3.º/wildcard) de grupos pendentes;
+      // mantém o número do seed como placeholder. Vencedores de grupo (seed ≤ nº grupos)
+      // permanecem como projecção até recalcular.
+      if (j.eq1grupo && pendingGroups.has(j.eq1grupo) && j.eq1seed > numGroups) { j.eq1 = null; j.eq1grupo = null; }
+      if (j.eq2grupo && pendingGroups.has(j.eq2grupo) && j.eq2seed > numGroups) { j.eq2 = null; j.eq2grupo = null; }
+    });
+  }
+  catObj.incomplete = !allDone;
+  return catObj;
+}
+
+// Regenera o bracket de uma categoria preservando agenda (data/hora/campo) e
+// resultados já lançados, mapeados por id de jogo (ids são estáveis). Usado pelo
+// recalcular manual e pela auto-manutenção. Devolve a collisionNote.
+function _ffRegenPreserve(catId, ff) {
+  const old   = ff[catId];
+  const fresh = ffGenerateBracket(catId);
+  if (old?.jogos?.length) {
+    const byId = Object.fromEntries(old.jogos.map(j => [j.id, j]));
+    fresh.jogos.forEach(j => {
+      const o = byId[j.id];
+      if (!o) return;
+      if (o.data)  j.data  = o.data;
+      if (o.hora)  j.hora  = o.hora;
+      if (o.campo) j.campo = o.campo;
+      if (o.resultado) j.resultado = o.resultado;
+    });
+  }
+  ff[catId] = fresh;
+  ff[catId].swapNote = null;
+  _ffApplyIncompleteNulls(catId, ff[catId]);
+  return fresh.collisionNote || null;
+}
+
+// Um bracket está "bloqueado" para auto-ajuste quando a fase de grupos terminou
+// (seeds finais) ou quando já foi lançado algum resultado da própria fase final.
+function _ffCatLocked(catId, ff) {
+  const cd = ff[catId];
+  if (!cd?.generated) return false;
+  if (cd.incomplete === false) return true;
+  if (allGroupGamesDone(catId)) return true;
+  return (cd.jogos || []).some(j => j.resultado);
+}
+
+// Recalcular Seeds (manual — opção C). Funciona para todos os formatos.
 function ffRecalcBracket(catId) {
   if (!Auth.hasRole('admin', 'operator')) return toast('Apenas administradores ou operadores.', 'error');
   const ff = ffLoad();
   if (!ff[catId]?.generated) { alert('Bracket não gerado para ' + catId); return; }
-  if (FF_2G.includes(catId) || FF_1G.includes(catId)) { alert(catId + ' não tem Quartos de Final (apura directo para as Meias).'); return; }
-
-  const q = ffGetQualified(catId);
-  const { pairs: newPairs, collisionNote } = _ffBuildPairs(q);
-
-  const qfJogos = ff[catId].jogos.filter(j => j.fase === 'QF').sort((a, b) => a.num - b.num);
-  qfJogos.forEach((jogo, i) => {
-    if (i >= newPairs.length) return;
-    const [e1, e2] = newPairs[i];
-    jogo.eq1 = e1?.par ?? null; jogo.eq1grupo = e1?.grupo ?? null; jogo.eq1seed = e1?.seed ?? null;
-    jogo.eq2 = e2?.par ?? null; jogo.eq2grupo = e2?.grupo ?? null; jogo.eq2seed = e2?.seed ?? null;
-  });
-
-  // Corrigir SF feedFrom: SF1=W(QF1)+W(QF2), SF2=W(QF3)+W(QF4)
-  const sf1 = ff[catId].jogos.find(j => j.fase === 'SF' && j.num === 1);
-  const sf2 = ff[catId].jogos.find(j => j.fase === 'SF' && j.num === 2);
-  if (sf1) sf1.feedFrom = [`${catId}-QF1`, `${catId}-QF2`];
-  if (sf2) sf2.feedFrom = [`${catId}-QF3`, `${catId}-QF4`];
-
-  // Guardar notas separadas: collisionNote (anti-colisão) e swapNote (trocas manuais)
-  ff[catId].collisionNote = collisionNote || null;
-  ff[catId].swapNote = null; // reset manual swaps on recalc
-
-  // If bracket is incomplete, null out teams from groups with pending games (show "A definir")
-  const allDone = allGroupGamesDone(catId);
-  if (!allDone) {
-    const grupos = getData('grupos').filter(g => g.cat === catId);
-    const numGroups = grupos.length;
-    const allJogos = getData('jogos') || [];
-    const pendingGroups = new Set(
-      grupos.filter(g => allJogos.some(j => j.grupo === g.id && !j.resultado)).map(g => g.id)
-    );
-    ff[catId].jogos.forEach(j => {
-      if (j.fase !== 'QF') return;
-      if (j.eq1grupo && pendingGroups.has(j.eq1grupo) && j.eq1seed > numGroups) {
-        j.eq1 = null; j.eq1grupo = null; j.eq1seed = null;
-      }
-      if (j.eq2grupo && pendingGroups.has(j.eq2grupo) && j.eq2seed > numGroups) {
-        j.eq2 = null; j.eq2grupo = null; j.eq2seed = null;
-      }
-    });
-    ff[catId].incomplete = true;
-  } else {
-    ff[catId].incomplete = false;
-  }
-
+  const collisionNote = _ffRegenPreserve(catId, ff);
+  ff[catId].collisionNote = collisionNote;
   ffSave(ff);
   _autoSync();
   renderFaseFinal();
   auditLog('ff_recalc_bracket', { cat: catId, collisionNote });
+  toast(`Seeds recalculados para ${catId}.`);
+}
+
+// Lista das 8 categorias do torneio.
+const FF_ALL_CATS = ['M1', 'M2', 'F1', 'F2', 'F3', 'M3', 'M4', 'M5'];
+
+// (A) Garante que existe um esqueleto de bracket para todas as categorias, para
+// que os jogos da fase final apareçam desde já (site público, calendário e
+// construtor de horário) e possam ser agendados mesmo sem duplas definidas.
+// Idempotente: nunca sobrescreve um bracket já gerado. Devolve nº de novos.
+function ffEnsureSkeletons() {
+  const ff = ffLoad();
+  let created = 0;
+  FF_ALL_CATS.forEach(catId => {
+    if (ff[catId]?.generated) return;
+    const grupos = getData('grupos').filter(g => g.cat === catId);
+    if (!grupos.length) return; // categoria sem grupos definidos ainda
+    const fresh = ffGenerateBracket(catId);
+    fresh.auto = true;
+    ff[catId] = fresh;
+    _ffApplyIncompleteNulls(catId, ff[catId]);
+    created++;
+    ffSave(ff); // guardar incrementalmente para a auto-alocação de QF ver os slots já ocupados
+  });
+  return created;
+}
+
+// (A) Auto-manutenção: cria esqueletos em falta e, para cada categoria ainda
+// incompleta e não bloqueada, recalcula os seeds preenchendo as duplas cujos
+// grupos já fecharam — preservando agenda e resultados. Silencioso por defeito.
+function ffAutoMaintain(opts = {}) {
+  const created = ffEnsureSkeletons();
+  const ff = ffLoad();
+  let updated = 0;
+  FF_ALL_CATS.forEach(catId => {
+    if (!ff[catId]?.generated) return;
+    if (_ffCatLocked(catId, ff)) return;
+    const note = _ffRegenPreserve(catId, ff);
+    ff[catId].collisionNote = note;
+    updated++;
+  });
+  if (created || updated) {
+    ffSave(ff);
+    if (opts.sync !== false) _autoSync();
+    if (opts.render !== false && typeof renderFaseFinal === 'function' && APP.currentView === 'fasefinal') {
+      if (ffCurrentCat === 'ALL') ffRenderGlobal(); else renderFaseFinal();
+    }
+  }
+  return { created, updated };
 }
 
 function ffGetWinner(r) {
@@ -5053,6 +5126,11 @@ function ffChampionColHtml(catId) {
 }
 
 function renderFaseFinal() {
+  // (A) Garantir que os esqueletos existem antes de renderizar (idempotente).
+  if (Auth.hasRole('admin', 'operator')) {
+    try { ffAutoMaintain({ render: false }); } catch (e) { console.warn('ffAutoMaintain render falhou', e); }
+  }
+
   // Re-propagate all generated categories so WO results and normal results
   // that were saved before this fix take effect immediately
   const _ffProp = ffLoad();
@@ -5197,6 +5275,15 @@ window.ffTeamDrop = function(ev, catId, jogoId, side) {
   setTimeout(() => renderFaseFinal(), 0);
 };
 
+function ffFeederLabel(feedId) {
+  if (!feedId) return null;
+  const suf = String(feedId).split('-').slice(1).join('-'); // QF1 / SF1 / F
+  if (/^QF/i.test(suf)) return 'Vencedor QF ' + suf.replace(/QF/i, '');
+  if (/^SF/i.test(suf)) return 'Vencedor Meia ' + suf.replace(/SF/i, '');
+  if (/^F/i.test(suf))  return 'Vencedor Final';
+  return null;
+}
+
 function ffCardHtml(j, catId) {
   const w    = ffGetWinner(j.resultado);
   const done = !!j.resultado;
@@ -5204,14 +5291,20 @@ function ffCardHtml(j, catId) {
   const canDrag = _ffDragMode && j.fase === 'QF' && !done;
 
   const teamHtml = (name, grupo, seed, isWin, side) => {
-    const inner = name
-      ? `<div class="bk-card-team${isWin ? ' win' : ''}"${canDrag ? ' style="pointer-events:none"' : ''}>
-          ${canDrag ? '<i class="ph ph-dots-six-vertical" style="font-size:.85rem;color:var(--cinza-texto);flex-shrink:0;margin-right:.1rem"></i>' : ''}
+    const dragIcon = canDrag ? '<i class="ph ph-dots-six-vertical" style="font-size:.85rem;color:var(--cinza-texto);flex-shrink:0;margin-right:.1rem"></i>' : '';
+    let inner;
+    if (name) {
+      inner = `<div class="bk-card-team${isWin ? ' win' : ''}"${canDrag ? ' style="pointer-events:none"' : ''}>
+          ${dragIcon}
           ${seed ? `<span class="bk-cseed">${seed}</span>` : ''}
           <span class="bk-cname">${name}</span>
           ${grupo ? `<span class="bk-cgrp">${grupo}</span>` : ''}
-        </div>`
-      : `<div class="bk-card-team tbd"${canDrag ? ' style="pointer-events:none"' : ''}>${canDrag ? '<i class="ph ph-dots-six-vertical" style="font-size:.85rem;color:var(--cinza-texto);flex-shrink:0;margin-right:.1rem"></i>' : ''}<span class="bk-cname">A definir…</span></div>`;
+        </div>`;
+    } else {
+      const feedId = (j.feedFrom && j.feedFrom.length) ? (side === 'eq1' ? j.feedFrom[0] : j.feedFrom[1]) : null;
+      const ph = ffFeederLabel(feedId) || 'A definir…';
+      inner = `<div class="bk-card-team tbd"${canDrag ? ' style="pointer-events:none"' : ''}>${dragIcon}${seed ? `<span class="bk-cseed">${seed}</span>` : ''}<span class="bk-cname">${ph}</span></div>`;
+    }
     if (!canDrag) return inner;
     return `<div draggable="true"
       style="cursor:grab;border-radius:6px;transition:outline .1s"
@@ -5339,37 +5432,18 @@ window.ffGenerate = function(catId) {
 };
 
 // Generate bracket even when group phase is incomplete.
-// Missing teams show as null ("A definir") and are filled via Recalcular Seeds later.
+// Missing teams show as null ("A definir") keeping the seed label; filled via
+// Recalcular Seeds (ou automaticamente à medida que os grupos fecham).
 window.ffGenerateIncomplete = function(catId) {
   if (!Auth.hasRole('admin', 'operator')) return toast('Acesso restrito.', 'error');
   const ff = ffLoad();
-  const result = ffGenerateBracket(catId);
-
-  // Null out any team that is NOT a group winner (seed > numGroups) AND comes from a
-  // group that still has pending games — their position is not yet decided.
-  const grupos = getData('grupos').filter(g => g.cat === catId);
-  const numGroups = grupos.length;
-  const allJogos = getData('jogos') || [];
-  const pendingGroups = new Set(
-    grupos.filter(g => allJogos.some(j => j.grupo === g.id && !j.resultado)).map(g => g.id)
-  );
-  result.jogos.forEach(j => {
-    if (j.fase !== 'QF') return;
-    if (j.eq1grupo && pendingGroups.has(j.eq1grupo) && j.eq1seed > numGroups) {
-      j.eq1 = null; j.eq1grupo = null; j.eq1seed = null;
-    }
-    if (j.eq2grupo && pendingGroups.has(j.eq2grupo) && j.eq2seed > numGroups) {
-      j.eq2 = null; j.eq2grupo = null; j.eq2seed = null;
-    }
-  });
-
-  ff[catId] = result;
-  ff[catId].incomplete = true;
+  ff[catId] = ffGenerateBracket(catId);
+  _ffApplyIncompleteNulls(catId, ff[catId]);
   ffSave(ff);
   _autoSync();
   renderFaseFinal();
   Auth.log('GENERATE_BRACKET_INCOMPLETE', 'fasefinal', `Bracket gerado (incompleto): ${catId}`);
-  toast(`Bracket de ${catId} gerado com equipas em falta. Use "Recalcular Seeds" após o jogo.`, 'warning');
+  toast(`Bracket de ${catId} gerado com equipas em falta. Preenche automaticamente à medida que os grupos fecham.`, 'warning');
 };
 
 window.ffReset = function(catId) {
@@ -7856,6 +7930,7 @@ function _importConfirm() {
     count++;
   });
   setData('jogos', jogos);
+  try { ffAutoMaintain({ render: false }); } catch (e) {}
   Auth.log('IMPORT_BULK', `${count} resultados importados em lote`);
   toast(`${count} resultados importados com sucesso.`);
   renderImportar();
