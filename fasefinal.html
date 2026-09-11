@@ -225,8 +225,20 @@ document.addEventListener('DOMContentLoaded', () => {
       }).join(' / ');
   }
 
-  function teamRow(name, grupo, seed, isWin) {
-    if (!name) return `<div class="bk-card-team tbd"><span class="bk-cname">A definir&hellip;</span></div>`;
+  function ffFeederLabel(feedId) {
+    if (!feedId) return null;
+    const suf = String(feedId).split('-').slice(1).join('-');
+    if (/^QF/i.test(suf)) return 'Vencedor QF ' + suf.replace(/QF/i, '');
+    if (/^SF/i.test(suf)) return 'Vencedor Meia ' + suf.replace(/SF/i, '');
+    if (/^F/i.test(suf))  return 'Vencedor Final';
+    return null;
+  }
+
+  function teamRow(name, grupo, seed, isWin, feedId) {
+    if (!name) {
+      const ph = ffFeederLabel(feedId) || 'A definir&hellip;';
+      return `<div class="bk-card-team tbd">${seed ? `<span class="bk-cseed">${seed}</span>` : ''}<span class="bk-cname">${ph}</span></div>`;
+    }
     return `<div class="bk-card-team${isWin ? ' win' : ''}">
       ${seed ? `<span class="bk-cseed">${seed}</span>` : ''}
       <span class="bk-cname">${name.split(' & ').join('<br>')}</span>
@@ -257,9 +269,9 @@ document.addEventListener('DOMContentLoaded', () => {
       <div class="bk-card${done ? ' done' : ''}${isFinal ? ' is-final' : ''}">
         <div class="bk-card-lbl">${fLabel}</div>
         ${schedHtml}
-        ${teamRow(j.eq1, j.eq1grupo, j.eq1seed, done && w === 1)}
+        ${teamRow(j.eq1, j.eq1grupo, j.eq1seed, done && w === 1, (j.feedFrom && j.feedFrom.length) ? j.feedFrom[0] : null)}
         <div class="bk-card-vs">VS</div>
-        ${teamRow(j.eq2, j.eq2grupo, j.eq2seed, done && w === 2)}
+        ${teamRow(j.eq2, j.eq2grupo, j.eq2seed, done && w === 2, (j.feedFrom && j.feedFrom.length) ? j.feedFrom[1] : null)}
         ${scoreHtml}
       </div>`;
   }
@@ -291,7 +303,7 @@ document.addEventListener('DOMContentLoaded', () => {
       content.innerHTML = `
         <div class="bracket-empty">
           <i class="ph ph-hourglass bracket-empty-icon"></i>
-          <p class="bracket-empty-text">O bracket para <strong>${catId}</strong> ainda não foi gerado.<br>Aguarde a conclusão da fase de grupos.</p>
+          <p class="bracket-empty-text">O quadro da fase final de <strong>${catId}</strong> ainda não está disponível.<br>Será gerado automaticamente assim que os grupos estiverem definidos.</p>
         </div>`;
       return;
     }
