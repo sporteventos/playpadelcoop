@@ -4955,21 +4955,18 @@ function ffGenerateBracket(catId) {
 // grupos (feedFrom nulo) — Quartos (cats de 8) e Meias directas (F1/F2/F3, M1).
 // Define catObj.incomplete. Mantém os labels de seed (S1..S8) para leitura do bracket.
 function _ffApplyIncompleteNulls(catId, catObj) {
-  const grupos    = getData('grupos').filter(g => g.cat === catId);
-  const numGroups = grupos.length;
-  const allJogos  = getData('jogos') || [];
-  const pendingGroups = new Set(
-    grupos.filter(g => allJogos.some(j => j.grupo === g.id && !j.resultado)).map(g => g.id)
-  );
   const allDone = allGroupGamesDone(catId);
   if (!allDone) {
+    // O seeding da fase final é cruzado entre grupos (S1..S8 pela classificação
+    // global), pelo que nenhuma posição fica matematicamente garantida enquanto
+    // TODA a fase de grupos da categoria não terminar. Até lá não mostramos
+    // nomes de duplas — apenas o número de seed e "Vencedor QF/Meia" (analogia
+    // do quadro do Mundial). Os slots alimentados por vencedores (feedFrom)
+    // mantêm-se nulos e são propagados quando o jogo anterior é decidido.
     catObj.jogos.forEach(j => {
       if (j.feedFrom && j.feedFrom.length) return; // alimentado por vencedores → propaga
-      // Anula apenas seeds cross-group (2.º/3.º/wildcard) de grupos pendentes;
-      // mantém o número do seed como placeholder. Vencedores de grupo (seed ≤ nº grupos)
-      // permanecem como projecção até recalcular.
-      if (j.eq1grupo && pendingGroups.has(j.eq1grupo) && j.eq1seed > numGroups) { j.eq1 = null; j.eq1grupo = null; }
-      if (j.eq2grupo && pendingGroups.has(j.eq2grupo) && j.eq2seed > numGroups) { j.eq2 = null; j.eq2grupo = null; }
+      j.eq1 = null; j.eq1grupo = null;
+      j.eq2 = null; j.eq2grupo = null;
     });
   }
   catObj.incomplete = !allDone;
