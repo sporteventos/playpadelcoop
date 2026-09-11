@@ -236,8 +236,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function teamRow(name, grupo, seed, isWin, feedId) {
     if (!name) {
-      const ph = ffFeederLabel(feedId) || 'A definir&hellip;';
-      return `<div class="bk-card-team tbd">${seed ? `<span class="bk-cseed">${seed}</span>` : ''}<span class="bk-cname">${ph}</span></div>`;
+      const ph = ffFeederLabel(feedId) || (seed != null ? `Seed ${seed}` : 'A definir&hellip;');
+      return `<div class="bk-card-team tbd"><span class="bk-cname">${ph}</span></div>`;
     }
     return `<div class="bk-card-team${isWin ? ' win' : ''}">
       ${seed ? `<span class="bk-cseed">${seed}</span>` : ''}

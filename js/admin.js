@@ -5299,8 +5299,8 @@ function ffCardHtml(j, catId) {
         </div>`;
     } else {
       const feedId = (j.feedFrom && j.feedFrom.length) ? (side === 'eq1' ? j.feedFrom[0] : j.feedFrom[1]) : null;
-      const ph = ffFeederLabel(feedId) || 'A definir…';
-      inner = `<div class="bk-card-team tbd"${canDrag ? ' style="pointer-events:none"' : ''}>${dragIcon}${seed ? `<span class="bk-cseed">${seed}</span>` : ''}<span class="bk-cname">${ph}</span></div>`;
+      const ph = ffFeederLabel(feedId) || (seed != null ? `Seed ${seed}` : 'A definir…');
+      inner = `<div class="bk-card-team tbd"${canDrag ? ' style="pointer-events:none"' : ''}>${dragIcon}<span class="bk-cname">${ph}</span></div>`;
     }
     if (!canDrag) return inner;
     return `<div draggable="true"
