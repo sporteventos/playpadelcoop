@@ -5318,6 +5318,17 @@ function ffFeederLabel(feedId) {
   return null;
 }
 
+// Rótulo de uma vaga de jogo da fase final para listagens (construtor de horário,
+// agenda/relatório): nome da dupla quando conhecido; senão "Vencedor QF/Meia x"
+// (jogos alimentados por outro jogo) ou "Seed N" (alimentados pela fase de grupos).
+function ffSlotLabel(j, side) {
+  const name = side === 'eq1' ? j.eq1 : j.eq2;
+  if (name) return name;
+  const feedId = (j.feedFrom && j.feedFrom.length) ? (side === 'eq1' ? j.feedFrom[0] : j.feedFrom[1]) : null;
+  const seed = side === 'eq1' ? j.eq1seed : j.eq2seed;
+  return ffFeederLabel(feedId) || (seed != null ? `Seed ${seed}` : 'A definir');
+}
+
 function ffCardHtml(j, catId) {
   const w    = ffGetWinner(j.resultado);
   const done = !!j.resultado;
@@ -8178,8 +8189,8 @@ function renderHorario() {
             return 'Jogo consecutivo: ' + offenders.map(p => `${escHtml(p.trim())} (${[...new Set(playerSlots[p.trim().toLowerCase()])].sort().join(' → ')})`).join(' | ');
           })() : '');
           const conflictClass = conflict ? ' has-conflict' : btb ? ' has-btb' : '';
-          const e1 = j.eq1 || 'A definir';
-          const e2 = j.eq2 || 'A definir';
+          const e1 = j._isFaseFinal ? ffSlotLabel(j, 'eq1') : (j.eq1 || 'A definir');
+          const e2 = j._isFaseFinal ? ffSlotLabel(j, 'eq2') : (j.eq2 || 'A definir');
           const dragAttr = `draggable="true" ondragstart="horarioStartDrag(event,'${j.id}')" ondragend="horarioDragEnd(event)"`;
           const moverBtn = `<button onclick="event.stopPropagation();horarioMoverDia('${j.id}')" style="margin-top:.35rem;width:100%;background:transparent;border:1px solid var(--preto-borda);border-radius:4px;color:var(--cinza-texto);font-size:.62rem;padding:.15rem .3rem;cursor:pointer;text-align:center" title="Mover para outro dia">↗ outro dia</button>`;
           return `<div class="schedule-slot has-game${j.resultado?' has-result':''}${conflictClass}" ${dragAttr} ${slotAttr}>
@@ -9032,9 +9043,9 @@ function renderRelatorioJogos() {
             <td style="padding:.45rem .75rem;font-family:monospace;font-weight:700;color:var(--branco)">${j.hora || '—'}</td>
             <td style="padding:.45rem .75rem;color:var(--cinza-texto)">${escHtml(j.campo || '—')}</td>
             <td style="padding:.45rem .75rem"><span style="background:${clr}22;color:${clr};border-radius:4px;padding:.1rem .45rem;font-size:.72rem;font-weight:700">${escHtml(j.grupo || '—')}</span></td>
-            <td style="padding:.45rem .75rem;${e1style}">${escHtml(j.eq1 || 'A definir')}</td>
+            <td style="padding:.45rem .75rem;${e1style}">${escHtml(j._ff ? ffSlotLabel(j, 'eq1') : (j.eq1 || 'A definir'))}</td>
             <td style="padding:.45rem .75rem;text-align:center">${res}</td>
-            <td style="padding:.45rem .75rem;${e2style}">${escHtml(j.eq2 || 'A definir')}</td>
+            <td style="padding:.45rem .75rem;${e2style}">${escHtml(j._ff ? ffSlotLabel(j, 'eq2') : (j.eq2 || 'A definir'))}</td>
             <td style="padding:.45rem .75rem;text-align:center">
               ${j.resultado
                 ? (j.resultado.wo
