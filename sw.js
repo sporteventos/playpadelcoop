@@ -1,5 +1,5 @@
 // Play Padel · Service Worker
-const CACHE = 'playpadel-v56';
+const CACHE = 'playpadel-v57';
 const PRECACHE = [
   '/playpadelcoop/',
   '/playpadelcoop/index.html',
@@ -12,6 +12,7 @@ const PRECACHE = [
   '/playpadelcoop/estatisticas.html',
   '/playpadelcoop/regulamento.html',
   '/playpadelcoop/manifest.json',
+  '/playpadelcoop/manifest-admin.json',
   '/playpadelcoop/icon-192.png',
   '/playpadelcoop/icon-512.png',
   '/playpadelcoop/css/style.css',
