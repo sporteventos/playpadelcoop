@@ -3793,6 +3793,44 @@ window.onSetInput = function(n) {
   updateMatchResultBar();
 };
 
+// Auto-avanço de foco entre caixas de resultado. Como os sets são um único
+// dígito (0–7), ao preencher uma caixa salta automaticamente para a seguinte:
+// E1 → E2 → (Tie-Break se 6–6, ou próximo set) — poupando cliques manuais.
+// Só avança se a caixa de destino estiver vazia (não interfere com correcções).
+window.scoreAdvance = function(el) {
+  if (!el) return;
+  const focusIfEmpty = id => {
+    const t = document.getElementById(id);
+    if (t && t.value === '') { t.focus(); try { t.select(); } catch (e) {} return true; }
+    return false;
+  };
+  const v = String(el.value);
+  if (v === '') return;
+
+  // Caixas de set (0–7, um dígito) → avanço imediato
+  const ms = el.id.match(/^resS(\d)(E[12])$/);
+  if (ms) {
+    const n = +ms[1], side = ms[2];
+    const num = parseInt(v, 10);
+    if (isNaN(num) || num < 0 || num > 7) return;
+    if (side === 'E1') { focusIfEmpty(`resS${n}E2`); return; }
+    // Lado E2: decidir destino conforme tie-break / próximo set
+    const a = parseInt(document.getElementById(`resS${n}E1`)?.value, 10);
+    if (a === 6 && num === 6) { document.getElementById(`resTB${n}E1`)?.focus(); return; }
+    const nextBlock = document.getElementById(`setBlock${n + 1}`);
+    if (n < 3 && nextBlock && nextBlock.style.display !== 'none') focusIfEmpty(`resS${n + 1}E1`);
+    return;
+  }
+
+  // Caixas de tie-break (podem ter 2 dígitos): só avança E1 → E2 quando o valor
+  // já está "fechado" (≥7 ou 2 dígitos), evitando saltar a meio de "10"/"11".
+  const mt = el.id.match(/^resTB(\d)E1$/);
+  if (mt) {
+    const num = parseInt(v, 10);
+    if (!isNaN(num) && (num >= 7 || v.length >= 2)) focusIfEmpty(`resTB${mt[1]}E2`);
+  }
+};
+
 window.abrirResultado = function(jogoId) {
   const jogos = getData('jogos');
   const j = jogos.find(x => x.id === jogoId);

@@ -1405,14 +1405,14 @@
           <span class="set-status" id="setStatus1"></span>
         </div>
         <div class="score-inputs">
-          <input class="score-input" type="number" id="resS1E1" min="0" max="7" placeholder="0" oninput="onSetInput(1)"/>
+          <input class="score-input" type="number" id="resS1E1" min="0" max="7" placeholder="0" oninput="onSetInput(1);scoreAdvance(this)"/>
           <span class="score-sep">-</span>
-          <input class="score-input" type="number" id="resS1E2" min="0" max="7" placeholder="0" oninput="onSetInput(1)"/>
+          <input class="score-input" type="number" id="resS1E2" min="0" max="7" placeholder="0" oninput="onSetInput(1);scoreAdvance(this)"/>
         </div>
         <div class="tb-row" id="tbRow1" style="display:none">
           <span class="tb-row-label"><i class="ph ph-lightning"></i> Tie-Break</span>
           <div class="score-inputs">
-            <input class="score-input" type="number" id="resTB1E1" min="0" placeholder="7" oninput="onSetInput(1)"/>
+            <input class="score-input" type="number" id="resTB1E1" min="0" placeholder="7" oninput="onSetInput(1);scoreAdvance(this)"/>
             <span class="score-sep">-</span>
             <input class="score-input" type="number" id="resTB1E2" min="0" placeholder="5" oninput="onSetInput(1)"/>
           </div>
@@ -1426,14 +1426,14 @@
           <span class="set-status" id="setStatus2"></span>
         </div>
         <div class="score-inputs">
-          <input class="score-input" type="number" id="resS2E1" min="0" max="7" placeholder="0" oninput="onSetInput(2)"/>
+          <input class="score-input" type="number" id="resS2E1" min="0" max="7" placeholder="0" oninput="onSetInput(2);scoreAdvance(this)"/>
           <span class="score-sep">-</span>
-          <input class="score-input" type="number" id="resS2E2" min="0" max="7" placeholder="0" oninput="onSetInput(2)"/>
+          <input class="score-input" type="number" id="resS2E2" min="0" max="7" placeholder="0" oninput="onSetInput(2);scoreAdvance(this)"/>
         </div>
         <div class="tb-row" id="tbRow2" style="display:none">
           <span class="tb-row-label"><i class="ph ph-lightning"></i> Tie-Break</span>
           <div class="score-inputs">
-            <input class="score-input" type="number" id="resTB2E1" min="0" placeholder="7" oninput="onSetInput(2)"/>
+            <input class="score-input" type="number" id="resTB2E1" min="0" placeholder="7" oninput="onSetInput(2);scoreAdvance(this)"/>
             <span class="score-sep">-</span>
             <input class="score-input" type="number" id="resTB2E2" min="0" placeholder="5" oninput="onSetInput(2)"/>
           </div>
@@ -1447,14 +1447,14 @@
           <span class="set-status" id="setStatus3"></span>
         </div>
         <div class="score-inputs">
-          <input class="score-input" type="number" id="resS3E1" min="0" max="7" placeholder="0" oninput="onSetInput(3)"/>
+          <input class="score-input" type="number" id="resS3E1" min="0" max="7" placeholder="0" oninput="onSetInput(3);scoreAdvance(this)"/>
           <span class="score-sep">-</span>
-          <input class="score-input" type="number" id="resS3E2" min="0" max="7" placeholder="0" oninput="onSetInput(3)"/>
+          <input class="score-input" type="number" id="resS3E2" min="0" max="7" placeholder="0" oninput="onSetInput(3);scoreAdvance(this)"/>
         </div>
         <div class="tb-row" id="tbRow3" style="display:none">
           <span class="tb-row-label"><i class="ph ph-lightning"></i> Tie-Break</span>
           <div class="score-inputs">
-            <input class="score-input" type="number" id="resTB3E1" min="0" placeholder="7" oninput="onSetInput(3)"/>
+            <input class="score-input" type="number" id="resTB3E1" min="0" placeholder="7" oninput="onSetInput(3);scoreAdvance(this)"/>
             <span class="score-sep">-</span>
             <input class="score-input" type="number" id="resTB3E2" min="0" placeholder="5" oninput="onSetInput(3)"/>
           </div>
@@ -1547,7 +1547,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="js/data.js?v=28"></script>
 <script src="js/auth.js?v=28"></script>
-<script src="js/admin.js?v=35"></script>
+<script src="js/admin.js?v=36"></script>
 <script>
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('/playpadelcoop/sw.js', { updateViaCache: 'none' })
