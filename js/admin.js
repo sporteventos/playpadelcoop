@@ -2544,10 +2544,12 @@ function renderConfigPanel() {
     ${section('Datas do Torneio')}
     ${fieldDate('dataGruposInicio', 'Fase de Grupos — início', '2026-09-10')}
     ${fieldDate('dataGruposFim',    'Fase de Grupos — fim',    '2026-09-16')}
-    ${fieldDate('dataQuartos',      'Quartos de Final',         '2026-09-17')}
-    ${fieldDate('dataMeias',        'Meias-Finais',             '2026-09-18')}
+    ${fieldDate('dataQuartos',      'Quartos de Final — início', '2026-09-17')}
+    ${fieldDate('dataQuartosFim',   'Quartos de Final — fim (opcional)', '')}
+    ${fieldDate('dataMeias',        'Meias-Finais — início',     '2026-09-18')}
+    ${fieldDate('dataMeiasFim',     'Meias-Finais — fim (opcional)', '')}
     ${fieldDate('dataFinais',       'Finais',                   '2026-09-19')}
-    <div style="font-size:.72rem;color:var(--cinza-texto);padding:.2rem 0 .5rem">Estas datas definem os limites do calendário de jogos e a alocação automática das fases finais. O intervalo geral (${escHtml(str('dataGruposInicio','2026-09-10'))} a ${escHtml(str('dataFinais','2026-09-19'))}) é aplicado aos seletores de data.</div>
+    <div style="font-size:.72rem;color:var(--cinza-texto);padding:.2rem 0 .5rem">Estas datas definem os limites do calendário de jogos e a alocação automática das fases finais. Os campos <strong>— fim</strong> dos Quartos e Meias são opcionais: se preenchidos, esses jogos são distribuídos automaticamente por vários dias (do início ao fim). Deixe em branco para agendar tudo num único dia. O intervalo geral (${escHtml(str('dataGruposInicio','2026-09-10'))} a ${escHtml(str('dataFinais','2026-09-19'))}) é aplicado aos seletores de data.</div>
 
     ${section('Capacidade de Inscrições')}
     ${fieldText('maxJogadoresM', 'Máx. jogadores Masculino', 'ex: 144', '144')}
@@ -4801,48 +4803,80 @@ function ffGetQualified(catId) {
 
 // Datas das fases finais — lidas da config do torneio (editáveis no admin)
 function _tornCfg() { return getData('config') || {}; }
-function ffQfDate() { return _tornCfg().dataQuartos || '2026-09-17'; } // Quartos de Final
-function ffSfDate() { return _tornCfg().dataMeias   || '2026-09-18'; } // Meias-Finais
+function ffQfDate() { return _tornCfg().dataQuartos || '2026-09-17'; } // Quartos de Final (início)
+function ffSfDate() { return _tornCfg().dataMeias   || '2026-09-18'; } // Meias-Finais (início)
 function ffFDate()  { return _tornCfg().dataFinais  || '2026-09-19'; } // Finais
+
+// Intervalo de dias (inclusive) para cada fase. Se o campo "fim" estiver vazio
+// ou for inválido, cai para um único dia (o de início). Permite distribuir os
+// jogos de Quartos/Meias por vários dias configuráveis.
+function ffQfDays() {
+  const ini = ffQfDate(); const fim = _tornCfg().dataQuartosFim || '';
+  const r = fim ? _cjDateRange(ini, fim) : [];
+  return r.length ? r : [ini];
+}
+function ffSfDays() {
+  const ini = ffSfDate(); const fim = _tornCfg().dataMeiasFim || '';
+  const r = fim ? _cjDateRange(ini, fim) : [];
+  return r.length ? r : [ini];
+}
+
 const FF_QF_SLOTS = ['17:30', '18:30', '19:30', '20:30', '21:30'];
 const FF_SF_SLOTS = ['15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00', '22:00'];
 const FF_F_SLOT   = '15:00';
 const FF_FINAL_CAMPOS = { M1:'Play Padel', M2:'Play Padel', F1:'Play Padel', F2:'Play Padel', F3:'Play Padel', M3:'TVCabo', M4:'TVCabo', M5:'TVCabo' };
 
-// Auto-alocação de QF nos slots livres do dia dos Quartos de Final
-function ffAutoAllocateQF(qfJogos) {
-  const QF_DAYS   = [ffQfDate()];
-  const QF_HORAS  = ['17:30', '18:30', '19:30', '20:30', '21:30'];
-  const campos    = (getData('campos') || []).sort((a,b) => (a.id||0)-(b.id||0)).map(c => c.nome);
+// Alocador genérico: distribui `games` pelos dias × horas × campos livres,
+// enchendo o 1.º dia antes de transbordar para o seguinte. Evita colisões com
+// os jogos de grupos e com os restantes jogos da fase final já agendados
+// (excepto os próprios `games`, para permitir reagendamentos idempotentes).
+// `alsoOccupied` permite marcar jogos ainda não gravados (ex.: QF acabados de
+// alocar na mesma geração) para que as Meias não colidam com eles.
+function _ffAllocate(games, days, horas, alsoOccupied) {
+  if (!games || !games.length) return;
+  const fallbackDate = (days && days[0]) || null;
+  const campos = (getData('campos') || []).sort((a,b) => (a.id||0)-(b.id||0)).map(c => c.nome);
   if (!campos.length) {
-    // fallback: assign all to QF date with sequential slots
-    qfJogos.forEach((j, i) => { j.data = ffQfDate(); j.hora = FF_QF_SLOTS[i % FF_QF_SLOTS.length]; });
+    // Sem campos definidos: distribui por dias/horas sequencialmente (sem campo).
+    games.forEach((j, i) => {
+      const dIdx = Math.floor(i / horas.length) % (days.length || 1);
+      j.data = days[dIdx] || fallbackDate;
+      j.hora = horas[i % horas.length];
+    });
     return;
   }
-  // Build occupied map from jogos (grupos) on these days
-  const allJogos = getData('jogos') || [];
+  const placingIds = new Set(games.map(g => g.id));
   const occupied = new Set();
-  allJogos.forEach(j => { if (j.data && j.hora && j.campo) occupied.add(`${j.data}|${j.hora}|${j.campo}`); });
-  // Also include already-placed FF QF games
+  const mark = j => {
+    if (!j || (j.id && placingIds.has(j.id))) return;
+    if (j.data && j.hora && j.campo) occupied.add(`${j.data}|${j.hora}|${j.campo}`);
+  };
+  (getData('jogos') || []).forEach(mark);
   const ff = ffLoad();
-  Object.values(ff).forEach(cd => (cd?.jogos || []).forEach(j => {
-    if (j.fase === 'QF' && j.data && j.hora && j.campo) occupied.add(`${j.data}|${j.hora}|${j.campo}`);
-  }));
-  // Generate ordered list of available slots
+  Object.values(ff).forEach(cd => (cd?.jogos || []).forEach(mark));
+  (alsoOccupied || []).forEach(mark);
+  // Lista ordenada de slots livres (dia → hora → campo)
   const available = [];
-  for (const d of QF_DAYS)
-    for (const h of QF_HORAS)
+  for (const d of days)
+    for (const h of horas)
       for (const c of campos)
         if (!occupied.has(`${d}|${h}|${c}`)) available.push({ data: d, hora: h, campo: c });
-  qfJogos.forEach((j, i) => {
+  games.forEach((j, i) => {
     if (!available.length) {
-      j.data = ffQfDate(); j.hora = FF_QF_SLOTS[i % FF_QF_SLOTS.length]; j.campo = campos[0] || '';
+      j.data = fallbackDate; j.hora = horas[i % horas.length]; j.campo = campos[0] || '';
       return;
     }
     const slot = available.shift();
     j.data = slot.data; j.hora = slot.hora; j.campo = slot.campo;
   });
 }
+
+// Auto-alocação de Quartos de Final pelos dias configurados (intervalo).
+function ffAutoAllocateQF(qfJogos) { _ffAllocate(qfJogos, ffQfDays(), FF_QF_SLOTS); }
+
+// Auto-alocação de Meias-Finais pelos dias configurados (intervalo).
+// `alsoOccupied` = jogos (ex.: QF) da mesma geração ainda não gravados.
+function ffAutoAllocateSF(sfJogos, alsoOccupied) { _ffAllocate(sfJogos, ffSfDays(), FF_SF_SLOTS, alsoOccupied); }
 
 function ffMakeJogo(catId, fase, num, e1, e2, feedFrom = null, data = null, hora = null, campo = null) {
   return {
@@ -4922,6 +4956,7 @@ function ffGenerateBracket(catId) {
     // Grupo único: 4 melhores → Meias-Finais (S1 vs S4, S2 vs S3) → Final
     jogos.push(ffMakeJogo(catId, 'SF', 1, q[0], q[3], null, ffSfDate(), FF_SF_SLOTS[0]));
     jogos.push(ffMakeJogo(catId, 'SF', 2, q[1], q[2], null, ffSfDate(), FF_SF_SLOTS[1]));
+    ffAutoAllocateSF(jogos.filter(j => j.fase === 'SF'));
     jogos.push(ffMakeJogo(catId, 'F',  1, null, null, [`${catId}-SF1`, `${catId}-SF2`], ffFDate(), FF_F_SLOT, FF_FINAL_CAMPOS[catId] || null));
     return { generated: true, jogos, collisionNote: null };
 
@@ -4932,6 +4967,7 @@ function ffGenerateBracket(catId) {
     const [gA, gB] = Object.keys(bg).sort();
     jogos.push(ffMakeJogo(catId, 'SF', 1, bg[gA][0], bg[gB][1], null, ffSfDate(), FF_SF_SLOTS[0]));
     jogos.push(ffMakeJogo(catId, 'SF', 2, bg[gB][0], bg[gA][1], null, ffSfDate(), FF_SF_SLOTS[1]));
+    ffAutoAllocateSF(jogos.filter(j => j.fase === 'SF'));
     jogos.push(ffMakeJogo(catId, 'F',  1, null, null, [`${catId}-SF1`, `${catId}-SF2`], ffFDate(), FF_F_SLOT, FF_FINAL_CAMPOS[catId] || null));
     return { generated: true, jogos, collisionNote: null };
 
@@ -4943,6 +4979,7 @@ function ffGenerateBracket(catId) {
     ffAutoAllocateQF(jogos.filter(j => j.fase === 'QF'));
     jogos.push(ffMakeJogo(catId, 'SF', 1, null, null, [`${catId}-QF1`, `${catId}-QF2`], ffSfDate(), FF_SF_SLOTS[0]));
     jogos.push(ffMakeJogo(catId, 'SF', 2, null, null, [`${catId}-QF3`, `${catId}-QF4`], ffSfDate(), FF_SF_SLOTS[1]));
+    ffAutoAllocateSF(jogos.filter(j => j.fase === 'SF'), jogos.filter(j => j.fase === 'QF'));
     jogos.push(ffMakeJogo(catId, 'F',  1, null, null, [`${catId}-SF1`, `${catId}-SF2`], ffFDate(), FF_F_SLOT, FF_FINAL_CAMPOS[catId] || null));
     return { generated: true, jogos, collisionNote };
   }
@@ -5452,6 +5489,29 @@ window.ffReset = function(catId) {
   toast(`Bracket de ${catId} removido.`);
 };
 
+// Reagenda automaticamente Quartos e Meias-Finais de todas as categorias já
+// geradas, distribuindo-os pelos intervalos de datas configurados (Configurações
+// → Datas do Torneio). Substitui apenas data/hora/campo desses jogos — mantém
+// seeds, resultados e as Finais. Útil depois de definir/alterar um intervalo.
+window.ffReagendarFasesFinais = function() {
+  if (!Auth.hasRole('admin', 'operator')) return toast('Acesso restrito.', 'error');
+  if (!confirm('Reagendar Quartos e Meias-Finais de todas as categorias pelos intervalos configurados?\n\nAs datas, horas e campos actuais destes jogos serão redistribuídos automaticamente. Seeds, resultados e Finais mantêm-se.')) return;
+  const ff = ffLoad();
+  let count = 0;
+  FF_ALL_CATS.forEach(catId => {
+    const cd = ff[catId];
+    if (!cd?.generated) return;
+    const qf = cd.jogos.filter(j => j.fase === 'QF');
+    const sf = cd.jogos.filter(j => j.fase === 'SF');
+    if (qf.length) { _ffAllocate(qf, ffQfDays(), FF_QF_SLOTS); ffSave(ff); count += qf.length; }
+    if (sf.length) { _ffAllocate(sf, ffSfDays(), FF_SF_SLOTS, qf); ffSave(ff); count += sf.length; }
+  });
+  _autoSync();
+  renderFaseFinal();
+  Auth.log('RESCHEDULE_FF', 'fasefinal', `Fase final reagendada (${count} jogos)`);
+  toast(`Fase final reagendada · ${count} jogos distribuídos pelos intervalos.`);
+};
+
 // ---- Global view (all categories) ----
 function ffRenderGlobal() {
   const cats = ['M1', 'M2', 'F1', 'F2', 'F3', 'M3', 'M4', 'M5'];
@@ -5463,6 +5523,9 @@ function ffRenderGlobal() {
       <button class="btn btn-primary btn-sm" onclick="ffGerarTodosBrackets()">
         <i class="ph ph-magic-wand"></i> Gerar Brackets em Falta
       </button>
+      ${Auth.hasRole('admin', 'operator') ? `<button class="btn btn-ghost btn-sm" style="color:var(--verde);border-color:rgba(0,195,123,.3)" onclick="ffReagendarFasesFinais()" title="Redistribui Quartos e Meias pelos intervalos de datas configurados">
+        <i class="ph ph-calendar-check"></i> Reagendar Quartos/Meias
+      </button>` : ''}
       <button class="btn btn-ghost btn-sm" style="color:var(--amarelo);border-color:rgba(245,197,24,.3)" onclick="gerarPanfletoDiaFinais()">
         <i class="ph ph-medal"></i> Panfleto Dia das Finais
       </button>
