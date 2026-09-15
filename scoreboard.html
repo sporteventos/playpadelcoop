@@ -351,11 +351,21 @@
       });
       const wcCandidates = [...bestPerGroup.values()];
 
-      // Mark non-candidates (4th, 5th…) as definitively eliminated
+      // Mark non-candidate eliminated-from-group pairs. A pair is only
+      // DEFINITIVELY eliminated if it can no longer reach its group's
+      // wildcard-eligible slot (rank = directN): i.e. MORE THAN directN same-group
+      // pairs are already guaranteed to finish strictly above it. Otherwise it is
+      // still fighting for that slot — e.g. the current 3rd who still has to play
+      // the current 2nd — and stays in wildcard contention.
       elim3.forEach(t => {
-        if (!wcCandidates.find(c => c.par === t.par)) {
-          result.set(t.par, { status: 'eliminated', group: t.group });
-        }
+        if (wcCandidates.find(c => c.par === t.par)) return; // current best-per-group → candidate
+        const grpRows = (allGroupData.find(d => d.g.id === t.group) || {}).rows || [];
+        const guaranteedAbove = grpRows.filter(o => o.par !== t.par && o._minWins > t._maxWins).length;
+        result.set(t.par, guaranteedAbove > directN
+          ? { status: 'eliminated', group: t.group }
+          : { status: 'contention_wc', group: t.group,
+              _maxWins: t._maxWins, _minWins: t._minWins,
+              _sv: t._sv, _sl: t._sl, _gv: t._gv, _gl: t._gl });
       });
 
       const nWildcards = wcN;
