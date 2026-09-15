@@ -5071,14 +5071,18 @@ function _ffRegenPreserve(catId, ff) {
   return fresh.collisionNote || null;
 }
 
-// Um bracket está "bloqueado" para auto-ajuste quando a fase de grupos terminou
-// (seeds finais) ou quando já foi lançado algum resultado da própria fase final.
+// Um bracket está "bloqueado" para auto-ajuste quando já tem seeds finais
+// (incomplete === false) ou quando já foi lançado algum resultado da própria
+// fase final. IMPORTANTE: um bracket ainda incompleto (nomes por preencher) NÃO
+// é bloqueado só porque a fase de grupos fechou — é precisamente aí que tem de
+// correr a regeneração final que preenche as duplas apuradas. Após essa
+// regeneração, incomplete passa a false e a categoria fica bloqueada.
 function _ffCatLocked(catId, ff) {
   const cd = ff[catId];
   if (!cd?.generated) return false;
-  if (cd.incomplete === false) return true;
-  if (allGroupGamesDone(catId)) return true;
-  return (cd.jogos || []).some(j => j.resultado);
+  if ((cd.jogos || []).some(j => j.resultado)) return true; // fase final já em jogo
+  if (cd.incomplete === false) return true;                 // seeds finais preenchidos
+  return false;                                             // incompleto → permitir preencher
 }
 
 // Recalcular Seeds (manual — opção C). Funciona para todos os formatos.
