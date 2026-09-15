@@ -383,7 +383,9 @@ document.addEventListener('DOMContentLoaded', () => {
           <span class="day-block-date">${ppFormatDate(data)}</span>
         </div>`;
 
-      Object.keys(byDate[data]).forEach(campo => {
+      Object.keys(byDate[data])
+        .sort((a, b) => (CAMPO_ORDER.indexOf(a) + 1 || 99) - (CAMPO_ORDER.indexOf(b) + 1 || 99))
+        .forEach(campo => {
         html += `<div class="court-block">
           <div class="court-label"><i class="ph ph-tennis"></i> ${campo}</div>
           <div class="matches-list">`;
