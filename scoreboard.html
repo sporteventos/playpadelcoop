@@ -334,68 +334,44 @@
 
     // For wildcard cats: check if eliminated-from-group pairs can still get wildcard
     if (hasWc) {
-      const elim3 = [...result.entries()]
-        .filter(([, v]) => v.status === 'eliminated_group')
-        .map(([par, v]) => ({ par, ...v }));
-
-      // Only the BEST eliminated per group is eligible for wildcard (true 3rd place)
-      // Use allGroupData rows[] (already sorted by miniGroupSort) to pick the correct 3rd
-      const bestPerGroup = new Map();
+      // Uma dupla que não faz o corte directo (eliminated_group) ainda pode
+      // apanhar wildcard SE puder terminar no lugar elegível do seu grupo (2.º =
+      // rank directN). Isso só é possível se, no MELHOR cenário dela, no máximo
+      // directN duplas do mesmo grupo estiverem garantidamente acima. Caso
+      // contrário está fora de alcance → eliminada. Duas duplas com a mesma
+      // situação obtêm sempre o mesmo estado.
+      const contenders = [];
       allGroupData.forEach(({ g, rows }) => {
-        // rows is sorted: find first row that is eliminated_group (= true 3rd place)
-        const best = rows.find(r => result.get(r.par)?.status === 'eliminated_group');
-        if (best) {
-          const v = result.get(best.par);
-          bestPerGroup.set(g.id, { par: best.par, ...v });
-        }
-      });
-      const wcCandidates = [...bestPerGroup.values()];
-
-      // Mark non-candidate eliminated-from-group pairs. A pair is only
-      // DEFINITIVELY eliminated if it can no longer reach its group's
-      // wildcard-eligible slot (rank = directN): i.e. MORE THAN directN same-group
-      // pairs are already guaranteed to finish strictly above it. Otherwise it is
-      // still fighting for that slot — e.g. the current 3rd who still has to play
-      // the current 2nd — and stays in wildcard contention.
-      elim3.forEach(t => {
-        if (wcCandidates.find(c => c.par === t.par)) return; // current best-per-group → candidate
-        const grpRows = (allGroupData.find(d => d.g.id === t.group) || {}).rows || [];
-        const guaranteedAbove = grpRows.filter(o => o.par !== t.par && o._minWins > t._maxWins).length;
-        result.set(t.par, guaranteedAbove > directN
-          ? { status: 'eliminated', group: t.group }
-          : { status: 'contention_wc', group: t.group,
-              _maxWins: t._maxWins, _minWins: t._minWins,
-              _sv: t._sv, _sl: t._sl, _gv: t._gv, _gl: t._gl });
+        rows.forEach(t => {
+          if (result.get(t.par)?.status !== 'eliminated_group') return;
+          const guaranteedAbove = rows.filter(o => o.par !== t.par && o._minWins > t._maxWins).length;
+          const payload = {
+            group: g.id, _maxWins: t._maxWins, _minWins: t._minWins,
+            _sv: t.sv, _sl: t.sl, _gv: t.gv, _gl: t.gl
+          };
+          if (guaranteedAbove > directN) {
+            result.set(t.par, { status: 'eliminated', ...payload });
+          } else {
+            result.set(t.par, { status: 'contention_wc', ...payload });
+            contenders.push({ par: t.par, ...payload });
+          }
+        });
       });
 
-      const nWildcards = wcN;
-      // Only assign wildcards definitively when ALL groups have a determined 3rd place candidate
-      // (if a group has no candidate yet, its 3rd is still in contention → wait)
-      const allGroupsHaveCandidate = wcCandidates.length === catGrupos.length;
-      const allGroupsDone = allGroupsHaveCandidate && wcCandidates.every(t => t._maxWins === t._minWins);
-
-      if (allGroupsDone && nWildcards > 0) {
-        // Rank wildcards: wins → sets diff → games diff → games won (no H2H across groups)
-        const ranked = [...wcCandidates].sort((a, b) =>
+      // Quando TODA a fase de grupos da categoria terminou, cada grupo tem um 2.º
+      // lugar determinado → ordenam-se os candidatos e atribuem-se as vagas de
+      // wildcard. Enquanto a categoria não fecha, todas as duplas ainda ao
+      // alcance permanecem em disputa (amarelo) — não pré-eliminamos entre grupos.
+      const allCatDone = allGroupData.every(({ rows }) => rows.every(r => r._remaining === 0));
+      if (allCatDone && wcN > 0) {
+        const ranked = [...contenders].sort((a, b) =>
           b._maxWins - a._maxWins ||
           (b._sv - b._sl) - (a._sv - a._sl) ||
           (b._gv - b._gl) - (a._gv - a._gl) ||
           b._gv - a._gv
         );
         ranked.forEach((t, i) => {
-          result.set(t.par, {
-            status: i < nWildcards ? 'qualified' : 'eliminated',
-            group: t.group,
-            _isWildcard: i < nWildcards
-          });
-        });
-      } else {
-        wcCandidates.forEach(({ par, _maxWins, group }) => {
-          const betterGuaranteed = wcCandidates.filter(t => t.par !== par && t._minWins > _maxWins).length;
-          result.set(par, betterGuaranteed >= nWildcards
-            ? { status: 'eliminated', group }
-            : { status: 'contention_wc', group }
-          );
+          result.set(t.par, { status: i < wcN ? 'qualified' : 'eliminated', group: t.group, _isWildcard: i < wcN });
         });
       }
     }
