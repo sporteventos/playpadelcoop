@@ -184,17 +184,19 @@
         <div class="live-stat-sub" id="lsProgressSub"></div>
       </div>
       <div class="live-stat-card">
+        <div class="live-stat-val" id="lsGrupos">&mdash;</div>
+        <div class="live-stat-lbl">Fase de grupos</div>
+        <div class="live-stat-sub" id="lsGruposSub"></div>
+      </div>
+      <div class="live-stat-card">
+        <div class="live-stat-val" id="lsFinal">&mdash;</div>
+        <div class="live-stat-lbl">Fase final</div>
+        <div class="live-stat-sub" id="lsFinalSub"></div>
+      </div>
+      <div class="live-stat-card">
         <div class="live-stat-val" id="lsSets">&mdash;</div>
         <div class="live-stat-lbl">Sets jogados</div>
-      </div>
-      <div class="live-stat-card">
-        <div class="live-stat-val" id="lsPct">&mdash;</div>
-        <div class="live-stat-lbl">% conclu&iacute;do</div>
-      </div>
-      <div class="live-stat-card">
-        <div class="live-stat-val" id="lsHoje">&mdash;</div>
-        <div class="live-stat-lbl">Jogos fase de grupos</div>
-        <div class="live-stat-sub" id="lsHojeSub"></div>
+        <div class="live-stat-sub" id="lsPctSub"></div>
       </div>
     </div>
   </div>
@@ -342,36 +344,48 @@
 // ---- Live stats counters ----
 (function() {
   const jogos = ppGet('jogos');
-  // Include fase final games
+  // Fase final: contar TODOS os jogos do bracket (esqueleto), mesmo sem duplas
+  // definidas — o total do torneio é fixo (grupos + fase final) e não deve
+  // oscilar à medida que as duplas vão sendo apuradas.
   const ffRaw = ppLoad('fasefinal') || {};
-  const jogosFF = Object.values(ffRaw).flatMap(cat => (cat && cat.jogos) ? cat.jogos.filter(j => j.eq1 && j.eq2) : []);
-  const todos = jogos.concat(jogosFF);
+  const jogosFF = Object.values(ffRaw).flatMap(cat => (cat && cat.jogos) ? cat.jogos : []);
 
-  const total = todos.length;
-  const disputados = todos.filter(j => !!j.resultado).length;
-  const pct = total ? Math.round(disputados / total * 100) : 0;
+  // Totais fixos por fase
+  const grupoTotal = jogos.length;                       // 134
+  const finalTotal = jogosFF.length;                     // 40
+  const total      = grupoTotal + finalTotal;            // 174
 
-  // Count sets played across all finished games
+  // Disputados por fase
+  const grupoDisputados = jogos.filter(j => !!j.resultado).length;
+  const finalDisputados = jogosFF.filter(j => !!j.resultado).length;
+  const disputados      = grupoDisputados + finalDisputados;
+  const pct       = total ? Math.round(disputados / total * 100) : 0;
+  const pctGrupo  = grupoTotal ? Math.round(grupoDisputados / grupoTotal * 100) : 0;
+
+  // Sets jogados (grupos + fase final, exclui WO)
   let sets = 0;
-  todos.forEach(j => {
-    if (!j.resultado) return;
+  jogos.concat(jogosFF).forEach(j => {
     const r = j.resultado;
-    if (r.wo) return; // WO counts as a result but 0 sets
+    if (!r || r.wo) return;
     if (r.s1eq1 != null) sets++;
     if (r.s2eq1 != null) sets++;
     if (r.s3eq1 != null) sets++;
   });
 
-  // Fase de grupos games counter
-  const grupoDisputados = jogos.filter(j => !!j.resultado).length;
+  const set = (id, txt) => { const el = document.getElementById(id); if (el) el.textContent = txt; };
 
-  document.getElementById('lsDisputados').textContent = disputados;
+  set('lsDisputados', disputados);
   document.getElementById('lsProgressFill').style.width = pct + '%';
-  document.getElementById('lsProgressSub').textContent = total ? disputados + ' de ' + total + ' jogos' : '';
-  document.getElementById('lsSets').textContent = sets;
-  document.getElementById('lsPct').textContent = pct + '%';
-  document.getElementById('lsHoje').textContent = jogos.length;
-  document.getElementById('lsHojeSub').textContent = jogos.length ? grupoDisputados + ' conclu\u00eddos' : 'a decorrer';
+  set('lsProgressSub', total ? disputados + ' de ' + total + ' jogos \u00b7 ' + pct + '%' : '');
+
+  set('lsGrupos', grupoDisputados + ' / ' + grupoTotal);
+  set('lsGruposSub', grupoTotal ? pctGrupo + '% conclu\u00edda' : '');
+
+  set('lsFinal', finalDisputados + ' / ' + finalTotal);
+  set('lsFinalSub', finalDisputados ? finalDisputados + ' disputados' : 'por disputar');
+
+  set('lsSets', sets);
+  set('lsPctSub', 'em ' + disputados + ' jogos');
 })();
 
 // ---- Top Pares leaderboard ----
