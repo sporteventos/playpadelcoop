@@ -282,13 +282,23 @@ document.addEventListener('DOMContentLoaded', () => {
     tournamentDates.push(d.toISOString().slice(0, 10));
   }
 
+  // Dia de hoje (data local) — se estiver dentro do torneio, filtra automaticamente para hoje.
+  const _now = new Date();
+  const todayStr = `${_now.getFullYear()}-${String(_now.getMonth() + 1).padStart(2, '0')}-${String(_now.getDate()).padStart(2, '0')}`;
+  if (tournamentDates.includes(todayStr)) activeDia = todayStr;
+
   const dayTabs = document.getElementById('dayTabs');
-  const allTab = makeTab('todos', 'Todos', true);
+  const allTab = makeTab('todos', 'Todos', activeDia === 'todos');
   dayTabs.appendChild(allTab);
   tournamentDates.forEach(d => {
     const label = `${ppWeekday(d).substring(0,3)} ${ppFormatDate(d)}`;
-    dayTabs.appendChild(makeTab(d, label, false));
+    dayTabs.appendChild(makeTab(d, label, d === activeDia));
   });
+  // Trazer o dia ativo para a vista (scroll horizontal das tabs)
+  const _activeTab = dayTabs.querySelector('.day-tab.active');
+  if (_activeTab && activeDia !== 'todos' && typeof _activeTab.scrollIntoView === 'function') {
+    _activeTab.scrollIntoView({ inline: 'center', block: 'nearest' });
+  }
 
   function makeTab(val, label, active) {
     const btn = document.createElement('button');
