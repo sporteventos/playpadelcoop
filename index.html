@@ -442,7 +442,7 @@
   });
   var nowStr = new Date().toISOString().slice(0, 16);
   var pending = jogos.concat(ffJogos)
-    .filter(function(j){ return !j.resultado; })
+    .filter(function(j){ return !j.resultado && !j.suspenso && !j.adiado; })
     .map(function(j){
       var dt = (j.data && j.hora) ? j.data + 'T' + j.hora : null;
       return Object.assign({}, j, { _overdue: !!(dt && dt < nowStr && !j.adiado && !j._isFF), _suspenso: !!j.suspenso, _adiado: !!j.adiado });
