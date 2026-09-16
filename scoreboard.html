@@ -474,7 +474,13 @@
     const lossElim  = sLoss === 'eliminated';
     if (winClinch && lossElim) return _scRow('ph-fire', 'sc-decisive', `<b>Jogo decisivo</b> vs <span class="sc-opp">${opp}</span>${hora} — vitória apura, derrota elimina.`);
     if (winClinch)             return _scRow('ph-seal-check', 'sc-win', `Vence vs <span class="sc-opp">${opp}</span>${hora} e <b>garante o apuramento</b>.`);
-    if (lossElim)              return _scRow('ph-warning', 'sc-warn', `Tem de vencer vs <span class="sc-opp">${opp}</span>${hora} para seguir em frente.`);
+    if (lossElim) {
+      // Derrota elimina; vitória NÃO garante — só a mantém viva. Em grupos com
+      // wildcard, passar a 2.º apenas a coloca na corrida (sujeita a desempate).
+      if (sWin === 'contention_wc')
+        return _scRow('ph-warning', 'sc-warn', `Tem de vencer vs <span class="sc-opp">${opp}</span>${hora} para continuar na corrida ao <b>wildcard</b> (sujeito a desempate).`);
+      return _scRow('ph-warning', 'sc-warn', `Tem de vencer vs <span class="sc-opp">${opp}</span>${hora} para continuar na disputa.`);
+    }
     if (status === 'contention_wc') return _scRow('ph-star', 'sc-wait', `Em disputa pelo <b>wildcard</b> — próximo vs <span class="sc-opp">${opp}</span>${hora}.`);
     return _scRow('ph-target', 'sc-wait', `Em disputa — próximo vs <span class="sc-opp">${opp}</span>${hora}.`);
   }
