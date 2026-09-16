@@ -4862,6 +4862,22 @@ function ffSfDays() {
 const FF_QF_SLOTS = ['17:30', '18:30', '19:30', '20:30', '21:30'];
 const FF_SF_SLOTS = ['15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00', '22:00'];
 const FF_F_SLOT   = '15:00';
+
+// Slots de 1h da fase final sensíveis ao dia — mesma regra da fase de grupos:
+// dias úteis com intervalos :30 (17:30, 18:30 …); fins de semana com intervalos
+// :00 e início à tarde (15:00, 16:00 …). `phase` = 'QF' | 'SF'.
+function _ffSlotsForDate(ds, phase) {
+  const wd = new Date(ds + 'T12:00:00').getDay(); // 0=Dom .. 6=Sáb
+  const weekend = (wd === 0 || wd === 6);
+  const endH = phase === 'QF' ? 21 : 22;
+  const out = [];
+  if (weekend) {
+    for (let h = 15; h <= endH; h++) out.push(`${String(h).padStart(2, '0')}:00`);
+  } else {
+    for (let h = 17; h <= endH; h++) out.push(`${String(h).padStart(2, '0')}:30`);
+  }
+  return out;
+}
 const FF_FINAL_CAMPOS = { M1:'Play Padel', M2:'Play Padel', F1:'Play Padel', F2:'Play Padel', F3:'Play Padel', M3:'TVCabo', M4:'TVCabo', M5:'TVCabo' };
 
 // Alocador genérico: distribui `games` pelos dias × horas × campos livres,
@@ -4870,16 +4886,21 @@ const FF_FINAL_CAMPOS = { M1:'Play Padel', M2:'Play Padel', F1:'Play Padel', F2:
 // (excepto os próprios `games`, para permitir reagendamentos idempotentes).
 // `alsoOccupied` permite marcar jogos ainda não gravados (ex.: QF acabados de
 // alocar na mesma geração) para que as Meias não colidam com eles.
+// `horas` pode ser um array (mesmos slots para todos os dias) ou uma função
+// `(data) => string[]` que devolve os slots específicos de cada dia (ex.: para
+// aplicar intervalos :30 em dias úteis e :00 nos fins de semana).
 function _ffAllocate(games, days, horas, alsoOccupied) {
   if (!games || !games.length) return;
   const fallbackDate = (days && days[0]) || null;
+  const slotsFor = typeof horas === 'function' ? horas : () => horas;
+  const fallbackHoras = slotsFor(fallbackDate) || [];
   const campos = (getData('campos') || []).sort((a,b) => (a.id||0)-(b.id||0)).map(c => c.nome);
   if (!campos.length) {
     // Sem campos definidos: distribui por dias/horas sequencialmente (sem campo).
     games.forEach((j, i) => {
-      const dIdx = Math.floor(i / horas.length) % (days.length || 1);
+      const dIdx = Math.floor(i / (fallbackHoras.length || 1)) % (days.length || 1);
       j.data = days[dIdx] || fallbackDate;
-      j.hora = horas[i % horas.length];
+      j.hora = fallbackHoras[i % (fallbackHoras.length || 1)];
     });
     return;
   }
@@ -4896,12 +4917,12 @@ function _ffAllocate(games, days, horas, alsoOccupied) {
   // Lista ordenada de slots livres (dia → hora → campo)
   const available = [];
   for (const d of days)
-    for (const h of horas)
+    for (const h of (slotsFor(d) || []))
       for (const c of campos)
         if (!occupied.has(`${d}|${h}|${c}`)) available.push({ data: d, hora: h, campo: c });
   games.forEach((j, i) => {
     if (!available.length) {
-      j.data = fallbackDate; j.hora = horas[i % horas.length]; j.campo = campos[0] || '';
+      j.data = fallbackDate; j.hora = fallbackHoras[i % (fallbackHoras.length || 1)]; j.campo = campos[0] || '';
       return;
     }
     const slot = available.shift();
@@ -4910,11 +4931,11 @@ function _ffAllocate(games, days, horas, alsoOccupied) {
 }
 
 // Auto-alocação de Quartos de Final pelos dias configurados (intervalo).
-function ffAutoAllocateQF(qfJogos) { _ffAllocate(qfJogos, ffQfDays(), FF_QF_SLOTS); }
+function ffAutoAllocateQF(qfJogos) { _ffAllocate(qfJogos, ffQfDays(), d => _ffSlotsForDate(d, 'QF')); }
 
 // Auto-alocação de Meias-Finais pelos dias configurados (intervalo).
 // `alsoOccupied` = jogos (ex.: QF) da mesma geração ainda não gravados.
-function ffAutoAllocateSF(sfJogos, alsoOccupied) { _ffAllocate(sfJogos, ffSfDays(), FF_SF_SLOTS, alsoOccupied); }
+function ffAutoAllocateSF(sfJogos, alsoOccupied) { _ffAllocate(sfJogos, ffSfDays(), d => _ffSlotsForDate(d, 'SF'), alsoOccupied); }
 
 function ffMakeJogo(catId, fase, num, e1, e2, feedFrom = null, data = null, hora = null, campo = null) {
   return {
@@ -5556,8 +5577,8 @@ window.ffReagendarFasesFinais = function() {
     if (!cd?.generated) return;
     const qf = cd.jogos.filter(j => j.fase === 'QF');
     const sf = cd.jogos.filter(j => j.fase === 'SF');
-    if (qf.length) { _ffAllocate(qf, ffQfDays(), FF_QF_SLOTS); ffSave(ff); count += qf.length; }
-    if (sf.length) { _ffAllocate(sf, ffSfDays(), FF_SF_SLOTS, qf); ffSave(ff); count += sf.length; }
+    if (qf.length) { _ffAllocate(qf, ffQfDays(), d => _ffSlotsForDate(d, 'QF')); ffSave(ff); count += qf.length; }
+    if (sf.length) { _ffAllocate(sf, ffSfDays(), d => _ffSlotsForDate(d, 'SF'), qf); ffSave(ff); count += sf.length; }
   });
   _autoSync();
   renderFaseFinal();
