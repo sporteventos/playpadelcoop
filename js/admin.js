@@ -8097,7 +8097,14 @@ function renderHorario() {
     const saved = dataFilter.value;
     const dates = [...new Set(allJogos.map(j => j.data).filter(Boolean))].sort();
     dataFilter.innerHTML = dates.map(d => `<option value="${d}">${formatDate(d)}</option>`).join('');
-    if (saved) dataFilter.value = saved;
+    if (saved) {
+      dataFilter.value = saved;
+    } else {
+      // Sem seleção anterior: assume o dia atual se houver jogos hoje;
+      // caso contrário, o primeiro dia disponível (default do <select>).
+      const todayStr = new Date().toLocaleDateString('en-CA'); // YYYY-MM-DD local
+      if (dates.includes(todayStr)) dataFilter.value = todayStr;
+    }
   }
   if (campoFilter) {
     const saved = campoFilter.value;
