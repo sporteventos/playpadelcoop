@@ -297,6 +297,35 @@
     return miniGroupSort(Object.values(table));
   }
 
+  // â”€â”€ Reachability por vitórias (enumera resultados dos jogos em falta) â”€â”€â”€â”€â”€â”€
+  // Grupos são pequenos (≤5 duplas, poucos jogos em falta), por isso podemos
+  // enumerar TODOS os cenários possíveis dos jogos por disputar. Isto capta
+  // situações que a heurística min/max falha, p.ex. duas duplas empatadas que
+  // ainda jogam ENTRE SI (uma delas sobe obrigatoriamente).
+  //   qual = duplas garantidamente no top-directN em TODOS os cenários
+  //   elim = duplas que NÃO chegam ao top-directN em NENHUM cenário
+  // Devolve null se houver jogos a mais (fallback para a heurística simples).
+  function _winsReachability(rows, remPairs, directN) {
+    const pars = rows.map(r => r.par);
+    const base = {}; rows.forEach(r => { base[r.par] = r.v; });
+    const games = remPairs.filter(([a, b]) => base[a] != null && base[b] != null);
+    const m = games.length;
+    if (m > 16) return null;
+    const qual = new Set(pars);   // otimista: retiramos ao encontrar contra-cenário
+    const elim = new Set(pars);   // pessimista: retiramos quando a dupla alcança o top
+    for (let mask = 0; mask < (1 << m); mask++) {
+      const w = { ...base };
+      for (let i = 0; i < m; i++) { const [a, b] = games[i]; if (mask & (1 << i)) w[a]++; else w[b]++; }
+      pars.forEach(p => {
+        let ge = 0, gt = 0;
+        pars.forEach(q => { if (q !== p) { if (w[q] >= w[p]) ge++; if (w[q] > w[p]) gt++; } });
+        if (ge > directN - 1) qual.delete(p); // existe cenário em que não fica garantido no top
+        if (gt < directN)     elim.delete(p); // existe cenário em que alcança o top
+      });
+    }
+    return { qual, elim };
+  }
+
   // â”€â”€ Mathematical confirmation of status â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   // Returns Map: par -> { status, group }
   // status: 'qualified' | 'eliminated' | 'contention_wc' | 'contention'
@@ -346,15 +375,22 @@
           }
         });
       } else {
+        const remPairs = jogos
+          .filter(j => !j.resultado && j.grupo === g.id)
+          .map(j => [j.eq1, j.eq2]);
+        const reach = _winsReachability(rows, remPairs, directN);
         rows.forEach(r => {
           // How many others can potentially reach >= r's min wins (could overtake in worst case)
           const canOvertake = rows.filter(o => o.par !== r.par && o._maxWins >= r._minWins).length;
           // How many others are guaranteed to have STRICTLY MORE wins than r's best case
           const guaranteedAbove = rows.filter(o => o.par !== r.par && o._minWins > r._maxWins).length;
+          // Reachability exacta (enumeração) com fallback para a heurística.
+          const isQual = reach ? reach.qual.has(r.par) : (canOvertake <= directN - 1);
+          const isElim = reach ? reach.elim.has(r.par) : (guaranteedAbove >= directN);
 
-          if (canOvertake <= directN - 1) {
+          if (isQual) {
             result.set(r.par, { status: 'qualified', group: g.id });
-          } else if (guaranteedAbove >= directN) {
+          } else if (isElim) {
             result.set(r.par, {
               status: hasWc ? 'eliminated_group' : 'eliminated',
               group: g.id, _maxWins: r._maxWins, _minWins: r._minWins,
