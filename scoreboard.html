@@ -131,6 +131,32 @@
     .footer-bar { text-align:center; padding:1.25rem; font-size:.72rem; color:var(--cinza-texto); border-top:1px solid var(--preto-borda); margin-top:1.5rem; }
     .empty-box { text-align:center; padding:2rem; color:var(--cinza-texto); font-size:.82rem; }
 
+    /* â”€â”€ Pesquisa "A minha dupla" â”€â”€ */
+    .search-bar { display:flex; align-items:center; gap:.55rem; padding:.55rem 1.5rem; background:var(--preto-card); border-bottom:1px solid var(--preto-borda); }
+    .search-input { flex:1; min-width:0; background:var(--preto); border:1px solid var(--preto-borda); border-radius:8px; color:var(--branco); font-family:'Inter',sans-serif; font-size:.85rem; padding:.5rem .7rem; outline:none; transition:border-color .15s; }
+    .search-input::placeholder { color:var(--cinza-texto); }
+    .search-input:focus { border-color:var(--verde); }
+    .search-count { font-size:.72rem; color:var(--cinza-texto); white-space:nowrap; font-weight:600; }
+    .search-clear { background:none; border:1px solid var(--preto-borda); border-radius:6px; color:var(--cinza-texto); width:30px; height:30px; display:inline-flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0; }
+    .search-clear:hover { color:var(--vermelho); border-color:rgba(255,74,74,.4); }
+    tr.pair-hit td { background:rgba(245,197,24,.14) !important; }
+    tr.pair-hit .pair-name { color:var(--amarelo) !important; font-weight:800; }
+    .qual-card.pair-hit { box-shadow:0 0 0 2px var(--amarelo); }
+    .group-card.card-hit { border-color:var(--amarelo); box-shadow:0 0 0 1px rgba(245,197,24,.45); }
+    [data-par].search-dim { opacity:.24; transition:opacity .2s; }
+
+    /* â”€â”€ Cenários "O que falta para apurar" â”€â”€ */
+    .sc-row td { padding:.15rem .5rem .45rem !important; border-bottom:1px solid rgba(255,255,255,.04) !important; }
+    .sc-note { display:flex; align-items:flex-start; gap:.4rem; font-size:.68rem; line-height:1.35; padding:.32rem .5rem; border-radius:6px; }
+    .sc-note i { font-size:.85rem; margin-top:.06rem; flex-shrink:0; }
+    .sc-note b { font-weight:700; }
+    .sc-opp { color:var(--branco); font-weight:600; }
+    .sc-decisive { background:rgba(245,197,24,.1);  color:#e8d38a; border:1px solid rgba(245,197,24,.22); }
+    .sc-win      { background:rgba(0,195,123,.1);   color:#7fe0b4; border:1px solid rgba(0,195,123,.22); }
+    .sc-warn     { background:rgba(255,74,74,.08);  color:#f2a3a3; border:1px solid rgba(255,74,74,.2); }
+    .sc-wait     { background:var(--cinza-escuro);  color:var(--cinza-texto); }
+    .sc-wait .sc-opp { color:var(--branco); }
+
     @media (max-width:640px) {
       .top-bar { padding:.6rem 1rem; flex-wrap:wrap; }
       .cat-tabs { padding:.5rem 1rem; flex-wrap:nowrap; overflow-x:auto; scrollbar-width:none; }
@@ -172,6 +198,15 @@
 </div>
 
 <div class="cat-tabs" id="catTabs"></div>
+<div class="search-bar">
+  <i class="ph ph-magnifying-glass" style="color:var(--cinza-texto);flex-shrink:0"></i>
+  <input id="pairSearch" class="search-input" type="search" autocomplete="off" spellcheck="false"
+    placeholder="A minha dupla — procurar jogador ou dupla…"
+    oninput="onPairSearch(this.value)"
+    onkeydown="if(event.key==='Enter'){event.preventDefault();jumpToPair();}">
+  <span id="pairSearchCount" class="search-count"></span>
+  <button id="pairSearchClear" class="search-clear" style="display:none" onclick="clearPairSearch()" title="Limpar pesquisa"><i class="ph ph-x"></i></button>
+</div>
 <div class="content" id="mainContent"></div>
 <div class="footer-bar">
   <div style="display:flex;justify-content:center;gap:1.25rem;flex-wrap:wrap;margin-bottom:.6rem;font-size:.7rem;">
@@ -404,8 +439,48 @@
 
   function escHtml(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
+  // â”€â”€ Cenários de apuramento ("o que falta") â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // Reutiliza getConfirmedStatus (matematicamente correcto) para simular o
+  // próximo jogo da dupla: vitória apura? derrota elimina? Cache por render.
+  let _scenCache = new Map();
+  function _simStatusMap(cat, grupos, jogos, gameId, winIsEq1) {
+    const key = cat + '|' + gameId + '|' + (winIsEq1 ? '1' : '0');
+    if (_scenCache.has(key)) return _scenCache.get(key);
+    const jj = jogos.map(j => j.id === gameId
+      ? { ...j, resultado: { s1eq1: winIsEq1?6:0, s1eq2: winIsEq1?0:6, s2eq1: winIsEq1?6:0, s2eq2: winIsEq1?0:6 } }
+      : j);
+    const m = getConfirmedStatus(cat, grupos, jj);
+    _scenCache.set(key, m);
+    return m;
+  }
+  function _nextGroupGame(par, groupId, jogos) {
+    return jogos
+      .filter(j => !j.resultado && j.grupo === groupId && (j.eq1 === par || j.eq2 === par))
+      .sort((a,b) => ((a.data||'')+(a.hora||'')).localeCompare((b.data||'')+(b.hora||'')))[0] || null;
+  }
+  function _scRow(icon, cls, html) {
+    return `<tr class="sc-row"><td colspan="8"><div class="sc-note ${cls}"><i class="ph ${icon}"></i><span>${html}</span></div></td></tr>`;
+  }
+  function buildScenario(par, g, jogos, grupos, status) {
+    if (!grupos || (status !== 'contention' && status !== 'contention_wc')) return '';
+    const next = _nextGroupGame(par, g.id, jogos);
+    if (!next) return _scRow('ph-hourglass', 'sc-wait', 'Jogos terminados — apuramento depende de outros grupos.');
+    const winIsEq1 = next.eq1 === par;
+    const opp  = escHtml((winIsEq1 ? next.eq2 : next.eq1) || '').replace(' &amp; ', ' / ');
+    const hora = next.hora ? (' · ' + escHtml(next.hora)) : '';
+    const sWin  = _simStatusMap(g.cat, grupos, jogos, next.id, winIsEq1).get(par)?.status;
+    const sLoss = _simStatusMap(g.cat, grupos, jogos, next.id, !winIsEq1).get(par)?.status;
+    const winClinch = sWin === 'qualified';
+    const lossElim  = sLoss === 'eliminated';
+    if (winClinch && lossElim) return _scRow('ph-fire', 'sc-decisive', `<b>Jogo decisivo</b> vs <span class="sc-opp">${opp}</span>${hora} — vitória apura, derrota elimina.`);
+    if (winClinch)             return _scRow('ph-seal-check', 'sc-win', `Vence vs <span class="sc-opp">${opp}</span>${hora} e <b>garante o apuramento</b>.`);
+    if (lossElim)              return _scRow('ph-warning', 'sc-warn', `Tem de vencer vs <span class="sc-opp">${opp}</span>${hora} para seguir em frente.`);
+    if (status === 'contention_wc') return _scRow('ph-star', 'sc-wait', `Em disputa pelo <b>wildcard</b> — próximo vs <span class="sc-opp">${opp}</span>${hora}.`);
+    return _scRow('ph-target', 'sc-wait', `Em disputa — próximo vs <span class="sc-opp">${opp}</span>${hora}.`);
+  }
+
   // â”€â”€ Build a single group card â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-  function buildGroupCard(g, jogos, confirmed) {
+  function buildGroupCard(g, jogos, confirmed, grupos) {
     const rows  = computeStandings(g, jogos);
     const gJogs = jogos.filter(j => j.grupo === g.id);
     const done  = gJogs.filter(j => j.resultado).length;
@@ -427,7 +502,7 @@
       else if (st === 'eliminated')   { dotCls = 'dot-vermelho'; rowClass = 'row-elim'; }
       else if (r.pj > 0)             { dotCls = 'dot-azul'; }
 
-      return `<tr class="${rowClass}">
+      const pairTr = `<tr class="${rowClass}" data-par="${escHtml(r.par)}" data-cat="${g.cat}">
         <td class="status-col"><span class="status-dot ${dotCls}"></span></td>
         <td><span class="pair-name" title="${escHtml(r.par)}">${escHtml(r.par).replace(' &amp; ','<br>')}</span></td>
         <td style="font-weight:700;color:var(--branco)">${r.v*2}</td>
@@ -437,6 +512,7 @@
         <td>${r.sv}-${r.sl}</td>
         <td style="font-weight:700;color:var(--branco);white-space:nowrap">${r.gv}-${r.gl}</td>
       </tr>`;
+      return pairTr + buildScenario(r.par, g, jogos, grupos, st);
     }).join('');
 
     return `<div class="group-card">
@@ -498,7 +574,7 @@
         const isWc = !!v._isWildcard;
         const seed = seedMap?.get(par);
         const seedHtml = seed ? `<span class="qual-seed">S${seed}</span>` : '';
-        return `<div class="qual-card q-apurado${isWc ? ' q-wildcard' : ''}">
+        return `<div class="qual-card q-apurado${isWc ? ' q-wildcard' : ''}" data-par="${escHtml(par)}">
           <div class="qual-row"><span class="qual-p1" title="${escHtml(p1)}">${escHtml(p1)}</span><span style="display:flex;align-items:center;gap:.3rem;flex-shrink:0">${seedHtml}<span class="qual-from">${v.group}</span></span></div>
           <div class="qual-row"><span class="qual-p2" title="${escHtml(p2||'')}">${escHtml(p2||'')}</span><span class="qual-badge-sm ${isWc ? 'badge-wc' : 'badge-ap'}">${isWc ? 'Wildcard' : 'Apurado'}</span></div>
         </div>`;
@@ -512,7 +588,7 @@
     if (eliminados.length > 0) {
       const cards = eliminados.map(([par, v]) => {
         const [p1, p2] = par.split(' & ');
-        return `<div class="qual-card q-eliminado">
+        return `<div class="qual-card q-eliminado" data-par="${escHtml(par)}">
           <div class="qual-row"><span class="qual-p1 elim" title="${escHtml(p1)}">${escHtml(p1)}</span><span class="qual-from">${v.group}</span></div>
           <div class="qual-row"><span class="qual-p2 elim" title="${escHtml(p2||'')}">${escHtml(p2||'')}</span><span class="qual-badge-sm badge-el">Eliminado</span></div>
         </div>`;
@@ -527,6 +603,7 @@
   let activeTab = 'TODOS';
 
   function renderAll() {
+    _scenCache = new Map();
     const jogos  = getData('jogos');
     const grupos = getData('grupos');
 
@@ -549,7 +626,7 @@
     // Tabs
     const tabsEl = document.getElementById('catTabs');
     tabsEl.innerHTML = ['TODOS', ...CATS].map(c =>
-      `<button class="cat-tab${c===activeTab?' active':''}" onclick="switchTab('${c}',this)">${c==='TODOS'?'Todos':c}</button>`
+      `<button class="cat-tab${c===activeTab?' active':''}" data-cat="${c}" onclick="switchTab('${c}',this)">${c==='TODOS'?'Todos':c}</button>`
     ).join('');
 
     // Content
@@ -656,7 +733,7 @@
         ${recentHtml ? `<div class="section-heading" style="margin-top:1.25rem"><i class="ph ph-check-circle"></i> Últimos Resultados</div><div class="results-list">${recentHtml}</div>` : ''}
         ${decisiveHtml ? `<div class="section-heading"><i class="ph ph-fire"></i> Jogos Decisivos Pendentes</div><div class="decisive-list">${decisiveHtml}</div>` : ''}
         <div class="section-heading" style="margin-top:1.25rem"><i class="ph ph-list"></i> Todos os Grupos</div>
-        <div class="groups-grid">${grupos.map(g => buildGroupCard(g, jogos, allConfirmed)).join('')}</div>
+        <div class="groups-grid">${grupos.map(g => buildGroupCard(g, jogos, allConfirmed, grupos)).join('')}</div>
       </div>`;
     }
 
@@ -708,7 +785,7 @@
            }).join('')}</div>`
         : '';
 
-      const groupsHtml = catGrupos.map(g => buildGroupCard(g, jogos, confirmedMap)).join('');
+      const groupsHtml = catGrupos.map(g => buildGroupCard(g, jogos, confirmedMap, grupos)).join('');
 
       allHtml += `<div class="cat-section${activeTab===cat?' active':''}" id="cat-${cat}">
         ${chipsHtml}
@@ -721,6 +798,53 @@
 
     contentEl.innerHTML = allHtml;
     document.getElementById('lastUpdate').textContent = new Date().toLocaleTimeString('pt-PT');
+    applyPairSearch();
+  }
+
+  // â”€â”€ Pesquisa "A minha dupla" â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  let _pairQuery = '';
+  function _norm(s) { return String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim(); }
+  function onPairSearch(v) { _pairQuery = v; applyPairSearch(); }
+  function clearPairSearch() {
+    _pairQuery = '';
+    const i = document.getElementById('pairSearch');
+    if (i) { i.value = ''; i.focus(); }
+    applyPairSearch();
+  }
+  function applyPairSearch() {
+    const q = _norm(_pairQuery);
+    document.querySelectorAll('.group-card.card-hit').forEach(c => c.classList.remove('card-hit'));
+    let hits = 0;
+    document.querySelectorAll('#mainContent [data-par]').forEach(n => {
+      const isHit = !!q && _norm(n.getAttribute('data-par')).includes(q);
+      n.classList.toggle('pair-hit', isHit);
+      n.classList.toggle('search-dim', !!q && !isHit);
+      if (isHit) { hits++; const gc = n.closest('.group-card'); if (gc) gc.classList.add('card-hit'); }
+    });
+    const cnt = document.getElementById('pairSearchCount');
+    if (cnt) cnt.textContent = q ? (hits ? `${hits} ${hits===1?'resultado':'resultados'}` : 'sem resultados') : '';
+    const clr = document.getElementById('pairSearchClear');
+    if (clr) clr.style.display = q ? 'inline-flex' : 'none';
+  }
+  function goToTab(cat) {
+    const btn = [...document.querySelectorAll('.cat-tab')].find(b => b.getAttribute('data-cat') === cat);
+    if (btn) switchTab(cat, btn);
+  }
+  function jumpToPair() {
+    const q = _norm(_pairQuery);
+    if (!q) return;
+    const active = document.querySelector('.cat-section.active');
+    const matches = n => _norm(n.getAttribute('data-par')).includes(q);
+    let target = active ? [...active.querySelectorAll('[data-par]')].find(matches) : null;
+    if (!target) {
+      const any = [...document.querySelectorAll('#mainContent [data-par]')].find(matches);
+      if (any) {
+        const sec = any.closest('.cat-section');
+        if (sec) goToTab(sec.id.replace('cat-', ''));
+        target = any;
+      }
+    }
+    if (target) (target.closest('.group-card') || target).scrollIntoView({ behavior: 'smooth', block: 'center' });
   }
 
   function switchTab(cat, btn) {
