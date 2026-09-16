@@ -381,7 +381,7 @@
           if (result.get(t.par)?.status !== 'eliminated_group') return;
           const guaranteedAbove = rows.filter(o => o.par !== t.par && o._minWins > t._maxWins).length;
           const payload = {
-            group: g.id, _maxWins: t._maxWins, _minWins: t._minWins,
+            group: g.id, _maxWins: t._maxWins, _minWins: t._minWins, _remaining: t._remaining,
             _sv: t.sv, _sl: t.sl, _gv: t.gv, _gl: t.gl
           };
           if (guaranteedAbove > directN) {
@@ -391,6 +391,33 @@
             contenders.push({ par: t.par, ...payload });
           }
         });
+      });
+
+      // Pré-eliminação cross-group SEGURA: uma dupla que ainda tem jogos por
+      // disputar é eliminada da corrida ao wildcard se, mesmo no seu MELHOR
+      // cenário possível (ganhar tudo o que falta por 6-0), já existirem pelo
+      // menos wcN rivais de OUTROS grupos com posição FECHADA (sem jogos por
+      // disputar) garantidamente à frente na ordenação de wildcard (vitórias,
+      // dif. sets, dif. jogos, jogos ganhos). Só compara contra rivais fechados,
+      // por isso nunca gera falsos eliminados.
+      const lockedRivals = contenders.filter(c => c._remaining === 0);
+      contenders.forEach(p => {
+        if (p._remaining === 0) return;
+        const pb = {
+          w:  p._maxWins,
+          sd: (p._sv - p._sl) + 2 * p._remaining,
+          gd: (p._gv - p._gl) + 12 * p._remaining,
+          gv: p._gv + 12 * p._remaining
+        };
+        const above = lockedRivals.filter(rv => {
+          if (rv.group === p.group) return false;
+          const rsd = rv._sv - rv._sl, rgd = rv._gv - rv._gl;
+          if (rv._maxWins !== pb.w) return rv._maxWins > pb.w;
+          if (rsd !== pb.sd) return rsd > pb.sd;
+          if (rgd !== pb.gd) return rgd > pb.gd;
+          return rv._gv > pb.gv;
+        }).length;
+        if (above >= wcN) result.set(p.par, { status: 'eliminated', group: p.group });
       });
 
       // Quando TODA a fase de grupos da categoria terminou, cada grupo tem um 2.º
@@ -443,15 +470,34 @@
   // Reutiliza getConfirmedStatus (matematicamente correcto) para simular o
   // próximo jogo da dupla: vitória apura? derrota elimina? Cache por render.
   let _scenCache = new Map();
-  function _simStatusMap(cat, grupos, jogos, gameId, winIsEq1) {
-    const key = cat + '|' + gameId + '|' + (winIsEq1 ? '1' : '0');
-    if (_scenCache.has(key)) return _scenCache.get(key);
-    const jj = jogos.map(j => j.id === gameId
-      ? { ...j, resultado: { s1eq1: winIsEq1?6:0, s1eq2: winIsEq1?0:6, s2eq1: winIsEq1?6:0, s2eq2: winIsEq1?0:6 } }
-      : j);
-    const m = getConfirmedStatus(cat, grupos, jj);
-    _scenCache.set(key, m);
-    return m;
+  // Constrói um resultado a partir da perspectiva da dupla (pairIsEq1): sets é
+  // uma lista de [jogosDaDupla, jogosDoAdversario].
+  function _mkResultado(pairIsEq1, sets) {
+    const r = { s1eq1:null,s1eq2:null,s2eq1:null,s2eq2:null,s3eq1:null,s3eq2:null };
+    sets.forEach(([pg, og], i) => {
+      const n = i + 1;
+      if (pairIsEq1) { r['s'+n+'eq1'] = pg; r['s'+n+'eq2'] = og; }
+      else           { r['s'+n+'eq1'] = og; r['s'+n+'eq2'] = pg; }
+    });
+    return r;
+  }
+  // Margens (perspectiva da dupla): vitória máxima vs vitória mínima possível;
+  // derrota máxima vs melhor derrota possível. Usadas para testar se o
+  // apuramento/eliminação é GARANTIDO independentemente do resultado (margem).
+  const _WIN_BIG  = [[6,0],[6,0]];        // 2-0 esmagador
+  const _WIN_MIN  = [[7,6],[0,6],[7,6]];  // 2-1 renhido, diferença mínima de jogos
+  const _LOSS_BIG = [[0,6],[0,6]];        // 0-2 esmagador
+  const _LOSS_MIN = [[6,7],[7,6],[6,7]];  // 1-2 renhido (melhor cenário na derrota)
+  function _simStatus(cat, grupos, jogos, gameId, pairIsEq1, sets, par) {
+    const key = cat + '|' + gameId + '|' + (pairIsEq1?'1':'0') + '|' + sets.map(s=>s.join('-')).join(',');
+    let m = _scenCache.get(key);
+    if (!m) {
+      const res = _mkResultado(pairIsEq1, sets);
+      const jj = jogos.map(j => j.id === gameId ? { ...j, resultado: res } : j);
+      m = getConfirmedStatus(cat, grupos, jj);
+      _scenCache.set(key, m);
+    }
+    return m.get(par)?.status;
   }
   function _nextGroupGame(par, groupId, jogos) {
     return jogos
@@ -465,24 +511,32 @@
     if (!grupos || (status !== 'contention' && status !== 'contention_wc')) return '';
     const next = _nextGroupGame(par, g.id, jogos);
     if (!next) return _scRow('ph-hourglass', 'sc-wait', 'Jogos terminados — apuramento depende de outros grupos.');
-    const winIsEq1 = next.eq1 === par;
-    const opp  = escHtml((winIsEq1 ? next.eq2 : next.eq1) || '').replace(' &amp; ', ' / ');
+    const eq1 = next.eq1 === par;
+    const opp  = escHtml((eq1 ? next.eq2 : next.eq1) || '').replace(' &amp; ', ' / ');
     const hora = next.hora ? (' · ' + escHtml(next.hora)) : '';
-    const sWin  = _simStatusMap(g.cat, grupos, jogos, next.id, winIsEq1).get(par)?.status;
-    const sLoss = _simStatusMap(g.cat, grupos, jogos, next.id, !winIsEq1).get(par)?.status;
-    const winClinch = sWin === 'qualified';
-    const lossElim  = sLoss === 'eliminated';
-    if (winClinch && lossElim) return _scRow('ph-fire', 'sc-decisive', `<b>Jogo decisivo</b> vs <span class="sc-opp">${opp}</span>${hora} — vitória apura, derrota elimina.`);
-    if (winClinch)             return _scRow('ph-seal-check', 'sc-win', `Vence vs <span class="sc-opp">${opp}</span>${hora} e <b>garante o apuramento</b>.`);
+    const S = (sets) => _simStatus(g.cat, grupos, jogos, next.id, eq1, sets, par);
+    // Vitória: garante apuramento em QUALQUER margem? (máxima E mínima)
+    const winBig = S(_WIN_BIG), winMin = S(_WIN_MIN);
+    const lossBig = S(_LOSS_BIG), lossMin = S(_LOSS_MIN);
+    const winClinch = winBig === 'qualified' && winMin === 'qualified';   // garante sempre
+    const winHelps  = winBig === 'qualified' && winMin !== 'qualified';   // só apura com margem
+    const lossElim  = lossBig === 'eliminated' && lossMin === 'eliminated'; // elimina sempre
+    const opTxt = `vs <span class="sc-opp">${opp}</span>${hora}`;
+
+    if (winClinch && lossElim) return _scRow('ph-fire', 'sc-decisive', `<b>Jogo decisivo</b> ${opTxt} — vitória apura, derrota elimina.`);
+    if (winClinch)             return _scRow('ph-seal-check', 'sc-win', `Vence ${opTxt} e <b>garante o apuramento</b>.`);
     if (lossElim) {
-      // Derrota elimina; vitória NÃO garante — só a mantém viva. Em grupos com
-      // wildcard, passar a 2.º apenas a coloca na corrida (sujeita a desempate).
-      if (sWin === 'contention_wc')
-        return _scRow('ph-warning', 'sc-warn', `Tem de vencer vs <span class="sc-opp">${opp}</span>${hora} para continuar na corrida ao <b>wildcard</b> (sujeito a desempate).`);
-      return _scRow('ph-warning', 'sc-warn', `Tem de vencer vs <span class="sc-opp">${opp}</span>${hora} para continuar na disputa.`);
+      // Derrota elimina de certeza. Vitória pode não bastar: em grupos com
+      // wildcard o apuramento depende da margem/critérios de desempate.
+      if (winHelps)
+        return _scRow('ph-warning', 'sc-warn', `Derrota elimina. Para se apurar tem de vencer ${opTxt} <b>com margem suficiente</b> (desempate ao wildcard).`);
+      if (winBig === 'contention_wc')
+        return _scRow('ph-warning', 'sc-warn', `Tem de vencer ${opTxt} para continuar na corrida ao <b>wildcard</b> (sujeito a desempate).`);
+      return _scRow('ph-warning', 'sc-warn', `Tem de vencer ${opTxt} para continuar na disputa.`);
     }
-    if (status === 'contention_wc') return _scRow('ph-star', 'sc-wait', `Em disputa pelo <b>wildcard</b> — próximo vs <span class="sc-opp">${opp}</span>${hora}.`);
-    return _scRow('ph-target', 'sc-wait', `Em disputa — próximo vs <span class="sc-opp">${opp}</span>${hora}.`);
+    if (winHelps) return _scRow('ph-target', 'sc-wait', `Uma vitória ${opTxt} aproxima do apuramento (sujeito a desempate).`);
+    if (status === 'contention_wc') return _scRow('ph-star', 'sc-wait', `Em disputa pelo <b>wildcard</b> — próximo ${opTxt}.`);
+    return _scRow('ph-target', 'sc-wait', `Em disputa — próximo ${opTxt}.`);
   }
 
   // â”€â”€ Build a single group card â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
