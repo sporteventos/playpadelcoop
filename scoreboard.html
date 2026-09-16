@@ -499,18 +499,23 @@
     }
     return m.get(par)?.status;
   }
-  function _nextGroupGame(par, groupId, jogos) {
-    return jogos
-      .filter(j => !j.resultado && j.grupo === groupId && (j.eq1 === par || j.eq2 === par))
-      .sort((a,b) => ((a.data||'')+(a.hora||'')).localeCompare((b.data||'')+(b.hora||'')))[0] || null;
-  }
   function _scRow(icon, cls, html) {
     return `<tr class="sc-row"><td colspan="8"><div class="sc-note ${cls}"><i class="ph ${icon}"></i><span>${html}</span></div></td></tr>`;
   }
   function buildScenario(par, g, jogos, grupos, status) {
     if (!grupos || (status !== 'contention' && status !== 'contention_wc')) return '';
-    const next = _nextGroupGame(par, g.id, jogos);
-    if (!next) return _scRow('ph-hourglass', 'sc-wait', 'Jogos terminados — apuramento depende de outros grupos.');
+    const rem = jogos.filter(j => !j.resultado && j.grupo === g.id && (j.eq1 === par || j.eq2 === par));
+    if (rem.length === 0) return _scRow('ph-hourglass', 'sc-wait', 'Jogos terminados — apuramento depende de outros grupos.');
+    // Com 2+ jogos por disputar não faz sentido destacar um só jogo com
+    // "vitória apura / derrota elimina" — a frase decisiva fica reservada ao
+    // último jogo do grupo. Aqui damos apenas o estado geral.
+    if (rem.length >= 2) {
+      const n = rem.length;
+      if (status === 'contention_wc')
+        return _scRow('ph-star', 'sc-wait', `Ainda com <b>${n} jogos</b> por disputar — em disputa pelo <b>wildcard</b>.`);
+      return _scRow('ph-target', 'sc-wait', `Ainda com <b>${n} jogos</b> por disputar — apuramento em aberto.`);
+    }
+    const next = rem[0];
     const eq1 = next.eq1 === par;
     const opp  = escHtml((eq1 ? next.eq2 : next.eq1) || '').replace(' &amp; ', ' / ');
     const hora = next.hora ? (' · ' + escHtml(next.hora)) : '';
