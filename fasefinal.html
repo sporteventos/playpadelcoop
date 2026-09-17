@@ -294,6 +294,38 @@ document.addEventListener('DOMContentLoaded', () => {
     </div>`;
   }
 
+  // Explica o ajuste anti-colisão de forma legível: reconstrói o cruzamento-
+  // padrão (S1-S8, S4-S5, S3-S6, S2-S7) a partir dos seeds/grupos dos QF e
+  // identifica que par do MESMO grupo se defrontaria nos quartos (o que é
+  // evitado porque essas duplas já jogaram na fase de grupos).
+  function collisionNoteHtml(catData) {
+    const qf = (catData.jogos || []).filter(j => j.fase === 'QF');
+    if (!qf.length) return '';
+    const bySeed = {};
+    qf.forEach(j => {
+      if (j.eq1seed) bySeed[j.eq1seed] = { par: j.eq1, grupo: j.eq1grupo };
+      if (j.eq2seed) bySeed[j.eq2seed] = { par: j.eq2, grupo: j.eq2grupo };
+    });
+    const idealPairs = [[1, 8], [4, 5], [3, 6], [2, 7]];
+    const fmtPar = p => (p || '').split(' & ').join(' / ');
+    const clashes = [];
+    idealPairs.forEach(([a, b]) => {
+      const A = bySeed[a], B = bySeed[b];
+      if (A && B && A.grupo && B.grupo && A.grupo === B.grupo) clashes.push({ a, b, A, B });
+    });
+    if (!clashes.length) return '';
+    const lines = clashes.map(c =>
+      `<b>S${c.a}</b> (${fmtPar(c.A.par)}) e <b>S${c.b}</b> (${fmtPar(c.B.par)}), ambos do <b>${c.A.grupo}</b>, defrontar-se-iam logo nos quartos`
+    );
+    const swap = catData.collisionNote
+      ? ` Seeds inferiores reorganizados: ${catData.collisionNote.replace(/^Ajuste anti-colis[ãa]o:\s*/i, '')}.`
+      : '';
+    return `<div class="ff-collision-note" style="font-size:.72rem;color:var(--amarelo);margin:.7rem 0 0;line-height:1.55;display:flex;gap:.4rem;align-items:flex-start">
+      <i class="ph ph-swap" style="margin-top:.15rem"></i>
+      <span><b>Ajuste anti-colisão</b> — No seeding padrão, ${lines.join('; ')}. Como já se defrontaram na fase de grupos, o quadro foi reorganizado para as manter em lados opostos.${swap}</span>
+    </div>`;
+  }
+
   function renderCat(catId) {
     const ff      = ppLoad('fasefinal') || {};
     const catData = ff[catId];
@@ -334,7 +366,7 @@ document.addEventListener('DOMContentLoaded', () => {
           </div>`).join('')}
         ${championBanner(catData)}
       </div>
-      ${catData.collisionNote ? `<p style="font-size:.7rem;color:var(--amarelo);margin:.6rem 0 0;display:flex;align-items:center;gap:.3rem"><i class="ph ph-swap"></i> <em>${catData.collisionNote}</em></p>` : ''}` ;
+      ${collisionNoteHtml(catData)}` ;
 
 
   }
