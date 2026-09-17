@@ -4974,7 +4974,11 @@ function _ffBuildPairs(q) {
     }
 
   let bestPerm = null;
-  let bestPenalty = Infinity;
+  let bestKey = null;
+
+  // Ordem dos seeds de topo (S1..S4) por posição de slot, para proteger primeiro
+  // os melhores: S1=slot0, S4=slot1, S3=slot2, S2=slot3.
+  const slotsByRank = [0, 1, 2, 3].sort((a, b) => (upper[a]?.seed ?? 99) - (upper[b]?.seed ?? 99));
 
   for (const perm of perms) {
     // Check no same-group clash in any QF
@@ -4984,9 +4988,19 @@ function _ffBuildPairs(q) {
       if (u?.grupo && l?.grupo && u.grupo === l.grupo) { valid = false; break; }
     }
     if (!valid) continue;
-    // Penalty = positional distance from ideal; lower = closer to standard seeding
-    const penalty = perm.reduce((s, src, slot) => s + Math.abs(src - slot), 0);
-    if (penalty < bestPenalty) { bestPenalty = penalty; bestPerm = perm; }
+    // Objetivo: PROTEGER os seeds mais altos. Cada seed de topo, por ordem
+    // (S1, depois S2, S3, S4), deve apanhar o adversário legal mais fraco
+    // possível (maior número de seed). Chave = nº de seed do adversário por
+    // ordem de ranking; escolhemos a maior lexicograficamente. Sem colisão,
+    // isto reproduz o seeding padrão (S1-S8, S2-S7, S3-S6, S4-S5).
+    const key = slotsByRank.map(slot => (lowerPool[perm[slot]]?.seed ?? -1));
+    let better = bestKey === null;
+    if (!better) {
+      for (let i = 0; i < key.length; i++) {
+        if (key[i] !== bestKey[i]) { better = key[i] > bestKey[i]; break; }
+      }
+    }
+    if (better) { bestKey = key; bestPerm = perm; }
   }
 
   // If no clash-free assignment exists (impossible), fall back to ideal
