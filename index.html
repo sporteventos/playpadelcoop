@@ -54,16 +54,17 @@
     .top-par-rate { font-size: .7rem; color: #8AA396; white-space: nowrap; }
     @media (max-width: 480px) { .top-par-card { grid-template-columns: 2rem 1fr; } .top-par-stats { display: none; } }
   </style>
+  <link rel="stylesheet" href="css/tournament-public.css"/>
 </head>
-<body>
+<body class="tournament-public tournament-home">
 
 <!-- ===================== NAVBAR ===================== -->
 <nav class="navbar" id="navbar">
   <a class="nav-logo" href="#inicio">
     <img src="playpadellogo.jpg" alt="Play Padel" style="height:34px;width:34px;border-radius:7px;object-fit:cover;flex-shrink:0"/>
     <div class="nav-logo-text">
-      <span class="nav-logo-title">Play Padel</span>
-      <span class="nav-logo-sub">Torneio Rentreé</span>
+      <span class="nav-logo-title" id="cfgNomeTorneio">Play Padel</span>
+      <span class="nav-logo-sub" id="cfgSubtituloNav">Torneio Rentreé</span>
     </div>
   </a>
 
@@ -105,46 +106,84 @@
 
 <!-- ===================== HERO ===================== -->
 <section class="hero" id="inicio">
-  <div class="hero-orb hero-orb-1"></div>
-  <div class="hero-orb hero-orb-2"></div>
+  <div class="tp-court-lines" aria-hidden="true"></div>
+  <div class="tp-hero-grid">
+    <div class="hero-content">
+      <div class="tp-status-pill">Torneio oficial</div>
+      <div class="hero-badge">
+        <i class="ph ph-map-pin"></i>&nbsp;<span id="cfgLocal">Maputo</span> &nbsp;·&nbsp; <span id="cfgDatas">10 a 19 de Setembro 2026</span>
+      </div>
 
-  <div class="hero-content">
+      <h1 class="hero-title">
+        <span class="line-2" id="cfgNomeHero">Torneio Rentreé</span>
+      </h1>
 
-    <div class="hero-badge">
-      <span class="hero-badge-dot"></span>
-      <i class="ph ph-map-pin"></i>&nbsp;<span id="cfgLocal">Maputo</span> &nbsp;·&nbsp; <span id="cfgDatas">10 a 19 de Setembro 2026</span>
+      <p class="hero-subtitle">
+        Competição, comunidade e padel ao mais alto nível. Organizado por <strong id="cfgClube">Sport Eventos</strong>.
+      </p>
+
+      <div class="hero-cta">
+        <a href="inscricoes.html" class="btn tp-hero-primary" id="btnInscreverHero">
+          <i class="ph ph-user-plus"></i> Inscrever a minha dupla
+        </a>
+        <a href="calendario.html" class="btn btn-secondary" id="btnVerCalendario">
+          <i class="ph ph-calendar"></i> Ver calendário
+        </a>
+        <a href="classificacoes.html" class="btn btn-secondary" id="btnVerClassificacoes">
+          <i class="ph ph-chart-bar"></i> Classificações
+        </a>
+        <a href="fasefinal.html" class="btn btn-secondary" id="btnFaseFinalHero" style="display:none">
+          <i class="ph ph-brackets-round"></i> Fase final
+        </a>
+        <a href="scoreboard.html" class="btn btn-secondary" target="_blank" id="btnScoreboard" style="display:none">
+          <i class="ph ph-monitor-play"></i> Apuramento
+        </a>
+        <a href="jogadores.html" class="btn btn-secondary" id="btnVerJogadores">
+          <i class="ph ph-users"></i> Jogadores
+        </a>
+      </div>
+
+      <div class="tp-event-facts">
+        <div class="tp-event-fact">
+          <i class="ph ph-calendar-blank"></i>
+          <span><small>FORMATO</small><strong>10 dias de competição</strong></span>
+        </div>
+        <div class="tp-event-fact">
+          <i class="ph ph-tennis-ball"></i>
+          <span><small>CAMPOS</small><strong>3 campos oficiais</strong></span>
+        </div>
+        <div class="tp-event-fact">
+          <i class="ph ph-medal"></i>
+          <span><small>CATEGORIAS</small><strong>Masculino &amp; Feminino</strong></span>
+        </div>
+      </div>
     </div>
 
-    <h1 class="hero-title">
-      <span class="line-2" id="cfgNomeHero">Torneio Rentreé</span>
-    </h1>
-
-    <p class="hero-subtitle">
-      Organizado por <strong id="cfgClube">Sport Eventos</strong>
-    </p>
-
-    <div class="hero-cta">
-      <a href="calendario.html" class="btn btn-secondary" id="btnVerCalendario">
-        <i class="ph ph-calendar"></i> Ver Calendário
+    <aside class="tp-entry-card">
+      <div class="tp-entry-card__top">
+        <div>
+          <span class="tp-eyebrow">Participa no torneio</span>
+          <h2>O teu lugar<br>começa aqui.</h2>
+          <p>Faz a pré-inscrição e recebe a confirmação da organização.</p>
+        </div>
+        <span class="tp-entry-card__icon"><i class="ph ph-trophy"></i></span>
+      </div>
+      <div class="tp-entry-steps">
+        <div class="tp-entry-step">
+          <b>01</b><span><strong>Escolhe a categoria</strong><small>Encontra o nível certo para ti.</small></span><i class="ph ph-check"></i>
+        </div>
+        <div class="tp-entry-step">
+          <b>02</b><span><strong>Adiciona o parceiro</strong><small>Ou reserva o lugar para anunciar depois.</small></span><i class="ph ph-check"></i>
+        </div>
+        <div class="tp-entry-step">
+          <b>03</b><span><strong>Confirma a inscrição</strong><small>Recebe o resumo diretamente no WhatsApp.</small></span><i class="ph ph-check"></i>
+        </div>
+      </div>
+      <a href="inscricoes.html" class="tp-button tp-button--primary">
+        Começar inscrição <i class="ph ph-arrow-right"></i>
       </a>
-      <a href="classificacoes.html" class="btn btn-secondary" id="btnVerClassificacoes">
-        <i class="ph ph-chart-bar"></i> Ver Classificações
-      </a>
-      <a href="fasefinal.html" class="btn btn-secondary" id="btnFaseFinalHero" style="display:none">
-        <i class="ph ph-brackets-round"></i> Fase Final
-      </a>
-      <a href="scoreboard.html" class="btn btn-secondary" target="_blank" id="btnScoreboard" style="display:none">
-        <i class="ph ph-monitor-play"></i> Quadro de Apuramento
-      </a>
-      <a href="jogadores.html" class="btn btn-secondary" id="btnVerJogadores">
-        <i class="ph ph-users"></i> Ver Jogadores
-      </a>
-    </div>
-  </div>
-
-  <div class="hero-scroll">
-    <span>EXPLORAR</span>
-    <div class="hero-scroll-arrow">↓</div>
+      <p class="tp-entry-note">Processo rápido · menos de 3 minutos</p>
+    </aside>
   </div>
 </section>
 
@@ -575,6 +614,7 @@
         show('drawerLiInscricoes',    cfg.inscricoesVisible !== false);
         show('footerLiInscricoes',    cfg.inscricoesVisible !== false);
         show('cardInscricoes',        cfg.inscricoesVisible !== false);
+        show('btnInscreverHero',      cfg.inscricoesVisible !== false);
         show('navLiInscritos',        cfg.inscritosVisible !== false);
         show('drawerLiInscritos',     cfg.inscritosVisible !== false);
         show('footerLiInscritos',     cfg.inscritosVisible !== false);

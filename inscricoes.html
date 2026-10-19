@@ -49,15 +49,16 @@
     .form-actions { display: flex; gap: .6rem; flex-wrap: wrap; }
     @media (max-width: 600px) { .form-grid { grid-template-columns: 1fr; } }
   </style>
+  <link rel="stylesheet" href="css/tournament-public.css"/>
 </head>
-<body>
+<body class="tournament-public tournament-registration">
 
 <nav class="navbar" id="navbar">
   <a class="nav-logo" href="index.html">
     <img src="playpadellogo.jpg" alt="Play Padel" style="height:34px;width:34px;border-radius:7px;object-fit:cover;flex-shrink:0"/>
     <div class="nav-logo-text">
-      <span class="nav-logo-title">Play Padel</span>
-      <span class="nav-logo-sub">Torneio Rentreé</span>
+      <span class="nav-logo-title" id="cfgNomeTorneio">Play Padel</span>
+      <span class="nav-logo-sub" id="cfgSubtituloNav">Torneio Rentreé</span>
     </div>
   </a>
 
@@ -91,132 +92,155 @@
   </ul>
 </div>
 
-<div class="page-hero">
-  <div class="page-hero-content">
-    <p class="page-hero-tag"><i class="ph ph-clipboard-text"></i> Pré-Inscrição</p>
-    <h1 class="page-hero-title">Inscreve-te no <span>Torneio Rentreé</span></h1>
-    <p class="page-hero-sub">Preenche o formulário com os teus dados. A organização irá confirmar a tua inscrição.</p>
+<section class="tp-registration-hero">
+  <div class="tp-registration-hero__inner">
+    <div>
+      <div class="tp-status-pill">Inscrições abertas</div>
+      <p class="tp-eyebrow" style="margin-top:1.5rem">PRÉ-INSCRIÇÃO OFICIAL</p>
+      <h1>ENTRA EM<br><span>CAMPO.</span></h1>
+      <p class="tp-registration-hero__copy">Forma a tua dupla, escolhe a categoria e garante o teu lugar no <strong id="cfgHeroTournament">Torneio Rentreé</strong>. A organização confirma todos os dados após a submissão.</p>
+    </div>
+    <div class="tp-registration-facts">
+      <div class="tp-registration-fact"><i class="ph ph-calendar-blank"></i><span><small>DATAS</small><strong id="cfgRegistrationDates">10 a 19 de Setembro 2026</strong></span></div>
+      <div class="tp-registration-fact"><i class="ph ph-map-pin"></i><span><small>LOCAL</small><strong id="cfgRegistrationLocation">Maputo</strong></span></div>
+      <div class="tp-registration-fact"><i class="ph ph-clock"></i><span><small>PROCESSO</small><strong>Menos de 3 minutos</strong></span></div>
+    </div>
   </div>
-</div>
+</section>
 
-<main class="ins-page">
-
-  <!-- ======= FORM STEP ======= -->
+<main class="tp-registration-main">
   <div id="stepForm">
-    <div class="ins-form-wrap">
-      <div class="ins-info-box">
-        <i class="ph ph-info" style="font-size:1.25rem;color:var(--verde);flex-shrink:0"></i>
-        <div>
-          <strong>Como funciona?</strong><br/>
-          Preenche os teus dados abaixo. Após submeter, recebes um resumo para confirmares via WhatsApp com a organização. Podes inscrever-te sozinho(a), com parceiro(a), ou reservar já o lugar e anunciar o(a) parceiro(a) mais tarde.
-        </div>
+    <section class="tp-form-card">
+      <div class="tp-form-head">
+        <div><span class="tp-eyebrow">INSCRIÇÃO DE JOGADOR</span><h2>Vamos começar</h2><p>Preenche cada etapa para submeteres a tua pré-inscrição.</p></div>
+        <div class="tp-form-count"><strong id="currentStep">01</strong> / 04</div>
       </div>
 
-      <div id="vagasBox" class="ins-vagas" style="display:none">
-        <div class="ins-vagas-main">
-          <i class="ph ph-users-three" style="font-size:1.4rem;color:var(--verde)"></i>
-          <div>
-            <div class="ins-vagas-num"><span id="vagasLivres">–</span> <span style="font-size:.8rem;font-weight:500;color:var(--cinza-texto)">de <span id="vagasTotal">–</span> vagas disponíveis</span></div>
-            <div class="ins-vagas-sub" id="vagasSub">A carregar disponibilidade…</div>
-          </div>
-        </div>
-        <div class="ins-vagas-bar"><div class="ins-vagas-fill" id="vagasFill" style="width:0%"></div></div>
+      <div class="tp-step-progress" aria-label="Progresso da inscrição">
+        <button type="button" data-step-target="1" data-short-label="Dados">Os teus dados</button>
+        <button type="button" data-step-target="2" data-short-label="Categoria">Categoria</button>
+        <button type="button" data-step-target="3" data-short-label="Parceiro">Parceiro</button>
+        <button type="button" data-step-target="4" data-short-label="Confirmar">Confirmar</button>
       </div>
 
       <form id="insForm" novalidate>
-        <div class="ins-section-title"><i class="ph ph-user"></i> Os teus dados</div>
-        <div class="form-grid">
-          <div class="form-field">
-            <label class="form-label" for="nome1">Nome completo <span class="req">*</span></label>
-            <input class="form-input" id="nome1" name="nome1" type="text" required placeholder="O teu nome completo" list="dlJogadores" autocomplete="off"/>
-          </div>
-          <div class="form-field">
-            <label class="form-label" for="telefone">Telefone <span class="req">*</span></label>
-            <input class="form-input" id="telefone" name="telefone" type="tel" required placeholder="+258 84 000 0000"/>
-          </div>
-          <div class="form-field">
-            <label class="form-label" for="email">Email</label>
-            <input class="form-input" id="email" name="email" type="email" placeholder="opcional"/>
-          </div>
-        </div>
-
-        <div class="ins-section-title" style="margin-top:1.25rem"><i class="ph ph-medal"></i> Categoria</div>
-        <div class="form-grid">
-          <div class="form-field">
-            <label class="form-label">Género <span class="req">*</span></label>
-            <div class="toggle-wrap" id="generoWrap">
-              <label class="toggle-pill"><input type="radio" name="genero" value="M" checked> <i class="ph ph-person"></i> Masculino</label>
-              <label class="toggle-pill"><input type="radio" name="genero" value="F"> <i class="ph ph-person-simple-dress"></i> Feminino</label>
+        <section class="registration-step active" data-step="1">
+          <div class="tp-step-intro"><span class="tp-eyebrow">ETAPA 1</span><h3>Conta-nos quem és</h3><p>Usaremos estes dados apenas para gerir a tua participação e contactar-te sobre o torneio.</p></div>
+          <div class="form-grid">
+            <div class="form-field full">
+              <label class="form-label" for="nome1">Nome completo <span class="req">*</span></label>
+              <input class="form-input" id="nome1" name="nome1" type="text" required placeholder="O teu nome completo" list="dlJogadores" autocomplete="name"/>
+            </div>
+            <div class="form-field">
+              <label class="form-label" for="telefone">Telefone <span class="req">*</span></label>
+              <input class="form-input" type="tel" id="telefone" name="telefone" required placeholder="+258 84 000 0000" autocomplete="tel"/>
+            </div>
+            <div class="form-field">
+              <label class="form-label" for="email">Email <span style="font-weight:400;text-transform:none;letter-spacing:0">(opcional)</span></label>
+              <input class="form-input" id="email" name="email" type="email" placeholder="nome@email.com" autocomplete="email"/>
             </div>
           </div>
-          <div class="form-field">
-            <label class="form-label" for="categoria">Nível pretendido <span class="req">*</span></label>
-            <select class="form-select" id="categoria" name="categoria" required>
-              <option value="">— selecciona —</option>
-            </select>
-            <span class="form-help" id="catHelp"></span>
-          </div>
-        </div>
+          <div class="tp-step-actions"><button class="tp-button tp-button--primary" type="button" data-step-next>Continuar <i class="ph ph-arrow-right"></i></button></div>
+        </section>
 
-        <div class="ins-section-title" style="margin-top:1.25rem"><i class="ph ph-handshake"></i> Parceiro(a)</div>
-        <div class="form-field full" style="margin-bottom:.4rem">
-          <div class="toggle-wrap" id="modoWrap" style="flex-wrap:wrap">
-            <label class="toggle-pill"><input type="radio" name="modo" value="parceiro" checked> <i class="ph ph-handshake"></i> Com parceiro(a)</label>
-            <label class="toggle-pill"><input type="radio" name="modo" value="reserva"> <i class="ph ph-bookmark-simple"></i> Reservar (a anunciar)</label>
-            <label class="toggle-pill"><input type="radio" name="modo" value="solo"> <i class="ph ph-user"></i> Sozinho(a)</label>
+        <section class="registration-step" data-step="2">
+          <div class="tp-step-intro"><span class="tp-eyebrow">ETAPA 2</span><h3>Escolhe o teu desafio</h3><p>Seleciona o género e o nível em que pretendes competir. A disponibilidade é atualizada em tempo real.</p></div>
+          <div id="vagasBox" class="ins-vagas" style="display:none">
+            <div class="ins-vagas-main">
+              <i class="ph ph-users-three" style="font-size:1.4rem;color:var(--verde)"></i>
+              <div><div class="ins-vagas-num"><span id="vagasLivres">–</span> <span style="font-size:.8rem;font-weight:500;color:var(--cinza-texto)">de <span id="vagasTotal">–</span> vagas disponíveis</span></div><div class="ins-vagas-sub" id="vagasSub">A carregar disponibilidade…</div></div>
+            </div>
+            <div class="ins-vagas-bar"><div class="ins-vagas-fill" id="vagasFill" style="width:0%"></div></div>
           </div>
-          <span class="form-help" id="modoHelp">Indica o(a) parceiro(a). Se ainda não o tiveres, reserva o lugar e anuncia mais tarde.</span>
-        </div>
-        <div class="form-grid" id="parceiroGrid">
-          <div class="form-field full" id="parceiroNameField">
-            <label class="form-label" for="parceiro">Nome do(a) parceiro(a) <span style="font-weight:400;text-transform:none;letter-spacing:0">(se já tiveres)</span></label>
-            <input class="form-input" id="parceiro" name="parceiro" type="text" placeholder="Deixa em branco se não tiveres parceiro(a)" list="dlJogadores" autocomplete="off"/>
-            <span class="form-help">Se o teu parceiro já estiver inscrito, escolhe-o da lista. Só escreve o nome manualmente se ainda não existir.</span>
+          <div class="form-grid">
+            <div class="form-field">
+              <label class="form-label">Género <span class="req">*</span></label>
+              <div class="toggle-wrap" id="generoWrap">
+                <label class="toggle-pill"><input type="radio" name="genero" value="M" checked> <i class="ph ph-person"></i> Masculino</label>
+                <label class="toggle-pill"><input type="radio" name="genero" value="F"> <i class="ph ph-person-simple-dress"></i> Feminino</label>
+              </div>
+            </div>
+            <div class="form-field">
+              <label class="form-label" for="categoria">Nível pretendido <span class="req">*</span></label>
+              <select class="form-select" id="categoria" name="categoria" required><option value="">— seleciona —</option></select>
+              <span class="form-help" id="catHelp"></span>
+            </div>
           </div>
-          <div class="form-field" id="parceiroTelField" style="display:none">
-            <label class="form-label" for="parceiroTel">Telefone do(a) parceiro(a) <span class="req">*</span></label>
-            <input class="form-input" id="parceiroTel" name="parceiroTel" type="tel" placeholder="+258 84 000 0000"/>
-            <span class="form-help" id="parceiroTelHelp">Necessário para o parceiro ter a sua própria pré-inscrição e confirmação individual.</span>
-          </div>
-          <div class="form-field" id="parceiroEmailField" style="display:none">
-            <label class="form-label" for="parceiroEmail">Email do(a) parceiro(a)</label>
-            <input class="form-input" id="parceiroEmail" name="parceiroEmail" type="email" placeholder="opcional"/>
-          </div>
-          <datalist id="dlJogadores"></datalist>
-          <div class="form-field full">
-            <label class="form-label" for="observacoes">Observações</label>
-            <textarea class="form-textarea" id="observacoes" name="observacoes" placeholder="Horário preferido, lesões ou condicionantes, etc."></textarea>
-          </div>
-        </div>
+          <div class="tp-step-actions"><button class="tp-button" type="button" data-step-back><i class="ph ph-arrow-left"></i> Voltar</button><button class="tp-button tp-button--primary" type="button" data-step-next>Continuar <i class="ph ph-arrow-right"></i></button></div>
+        </section>
 
-        <div class="form-actions" style="margin-top:1.5rem">
-          <button class="btn btn-primary" type="submit" style="font-size:1rem;padding:.75rem 2rem"><i class="ph ph-paper-plane-tilt"></i> Submeter inscrição</button>
-        </div>
-        <p id="formError" style="color:#FF6B6B;font-size:.83rem;margin-top:.5rem;display:none"></p>
+        <section class="registration-step" data-step="3">
+          <div class="tp-step-intro"><span class="tp-eyebrow">ETAPA 3</span><h3>Como vais participar?</h3><p>Inscreve a dupla completa, reserva duas vagas enquanto decides o parceiro ou participa individualmente.</p></div>
+          <div class="tp-mode-grid" id="modoWrap">
+            <label class="tp-mode-card"><input type="radio" name="modo" value="parceiro" checked><i class="ph ph-handshake"></i><strong>Com parceiro(a)</strong><small>Já sei com quem vou jogar.</small></label>
+            <label class="tp-mode-card"><input type="radio" name="modo" value="reserva"><i class="ph ph-bookmark-simple"></i><strong>Reservar dupla</strong><small>Anuncio o parceiro mais tarde.</small></label>
+            <label class="tp-mode-card"><input type="radio" name="modo" value="solo"><i class="ph ph-user"></i><strong>Individual</strong><small>Preciso de ajuda para formar dupla.</small></label>
+          </div>
+          <span class="form-help" id="modoHelp" style="display:block;margin:.75rem 0 1rem">Indica o(a) parceiro(a). Se ainda não o tiveres, reserva o lugar e anuncia mais tarde.</span>
+          <div class="form-grid" id="parceiroGrid">
+            <div class="form-field full" id="parceiroNameField">
+              <label class="form-label" for="parceiro">Nome do(a) parceiro(a)</label>
+              <input class="form-input" id="parceiro" name="parceiro" type="text" placeholder="Pesquisa ou escreve o nome completo" list="dlJogadores" autocomplete="off"/>
+              <span class="form-help">Se já estiver registado, escolhe-o da lista.</span>
+            </div>
+            <div class="form-field" id="parceiroTelField" style="display:none">
+              <label class="form-label" for="parceiroTel">Telefone do(a) parceiro(a) <span class="req">*</span></label>
+              <input class="form-input" id="parceiroTel" name="parceiroTel" type="tel" placeholder="+258 84 000 0000"/>
+              <span class="form-help" id="parceiroTelHelp">Necessário para o parceiro ter a sua própria pré-inscrição e confirmação individual.</span>
+            </div>
+            <div class="form-field" id="parceiroEmailField" style="display:none">
+              <label class="form-label" for="parceiroEmail">Email do(a) parceiro(a)</label>
+              <input class="form-input" id="parceiroEmail" name="parceiroEmail" type="email" placeholder="opcional"/>
+            </div>
+            <datalist id="dlJogadores"></datalist>
+            <div class="form-field full">
+              <label class="form-label" for="observacoes">Observações</label>
+              <textarea class="form-textarea" id="observacoes" name="observacoes" placeholder="Horários preferidos, condicionantes ou informação útil para a organização."></textarea>
+            </div>
+          </div>
+          <div class="tp-step-actions"><button class="tp-button" type="button" data-step-back><i class="ph ph-arrow-left"></i> Voltar</button><button class="tp-button tp-button--primary" type="button" data-step-next>Rever inscrição <i class="ph ph-arrow-right"></i></button></div>
+        </section>
+
+        <section class="registration-step" data-step="4">
+          <div class="tp-step-intro"><span class="tp-eyebrow">ETAPA 4</span><h3>Confirma os teus dados</h3><p>Revê a informação antes de enviares. A inscrição fica pendente até à validação da organização.</p></div>
+          <div class="tp-review">
+            <div class="tp-review-row"><span>Jogador</span><strong id="reviewName">—</strong></div>
+            <div class="tp-review-row"><span>Contacto</span><strong id="reviewContact">—</strong></div>
+            <div class="tp-review-row"><span>Categoria</span><strong><span id="reviewCategory">—</span> · <span id="reviewGender">—</span></strong></div>
+            <div class="tp-review-row"><span>Formato</span><strong id="reviewMode">—</strong></div>
+            <div class="tp-review-row"><span>Parceiro(a)</span><strong id="reviewPartner">—</strong></div>
+          </div>
+          <div class="tp-step-actions"><button class="tp-button" type="button" data-step-back><i class="ph ph-arrow-left"></i> Corrigir</button><button class="tp-button tp-button--primary" type="submit"><i class="ph ph-paper-plane-tilt"></i> Submeter inscrição</button></div>
+        </section>
+        <p id="formError" style="color:var(--tp-danger);font-size:.78rem;margin-top:1rem;display:none"></p>
       </form>
-    </div>
-  </div>
+    </section>
 
-  <!-- ======= SUCCESS STEP ======= -->
-  <div id="stepSuccess" style="display:none">
-    <div class="ins-form-wrap" style="text-align:center;padding:3rem 2rem">
-      <div style="font-size:3.5rem;margin-bottom:.75rem">🎾</div>
-      <h2 style="font-family:'Barlow Condensed',sans-serif;font-size:2rem;text-transform:uppercase;margin:0 0 .5rem">Inscrição recebida!</h2>
-      <p style="color:var(--cinza-texto);max-width:480px;margin:0 auto 1.75rem;line-height:1.6" id="successMsg"></p>
-      <div style="display:flex;gap:.75rem;justify-content:center;flex-wrap:wrap">
-        <a id="btnWhatsApp" href="#" target="_blank" rel="noopener"
-           style="display:inline-flex;align-items:center;gap:.5rem;background:#25D366;color:#000;font-weight:700;padding:.75rem 1.5rem;border-radius:10px;font-size:.95rem;text-decoration:none">
-          <i class="ph ph-whatsapp-logo"></i> Confirmar via WhatsApp
-        </a>
-        <button onclick="document.getElementById('stepSuccess').style.display='none';document.getElementById('stepForm').style.display='';"
-          style="background:rgba(255,255,255,.07);color:#F0F7F3;border:1px solid #1C2620;border-radius:10px;padding:.75rem 1.25rem;font-size:.9rem;cursor:pointer">
-          <i class="ph ph-plus"></i> Nova inscrição
-        </button>
+    <aside class="tp-registration-summary">
+      <span class="tp-eyebrow">O TEU RESUMO</span>
+      <h3>Pré-inscrição</h3>
+      <p>Este resumo é atualizado automaticamente à medida que preenches os dados.</p>
+      <div class="tp-summary-list">
+        <div><span>Jogador</span><strong id="summaryPlayer">Por preencher</strong></div>
+        <div><span>Categoria</span><strong id="summaryCategory">—</strong></div>
+        <div><span>Parceiro</span><strong id="summaryPartner">Por indicar</strong></div>
+        <div><span>Estado</span><strong style="color:var(--tp-warning)">Pré-inscrição</strong></div>
       </div>
-      <p style="font-size:.76rem;color:#64796F;margin-top:1.25rem" id="successNoWa" style="display:none"></p>
-    </div>
+      <div class="tp-summary-help"><i class="ph ph-shield-check"></i><span>Os teus dados são usados apenas para gerir a participação neste torneio.</span></div>
+    </aside>
   </div>
 
+  <section id="stepSuccess" class="tp-success-card" style="display:none">
+    <div class="tp-success-icon"><i class="ph ph-check"></i></div>
+    <span class="tp-eyebrow">PEDIDO RECEBIDO</span>
+    <h2>Estás mais perto do campo.</h2>
+    <p id="successMsg"></p>
+    <div class="tp-success-actions">
+      <a id="btnWhatsApp" class="tp-button whatsapp" href="#" target="_blank" rel="noopener"><i class="ph ph-whatsapp-logo"></i> Confirmar via WhatsApp</a>
+      <button class="tp-button" onclick="document.getElementById('stepSuccess').style.display='none';document.getElementById('stepForm').style.display='';"><i class="ph ph-plus"></i> Nova inscrição</button>
+    </div>
+    <p id="successNoWa" style="display:none"></p>
+  </section>
 </main>
 
 <footer class="footer">
@@ -224,9 +248,9 @@
     <div class="footer-brand">
       <div class="footer-logo">
         <img src="playpadellogo.jpg" alt="Play Padel" style="height:42px;width:42px;border-radius:9px;object-fit:cover"/>
-        <div><p class="footer-logo-title">Play Padel</p></div>
+        <div><p class="footer-logo-title" id="cfgFooterTournament">Play Padel</p></div>
       </div>
-      <p class="footer-desc">Pré-inscrições do Torneio Rentreé<br/>10 a 19 de Setembro 2026 · Maputo</p>
+      <p class="footer-desc" id="cfgRegistrationFooter">Pré-inscrições do Torneio Rentreé<br/>10 a 19 de Setembro 2026 · Maputo</p>
     </div>
 
     <nav class="footer-links">
@@ -238,13 +262,14 @@
   </div>
 
   <div class="footer-bottom">
-    <p class="footer-copy">© 2026 <span>Play Padel</span> · Torneio Rentreé · Maputo, Moçambique</p>
+    <p class="footer-copy" id="cfgRegistrationCopy">© 2026 <span>Play Padel</span> · Torneio Rentreé · Maputo, Moçambique</p>
     <p class="footer-credit">Concebido por <a href="https://www.efforge.co.mz/" target="_blank" rel="noopener">EF Forge Technologies</a></p>
   </div>
 </footer>
 
 <script src="js/data.js?v=22"></script>
 <script src="js/nav-config.js" defer></script>
+<script src="js/tournament-public.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function () {
   var navbar = document.getElementById('navbar');
@@ -654,7 +679,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     document.getElementById('stepForm').style.display = 'none';
     document.getElementById('stepSuccess').style.display = '';
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    document.getElementById('stepSuccess').scrollIntoView({ behavior: 'smooth', block: 'center' });
     form.reset();
     buildCats();
     applyModo();

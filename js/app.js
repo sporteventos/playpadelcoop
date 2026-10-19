@@ -45,6 +45,8 @@ document.addEventListener('DOMContentLoaded', () => {
   function pad(n) { return String(n).padStart(2, '0'); }
 
   function updateCountdown() {
+    const countdownIds = ['cdDias', 'cdHoras', 'cdMins', 'cdSegs'];
+    if (!countdownIds.every(id => document.getElementById(id))) return;
     const now  = new Date();
     const diff = TARGET_DATE - now;
 
