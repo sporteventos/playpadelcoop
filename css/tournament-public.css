@@ -1142,3 +1142,436 @@ body.tournament-public {
     min-width: 0;
   }
 }
+
+/* Rules page */
+.tournament-rules {
+  scroll-behavior: smooth;
+}
+
+.tp-rules-hero {
+  position: relative;
+  overflow: hidden;
+  padding: 9.5rem 1.5rem 5.5rem;
+  border-bottom: 1px solid var(--tp-line);
+  background:
+    radial-gradient(circle at 78% 24%, rgba(84, 246, 83, 0.1), transparent 30%),
+    linear-gradient(130deg, #042832, var(--tp-bg) 52%);
+}
+
+.tp-rules-hero::before {
+  position: absolute;
+  top: -18rem;
+  right: -16rem;
+  width: 44rem;
+  height: 44rem;
+  border: 1px solid rgba(84, 246, 83, 0.16);
+  border-radius: 50%;
+  content: "";
+}
+
+.tp-rules-hero__inner {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 400px;
+  align-items: center;
+  gap: 5rem;
+  width: min(1180px, 100%);
+  margin: 0 auto;
+}
+
+.tp-rules-hero__content h1 {
+  max-width: 760px;
+  margin: 1rem 0 1.4rem;
+  color: var(--tp-text);
+  font-family: "Barlow Condensed", sans-serif;
+  font-size: clamp(4.3rem, 7.6vw, 7.4rem);
+  font-weight: 900;
+  letter-spacing: -0.045em;
+  line-height: 0.82;
+  text-transform: uppercase;
+}
+
+.tp-rules-hero__content h1 span {
+  color: var(--tp-accent);
+}
+
+.tp-rules-hero__copy {
+  max-width: 650px;
+  margin: 0;
+  color: var(--tp-muted);
+  font-size: 1rem;
+  line-height: 1.75;
+}
+
+.tp-rules-hero__copy strong {
+  color: var(--tp-text);
+}
+
+.tp-rules-facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.75rem;
+  margin-top: 2.3rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--tp-line);
+}
+
+.tp-rules-facts > div {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+
+.tp-rules-facts i {
+  color: var(--tp-accent);
+  font-size: 1.35rem;
+}
+
+.tp-rules-facts span {
+  display: grid;
+  gap: 0.14rem;
+}
+
+.tp-rules-facts small {
+  color: var(--tp-muted);
+  font-size: 0.59rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+}
+
+.tp-rules-facts strong {
+  color: var(--tp-text);
+  font-size: 0.82rem;
+}
+
+.tp-rules-summary {
+  position: relative;
+  overflow: hidden;
+  padding: 2rem;
+  border: 1px solid var(--tp-line);
+  border-radius: var(--tp-radius-lg);
+  background: linear-gradient(145deg, rgba(11, 48, 56, 0.97), rgba(5, 28, 34, 0.98));
+  box-shadow: var(--tp-shadow);
+}
+
+.tp-rules-summary::before {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--tp-accent), transparent 72%);
+  content: "";
+}
+
+.tp-rules-summary__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.2rem;
+}
+
+.tp-rules-summary__head h2 {
+  margin: 0.25rem 0 0;
+  color: var(--tp-text);
+  font-family: "Barlow Condensed", sans-serif;
+  font-size: 2.5rem;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.tp-rules-summary__head > span {
+  display: grid;
+  width: 3rem;
+  height: 3rem;
+  place-items: center;
+  border: 1px solid var(--tp-line-strong);
+  border-radius: 50%;
+  color: var(--tp-accent);
+  background: rgba(84, 246, 83, 0.08);
+  font-size: 1.35rem;
+}
+
+.tp-rules-summary__item {
+  display: grid;
+  grid-template-columns: 2rem 1fr;
+  gap: 0.7rem;
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--tp-line);
+}
+
+.tp-rules-summary__item b {
+  color: var(--tp-accent);
+  font-family: "Barlow Condensed", sans-serif;
+  font-size: 1.05rem;
+}
+
+.tp-rules-summary__item span {
+  display: grid;
+  gap: 0.24rem;
+}
+
+.tp-rules-summary__item strong {
+  color: var(--tp-text);
+  font-size: 0.85rem;
+}
+
+.tp-rules-summary__item small {
+  color: var(--tp-muted);
+  font-size: 0.72rem;
+  line-height: 1.5;
+}
+
+.tp-rules-summary .tp-button {
+  width: 100%;
+  margin-top: 1.4rem;
+}
+
+.tp-rules-layout {
+  display: grid;
+  grid-template-columns: 260px minmax(0, 1fr);
+  align-items: start;
+  gap: 2rem;
+  width: min(1180px, calc(100% - 3rem));
+  margin: 0 auto;
+  padding: 4rem 0 6rem;
+}
+
+.tp-rules-index {
+  position: sticky;
+  top: 6.5rem;
+  padding: 1.5rem;
+  border: 1px solid var(--tp-line);
+  border-radius: var(--tp-radius);
+  background: rgba(8, 37, 44, 0.82);
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(14px);
+}
+
+.tp-rules-index h2 {
+  margin: 0.3rem 0 1.2rem;
+  color: var(--tp-text);
+  font-family: "Barlow Condensed", sans-serif;
+  font-size: 1.75rem;
+  text-transform: uppercase;
+}
+
+.tp-rules-index nav {
+  display: grid;
+}
+
+.tp-rules-index nav a {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.7rem 0;
+  border-bottom: 1px solid var(--tp-line);
+  color: var(--tp-muted);
+  font-size: 0.76rem;
+  text-decoration: none;
+  transition: color 0.2s ease, padding-left 0.2s ease;
+}
+
+.tp-rules-index nav a:hover {
+  padding-left: 0.25rem;
+  color: var(--tp-accent);
+}
+
+.tp-rules-index nav a span {
+  color: var(--tp-accent);
+  font-family: "Barlow Condensed", sans-serif;
+  font-weight: 800;
+}
+
+.tp-rules-index__cta {
+  display: grid;
+  gap: 0.4rem;
+  margin-top: 1.25rem;
+  padding: 1.1rem;
+  border: 1px solid var(--tp-line-strong);
+  border-radius: var(--tp-radius-sm);
+  background: rgba(84, 246, 83, 0.07);
+}
+
+.tp-rules-index__cta > i {
+  margin-bottom: 0.25rem;
+  color: var(--tp-accent);
+  font-size: 1.4rem;
+}
+
+.tp-rules-index__cta strong {
+  color: var(--tp-text);
+  font-size: 0.8rem;
+}
+
+.tp-rules-index__cta span {
+  color: var(--tp-muted);
+  font-size: 0.68rem;
+}
+
+.tp-rules-index__cta a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 0.45rem;
+  color: var(--tp-accent);
+  font-size: 0.7rem;
+  font-weight: 800;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.tournament-rules .reg-container {
+  max-width: none;
+  margin: 0;
+  padding: 0;
+}
+
+.tournament-rules .reg-section {
+  scroll-margin-top: 6.5rem;
+  padding: 2rem;
+  border-color: var(--tp-line);
+  border-radius: var(--tp-radius-lg);
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.018), transparent 44%),
+    var(--tp-card);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.16);
+}
+
+.tournament-rules .reg-section-header {
+  padding-bottom: 1.15rem;
+  border-bottom: 1px solid var(--tp-line);
+}
+
+.tournament-rules .reg-section-icon {
+  width: 3rem;
+  height: 3rem;
+  border: 1px solid rgba(84, 246, 83, 0.16);
+  border-radius: 14px;
+}
+
+.tournament-rules .reg-section-title {
+  font-size: 1.55rem;
+  letter-spacing: 0.01em;
+}
+
+.tournament-rules .reg-list li {
+  border-bottom-color: var(--tp-line);
+  color: #bad0ca;
+}
+
+.tournament-rules .reg-list li::before {
+  background: var(--tp-accent);
+}
+
+.tournament-rules .reg-desempate li::before {
+  border-color: var(--tp-accent);
+  color: var(--tp-accent);
+  background: transparent;
+}
+
+.tournament-rules .reg-ponto-item,
+.tournament-rules .reg-disciplinar-list li {
+  border: 1px solid var(--tp-line);
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.tournament-rules .reg-footer-msg {
+  padding: 2.5rem;
+  border-color: var(--tp-line-strong);
+  border-radius: var(--tp-radius-lg);
+  background: linear-gradient(135deg, rgba(84, 246, 83, 0.11), rgba(8, 37, 44, 0.92));
+}
+
+.tournament-rules .reg-footer-msg h3 {
+  margin-top: 0.4rem;
+  font-size: 2rem;
+  text-transform: uppercase;
+}
+
+@media (max-width: 1020px) {
+  .tp-rules-hero__inner {
+    grid-template-columns: minmax(0, 1fr) 360px;
+    gap: 2.5rem;
+  }
+
+  .tp-rules-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .tp-rules-index {
+    position: static;
+  }
+
+  .tp-rules-index nav {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0 1rem;
+  }
+
+  .tp-rules-index__cta {
+    display: none;
+  }
+}
+
+@media (max-width: 820px) {
+  .tp-rules-hero {
+    padding: 7.5rem 1.25rem 4rem;
+  }
+
+  .tp-rules-hero__inner {
+    grid-template-columns: 1fr;
+  }
+
+  .tp-rules-summary {
+    margin-top: 0.5rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .tp-rules-hero {
+    padding: 6.6rem 1rem 3rem;
+  }
+
+  .tp-rules-hero__content h1 {
+    font-size: clamp(3.75rem, 18vw, 5rem);
+  }
+
+  .tp-rules-facts {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .tp-rules-summary {
+    padding: 1.4rem;
+  }
+
+  .tp-rules-layout {
+    width: calc(100% - 2rem);
+    padding: 2rem 0 4rem;
+  }
+
+  .tp-rules-index nav {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .tournament-rules .reg-section {
+    padding: 1.35rem;
+    border-radius: 18px;
+  }
+
+  .tournament-rules .reg-pontos-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .tournament-rules .reg-disciplinar-list li {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .tournament-rules .reg-footer-msg {
+    padding: 2rem 1.25rem;
+  }
+}

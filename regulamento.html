@@ -7,6 +7,7 @@
   <meta name="theme-color" content="#00C37B">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="Play Padel">
+  <meta name="description" content="Regulamento oficial do Torneio Clausura Play Padel"/>
   <title>Regulamento · Torneio Clausura</title>
   <link rel="stylesheet" href="css/style.css"/>
   <link rel="stylesheet" href="css/pages.css"/>
@@ -205,16 +206,17 @@
     }
     .reg-footer-msg p strong { color: var(--verde); }
   </style>
+  <link rel="stylesheet" href="css/tournament-public.css"/>
 </head>
-<body>
+<body class="tournament-public tournament-rules">
 
 <!-- NAVBAR -->
 <nav class="navbar" id="navbar">
   <a class="nav-logo" href="index.html">
     <img src="playpadellogo.jpg" alt="Play Padel" style="height:34px;width:34px;border-radius:7px;object-fit:cover;flex-shrink:0"/>
     <div class="nav-logo-text">
-      <span class="nav-logo-title">Play Padel</span>
-      <span class="nav-logo-sub">Torneio Clausura</span>
+      <span class="nav-logo-title" id="cfgNomeTorneio">Play Padel</span>
+      <span class="nav-logo-sub" id="cfgSubtituloNav">Torneio Clausura</span>
     </div>
   </a>
 
@@ -250,19 +252,70 @@
   </ul>
 </div>
 <!-- PAGE HERO -->
-<div class="page-hero">
-  <div class="page-hero-content">
-    <p class="page-hero-tag"><i class="ph ph-book-open"></i> Regulamento Oficial</p>
-    <h1 class="page-hero-title">Regulamento do <span>Torneio</span></h1>
-    <p class="page-hero-sub">Torneio Clausura · Maputo 2026</p>
+<section class="tp-rules-hero">
+  <div class="tp-court-lines" aria-hidden="true"></div>
+  <div class="tp-rules-hero__inner">
+    <div class="tp-rules-hero__content">
+      <div class="tp-status-pill">Documento oficial</div>
+      <p class="tp-eyebrow">Regulamento do torneio</p>
+      <h1>Joga com clareza.<br><span>Compete com fair play.</span></h1>
+      <p class="tp-rules-hero__copy">Tudo o que precisas de saber sobre formato, pontuação, apuramento e conduta no <strong id="cfgHeroTournament">Torneio Clausura</strong>.</p>
+      <div class="tp-rules-facts">
+        <div><i class="ph ph-tennis-ball"></i><span><small>FORMATO</small><strong>Melhor de 3 sets</strong></span></div>
+        <div><i class="ph ph-calendar-blank"></i><span><small>DATAS</small><strong id="cfgRulesDates">26 Nov — 05 Dez 2026</strong></span></div>
+        <div><i class="ph ph-map-pin"></i><span><small>LOCAL</small><strong id="cfgRulesLocation">Maputo</strong></span></div>
+      </div>
+    </div>
+
+    <aside class="tp-rules-summary">
+      <div class="tp-rules-summary__head">
+        <div>
+          <span class="tp-eyebrow">Em 30 segundos</span>
+          <h2>O essencial.</h2>
+        </div>
+        <span><i class="ph ph-book-open-text"></i></span>
+      </div>
+      <div class="tp-rules-summary__item">
+        <b>01</b><span><strong>Golden Point nos grupos</strong><small>O ponto seguinte decide todas as igualdades a 40-40.</small></span>
+      </div>
+      <div class="tp-rules-summary__item">
+        <b>02</b><span><strong>2 pontos pela vitória</strong><small>O confronto directo é o primeiro critério dentro do grupo.</small></span>
+      </div>
+      <div class="tp-rules-summary__item">
+        <b>03</b><span><strong>Fair play obrigatório</strong><small>As advertências podem levar à expulsão do torneio.</small></span>
+      </div>
+      <a class="tp-button tp-button--primary" href="#formato">Consultar regulamento <i class="ph ph-arrow-down"></i></a>
+    </aside>
   </div>
-</div>
+</section>
 
 <!-- CONTEÚDO -->
-<div class="reg-container">
+<main class="tp-rules-layout">
+  <aside class="tp-rules-index">
+    <span class="tp-eyebrow">Índice</span>
+    <h2>Consulta rápida</h2>
+    <nav>
+      <a href="#formato"><span>01</span> Formato dos jogos</a>
+      <a href="#ponto-decisivo"><span>02</span> Ponto decisivo</a>
+      <a href="#pontuacao"><span>03</span> Pontuação</a>
+      <a href="#apuramento"><span>04</span> Fase final</a>
+      <a href="#pontualidade"><span>05</span> Pontualidade</a>
+      <a href="#adiamentos"><span>06</span> Adiamentos</a>
+      <a href="#fair-play"><span>07</span> Fair play</a>
+      <a href="#disciplina"><span>08</span> Disciplina</a>
+    </nav>
+    <div class="tp-rules-index__cta">
+      <i class="ph ph-user-plus"></i>
+      <strong>Pronto para jogar?</strong>
+      <span>Garante o lugar da tua dupla.</span>
+      <a href="inscricoes.html">Fazer inscrição <i class="ph ph-arrow-right"></i></a>
+    </div>
+  </aside>
+
+  <div class="reg-container">
 
   <!-- Formato dos Jogos -->
-  <div class="reg-section">
+  <section class="reg-section" id="formato">
     <div class="reg-section-header">
       <div class="reg-section-icon">🎾</div>
       <div>
@@ -275,10 +328,10 @@
       <li>Cada set é jogado até <strong>6 jogos</strong>, com vantagem mínima de 2 jogos para vencer o set.</li>
       <li>Em caso de empate a <strong>6-6</strong>, será disputado um <strong>tie-break até 7 pontos</strong>, sendo obrigatória uma diferença mínima de 2 pontos.</li>
     </ul>
-  </div>
+  </section>
 
   <!-- Ponto Decisivo -->
-  <div class="reg-section">
+  <section class="reg-section" id="ponto-decisivo">
     <div class="reg-section-header">
       <div class="reg-section-icon amarelo">⭐</div>
       <div>
@@ -294,10 +347,10 @@
         <strong style="color:var(--amarelo)">Fase a Eliminar (Knockout) — Star Point:</strong> cada jogo é disputado com <strong>2 vantagens por jogo</strong>. À <strong>terceira igualdade (deuce)</strong>, joga-se o <strong>Golden Point</strong>, que decide o jogo.
       </div>
     </div>
-  </div>
+  </section>
 
   <!-- Pontuação -->
-  <div class="reg-section">
+  <section class="reg-section" id="pontuacao">
     <div class="reg-section-header">
       <div class="reg-section-icon azul">🔢</div>
       <div>
@@ -339,10 +392,10 @@
       <strong style="color:var(--amarelo)">Desempate em minitabela:</strong>
       quando há igualdade entre <strong>duas ou mais duplas</strong> do mesmo grupo, os critérios de diferença de sets, diferença de jogos e maior número de jogos ganhos consideram <strong>apenas os resultados dos jogos disputados entre as duplas empatadas</strong>. A dupla (ou duplas) não envolvida no empate é excluída dessa contagem.
     </p>
-  </div>
+  </section>
 
   <!-- Apuramento e Fase Final -->
-  <div class="reg-section">
+  <section class="reg-section" id="apuramento">
     <div class="reg-section-header">
       <div class="reg-section-icon amarelo">🏆</div>
       <div>
@@ -449,10 +502,10 @@
       <i class="ph ph-warning" style="color:var(--amarelo)"></i>&nbsp;
       <strong>Regra anti-colisão:</strong> duplas do mesmo grupo <strong>não se podem cruzar</strong> nos Quartos-de-Final. Se tal acontecer, o sistema troca automaticamente S7↔S8 para evitar o cruzamento, registando a justificação da troca no quadro.
     </p>
-  </div>
+  </section>
 
   <!-- Pontualidade -->
-  <div class="reg-section">
+  <section class="reg-section" id="pontualidade">
     <div class="reg-section-header">
       <div class="reg-section-icon azul">⏰</div>
       <div>
@@ -464,10 +517,10 @@
       <li>Todas as duplas deverão comparecer no <strong>horário definido pela organização</strong>.</li>
       <li>O atraso ou ausência injustificada poderá resultar em <strong>derrota por Walkover (WO)</strong>.</li>
     </ul>
-  </div>
+  </section>
 
   <!-- Jogos Não Concluídos ou Adiados -->
-  <div class="reg-section">
+  <section class="reg-section" id="adiamentos">
     <div class="reg-section-header">
       <div class="reg-section-icon azul">🌧️</div>
       <div>
@@ -478,10 +531,10 @@
     <ul class="reg-list">
       <li>Qualquer jogo que <strong>não se realize</strong> ou seja <strong>interrompido no próprio dia</strong> — seja por ultrapassar o horário limite da <strong>meia-noite</strong>, por <strong>condições meteorológicas</strong> (chuva) ou outros motivos de força maior — será <strong>retomado ou reagendado para o dia seguinte</strong>, conforme orientação da organização.</li>
     </ul>
-  </div>
+  </section>
 
   <!-- Fair Play -->
-  <div class="reg-section">
+  <section class="reg-section" id="fair-play">
     <div class="reg-section-header">
       <div class="reg-section-icon">🤝</div>
       <div>
@@ -502,10 +555,10 @@
       <li>Bater bolas contra vidros, rede ou para fora do recinto com o jogo interrompido</li>
       <li>Qualquer atitude contrária ao espírito de fair play</li>
     </ul>
-  </div>
+  </section>
 
   <!-- Sistema Disciplinar -->
-  <div class="reg-section">
+  <section class="reg-section" id="disciplina">
     <div class="reg-section-header">
       <div class="reg-section-icon vermelho">⚠️</div>
       <div>
@@ -533,10 +586,40 @@
     <p style="font-size:.8rem;color:var(--cinza-texto);margin-top:1rem;line-height:1.5;border-top:1px solid var(--preto-borda);padding-top:.85rem;">
       A reincidência em comportamentos impróprios ou qualquer situação considerada grave pela organização poderá resultar em <strong style="color:var(--vermelho)">desclassificação imediata</strong>.
     </p>
+  </section>
+
+
+  <div class="reg-footer-msg">
+    <span class="tp-eyebrow">Uma competição para todos</span>
+    <h3>Respeito primeiro. Competição sempre.</h3>
+    <p>Participar no torneio implica a aceitação integral deste regulamento. Em situações não previstas, a decisão da <strong>organização é soberana</strong>.</p>
   </div>
-
-
 </div>
+</main>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="footer-logo">
+        <img src="playpadellogo.jpg" alt="Play Padel" style="height:42px;width:42px;border-radius:9px;object-fit:cover"/>
+        <div><p class="footer-logo-title">Play Padel</p></div>
+      </div>
+      <p class="footer-desc" id="cfgRulesFooter">Regulamento oficial do Torneio Clausura<br/>26 de Novembro a 05 de Dezembro 2026 · Maputo</p>
+    </div>
+
+    <nav class="footer-links">
+      <a href="index.html"><i class="ph ph-house"></i> Início</a>
+      <a href="inscricoes.html"><i class="ph ph-clipboard-text"></i> Inscrições</a>
+      <a href="inscritos.html"><i class="ph ph-list-checks"></i> Inscritos</a>
+      <a href="jogadores.html"><i class="ph ph-users"></i> Jogadores</a>
+    </nav>
+  </div>
+  <div class="footer-bottom">
+    <p class="footer-copy" id="cfgRulesCopy">© 2026 <span>Play Padel</span> · Torneio Clausura · Maputo, Moçambique</p>
+    <p class="footer-credit">Concebido por <a href="https://www.efforge.co.mz/" target="_blank" rel="noopener">EF Forge Technologies</a></p>
+  </div>
+</footer>
 
 <script>
   // Navbar scroll
@@ -562,6 +645,39 @@
 </script>
 <script src="js/data.js"></script>
 <script src="js/nav-config.js" defer></script>
+<script>
+  (function () {
+    function applyTournamentIdentity() {
+      var cfg = ppGet('config') || {};
+      var nome = cfg.tornNome || 'Torneio Clausura';
+      var datas = cfg.tornDatas || '26 de Novembro a 05 de Dezembro 2026';
+      var local = cfg.tornLocal || 'Maputo';
+      var clube = cfg.tornClube || 'Play Padel';
+      var year = ((cfg.tornInicio || '').match(/^\d{4}/) || ['2026'])[0];
+      var values = {
+        cfgNomeTorneio: clube,
+        cfgSubtituloNav: cfg.tornSubtitulo || nome,
+        cfgHeroTournament: nome,
+        cfgRulesDates: datas,
+        cfgRulesLocation: local,
+        cfgRulesFooter: 'Regulamento oficial do ' + nome + '\n' + datas + ' · ' + local,
+        cfgRulesCopy: '© ' + year + ' Play Padel · ' + nome + ' · ' + local + ', Moçambique'
+      };
+      Object.keys(values).forEach(function (id) {
+        var el = document.getElementById(id);
+        if (!el) return;
+        if (id === 'cfgRulesFooter') {
+          var parts = values[id].split('\n');
+          el.replaceChildren(document.createTextNode(parts[0]), document.createElement('br'), document.createTextNode(parts[1]));
+        } else {
+          el.textContent = values[id];
+        }
+      });
+    }
+    applyTournamentIdentity();
+    window.addEventListener('pp:datasynced', applyTournamentIdentity);
+  }());
+</script>
 <script>if("serviceWorker"in navigator){navigator.serviceWorker.register("/playpadelcoop/sw.js").catch(function(){});}</script>
 </body>
 </html>
