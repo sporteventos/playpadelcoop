@@ -7,7 +7,7 @@
   <meta name="theme-color" content="#00C37B">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="Play Padel">
-  <title>Calendário · Torneio Rentreé</title>
+  <title>Calendário · Torneio Clausura</title>
   <link rel="stylesheet" href="css/style.css"/>
   <link rel="stylesheet" href="css/pages.css"/>
   <script src="https://unpkg.com/@phosphor-icons/web@2.1.1/src/index.js" defer></script>
@@ -101,7 +101,7 @@
     <img src="playpadellogo.jpg" alt="Play Padel" style="height:34px;width:34px;border-radius:7px;object-fit:cover;flex-shrink:0"/>
     <div class="nav-logo-text">
       <span class="nav-logo-title">Play Padel</span>
-      <span class="nav-logo-sub">Torneio Rentreé</span>
+      <span class="nav-logo-sub">Torneio Clausura</span>
     </div>
   </a>
 
@@ -206,7 +206,7 @@
 
 <footer class="footer">
   <div class="footer-bottom" style="max-width:1200px;margin:0 auto">
-    <p class="footer-copy">© 2026 <span>Play Padel</span> · Torneio Rentreé</p>
+    <p class="footer-copy">© 2026 <span>Play Padel</span> · Torneio Clausura</p>
     <a href="index.html" class="footer-copy" style="color:var(--verde);text-decoration:none">← Voltar ao início</a>
     <p class="footer-credit">Concebido por <a href="https://www.efforge.co.mz/" target="_blank" rel="noopener">EF Forge Technologies</a></p>
   </div>
@@ -272,10 +272,10 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     return out;
   }
-  // Datas do torneio a partir da config (fallback: intervalo completo Set 10–19)
+  // Datas do torneio a partir da config.
   const _cfg = ppGet('config') || {};
-  const _ini = _cfg.tornInicio || '2026-09-10';
-  const _fim = _cfg.tornFim || '2026-09-19';
+  const _ini = _cfg.tornInicio || '2026-11-26';
+  const _fim = _cfg.tornFim || '2026-12-05';
   const tournamentDates = [];
   for (let d = new Date(_ini + 'T12:00:00'), end = new Date(_fim + 'T12:00:00'), guard = 0;
        d <= end && guard < 400; d.setDate(d.getDate() + 1), guard++) {

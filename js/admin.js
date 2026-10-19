@@ -199,7 +199,7 @@ window._bundleShareOne = async function(idx) {
   if (!item) return;
   const file = new File([item.blob], item.name, { type: 'image/png' });
   if (navigator.canShare && navigator.canShare({ files: [file] })) {
-    try { await navigator.share({ files: [file], title: 'Play Padel · Torneio Reentre 2026' }); }
+    try { await navigator.share({ files: [file], title: 'Play Padel · Torneio Clausura 2026' }); }
     catch (err) { if (err.name !== 'AbortError') _bundleDownloadOne(idx); }
   } else { _bundleDownloadOne(idx); }
 };
@@ -215,7 +215,7 @@ window._bundleShareAll = async function() {
   if (!items.length) return;
   const files = items.map(b => new File([b.blob], b.name, { type: 'image/png' }));
   if (navigator.canShare && navigator.canShare({ files })) {
-    try { await navigator.share({ files, title: 'Play Padel · Torneio Reentre 2026' }); }
+    try { await navigator.share({ files, title: 'Play Padel · Torneio Clausura 2026' }); }
     catch (err) { if (err.name !== 'AbortError') _bundleDownloadAll(); }
   } else { _bundleDownloadAll(); }
 };
@@ -460,7 +460,7 @@ window._buildGameCanvas = function(j, onDone) {
     ctx.fillStyle = '#1C2620'; ctx.fillRect(0, fy, W, 1);
     ctx.fillStyle = '#4A6058'; ctx.font = '17px Arial, sans-serif';
     ctx.textAlign = 'center';
-    ctx.fillText('Play Padel  \u00B7  Torneio Reentre 2026', W / 2, fy + 44);
+    ctx.fillText('Play Padel  \u00B7  Torneio Clausura 2026', W / 2, fy + 44);
 
     // Bottom gradient bar
     g = ctx.createLinearGradient(0, 0, W, 0);
@@ -605,7 +605,7 @@ window.gerarBannerInstalacao = function() {
     ctx.fillStyle = '#111815'; ctx.fillRect(0, by, W, 52);
     ctx.fillStyle = '#1C2620'; ctx.fillRect(0, by, W, 1);
     ctx.fillStyle = '#4A6058'; ctx.font = '15px Arial, sans-serif';
-    ctx.fillText('Play Padel  ·  Torneio Reentre 2026  ·  Maputo', W / 2, by + 32);
+    ctx.fillText('Play Padel  ·  Torneio Clausura 2026  ·  Maputo', W / 2, by + 32);
 
     // Bottom gradient bar
     g = ctx.createLinearGradient(0, 0, W, 0);
@@ -884,7 +884,7 @@ window.gerarPanfleto = function(periodo) {
   ctx.fillStyle = '#4A6058';
   ctx.font = '17px Arial, sans-serif';
   ctx.textAlign = 'center';
-  ctx.fillText('Play Padel  \u00B7  Torneio Reentre 2026', W / 2, fy + 38);
+  ctx.fillText('Play Padel  \u00B7  Torneio Clausura 2026', W / 2, fy + 38);
   ctx.textAlign = 'left';
 
   _panfletoShare(canvas, `jogos-${filtroData !== 'todos' ? filtroData : 'todos'}${filenameSuffix}.png`);
@@ -1755,7 +1755,7 @@ window._shareWhatsapp = async function() {
       const sets = r.wo ? 'W.O.' : [[r.s1eq1,r.s1eq2],[r.s2eq1,r.s2eq2],[r.s3eq1,r.s3eq2]]
         .filter(([a]) => a !== null).map(([a, b], i) => { const [ta,tb] = _tbSW[i]; return `${a}-${b}${ta != null ? ` (${ta}-${tb})` : ''}`; }).join(' / ');
       const winner = w1 > w2 ? jogo.eq1 : jogo.eq2;
-      const texto = `\u{1F3BE} *Play Padel \u00B7 Torneio Reentre*\n\n` +
+      const texto = `\u{1F3BE} *Play Padel \u00B7 Torneio Clausura*\n\n` +
         `\u{1F3C6} *${escHtml(jogo.grupo)}*\n` +
         `${jogo.data ? ppFormatDate(jogo.data) : ''}${jogo.hora ? ' \u00B7 ' + jogo.hora : ''}\n\n` +
         `*${jogo.eq1}*  ${w1} \u2013 ${w2}  *${jogo.eq2}*\n` +
@@ -1917,7 +1917,7 @@ window.gerarPanfletoResultados = function() {
   ctx.fillStyle = '#1C2620'; ctx.fillRect(0, fy, W, 1);
   ctx.fillStyle = '#4A6058'; ctx.font = '17px Arial, sans-serif';
   ctx.textAlign = 'center';
-  ctx.fillText('Play Padel  \u00B7  Torneio Reentre 2026', W / 2, fy + 38);
+  ctx.fillText('Play Padel  \u00B7  Torneio Clausura 2026', W / 2, fy + 38);
   ctx.textAlign = 'left';
 
   _panfletoShare(canvas, `resultados-${filtroData !== 'todos' ? filtroData : 'todos'}.png`);
@@ -2534,22 +2534,22 @@ function renderConfigPanel() {
   el.innerHTML = `
     ${section('Identidade do Torneio')}
     ${fieldText('tornNome',      'Nome do Torneio',     'ex: Play Padel 2026',              'Play Padel 2026')}
-    ${fieldText('tornSubtitulo', 'Subtítulo',           'ex: Torneio Reentre',              'Torneio Reentre')}
+    ${fieldText('tornSubtitulo', 'Subtítulo',           'ex: Torneio Clausura',              'Torneio Clausura')}
     ${fieldText('tornClube',     'Clube / Organização', 'ex: Sport Eventos',                'Sport Eventos')}
     ${fieldText('tornLocal',     'Localidade',          'ex: Maputo',                       'Maputo')}
-    ${fieldText('tornDatas',     'Datas',               'ex: 10 a 19 de Setembro 2026',        '10 a 19 de Setembro 2026')}
+    ${fieldText('tornDatas',     'Datas',               'ex: 26 de Novembro a 05 de Dezembro 2026',        '26 de Novembro a 05 de Dezembro 2026')}
     ${fieldText('tornDescFooter','Frase do Rodapé',     'ex: O padel que une Moçambique.',  'O padel que une Moçambique.')}
     ${fieldText('tornTelOrg',   'Tel. Organizador (WhatsApp)', 'ex: 258841234567 (sem + ou espaços)', '')}
 
     ${section('Datas do Torneio')}
-    ${fieldDate('dataGruposInicio', 'Fase de Grupos — início', '2026-09-10')}
-    ${fieldDate('dataGruposFim',    'Fase de Grupos — fim',    '2026-09-16')}
-    ${fieldDate('dataQuartos',      'Quartos de Final — início', '2026-09-17')}
+    ${fieldDate('dataGruposInicio', 'Fase de Grupos — início', '2026-11-26')}
+    ${fieldDate('dataGruposFim',    'Fase de Grupos — fim',    '2026-12-02')}
+    ${fieldDate('dataQuartos',      'Quartos de Final — início', '2026-12-03')}
     ${fieldDate('dataQuartosFim',   'Quartos de Final — fim (opcional)', '')}
-    ${fieldDate('dataMeias',        'Meias-Finais — início',     '2026-09-18')}
+    ${fieldDate('dataMeias',        'Meias-Finais — início',     '2026-12-04')}
     ${fieldDate('dataMeiasFim',     'Meias-Finais — fim (opcional)', '')}
-    ${fieldDate('dataFinais',       'Finais',                   '2026-09-19')}
-    <div style="font-size:.72rem;color:var(--cinza-texto);padding:.2rem 0 .5rem">Estas datas definem os limites do calendário de jogos e a alocação automática das fases finais. Os campos <strong>— fim</strong> dos Quartos e Meias são opcionais: se preenchidos, esses jogos são distribuídos automaticamente por vários dias (do início ao fim). Deixe em branco para agendar tudo num único dia. O intervalo geral (${escHtml(str('dataGruposInicio','2026-09-10'))} a ${escHtml(str('dataFinais','2026-09-19'))}) é aplicado aos seletores de data.</div>
+    ${fieldDate('dataFinais',       'Finais',                   '2026-12-05')}
+    <div style="font-size:.72rem;color:var(--cinza-texto);padding:.2rem 0 .5rem">Estas datas definem os limites do calendário de jogos e a alocação automática das fases finais. Os campos <strong>— fim</strong> dos Quartos e Meias são opcionais: se preenchidos, esses jogos são distribuídos automaticamente por vários dias (do início ao fim). Deixe em branco para agendar tudo num único dia. O intervalo geral (${escHtml(str('dataGruposInicio','2026-11-26'))} a ${escHtml(str('dataFinais','2026-12-05'))}) é aplicado aos seletores de data.</div>
 
     ${section('Capacidade de Inscrições')}
     ${fieldText('maxJogadoresM', 'Máx. jogadores Masculino', 'ex: 144', '144')}
@@ -2618,8 +2618,8 @@ function saveConfigField(key, val) {
 // Aplica os limites (min/max) dos seletores de data a partir da config do torneio
 function applyDateBounds() {
   const cfg = getData('config') || {};
-  const ini = cfg.dataGruposInicio || cfg.tornInicio || '2026-09-10';
-  const fim = cfg.dataFinais || cfg.tornFim || '2026-09-19';
+  const ini = cfg.dataGruposInicio || cfg.tornInicio || '2026-11-26';
+  const fim = cfg.dataFinais || cfg.tornFim || '2026-12-05';
   const setB = (id, min, max) => {
     const el = document.getElementById(id);
     if (!el) return;
@@ -2628,7 +2628,7 @@ function applyDateBounds() {
   };
   ['jogoData', 'jogoAdiadoData', 'resData', 'moverDiaData'].forEach(id => setB(id, ini, fim));
   // Fase final: dos quartos às finais
-  setB('ffSchedData', cfg.dataQuartos || '2026-09-17', fim);
+  setB('ffSchedData', cfg.dataQuartos || '2026-12-03', fim);
 }
 window.applyDateBounds = applyDateBounds;
 
@@ -4841,9 +4841,9 @@ function ffGetQualified(catId) {
 
 // Datas das fases finais — lidas da config do torneio (editáveis no admin)
 function _tornCfg() { return getData('config') || {}; }
-function ffQfDate() { return _tornCfg().dataQuartos || '2026-09-17'; } // Quartos de Final (início)
-function ffSfDate() { return _tornCfg().dataMeias   || '2026-09-18'; } // Meias-Finais (início)
-function ffFDate()  { return _tornCfg().dataFinais  || '2026-09-19'; } // Finais
+function ffQfDate() { return _tornCfg().dataQuartos || '2026-12-03'; } // Quartos de Final (início)
+function ffSfDate() { return _tornCfg().dataMeias   || '2026-12-04'; } // Meias-Finais (início)
+function ffFDate()  { return _tornCfg().dataFinais  || '2026-12-05'; } // Finais
 
 // Intervalo de dias (inclusive) para cada fase. Se o campo "fim" estiver vazio
 // ou for inválido, cai para um único dia (o de início). Permite distribuir os
@@ -6250,10 +6250,11 @@ window._logsClearFilters = function() {
 function _insWaMsg(e) {
   const nome = (e.nome1 || '').split(' ')[0] || 'olá';
   const cat  = e.categoria || 'sem categoria';
+  const torneio = (getData('config') || {}).tornNome || 'Torneio Clausura';
   if (e.estado === 'confirmada') {
-    return `Olá ${nome}! A tua inscrição no Torneio Reentre (${cat}) está *confirmada* ✅. Até breve nos courts! 🎾`;
+    return `Olá ${nome}! A tua inscrição no ${torneio} (${cat}) está *confirmada* ✅. Até breve nos courts! 🎾`;
   }
-  return `Olá ${nome}! A tua pré-inscrição no Torneio Reentre (${cat}) está registada. Para garantir a vaga falta apenas o pagamento — podes confirmar connosco? Obrigado! 🎾`;
+  return `Olá ${nome}! A tua pré-inscrição no ${torneio} (${cat}) está registada. Para garantir a vaga falta apenas o pagamento — podes confirmar connosco? Obrigado! 🎾`;
 }
 
 // Painel de dashboard (enchimento por nível/género + ritmo de inscrições).
@@ -7567,7 +7568,7 @@ window.gerarPanfletoClassificacoes = function() {
   ctx.fillStyle = '#1C2620'; ctx.fillRect(0, H - FOOT_H, W, 1);
   ctx.fillStyle = '#4A6058'; ctx.font = '20px Arial, sans-serif';
   ctx.textAlign = 'center';
-  ctx.fillText('Play Padel  \u00B7  Torneio Reentre 2026', W / 2, H - FOOT_H + 42);
+  ctx.fillText('Play Padel  \u00B7  Torneio Clausura 2026', W / 2, H - FOOT_H + 42);
   ctx.textAlign = 'left';
 
   _panfletoShare(canvas, filename);
@@ -7699,7 +7700,7 @@ window.gerarPanfletoCampeoes = function() {
   ctx.fillStyle = 'rgba(245,197,24,.2)'; ctx.fillRect(0, fy, W, 1);
     ctx.fillStyle = '#4A6058'; ctx.font = '17px Arial, sans-serif';
     ctx.textAlign = 'center';
-    ctx.fillText('Play Padel  ·  Torneio Reentre 2026', W / 2, fy + 38);
+    ctx.fillText('Play Padel  ·  Torneio Clausura 2026', W / 2, fy + 38);
     ctx.textAlign = 'left';
 
     _panfletoShare(canvas, 'campeoes.png');
@@ -8808,8 +8809,8 @@ function renderConstrutorJogos() {
 }
 
 // ── Agendamento automático da fase de grupos ─────────────────
-function _cjGrupoInicio() { return (getData('config') || {}).dataGruposInicio || '2026-09-10'; }
-function _cjGrupoFim()    { return (getData('config') || {}).dataGruposFim    || '2026-09-16'; }
+function _cjGrupoInicio() { return (getData('config') || {}).dataGruposInicio || '2026-11-26'; }
+function _cjGrupoFim()    { return (getData('config') || {}).dataGruposFim    || '2026-12-02'; }
 
 function _cjDateRange(ini, fim) {
   const out = [];
@@ -8875,7 +8876,7 @@ function _cjBuildSchedule(targetGroupIds) {
     return `${j1?.nome || d.j1} & ${j2?.nome || d.j2}`;
   };
 
-  const days = _cjDateRange(cfg.dataGruposInicio || '2026-09-10', cfg.dataGruposFim || '2026-09-16');
+  const days = _cjDateRange(cfg.dataGruposInicio || '2026-11-26', cfg.dataGruposFim || '2026-12-02');
   const cap = {}, slotsByDay = {};
   days.forEach(d => { slotsByDay[d] = _cjSlotsForDate(d); cap[d] = slotsByDay[d].length * (campos.length || 1); });
 

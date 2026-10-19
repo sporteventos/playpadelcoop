@@ -7,8 +7,8 @@
   <meta name="theme-color" content="#00C37B">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="Play Padel">
-  <meta name="description" content="Inscrições locais do Torneio Rentreé Play Padel">
-  <title>Inscrições · Torneio Rentreé</title>
+  <meta name="description" content="Inscrições locais do Torneio Clausura Play Padel">
+  <title>Inscrições · Torneio Clausura</title>
   <link rel="stylesheet" href="css/style.css"/>
   <link rel="stylesheet" href="css/pages.css"/>
   <script src="https://unpkg.com/@phosphor-icons/web@2.1.1/src/index.js" defer></script>
@@ -58,7 +58,7 @@
     <img src="playpadellogo.jpg" alt="Play Padel" style="height:34px;width:34px;border-radius:7px;object-fit:cover;flex-shrink:0"/>
     <div class="nav-logo-text">
       <span class="nav-logo-title" id="cfgNomeTorneio">Play Padel</span>
-      <span class="nav-logo-sub" id="cfgSubtituloNav">Torneio Rentreé</span>
+      <span class="nav-logo-sub" id="cfgSubtituloNav">Torneio Clausura</span>
     </div>
   </a>
 
@@ -98,10 +98,10 @@
       <div class="tp-status-pill">Inscrições abertas</div>
       <p class="tp-eyebrow" style="margin-top:1.5rem">PRÉ-INSCRIÇÃO OFICIAL</p>
       <h1>ENTRA EM<br><span>CAMPO.</span></h1>
-      <p class="tp-registration-hero__copy">Forma a tua dupla, escolhe a categoria e garante o teu lugar no <strong id="cfgHeroTournament">Torneio Rentreé</strong>. A organização confirma todos os dados após a submissão.</p>
+      <p class="tp-registration-hero__copy">Forma a tua dupla, escolhe a categoria e garante o teu lugar no <strong id="cfgHeroTournament">Torneio Clausura</strong>. A organização confirma todos os dados após a submissão.</p>
     </div>
     <div class="tp-registration-facts">
-      <div class="tp-registration-fact"><i class="ph ph-calendar-blank"></i><span><small>DATAS</small><strong id="cfgRegistrationDates">10 a 19 de Setembro 2026</strong></span></div>
+      <div class="tp-registration-fact"><i class="ph ph-calendar-blank"></i><span><small>DATAS</small><strong id="cfgRegistrationDates">26 de Novembro a 05 de Dezembro 2026</strong></span></div>
       <div class="tp-registration-fact"><i class="ph ph-map-pin"></i><span><small>LOCAL</small><strong id="cfgRegistrationLocation">Maputo</strong></span></div>
       <div class="tp-registration-fact"><i class="ph ph-clock"></i><span><small>PROCESSO</small><strong>Menos de 3 minutos</strong></span></div>
     </div>
@@ -250,7 +250,7 @@
         <img src="playpadellogo.jpg" alt="Play Padel" style="height:42px;width:42px;border-radius:9px;object-fit:cover"/>
         <div><p class="footer-logo-title" id="cfgFooterTournament">Play Padel</p></div>
       </div>
-      <p class="footer-desc" id="cfgRegistrationFooter">Pré-inscrições do Torneio Rentreé<br/>10 a 19 de Setembro 2026 · Maputo</p>
+      <p class="footer-desc" id="cfgRegistrationFooter">Pré-inscrições do Torneio Clausura<br/>26 de Novembro a 05 de Dezembro 2026 · Maputo</p>
     </div>
 
     <nav class="footer-links">
@@ -262,7 +262,7 @@
   </div>
 
   <div class="footer-bottom">
-    <p class="footer-copy" id="cfgRegistrationCopy">© 2026 <span>Play Padel</span> · Torneio Rentreé · Maputo, Moçambique</p>
+    <p class="footer-copy" id="cfgRegistrationCopy">© 2026 <span>Play Padel</span> · Torneio Clausura · Maputo, Moçambique</p>
     <p class="footer-credit">Concebido por <a href="https://www.efforge.co.mz/" target="_blank" rel="noopener">EF Forge Technologies</a></p>
   </div>
 </footer>
@@ -640,7 +640,7 @@ document.addEventListener('DOMContentLoaded', function () {
     var cfg = ppGet('config') || {};
     var tel = (cfg.tornTelOrg || '').replace(/\D/g,'');
     var generoStr = entry.genero === 'F' ? 'Feminino' : 'Masculino';
-    var msg = '🎾 *Pré-Inscrição Torneio Rentreé*\n\n'
+    var msg = '🎾 *Pré-Inscrição ' + (cfg.tornNome || 'Torneio Clausura') + '*\n\n'
       + '*Nome:* ' + entry.nome1 + '\n'
       + '*Telefone:* ' + entry.telefone + '\n'
       + (entry.email ? '*Email:* ' + entry.email + '\n' : '')

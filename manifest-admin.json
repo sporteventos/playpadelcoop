@@ -2,7 +2,7 @@
   "id": "/playpadelcoop/admin.html",
   "name": "Play Padel · Admin",
   "short_name": "PP Admin",
-  "description": "Backoffice do Torneio Reentre — gestão de jogos, resultados e fase final",
+  "description": "Backoffice do Torneio Clausura — gestão de jogos, resultados e fase final",
   "start_url": "/playpadelcoop/admin.html",
   "scope": "/playpadelcoop/",
   "display": "standalone",
