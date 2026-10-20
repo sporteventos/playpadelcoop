@@ -2564,6 +2564,7 @@ function renderConfigPanel() {
     ${fieldToggle('inscricoesVisible',    'Inscrições',               'ph-clipboard-text',    true)}
     ${fieldToggle('inscritosVisible',     'Inscritos (duplas confirmadas)', 'ph-list-checks',   true)}
     ${fieldToggle('estatisticasVisible',  'Estatísticas',             'ph-chart-bar',         true)}
+    ${fieldToggle('premiosVisible',       'Prémios',                  'ph-gift',              false)}
     ${fieldToggle('regulamentoVisible',   'Regulamento',              'ph-book-open',         true)}
 
     ${section('Visibilidade de Secções (Página Principal)')}

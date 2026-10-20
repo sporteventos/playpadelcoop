@@ -78,6 +78,7 @@
     <li id="navLiInscricoes"><a href="inscricoes.html"><i class="ph ph-clipboard-text nav-icon"></i> Inscrições</a></li>
     <li id="navLiInscritos"><a href="inscritos.html"><i class="ph ph-list-checks nav-icon"></i> Inscritos</a></li>
     <li id="navLiEstatisticas"><a href="estatisticas.html"><i class="ph ph-chart-bar nav-icon"></i> Estatísticas</a></li>
+    <li id="navLiPremios"><a href="premios.html"><i class="ph ph-gift nav-icon"></i> Prémios</a></li>
     <li id="navLiRegulamento"><a href="regulamento.html"><i class="ph ph-book-open nav-icon"></i> Regulamento</a></li>
   </ul>
 
@@ -98,6 +99,7 @@
     <li id="drawerLiInscricoes"><a href="inscricoes.html"><i class="ph ph-clipboard-text"></i> Inscrições</a></li>
     <li id="drawerLiInscritos"><a href="inscritos.html"><i class="ph ph-list-checks"></i> Inscritos</a></li>
     <li id="drawerLiEstatisticas"><a href="estatisticas.html"><i class="ph ph-chart-bar"></i> Estatísticas</a></li>
+    <li id="drawerLiPremios"><a href="premios.html"><i class="ph ph-gift"></i> Prémios</a></li>
     <li id="drawerLiRegulamento"><a href="regulamento.html"><i class="ph ph-book-open"></i> Regulamento</a></li>
   </ul>
 </div>
@@ -297,7 +299,16 @@
         <div class="nav-card-arrow">→</div>
       </a>
 
-
+      <a href="premios.html" class="nav-card nav-card--premios" id="cardPremios">
+        <div class="nav-card-glow"></div>
+        <span class="nav-card-badge badge-novo">Novo</span>
+        <div class="nav-card-icon"><i class="ph ph-gift"></i></div>
+        <h3 class="nav-card-title">Prémios</h3>
+        <p class="nav-card-desc">
+          Conheça antecipadamente os prémios em disputa nesta edição do torneio.
+        </p>
+        <div class="nav-card-arrow">→</div>
+      </a>
 
 
 
@@ -366,6 +377,7 @@
       <a id="footerLiJogadores"     href="jogadores.html"><i class="ph ph-users"></i> Jogadores</a>
       <a id="footerLiInscricoes"    href="inscricoes.html"><i class="ph ph-clipboard-text"></i> Inscrições</a>
       <a id="footerLiInscritos"     href="inscritos.html"><i class="ph ph-list-checks"></i> Inscritos</a>
+      <a id="footerLiPremios"       href="premios.html"><i class="ph ph-gift"></i> Prémios</a>
     </nav>
   </div>
 
@@ -620,6 +632,10 @@
         show('footerLiInscritos',     cfg.inscritosVisible !== false);
         show('navLiEstatisticas',     cfg.estatisticasVisible !== false);
         show('drawerLiEstatisticas',  cfg.estatisticasVisible !== false);
+        show('navLiPremios',          cfg.premiosVisible === true);
+        show('drawerLiPremios',       cfg.premiosVisible === true);
+        show('footerLiPremios',       cfg.premiosVisible === true);
+        show('cardPremios',           cfg.premiosVisible === true);
         show('navLiRegulamento',      cfg.regulamentoVisible !== false);
         show('drawerLiRegulamento',   cfg.regulamentoVisible !== false);
 

@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#00C37B">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Play Padel">
+  <meta name="description" content="Prémios oficiais do Torneio Clausura Play Padel"/>
+  <title>Prémios · Torneio Clausura</title>
+  <link rel="stylesheet" href="css/style.css"/>
+  <link rel="stylesheet" href="css/pages.css"/>
+  <link rel="stylesheet" href="css/tournament-public.css"/>
+  <link rel="stylesheet" href="css/premios.css"/>
+  <script src="https://unpkg.com/@phosphor-icons/web@2.1.1/src/index.js" defer></script>
+</head>
+<body class="tournament-public tournament-prizes">
+
+<nav class="navbar" id="navbar">
+  <a class="nav-logo" href="index.html">
+    <img src="playpadellogo.jpg" alt="Play Padel" style="height:34px;width:34px;border-radius:7px;object-fit:cover;flex-shrink:0"/>
+    <div class="nav-logo-text">
+      <span class="nav-logo-title" id="cfgNomeTorneio">Play Padel</span>
+      <span class="nav-logo-sub" id="cfgSubtituloNav">Torneio Clausura</span>
+    </div>
+  </a>
+
+  <ul class="nav-links">
+    <li><a href="index.html"><i class="ph ph-house nav-icon"></i> Início</a></li>
+    <li><a href="calendario.html"><i class="ph ph-calendar nav-icon"></i> Calendário</a></li>
+    <li><a href="classificacoes.html"><i class="ph ph-trophy nav-icon"></i> Classificações</a></li>
+    <li><a href="fasefinal.html"><i class="ph ph-brackets-round nav-icon"></i> Fase Final</a></li>
+    <li><a href="jogadores.html"><i class="ph ph-users nav-icon"></i> Jogadores</a></li>
+    <li><a href="inscricoes.html"><i class="ph ph-clipboard-text nav-icon"></i> Inscrições</a></li>
+    <li><a href="inscritos.html"><i class="ph ph-list-checks nav-icon"></i> Inscritos</a></li>
+    <li><a href="estatisticas.html"><i class="ph ph-chart-bar nav-icon"></i> Estatísticas</a></li>
+    <li><a href="premios.html" class="active"><i class="ph ph-gift nav-icon"></i> Prémios</a></li>
+    <li><a href="regulamento.html"><i class="ph ph-book-open nav-icon"></i> Regulamento</a></li>
+  </ul>
+
+  <button class="nav-hamburger" id="hamburger" aria-label="Abrir menu" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<div class="nav-drawer" id="navDrawer">
+  <ul>
+    <li><a href="index.html"><i class="ph ph-house"></i> Início</a></li>
+    <li><a href="calendario.html"><i class="ph ph-calendar"></i> Calendário</a></li>
+    <li><a href="classificacoes.html"><i class="ph ph-trophy"></i> Classificações</a></li>
+    <li><a href="fasefinal.html"><i class="ph ph-brackets-round"></i> Fase Final</a></li>
+    <li><a href="jogadores.html"><i class="ph ph-users"></i> Jogadores</a></li>
+    <li><a href="inscricoes.html"><i class="ph ph-clipboard-text"></i> Inscrições</a></li>
+    <li><a href="inscritos.html"><i class="ph ph-list-checks"></i> Inscritos</a></li>
+    <li><a href="estatisticas.html"><i class="ph ph-chart-bar"></i> Estatísticas</a></li>
+    <li><a href="premios.html" class="active"><i class="ph ph-gift"></i> Prémios</a></li>
+    <li><a href="regulamento.html"><i class="ph ph-book-open"></i> Regulamento</a></li>
+  </ul>
+</div>
+
+<header class="prize-hero">
+  <div class="tp-court-lines" aria-hidden="true"></div>
+  <div class="prize-hero__glow" aria-hidden="true"></div>
+  <div class="prize-hero__inner">
+    <div class="prize-hero__content">
+      <div class="tp-status-pill">Revelação antecipada</div>
+      <p class="tp-eyebrow">Prémios oficiais</p>
+      <h1>A glória já tinha prémio.<br><span>Agora vais conhecê-lo antes.</span></h1>
+      <p>Pela primeira vez, o <strong id="cfgHeroTournament">Torneio Clausura</strong> apresenta os prémios antes do primeiro ponto. Mais transparência, mais ambição e ainda mais razões para entrar em campo.</p>
+      <div class="prize-hero__actions">
+        <a href="#premios-principais" class="tp-button tp-button--primary">Descobrir os prémios <i class="ph ph-arrow-down"></i></a>
+        <a href="inscricoes.html" class="tp-button">Inscrever a minha dupla <i class="ph ph-arrow-right"></i></a>
+      </div>
+      <div class="prize-hero__facts">
+        <div><i class="ph ph-calendar-blank"></i><span><small>EDIÇÃO</small><strong id="cfgPrizeDates">26 Nov — 05 Dez 2026</strong></span></div>
+        <div><i class="ph ph-medal"></i><span><small>CATEGORIAS</small><strong>Masculino &amp; Feminino</strong></span></div>
+        <div><i class="ph ph-map-pin"></i><span><small>LOCAL</small><strong id="cfgPrizeLocation">Maputo</strong></span></div>
+      </div>
+    </div>
+
+    <aside class="prize-reveal-card">
+      <div class="prize-reveal-card__orb"><i class="ph ph-trophy"></i></div>
+      <p class="tp-eyebrow">Prize pool</p>
+      <span class="prize-reveal-card__label">Montante global</span>
+      <strong>A revelar</strong>
+      <p>Os valores e benefícios de cada categoria serão apresentados oficialmente pela organização.</p>
+      <div class="prize-reveal-card__status"><span></span> Preparação do anúncio em curso</div>
+    </aside>
+  </div>
+</header>
+
+<main>
+  <section class="prize-intro" id="premios-principais">
+    <div class="prize-section-head">
+      <div>
+        <p class="tp-eyebrow">O pódio</p>
+        <h2>JOGA PELO TÍTULO.<br><span>CONQUISTA O PRÉMIO.</span></h2>
+      </div>
+      <p>Uma estrutura simples e transparente para reconhecer quem chega mais longe. Os detalhes finais serão atualizados antes da abertura pública desta página.</p>
+    </div>
+
+    <div class="prize-podium">
+      <article class="prize-podium-card prize-podium-card--champion">
+        <span class="prize-podium-card__rank"><i class="ph-fill ph-crown"></i></span>
+        <div>
+          <p>Campeões</p>
+          <h3>1.º Lugar</h3>
+          <span>Por categoria</span>
+        </div>
+        <div class="prize-podium-card__value">
+          <small>PRÉMIO</small>
+          <strong>A anunciar</strong>
+        </div>
+        <ul>
+          <li><i class="ph ph-check-circle"></i> Troféu de campeão</li>
+          <li><i class="ph ph-check-circle"></i> Prémio principal da categoria</li>
+          <li><i class="ph ph-check-circle"></i> Reconhecimento oficial</li>
+        </ul>
+      </article>
+
+      <article class="prize-podium-card prize-podium-card--finalist">
+        <span class="prize-podium-card__rank"><i class="ph-fill ph-medal"></i></span>
+        <div>
+          <p>Finalistas</p>
+          <h3>2.º Lugar</h3>
+          <span>Por categoria</span>
+        </div>
+        <div class="prize-podium-card__value">
+          <small>PRÉMIO</small>
+          <strong>A anunciar</strong>
+        </div>
+        <ul>
+          <li><i class="ph ph-check-circle"></i> Troféu de finalista</li>
+          <li><i class="ph ph-check-circle"></i> Prémio da categoria</li>
+          <li><i class="ph ph-check-circle"></i> Reconhecimento oficial</li>
+        </ul>
+      </article>
+    </div>
+  </section>
+
+  <section class="prize-categories">
+    <div class="prize-section-head">
+      <div>
+        <p class="tp-eyebrow">Todas as categorias</p>
+        <h2>O MESMO PALCO.<br><span>O TEU NÍVEL.</span></h2>
+      </div>
+      <p>A distribuição detalhada será apresentada por categoria, permitindo que cada dupla saiba exatamente pelo que está a competir.</p>
+    </div>
+
+    <div class="prize-category-group">
+      <div class="prize-category-group__label"><i class="ph ph-gender-male"></i><span><small>Masculino</small><strong>5 categorias</strong></span></div>
+      <div class="prize-category-grid">
+        <article><b>M1</b><span>Masculino 1</span><small>Prémios a anunciar</small></article>
+        <article><b>M2</b><span>Masculino 2</span><small>Prémios a anunciar</small></article>
+        <article><b>M3</b><span>Masculino 3</span><small>Prémios a anunciar</small></article>
+        <article><b>M4</b><span>Masculino 4</span><small>Prémios a anunciar</small></article>
+        <article><b>M5</b><span>Masculino 5</span><small>Prémios a anunciar</small></article>
+      </div>
+    </div>
+
+    <div class="prize-category-group prize-category-group--female">
+      <div class="prize-category-group__label"><i class="ph ph-gender-female"></i><span><small>Feminino</small><strong>3 categorias</strong></span></div>
+      <div class="prize-category-grid prize-category-grid--three">
+        <article><b>F1</b><span>Feminino 1</span><small>Prémios a anunciar</small></article>
+        <article><b>F2</b><span>Feminino 2</span><small>Prémios a anunciar</small></article>
+        <article><b>F3</b><span>Feminino 3</span><small>Prémios a anunciar</small></article>
+      </div>
+    </div>
+  </section>
+
+  <section class="prize-special">
+    <div class="prize-section-head">
+      <div>
+        <p class="tp-eyebrow">Para além do resultado</p>
+        <h2>PRÉMIOS <span>ESPECIAIS.</span></h2>
+      </div>
+      <p>Distinções adicionais podem celebrar atitude, evolução e impacto dentro e fora do court.</p>
+    </div>
+    <div class="prize-special-grid">
+      <article><i class="ph ph-hand-heart"></i><span><small>Distinção</small><strong>Fair Play</strong></span><b>A confirmar</b></article>
+      <article><i class="ph ph-sparkle"></i><span><small>Distinção</small><strong>Dupla Revelação</strong></span><b>A confirmar</b></article>
+      <article><i class="ph ph-star"></i><span><small>Distinção</small><strong>Jogador do Torneio</strong></span><b>A confirmar</b></article>
+      <article><i class="ph ph-star"></i><span><small>Distinção</small><strong>Jogadora do Torneio</strong></span><b>A confirmar</b></article>
+    </div>
+  </section>
+
+  <section class="prize-partners">
+    <div class="prize-partners__content">
+      <p class="tp-eyebrow">Parceiros dos prémios</p>
+      <h2>Marcas que valorizam<br>quem entra em campo.</h2>
+      <p>Este espaço apresentará os patrocinadores e parceiros associados aos prémios desta edição.</p>
+    </div>
+    <div class="prize-partners__placeholder">
+      <i class="ph ph-handshake"></i>
+      <strong>Parceiros a anunciar</strong>
+      <span>A identidade das marcas será revelada com os prémios oficiais.</span>
+    </div>
+  </section>
+
+  <section class="prize-conditions">
+    <i class="ph ph-info"></i>
+    <div>
+      <strong>Informação oficial e transparente</strong>
+      <p>A organização publicará nesta página os valores, benefícios, destinatários e condições de atribuição antes da ativação pública. Em caso de atualização, prevalece sempre a informação mais recente aqui apresentada.</p>
+    </div>
+  </section>
+
+  <section class="prize-cta">
+    <div>
+      <p class="tp-eyebrow">Torneio Clausura</p>
+      <h2>Já sabes pelo que jogas.<br><span>Agora garante o teu lugar.</span></h2>
+    </div>
+    <a href="inscricoes.html" class="tp-button tp-button--primary">Inscrever a minha dupla <i class="ph ph-arrow-right"></i></a>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="footer-logo">
+        <img src="playpadellogo.jpg" alt="Play Padel" style="height:42px;width:42px;border-radius:9px;object-fit:cover"/>
+        <div><p class="footer-logo-title">Play Padel</p></div>
+      </div>
+      <p class="footer-desc" id="cfgPrizeFooter">Prémios oficiais do Torneio Clausura<br/>26 de Novembro a 05 de Dezembro 2026 · Maputo</p>
+    </div>
+    <nav class="footer-links">
+      <a href="index.html"><i class="ph ph-house"></i> Início</a>
+      <a href="inscricoes.html"><i class="ph ph-clipboard-text"></i> Inscrições</a>
+      <a href="regulamento.html"><i class="ph ph-book-open"></i> Regulamento</a>
+      <a href="premios.html"><i class="ph ph-gift"></i> Prémios</a>
+    </nav>
+  </div>
+  <div class="footer-bottom">
+    <p class="footer-copy" id="cfgPrizeCopy">© 2026 Play Padel · Torneio Clausura · Maputo, Moçambique</p>
+    <p class="footer-credit">Concebido por <a href="https://www.efforge.co.mz/" target="_blank" rel="noopener">EF Forge Technologies</a></p>
+  </div>
+</footer>
+
+<script src="js/data.js"></script>
+<script src="js/nav-config.js" defer></script>
+<script>
+  (function () {
+    var hamburger = document.getElementById('hamburger');
+    var drawer = document.getElementById('navDrawer');
+    window.addEventListener('scroll', function () {
+      document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 20);
+    });
+    hamburger.addEventListener('click', function () {
+      var open = drawer.classList.toggle('open');
+      hamburger.setAttribute('aria-expanded', open);
+      hamburger.classList.toggle('active', open);
+    });
+    drawer.querySelectorAll('a').forEach(function (link) {
+      link.addEventListener('click', function () {
+        drawer.classList.remove('open');
+        hamburger.setAttribute('aria-expanded', false);
+        hamburger.classList.remove('active');
+      });
+    });
+
+    function applyTournamentIdentity() {
+      var cfg = ppGet('config') || {};
+      var nome = cfg.tornNome || 'Torneio Clausura';
+      var datas = cfg.tornDatas || '26 de Novembro a 05 de Dezembro 2026';
+      var local = cfg.tornLocal || 'Maputo';
+      var clube = cfg.tornClube || 'Play Padel';
+      var year = ((cfg.tornInicio || '').match(/^\d{4}/) || ['2026'])[0];
+      var values = {
+        cfgNomeTorneio: clube,
+        cfgSubtituloNav: cfg.tornSubtitulo || nome,
+        cfgHeroTournament: nome,
+        cfgPrizeDates: datas,
+        cfgPrizeLocation: local,
+        cfgPrizeFooter: 'Prémios oficiais do ' + nome + '\n' + datas + ' · ' + local,
+        cfgPrizeCopy: '© ' + year + ' Play Padel · ' + nome + ' · ' + local + ', Moçambique'
+      };
+      Object.keys(values).forEach(function (id) {
+        var el = document.getElementById(id);
+        if (!el) return;
+        if (id === 'cfgPrizeFooter') {
+          var parts = values[id].split('\n');
+          el.replaceChildren(document.createTextNode(parts[0]), document.createElement('br'), document.createTextNode(parts[1]));
+        } else {
+          el.textContent = values[id];
+        }
+      });
+    }
+    applyTournamentIdentity();
+    window.addEventListener('pp:datasynced', applyTournamentIdentity);
+  }());
+</script>
+<script>if("serviceWorker"in navigator){navigator.serviceWorker.register("/playpadelcoop/sw.js").catch(function(){});}</script>
+</body>
+</html>

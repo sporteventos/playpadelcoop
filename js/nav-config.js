@@ -16,6 +16,7 @@
     'inscricoes.html':    'inscricoesVisible',
     'inscritos.html':     'inscritosVisible',
     'estatisticas.html':  'estatisticasVisible',
+    'premios.html':       'premiosVisible',
     'regulamento.html':   'regulamentoVisible',
   };
 
@@ -29,7 +30,7 @@
       var file = href.split('/').pop().split('?')[0];
       var key  = PAGE_MAP[file];
       if (!key) return;
-      var visible = cfg[key] !== false;
+      var visible = key === 'premiosVisible' ? cfg[key] === true : cfg[key] !== false;
       var li = a.parentElement;
       if (li && li.tagName === 'LI') {
         li.style.display = visible ? '' : 'none';

@@ -38,6 +38,7 @@ values
   ('inscricoesVisible',    'true'::jsonb),
   ('inscritosVisible',     'true'::jsonb),
   ('estatisticasVisible',  'false'::jsonb),
+  ('premiosVisible',       'false'::jsonb),
   ('regulamentoVisible',   'true'::jsonb),
   ('liveStatsVisible',     'false'::jsonb),
   ('navegarVisible',       'true'::jsonb),

@@ -478,6 +478,25 @@ body.tournament-public {
   background: linear-gradient(135deg, rgba(84, 246, 83, 0.1), var(--tp-card));
 }
 
+.tournament-home .nav-card--premios {
+  border-color: rgba(245, 197, 24, 0.24);
+  background:
+    radial-gradient(circle at 88% 12%, rgba(245, 197, 24, 0.12), transparent 34%),
+    var(--tp-card);
+}
+
+.tournament-home .nav-card--premios .nav-card-icon,
+.tournament-home .nav-card--premios .nav-card-arrow {
+  color: #f5c518;
+}
+
+.tournament-home .nav-card--premios:hover {
+  border-color: rgba(245, 197, 24, 0.45);
+  background:
+    radial-gradient(circle at 88% 12%, rgba(245, 197, 24, 0.18), transparent 36%),
+    var(--tp-card);
+}
+
 .tournament-home .section-title {
   font-size: clamp(2.2rem, 4vw, 3.5rem);
   letter-spacing: -0.025em;

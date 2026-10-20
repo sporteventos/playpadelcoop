@@ -69,6 +69,7 @@ const DEFAULTS = {
     inscricoesVisible: true,
     inscritosVisible: true,
     estatisticasVisible: false,
+    premiosVisible: false,
     regulamentoVisible: true,
     liveStatsVisible: false,
     navegarVisible: true,
