@@ -6,9 +6,14 @@
 
   var tabs = [
     { file: 'index.html', label: 'Início', icon: 'ph-house', key: null, slot: 1 },
-    { file: 'inscritos.html', label: 'Inscritos', icon: 'ph-list-checks', key: 'inscritosVisible', slot: 2 },
     { file: 'inscricoes.html', label: 'Inscrever', icon: 'ph-plus', key: 'inscricoesVisible', primary: true, slot: 3 },
     { file: 'estado-inscricao.html', label: 'Estado', icon: 'ph-magnifying-glass', key: 'inscricoesVisible', slot: 4 }
+  ];
+
+  var secondaryTabs = [
+    { file: 'inscritos.html', label: 'Inscritos', icon: 'ph-list-checks', key: 'inscritosVisible', slot: 2 },
+    { file: 'premios.html', label: 'Prémios', icon: 'ph-gift', key: 'premiosVisible', slot: 2 },
+    { file: 'regulamento.html', label: 'Regras', icon: 'ph-book-open', key: 'regulamentoVisible', slot: 2 }
   ];
 
   var morePages = [
@@ -93,7 +98,13 @@
     var cfg = config();
     var file = currentFile();
     var visibleTabs = tabs.filter(function (item) { return isVisible(item, cfg); });
-    var moreActive = morePages.some(function (item) { return item.file === file; });
+    var secondaryTab = secondaryTabs.find(function (item) { return isVisible(item, cfg); });
+    if (secondaryTab) visibleTabs.push(secondaryTab);
+    visibleTabs.sort(function (a, b) { return a.slot - b.slot; });
+    var visibleMore = morePages.filter(function (item) {
+      return isVisible(item, cfg) && (!secondaryTab || item.file !== secondaryTab.file);
+    });
+    var moreActive = visibleMore.some(function (item) { return item.file === file; });
 
     shell.tabbar.innerHTML = visibleTabs.map(function (item) {
       return linkHtml(item, item.file === file);
@@ -105,7 +116,6 @@
     shell.moreButton = shell.tabbar.querySelector('.mobile-tabbar__more');
     shell.moreButton.addEventListener('click', openMore);
 
-    var visibleMore = morePages.filter(function (item) { return isVisible(item, cfg); });
     shell.grid.innerHTML = visibleMore.map(function (item) {
       return '<a href="' + item.file + '" class="mobile-more-sheet__item' + (item.file === file ? ' active' : '') + '"' +
         (item.file === file ? ' aria-current="page"' : '') + '>' +
