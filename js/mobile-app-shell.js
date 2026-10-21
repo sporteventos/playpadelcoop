@@ -5,16 +5,17 @@
   var shell = null;
 
   var tabs = [
-    { file: 'index.html', label: 'Início', icon: 'ph-house', key: null },
-    { file: 'inscricoes.html', label: 'Inscrição', icon: 'ph-clipboard-text', key: 'inscricoesVisible' },
-    { file: 'jogadores.html', label: 'Jogadores', icon: 'ph-users', key: 'jogadoresVisible' }
+    { file: 'index.html', label: 'Início', icon: 'ph-house', key: null, slot: 1 },
+    { file: 'inscritos.html', label: 'Inscritos', icon: 'ph-list-checks', key: 'inscritosVisible', slot: 2 },
+    { file: 'inscricoes.html', label: 'Inscrever', icon: 'ph-plus', key: 'inscricoesVisible', primary: true, slot: 3 },
+    { file: 'estado-inscricao.html', label: 'Estado', icon: 'ph-magnifying-glass', key: 'inscricoesVisible', slot: 4 }
   ];
 
   var morePages = [
+    { file: 'jogadores.html', label: 'Jogadores', icon: 'ph-users', key: 'jogadoresVisible' },
     { file: 'calendario.html', label: 'Calendário', icon: 'ph-calendar', key: 'calendarioVisible' },
     { file: 'classificacoes.html', label: 'Classificações', icon: 'ph-trophy', key: 'classificacoesVisible' },
     { file: 'fasefinal.html', label: 'Fase Final', icon: 'ph-brackets-round', key: 'fasefinalVisible' },
-    { file: 'inscritos.html', label: 'Inscritos', icon: 'ph-list-checks', key: 'inscritosVisible' },
     { file: 'estatisticas.html', label: 'Estatísticas', icon: 'ph-chart-bar', key: 'estatisticasVisible' },
     { file: 'premios.html', label: 'Prémios', icon: 'ph-gift', key: 'premiosVisible' },
     { file: 'regulamento.html', label: 'Regulamento', icon: 'ph-book-open', key: 'regulamentoVisible' }
@@ -82,7 +83,7 @@
   }
 
   function linkHtml(item, active) {
-    return '<a href="' + item.file + '" class="mobile-tabbar__item' + (active ? ' active' : '') + '"' +
+    return '<a href="' + item.file + '" class="mobile-tabbar__item mobile-tabbar__slot-' + item.slot + (item.primary ? ' mobile-tabbar__primary' : '') + (active ? ' active' : '') + '"' +
       (active ? ' aria-current="page"' : '') + '>' +
       '<i class="ph ' + item.icon + '"></i><span>' + item.label + '</span></a>';
   }
@@ -97,7 +98,7 @@
     shell.tabbar.innerHTML = visibleTabs.map(function (item) {
       return linkHtml(item, item.file === file);
     }).join('') +
-      '<button type="button" class="mobile-tabbar__item mobile-tabbar__more' + (moreActive ? ' active' : '') + '"' +
+      '<button type="button" class="mobile-tabbar__item mobile-tabbar__more mobile-tabbar__slot-5' + (moreActive ? ' active' : '') + '"' +
       ' aria-label="Abrir mais opções" aria-expanded="false">' +
       '<i class="ph ph-dots-three-outline"></i><span>Mais</span></button>';
 

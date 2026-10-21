@@ -161,6 +161,27 @@ async function ppCloudFetchInscricoes() {
   var rows = await r.json();
   return Array.isArray(rows) ? rows : [];
 }
+async function ppCloudLookupInscricoes(criteria) {
+  var input = criteria || {};
+  var digits = String(input.telefone || '').replace(/\D/g, '');
+  var id = String(input.id || '').trim();
+  var params = new URLSearchParams();
+  params.set('select', 'id,criadoem,tipo,genero,categoria,nome1,estado,parceiro,parid,reservado');
+  params.set('order', 'criadoem.desc');
+  params.set('limit', '10');
+  if (id) params.set('id', 'eq.' + id);
+  if (digits) {
+    if (digits.length < 8) return [];
+    var localDigits = digits.slice(-9);
+    params.set('telefone', 'like.*' + localDigits.split('').join('*') + '*');
+  }
+  if (!id && !digits) return [];
+  var endpoint = PP_CLOUD.url + '/rest/v1/' + encodeURIComponent(PP_CLOUD.inscricoesTable) + '?' + params.toString();
+  var r = await fetch(endpoint, { headers: ppCloudHeaders() });
+  if (!r.ok) throw new Error('Cloud inscricoes lookup failed: ' + r.status);
+  var rows = await r.json();
+  return Array.isArray(rows) ? rows : [];
+}
 async function ppCloudUpsertInscricao(entry) {
   var endpoint = PP_CLOUD.url + '/rest/v1/' + encodeURIComponent(PP_CLOUD.inscricoesTable) + '?on_conflict=id';
   // A tabela tem colunas estritas — enviar campos locais (ex.: confirmadoem,
@@ -358,6 +379,7 @@ window.ppCloudState = {
     return true;
   },
   fetchInscricoes: ppCloudFetchInscricoes,
+  lookupInscricoes: ppCloudLookupInscricoes,
   upsertInscricao: ppCloudUpsertInscricao,
   deleteInscricao: ppCloudDeleteInscricao,
 };

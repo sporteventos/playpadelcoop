@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#00C37B">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Play Padel">
+  <meta name="description" content="Consulta o estado da tua inscrição no Torneio Clausura"/>
+  <title>Estado da inscrição · Torneio Clausura</title>
+  <link rel="stylesheet" href="css/style.css"/>
+  <link rel="stylesheet" href="css/pages.css"/>
+  <link rel="stylesheet" href="css/tournament-public.css"/>
+  <link rel="stylesheet" href="css/estado-inscricao.css"/>
+  <script src="https://unpkg.com/@phosphor-icons/web@2.1.1/src/index.js" defer></script>
+</head>
+<body class="tournament-public registration-status-page">
+
+<nav class="navbar" id="navbar">
+  <a class="nav-logo" href="index.html">
+    <img src="playpadellogo.jpg" alt="Play Padel" style="height:34px;width:34px;border-radius:7px;object-fit:cover;flex-shrink:0"/>
+    <div class="nav-logo-text">
+      <span class="nav-logo-title" id="cfgNomeTorneio">Play Padel</span>
+      <span class="nav-logo-sub" id="cfgSubtituloNav">Torneio Clausura</span>
+    </div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html"><i class="ph ph-house nav-icon"></i> Início</a></li>
+    <li><a href="inscricoes.html"><i class="ph ph-clipboard-text nav-icon"></i> Inscrições</a></li>
+    <li><a href="inscritos.html"><i class="ph ph-list-checks nav-icon"></i> Inscritos</a></li>
+    <li><a href="premios.html"><i class="ph ph-gift nav-icon"></i> Prémios</a></li>
+    <li><a href="regulamento.html"><i class="ph ph-book-open nav-icon"></i> Regulamento</a></li>
+  </ul>
+  <button class="nav-hamburger" id="hamburger" aria-label="Abrir menu" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<div class="nav-drawer" id="navDrawer">
+  <ul>
+    <li><a href="index.html"><i class="ph ph-house"></i> Início</a></li>
+    <li><a href="inscricoes.html"><i class="ph ph-clipboard-text"></i> Inscrições</a></li>
+    <li><a href="inscritos.html"><i class="ph ph-list-checks"></i> Inscritos</a></li>
+    <li><a href="premios.html"><i class="ph ph-gift"></i> Prémios</a></li>
+    <li><a href="regulamento.html"><i class="ph ph-book-open"></i> Regulamento</a></li>
+  </ul>
+</div>
+
+<header class="registration-status-hero">
+  <div class="tp-court-lines" aria-hidden="true"></div>
+  <div class="registration-status-hero__inner">
+    <div>
+      <div class="tp-status-pill">Acompanhamento da inscrição</div>
+      <p class="tp-eyebrow">Consulta rápida</p>
+      <h1>A tua inscrição.<br><span>Sempre contigo.</span></h1>
+      <p>Consulta o estado do teu pedido no <strong id="cfgHeroTournament">Torneio Clausura</strong> através do telefone utilizado ou da referência recebida.</p>
+    </div>
+    <div class="registration-status-hero__icon"><i class="ph ph-magnifying-glass"></i></div>
+  </div>
+</header>
+
+<main class="registration-status-main">
+  <section class="registration-lookup-card">
+    <div class="registration-lookup-card__head">
+      <span class="tp-eyebrow">Encontrar inscrição</span>
+      <h2>Introduz um dos dados</h2>
+      <p>Usa o mesmo número de telefone da pré-inscrição ou a referência apresentada no final do processo.</p>
+    </div>
+    <form id="registrationLookupForm" novalidate>
+      <div class="registration-lookup-fields">
+        <label>
+          <span>Telefone</span>
+          <div><i class="ph ph-phone"></i><input id="lookupPhone" type="tel" inputmode="tel" autocomplete="tel" placeholder="+258 84 000 0000"/></div>
+        </label>
+        <span class="registration-lookup-or">ou</span>
+        <label>
+          <span>Referência</span>
+          <div><i class="ph ph-hash"></i><input id="lookupReference" type="text" autocomplete="off" autocapitalize="characters" placeholder="PP-1760000000000"/></div>
+        </label>
+      </div>
+      <p class="registration-lookup-error" id="lookupError" hidden></p>
+      <button type="submit" class="tp-button tp-button--primary" id="lookupSubmit">
+        <i class="ph ph-magnifying-glass"></i> Consultar estado
+      </button>
+    </form>
+    <div class="registration-lookup-privacy"><i class="ph ph-shield-check"></i><span>A consulta apresenta apenas informação essencial sobre a participação.</span></div>
+  </section>
+
+  <section class="registration-status-results" id="lookupResults" hidden aria-live="polite">
+    <div class="registration-status-results__head">
+      <div><span class="tp-eyebrow">Resultado da consulta</span><h2 id="lookupResultTitle">Inscrição encontrada</h2></div>
+      <button type="button" id="newLookup"><i class="ph ph-arrow-counter-clockwise"></i> Nova consulta</button>
+    </div>
+    <div id="lookupResultList"></div>
+  </section>
+
+  <section class="registration-status-help">
+    <i class="ph ph-question"></i>
+    <div><strong>Não encontraste a inscrição?</strong><p>Confirma os dados introduzidos. Se o pedido foi enviado há poucos instantes, aguarda alguns segundos e tenta novamente.</p></div>
+    <a href="inscricoes.html">Fazer inscrição <i class="ph ph-arrow-right"></i></a>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="footer-bottom" style="max-width:1200px;margin:0 auto">
+    <p class="footer-copy" id="cfgStatusCopy">© 2026 <span>Play Padel</span> · Torneio Clausura</p>
+    <a href="inscricoes.html" class="footer-copy" style="color:var(--verde);text-decoration:none">Fazer inscrição</a>
+    <p class="footer-credit">Concebido por <a href="https://www.efforge.co.mz/" target="_blank" rel="noopener">EF Forge Technologies</a></p>
+  </div>
+</footer>
+
+<script src="js/data.js?v=23"></script>
+<script src="js/nav-config.js" defer></script>
+<script src="js/mobile-app-shell.js"></script>
+<script src="js/estado-inscricao.js"></script>
+<script>if("serviceWorker"in navigator){navigator.serviceWorker.register("/playpadelcoop/sw.js").catch(function(){});}</script>
+</body>
+</html>

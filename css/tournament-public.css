@@ -542,6 +542,7 @@ body.tournament-public {
 /* Registration */
 .tournament-registration {
   min-height: 100vh;
+  overflow-x: hidden;
   background:
     radial-gradient(circle at 14% 17%, rgba(84, 246, 83, 0.11), transparent 25rem),
     linear-gradient(130deg, #042832, var(--tp-bg) 48%);
@@ -577,6 +578,10 @@ body.tournament-public {
   margin: 0 auto;
 }
 
+.tp-registration-hero__inner > * {
+  min-width: 0;
+}
+
 .tp-registration-hero h1 {
   max-width: 760px;
   margin: 1rem 0;
@@ -597,6 +602,21 @@ body.tournament-public {
   color: #adc2c1;
   font-size: 0.95rem;
   line-height: 1.7;
+}
+
+.tp-registration-status-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin-top: 1rem;
+  color: var(--tp-accent);
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.tp-registration-status-link:hover {
+  text-decoration: underline;
 }
 
 .tp-registration-facts {
@@ -962,6 +982,57 @@ body.tournament-public {
   font-size: 1rem;
 }
 
+.tp-draft-notice {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 0.65rem;
+  margin: 0 1.5rem 1rem;
+  padding: 0.75rem 0.9rem;
+  border: 1px solid rgba(84, 246, 83, 0.22);
+  border-radius: 11px;
+  color: #abc2bf;
+  background: rgba(84, 246, 83, 0.07);
+  font-size: 0.68rem;
+  line-height: 1.45;
+}
+
+.tp-draft-notice[hidden],
+.tp-draft-state[hidden] {
+  display: none;
+}
+
+.tp-draft-notice > i {
+  color: var(--tp-accent);
+  font-size: 1.1rem;
+}
+
+.tp-draft-notice strong {
+  color: var(--tp-text);
+}
+
+.tp-draft-notice button {
+  border: 0;
+  color: var(--tp-accent);
+  background: transparent;
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.tp-draft-state {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-top: 0.8rem;
+  color: #6f8c87;
+  font-size: 0.62rem;
+}
+
+.tp-draft-state i {
+  color: var(--tp-accent);
+}
+
 .tp-success-card {
   grid-column: 1 / -1;
   padding: clamp(2rem, 7vw, 5rem);
@@ -992,6 +1063,43 @@ body.tournament-public {
   margin: 0.7rem auto 1.5rem;
   color: var(--tp-muted);
   line-height: 1.6;
+}
+
+.tp-registration-reference {
+  display: inline-grid;
+  grid-template-columns: auto auto auto;
+  align-items: center;
+  gap: 0.7rem;
+  margin: 0 auto 1.5rem;
+  padding: 0.65rem 0.75rem 0.65rem 1rem;
+  border: 1px solid var(--tp-line-strong);
+  border-radius: 12px;
+  background: rgba(84, 246, 83, 0.06);
+}
+
+.tp-registration-reference span {
+  color: var(--tp-muted);
+  font-size: 0.62rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.tp-registration-reference strong {
+  color: var(--tp-text);
+  font-family: monospace;
+  font-size: 0.82rem;
+}
+
+.tp-registration-reference button {
+  display: grid;
+  width: 2rem;
+  height: 2rem;
+  place-items: center;
+  border: 0;
+  border-radius: 8px;
+  color: var(--tp-accent);
+  background: rgba(84, 246, 83, 0.1);
+  cursor: pointer;
 }
 
 .tp-success-actions {
@@ -1159,6 +1267,27 @@ body.tournament-public {
 
   .tp-step-actions .tp-button {
     min-width: 0;
+  }
+
+  .tp-draft-notice {
+    grid-template-columns: auto 1fr;
+    margin-right: 1rem;
+    margin-left: 1rem;
+  }
+
+  .tp-draft-notice button {
+    grid-column: 2;
+    justify-self: start;
+    padding: 0;
+  }
+
+  .tp-registration-reference {
+    grid-template-columns: 1fr auto;
+    text-align: left;
+  }
+
+  .tp-registration-reference span {
+    grid-column: 1 / -1;
   }
 }
 

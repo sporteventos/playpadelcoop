@@ -31,9 +31,9 @@
   ],
   "shortcuts": [
     {
-      "name": "Calendário",
-      "url": "/playpadelcoop/calendario.html",
-      "description": "Ver calendário de jogos"
+      "name": "Estado da inscrição",
+      "url": "/playpadelcoop/estado-inscricao.html",
+      "description": "Consultar o estado da inscrição"
     },
     {
       "name": "Classificações",

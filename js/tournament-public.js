@@ -42,6 +42,102 @@
     var steps = Array.prototype.slice.call(form.querySelectorAll('.registration-step'));
     var progress = Array.prototype.slice.call(document.querySelectorAll('.tp-step-progress button'));
     var currentStep = 1;
+    var draftReady = false;
+    var restoringDraft = false;
+    var suppressNextReset = false;
+    var draftTimer = null;
+
+    function draftKey() {
+      var cfg = typeof window.ppGet === 'function' ? window.ppGet('config') || {} : config;
+      var slug = String(cfg.tornSlug || 'torneio').replace(/[^a-z0-9_-]/gi, '-').toLowerCase();
+      return 'pp_registration_draft_' + slug;
+    }
+
+    function collectDraftValues() {
+      var values = {};
+      Array.prototype.forEach.call(form.elements, function (field) {
+        if (!field.name || field.disabled || field.readOnly || field.type === 'submit' || field.type === 'button') return;
+        if ((field.type === 'radio' || field.type === 'checkbox') && !field.checked) return;
+        values[field.name] = field.value;
+      });
+      return values;
+    }
+
+    function saveDraft() {
+      if (!draftReady || restoringDraft) return;
+      try {
+        localStorage.setItem(draftKey(), JSON.stringify({
+          tournament: draftKey(),
+          savedAt: new Date().toISOString(),
+          step: currentStep,
+          values: collectDraftValues()
+        }));
+        var state = document.getElementById('draftState');
+        if (state) state.hidden = false;
+      } catch (_) {}
+    }
+
+    function scheduleDraftSave() {
+      if (!draftReady || restoringDraft) return;
+      window.clearTimeout(draftTimer);
+      draftTimer = window.setTimeout(saveDraft, 350);
+    }
+
+    function clearDraft(suppressReset) {
+      window.clearTimeout(draftTimer);
+      try { localStorage.removeItem(draftKey()); } catch (_) {}
+      suppressNextReset = !!suppressReset;
+      var notice = document.getElementById('draftNotice');
+      var state = document.getElementById('draftState');
+      if (notice) notice.hidden = true;
+      if (state) state.hidden = true;
+    }
+
+    function restoreDraft() {
+      if (draftReady) return;
+      var draft = null;
+      try { draft = JSON.parse(localStorage.getItem(draftKey()) || 'null'); } catch (_) {}
+      if (!draft || !draft.values || !draft.savedAt) {
+        draftReady = true;
+        return;
+      }
+      var age = Date.now() - new Date(draft.savedAt).getTime();
+      if (!Number.isFinite(age) || age > 30 * 24 * 60 * 60 * 1000) {
+        clearDraft(false);
+        draftReady = true;
+        return;
+      }
+
+      restoringDraft = true;
+      var values = draft.values;
+      ['genero', 'modo'].forEach(function (name) {
+        if (!values[name]) return;
+        var radio = Array.prototype.find.call(form.querySelectorAll('input[name="' + name + '"]'), function (field) {
+          return field.value === values[name];
+        });
+        if (radio) {
+          radio.checked = true;
+          radio.dispatchEvent(new Event('change', { bubbles: true }));
+        }
+      });
+      Object.keys(values).forEach(function (name) {
+        if (name === 'genero' || name === 'modo') return;
+        var field = form.elements[name];
+        if (field && typeof field.value !== 'undefined') {
+          field.value = values[name];
+          field.dispatchEvent(new Event('input', { bubbles: true }));
+          field.dispatchEvent(new Event('change', { bubbles: true }));
+        }
+      });
+      showStep(Number(draft.step) || 1);
+      updateReview();
+      restoringDraft = false;
+      draftReady = true;
+      var notice = document.getElementById('draftNotice');
+      var state = document.getElementById('draftState');
+      if (notice) notice.hidden = false;
+      if (state) state.hidden = false;
+    }
 
     function value(name) {
       var field = form.elements[name];
@@ -117,17 +213,27 @@
       if (card && window.scrollY > card.offsetTop - 120) {
         card.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
+      scheduleDraftSave();
     }
 
     form.addEventListener('input', function (event) {
       if (event.target.classList) event.target.classList.remove('invalid');
       updateReview();
+      scheduleDraftSave();
     });
-    form.addEventListener('change', updateReview);
+    form.addEventListener('change', function () {
+      updateReview();
+      scheduleDraftSave();
+    });
     form.addEventListener('reset', function () {
       window.setTimeout(function () {
+        var suppress = suppressNextReset;
+        suppressNextReset = false;
+        restoringDraft = true;
         showStep(1);
         updateReview();
+        restoringDraft = false;
+        if (!suppress) clearDraft(false);
       }, 0);
     });
 
@@ -147,5 +253,19 @@
 
     showStep(1);
     updateReview();
+
+    window.ppRegistrationDraft = { clear: clearDraft, save: saveDraft };
+    window.addEventListener('pp:registration-ready', restoreDraft);
+    var discard = document.getElementById('discardDraft');
+    if (discard) {
+      discard.addEventListener('click', function () {
+        clearDraft(true);
+        form.reset();
+        var gender = form.querySelector('input[name="genero"]:checked');
+        var mode = form.querySelector('input[name="modo"]:checked');
+        if (gender) gender.dispatchEvent(new Event('change', { bubbles: true }));
+        if (mode) mode.dispatchEvent(new Event('change', { bubbles: true }));
+      });
+    }
   });
 }());
