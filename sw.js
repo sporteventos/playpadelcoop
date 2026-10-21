@@ -1,5 +1,5 @@
 // Play Padel · Service Worker
-const CACHE = 'playpadel-clausura-v2';
+const CACHE = 'playpadel-clausura-v3';
 const PRECACHE = [
   '/playpadelcoop/',
   '/playpadelcoop/index.html',
@@ -22,6 +22,7 @@ const PRECACHE = [
   '/playpadelcoop/css/premios.css',
   '/playpadelcoop/js/data.js',
   '/playpadelcoop/js/app.js',
+  '/playpadelcoop/js/mobile-app-shell.js',
   '/playpadelcoop/js/tournament-public.js',
   '/playpadelcoop/playpadellogo.jpg',
 ];

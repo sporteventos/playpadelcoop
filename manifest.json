@@ -5,6 +5,7 @@
   "start_url": "/playpadelcoop/",
   "scope": "/playpadelcoop/",
   "display": "standalone",
+  "display_override": ["standalone", "minimal-ui"],
   "background_color": "#0A0F0D",
   "theme_color": "#00C37B",
   "orientation": "portrait-primary",
