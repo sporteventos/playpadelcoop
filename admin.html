@@ -1109,6 +1109,10 @@
     </div>
     <div class="modal-body">
       <input type="hidden" id="insEditId"/>
+      <div class="form-group-modal" id="insEditReferenceWrap" style="display:none">
+        <label class="form-label">Referência da inscrição</label>
+        <div id="insEditReference" style="font-family:monospace;color:#7BB0FF;font-weight:700"></div>
+      </div>
       <div class="form-group-modal">
         <label class="form-label" for="insEditNome">Nome</label>
         <input class="form-input" type="text" id="insEditNome" placeholder="Nome do jogador"/>
@@ -1148,8 +1152,42 @@
         </label>
       </div>
       <div class="form-group-modal">
-        <label class="form-label" for="insEditObs">Observações</label>
-        <textarea class="form-input" id="insEditObs" rows="2" placeholder="Notas internas"></textarea>
+        <label class="form-label" for="insEditAvailability">Disponibilidade para os jogos</label>
+        <select class="form-input" id="insEditAvailability" onchange="insEditToggleAvailability()">
+          <option value="disponivel">Tenho disponibilidade</option>
+          <option value="pontual">Tenho indisponibilidade pontual</option>
+        </select>
+      </div>
+      <div id="insEditUnavailableFields" style="display:none">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.6rem">
+          <div class="form-group-modal">
+            <label class="form-label" for="insEditDate1">1.ª data indisponível</label>
+            <input class="form-input" type="date" id="insEditDate1"/>
+          </div>
+          <div class="form-group-modal">
+            <label class="form-label" for="insEditPeriod1">Período</label>
+            <select class="form-input" id="insEditPeriod1">
+              <option value="">— selecionar —</option><option value="manha">Manhã</option><option value="tarde">Tarde</option><option value="noite">Noite</option><option value="dia">Dia inteiro</option>
+            </select>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.6rem">
+          <div class="form-group-modal">
+            <label class="form-label" for="insEditDate2">2.ª data (opcional)</label>
+            <input class="form-input" type="date" id="insEditDate2"/>
+          </div>
+          <div class="form-group-modal">
+            <label class="form-label" for="insEditPeriod2">Período</label>
+            <select class="form-input" id="insEditPeriod2">
+              <option value="">— selecionar —</option><option value="manha">Manhã</option><option value="tarde">Tarde</option><option value="noite">Noite</option><option value="dia">Dia inteiro</option>
+            </select>
+          </div>
+        </div>
+        <p class="form-hint" style="color:var(--amarelo);font-size:.74rem">Devem ser consideradas as indisponibilidades dos dois jogadores. A organização tentará atendê-las, sem garantia.</p>
+      </div>
+      <div class="form-group-modal" id="insEditLegacyWrap" style="display:none">
+        <label class="form-label">Observação antiga</label>
+        <div id="insEditLegacyObs" style="font-size:.78rem;color:var(--cinza-texto);line-height:1.5"></div>
       </div>
     </div>
     <div class="modal-footer">

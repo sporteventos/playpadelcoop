@@ -812,6 +812,15 @@ body.tournament-public {
   box-shadow: 0 0 0 3px rgba(84, 246, 83, 0.08);
 }
 
+.tournament-registration .form-select {
+  color-scheme: dark;
+}
+
+.tournament-registration .form-select option {
+  color: var(--tp-text);
+  background: #08252c;
+}
+
 .tournament-registration .toggle-wrap {
   gap: 0.55rem;
 }
@@ -858,6 +867,55 @@ body.tournament-public {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 0.7rem;
+}
+
+.tp-availability {
+  margin-top: 0.5rem;
+  padding-top: 1.2rem;
+  border-top: 1px solid var(--tp-line);
+}
+
+.tp-availability-options {
+  margin-top: 0.7rem;
+}
+
+.tp-unavailability {
+  margin-top: 1rem;
+  padding: 1rem;
+  border: 1px solid rgba(245, 197, 24, 0.2);
+  border-radius: 14px;
+  background: rgba(245, 197, 24, 0.04);
+}
+
+.tp-unavailability[hidden] {
+  display: none;
+}
+
+.tp-unavailability-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.8rem;
+}
+
+.tp-unavailability-row + .tp-unavailability-row {
+  margin-top: 0.8rem;
+}
+
+.tp-availability-warning {
+  display: flex;
+  gap: 0.55rem;
+  margin-top: 1rem;
+  padding-top: 0.85rem;
+  border-top: 1px solid rgba(245, 197, 24, 0.15);
+  color: #c8b981;
+  font-size: 0.68rem;
+  line-height: 1.5;
+}
+
+.tp-availability-warning i {
+  flex-shrink: 0;
+  color: var(--tp-warning);
+  font-size: 1rem;
 }
 
 .tp-mode-card {
@@ -1244,6 +1302,10 @@ body.tournament-public {
   }
 
   .tp-mode-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .tp-unavailability-row {
     grid-template-columns: 1fr;
   }
 

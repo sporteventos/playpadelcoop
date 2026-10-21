@@ -64,17 +64,16 @@
   <div class="prize-hero__glow" aria-hidden="true"></div>
   <div class="prize-hero__inner">
     <div class="prize-hero__content">
-      <div class="tp-status-pill">Revelação antecipada</div>
+      <div class="tp-status-pill">Prémios da edição</div>
       <p class="tp-eyebrow">Prémios oficiais</p>
-      <h1>A glória já tinha prémio.<br><span>Agora vais conhecê-lo antes.</span></h1>
-      <p>Pela primeira vez, o <strong id="cfgHeroTournament">Torneio Clausura</strong> apresenta os prémios antes do primeiro ponto. Mais transparência, mais ambição e ainda mais razões para entrar em campo.</p>
+      <h1>PRÉMIOS DO TORNEIO.<br><span>POR CATEGORIA.</span></h1>
       <div class="prize-hero__actions">
         <a href="#premios-principais" class="tp-button tp-button--primary">Descobrir os prémios <i class="ph ph-arrow-down"></i></a>
         <a href="inscricoes.html" class="tp-button">Inscrever a minha dupla <i class="ph ph-arrow-right"></i></a>
       </div>
       <div class="prize-hero__facts">
         <div><i class="ph ph-calendar-blank"></i><span><small>EDIÇÃO</small><strong id="cfgPrizeDates">26 Nov — 05 Dez 2026</strong></span></div>
-        <div><i class="ph ph-medal"></i><span><small>CATEGORIAS</small><strong>Masculino &amp; Feminino</strong></span></div>
+        <div><i class="ph ph-medal"></i><span><small>CATEGORIAS</small><strong id="cfgPrizeCategories">Masculino &amp; Feminino</strong></span></div>
         <div><i class="ph ph-map-pin"></i><span><small>LOCAL</small><strong id="cfgPrizeLocation">Maputo</strong></span></div>
       </div>
     </div>
@@ -83,9 +82,9 @@
       <div class="prize-reveal-card__orb"><i class="ph ph-trophy"></i></div>
       <p class="tp-eyebrow">Prize pool</p>
       <span class="prize-reveal-card__label">Montante global</span>
-      <strong>A revelar</strong>
-      <p>Os valores e benefícios de cada categoria serão apresentados oficialmente pela organização.</p>
-      <div class="prize-reveal-card__status"><span></span> Preparação do anúncio em curso</div>
+      <strong id="cfgPrizePool">A anunciar</strong>
+      <p id="cfgPrizePoolText">Consulta abaixo os prémios definidos para cada categoria.</p>
+      <div class="prize-reveal-card__status"><span></span> Informação oficial do torneio</div>
     </aside>
   </div>
 </header>
@@ -97,7 +96,7 @@
         <p class="tp-eyebrow">O pódio</p>
         <h2>JOGA PELO TÍTULO.<br><span>CONQUISTA O PRÉMIO.</span></h2>
       </div>
-      <p>Uma estrutura simples e transparente para reconhecer quem chega mais longe. Os detalhes finais serão atualizados antes da abertura pública desta página.</p>
+      <p>Consulta os prémios atribuídos aos campeões e finalistas de cada categoria.</p>
     </div>
 
     <div class="prize-podium">
@@ -110,7 +109,7 @@
         </div>
         <div class="prize-podium-card__value">
           <small>PRÉMIO</small>
-          <strong>A anunciar</strong>
+          <strong>Ver categorias</strong>
         </div>
         <ul>
           <li><i class="ph ph-check-circle"></i> Troféu de campeão</li>
@@ -128,7 +127,7 @@
         </div>
         <div class="prize-podium-card__value">
           <small>PRÉMIO</small>
-          <strong>A anunciar</strong>
+          <strong>Ver categorias</strong>
         </div>
         <ul>
           <li><i class="ph ph-check-circle"></i> Troféu de finalista</li>
@@ -145,28 +144,9 @@
         <p class="tp-eyebrow">Todas as categorias</p>
         <h2>O MESMO PALCO.<br><span>O TEU NÍVEL.</span></h2>
       </div>
-      <p>A distribuição detalhada será apresentada por categoria, permitindo que cada dupla saiba exatamente pelo que está a competir.</p>
+      <p>As categorias apresentadas nesta página são atualizadas automaticamente a partir da configuração do torneio.</p>
     </div>
-
-    <div class="prize-category-group">
-      <div class="prize-category-group__label"><i class="ph ph-gender-male"></i><span><small>Masculino</small><strong>5 categorias</strong></span></div>
-      <div class="prize-category-grid">
-        <article><b>M1</b><span>Masculino 1</span><small>Prémios a anunciar</small></article>
-        <article><b>M2</b><span>Masculino 2</span><small>Prémios a anunciar</small></article>
-        <article><b>M3</b><span>Masculino 3</span><small>Prémios a anunciar</small></article>
-        <article><b>M4</b><span>Masculino 4</span><small>Prémios a anunciar</small></article>
-        <article><b>M5</b><span>Masculino 5</span><small>Prémios a anunciar</small></article>
-      </div>
-    </div>
-
-    <div class="prize-category-group prize-category-group--female">
-      <div class="prize-category-group__label"><i class="ph ph-gender-female"></i><span><small>Feminino</small><strong>3 categorias</strong></span></div>
-      <div class="prize-category-grid prize-category-grid--three">
-        <article><b>F1</b><span>Feminino 1</span><small>Prémios a anunciar</small></article>
-        <article><b>F2</b><span>Feminino 2</span><small>Prémios a anunciar</small></article>
-        <article><b>F3</b><span>Feminino 3</span><small>Prémios a anunciar</small></article>
-      </div>
-    </div>
+    <div id="prizeCategoryGroups"></div>
   </section>
 
   <section class="prize-special">
@@ -177,12 +157,7 @@
       </div>
       <p>Distinções adicionais podem celebrar atitude, evolução e impacto dentro e fora do court.</p>
     </div>
-    <div class="prize-special-grid">
-      <article><i class="ph ph-hand-heart"></i><span><small>Distinção</small><strong>Fair Play</strong></span><b>A confirmar</b></article>
-      <article><i class="ph ph-sparkle"></i><span><small>Distinção</small><strong>Dupla Revelação</strong></span><b>A confirmar</b></article>
-      <article><i class="ph ph-star"></i><span><small>Distinção</small><strong>Jogador do Torneio</strong></span><b>A confirmar</b></article>
-      <article><i class="ph ph-star"></i><span><small>Distinção</small><strong>Jogadora do Torneio</strong></span><b>A confirmar</b></article>
-    </div>
+    <div class="prize-special-grid" id="prizeDistinctions"></div>
   </section>
 
   <section class="prize-partners">
@@ -195,14 +170,6 @@
       <i class="ph ph-handshake"></i>
       <strong>Parceiros a anunciar</strong>
       <span>A identidade das marcas será revelada com os prémios oficiais.</span>
-    </div>
-  </section>
-
-  <section class="prize-conditions">
-    <i class="ph ph-info"></i>
-    <div>
-      <strong>Informação oficial e transparente</strong>
-      <p>A organização publicará nesta página os valores, benefícios, destinatários e condições de atribuição antes da ativação pública. Em caso de atualização, prevalece sempre a informação mais recente aqui apresentada.</p>
     </div>
   </section>
 
@@ -260,6 +227,69 @@
       });
     });
 
+    function escapeHtml(value) {
+      return String(value == null ? '' : value)
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+    }
+
+    function prizeLabel(prize) {
+      if (!prize || !prize.valor) return 'A anunciar';
+      var types = { dinheiro: 'Dinheiro', bem: 'Bem', servico: 'Serviço', misto: 'Prémio misto' };
+      return (types[prize.tipo] ? types[prize.tipo] + ' · ' : '') + prize.valor;
+    }
+
+    function renderPrizeConfiguration() {
+      var cfg = ppGet('config') || {};
+      var categories = ppGet('categorias') || [];
+      var prizeCfg = cfg.premiosConfig || {};
+      if (typeof prizeCfg === 'string') {
+        try { prizeCfg = JSON.parse(prizeCfg); } catch (_) { prizeCfg = {}; }
+      }
+      var categoryPrizes = prizeCfg.categorias || {};
+      var groups = [
+        { type: 'M', label: 'Masculino', icon: 'ph-gender-male', modifier: '' },
+        { type: 'F', label: 'Feminino', icon: 'ph-gender-female', modifier: ' prize-category-group--female' }
+      ];
+      var container = document.getElementById('prizeCategoryGroups');
+      container.innerHTML = groups.map(function (group) {
+        var list = categories.filter(function (cat) { return (cat.tipo || String(cat.id).charAt(0)) === group.type; });
+        if (!list.length) return '';
+        return '<div class="prize-category-group' + group.modifier + '">'
+          + '<div class="prize-category-group__label"><i class="ph ' + group.icon + '"></i><span><small>' + group.label + '</small><strong>'
+          + list.length + (list.length === 1 ? ' categoria' : ' categorias') + '</strong></span></div>'
+          + '<div class="prize-category-grid' + (list.length <= 3 ? ' prize-category-grid--three' : '') + '">'
+          + list.map(function (cat) {
+            var prizes = categoryPrizes[cat.id] || {};
+            return '<article><b>' + escapeHtml(cat.id) + '</b><span>' + escapeHtml(cat.nome || cat.id) + '</span>'
+              + '<small><strong>Campeões:</strong> ' + escapeHtml(prizeLabel(prizes.campeao)) + '<br>'
+              + '<strong>Finalistas:</strong> ' + escapeHtml(prizeLabel(prizes.finalista)) + '</small></article>';
+          }).join('') + '</div></div>';
+      }).join('');
+
+      var male = categories.filter(function (cat) { return (cat.tipo || String(cat.id).charAt(0)) === 'M'; }).length;
+      var female = categories.filter(function (cat) { return (cat.tipo || String(cat.id).charAt(0)) === 'F'; }).length;
+      var count = [];
+      if (male) count.push(male + ' masculina' + (male === 1 ? '' : 's'));
+      if (female) count.push(female + ' feminina' + (female === 1 ? '' : 's'));
+      document.getElementById('cfgPrizeCategories').textContent = count.join(' · ') || 'Categorias a configurar';
+
+      var pool = prizeCfg.montanteGlobal || '';
+      document.getElementById('cfgPrizePool').textContent = pool || 'A anunciar';
+      document.getElementById('cfgPrizePoolText').textContent = pool
+        ? 'Montante global definido pela organização para esta edição.'
+        : 'Consulta abaixo os prémios definidos para cada categoria.';
+
+      var distinctions = Array.isArray(prizeCfg.distincoes) ? prizeCfg.distincoes : [];
+      var distinctionGrid = document.getElementById('prizeDistinctions');
+      distinctionGrid.innerHTML = distinctions.map(function (item) {
+        return '<article><i class="ph ' + escapeHtml(item.icone || 'ph-medal') + '"></i><span><small>Distinção</small><strong>'
+          + escapeHtml(item.nome || 'Distinção') + '</strong></span><b>' + escapeHtml(prizeLabel(item.premio)) + '</b></article>';
+      }).join('');
+      var specialSection = distinctionGrid.closest('.prize-special');
+      if (specialSection) specialSection.hidden = !distinctions.length;
+    }
+
     function applyTournamentIdentity() {
       var cfg = ppGet('config') || {};
       var nome = cfg.tornNome || 'Torneio Clausura';
@@ -287,8 +317,12 @@
         }
       });
     }
+    renderPrizeConfiguration();
     applyTournamentIdentity();
-    window.addEventListener('pp:datasynced', applyTournamentIdentity);
+    window.addEventListener('pp:datasynced', function () {
+      renderPrizeConfiguration();
+      applyTournamentIdentity();
+    });
   }());
 </script>
 <script>if("serviceWorker"in navigator){navigator.serviceWorker.register("/playpadelcoop/sw.js").catch(function(){});}</script>

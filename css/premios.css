@@ -642,7 +642,7 @@
   }
 
   .prize-hero__content h1 {
-    font-size: clamp(3.7rem, 18vw, 5rem);
+    font-size: clamp(3.25rem, 15.5vw, 4.25rem);
   }
 
   .prize-hero__actions {

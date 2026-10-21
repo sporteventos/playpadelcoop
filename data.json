@@ -185,6 +185,16 @@
     "inscritosVisible": true,
     "estatisticasVisible": false,
     "premiosVisible": false,
+    "premiosConfig": {
+      "montanteGlobal": "",
+      "categorias": {},
+      "distincoes": [
+        { "id": "fair-play", "nome": "Fair Play", "icone": "ph-hand-heart", "premio": { "tipo": "", "valor": "" } },
+        { "id": "dupla-revelacao", "nome": "Dupla Revelação", "icone": "ph-sparkle", "premio": { "tipo": "", "valor": "" } },
+        { "id": "jogador-torneio", "nome": "Jogador do Torneio", "icone": "ph-star", "premio": { "tipo": "", "valor": "" } },
+        { "id": "jogadora-torneio", "nome": "Jogadora do Torneio", "icone": "ph-star", "premio": { "tipo": "", "valor": "" } }
+      ]
+    },
     "regulamentoVisible": true,
     "liveStatsVisible": false,
     "navegarVisible": true,

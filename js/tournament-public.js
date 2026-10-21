@@ -9,32 +9,38 @@
 
   ready(function () {
     var config = {};
-    try {
-      config = JSON.parse(localStorage.getItem('pp_config') || 'null') || {};
-    } catch (_) {}
-    var identity = {
-      cfgNomeTorneio: config.tornNome,
-      cfgSubtituloNav: config.tornSubtitulo,
-      cfgHeroTournament: config.tornNome,
-      cfgRegistrationDates: config.tornDatas,
-      cfgRegistrationLocation: config.tornLocal
-    };
-    Object.keys(identity).forEach(function (id) {
-      var element = document.getElementById(id);
-      if (element && identity[id]) element.textContent = identity[id];
-    });
-    var footerTournament = document.getElementById('cfgFooterTournament');
-    var footerDescription = document.getElementById('cfgRegistrationFooter');
-    var footerCopy = document.getElementById('cfgRegistrationCopy');
-    if (footerTournament && config.tornNome) footerTournament.textContent = config.tornNome;
-    if (footerDescription && (config.tornNome || config.tornDatas || config.tornLocal)) {
-      footerDescription.innerHTML = 'Pré-inscrições do ' + (config.tornNome || 'torneio') + '<br>'
-        + (config.tornDatas || '') + (config.tornLocal ? ' · ' + config.tornLocal : '');
+    function applyIdentity() {
+      try {
+        config = typeof window.ppGet === 'function'
+          ? window.ppGet('config') || {}
+          : JSON.parse(localStorage.getItem('pp_config') || 'null') || {};
+      } catch (_) { config = {}; }
+      var identity = {
+        cfgNomeTorneio: config.tornClube,
+        cfgSubtituloNav: config.tornSubtitulo || config.tornNome,
+        cfgHeroTournament: config.tornNome,
+        cfgRegistrationDates: config.tornDatas,
+        cfgRegistrationLocation: config.tornLocal
+      };
+      Object.keys(identity).forEach(function (id) {
+        var element = document.getElementById(id);
+        if (element && identity[id]) element.textContent = identity[id];
+      });
+      var footerTournament = document.getElementById('cfgFooterTournament');
+      var footerDescription = document.getElementById('cfgRegistrationFooter');
+      var footerCopy = document.getElementById('cfgRegistrationCopy');
+      if (footerTournament && config.tornNome) footerTournament.textContent = config.tornNome;
+      if (footerDescription && (config.tornNome || config.tornDatas || config.tornLocal)) {
+        footerDescription.innerHTML = 'Pré-inscrições do ' + (config.tornNome || 'torneio') + '<br>'
+          + (config.tornDatas || '') + (config.tornLocal ? ' · ' + config.tornLocal : '');
+      }
+      if (footerCopy && (config.tornNome || config.tornLocal)) {
+        footerCopy.textContent = '© 2026 ' + (config.tornNome || 'Torneio')
+          + (config.tornLocal ? ' · ' + config.tornLocal + ', Moçambique' : '');
+      }
     }
-    if (footerCopy && (config.tornNome || config.tornLocal)) {
-      footerCopy.textContent = '© 2026 ' + (config.tornNome || 'Torneio')
-        + (config.tornLocal ? ' · ' + config.tornLocal + ', Moçambique' : '');
-    }
+    applyIdentity();
+    window.addEventListener('pp:datasynced', applyIdentity);
 
     var form = document.getElementById('insForm');
     if (!form) return;
@@ -110,7 +116,7 @@
 
       restoringDraft = true;
       var values = draft.values;
-      ['genero', 'modo'].forEach(function (name) {
+      ['genero', 'modo', 'disponibilidade'].forEach(function (name) {
         if (!values[name]) return;
         var radio = Array.prototype.find.call(form.querySelectorAll('input[name="' + name + '"]'), function (field) {
           return field.value === values[name];
@@ -121,7 +127,7 @@
         }
       });
       Object.keys(values).forEach(function (name) {
-        if (name === 'genero' || name === 'modo') return;
+        if (name === 'genero' || name === 'modo' || name === 'disponibilidade') return;
         var field = form.elements[name];
         if (field && typeof field.value !== 'undefined') {
           field.value = values[name];
@@ -178,6 +184,9 @@
       var gender = value('genero') === 'F' ? 'Feminino' : 'Masculino';
       var partner = value('parceiro');
       var mode = value('modo') || 'parceiro';
+      var availability = value('disponibilidade') === 'pontual'
+        ? 'Indisponibilidade pontual indicada'
+        : 'Tenho disponibilidade';
       var pairs = {
         reviewName: value('nome1') || '—',
         reviewContact: value('telefone') || '—',
@@ -185,6 +194,7 @@
         reviewGender: gender,
         reviewMode: modeLabels[mode] || '—',
         reviewPartner: mode === 'reserva' ? 'A anunciar' : (mode === 'solo' ? 'Sem parceiro por agora' : (partner || 'Por indicar')),
+        reviewAvailability: availability,
         summaryPlayer: value('nome1') || 'Por preencher',
         summaryCategory: value('categoria') || '—',
         summaryPartner: mode === 'reserva' ? 'A anunciar' : (mode === 'solo' ? 'Individual' : (partner || 'Por indicar'))

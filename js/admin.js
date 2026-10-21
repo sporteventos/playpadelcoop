@@ -2425,7 +2425,7 @@ function renderDashboard() {
   }).join('');
 
   // Category progress bars
-  const CATS = ['M1','M2','M3','M4','M5','F1','F2','F3'];
+  const CATS = (getData('categorias') || []).map(c => c.id);
   const catProgress = document.getElementById('dashCatProgress');
   if (catProgress) {
     catProgress.innerHTML = CATS.map(cat => {
@@ -2469,6 +2469,68 @@ function renderDashboard() {
       }).join('');
     }
   }
+}
+
+function _prizeConfigValue(cfg) {
+  let value = cfg?.premiosConfig || {};
+  if (typeof value === 'string') {
+    try { value = JSON.parse(value); } catch (_) { value = {}; }
+  }
+  if (!value || typeof value !== 'object' || Array.isArray(value)) value = {};
+  value.categorias = value.categorias || {};
+  value.distincoes = Array.isArray(value.distincoes) ? value.distincoes : [];
+  return value;
+}
+
+function _prizeTypeOptions(current) {
+  return [
+    ['', 'Por definir'],
+    ['dinheiro', 'Dinheiro'],
+    ['bem', 'Bem'],
+    ['servico', 'Serviço'],
+    ['misto', 'Misto']
+  ].map(([value, label]) => `<option value="${value}" ${current === value ? 'selected' : ''}>${label}</option>`).join('');
+}
+
+function renderPrizeConfigEditor(cfg) {
+  const prizeCfg = _prizeConfigValue(cfg);
+  const inputStyle = 'background:var(--cinza-escuro);border:1px solid var(--preto-borda);border-radius:6px;padding:.4rem .55rem;font-size:.78rem;color:var(--branco);min-width:0';
+  const categories = (getData('categorias') || []).map(cat => {
+    const item = prizeCfg.categorias[cat.id] || {};
+    const place = (key, label) => {
+      const prize = item[key] || {};
+      return `<div style="display:grid;grid-template-columns:95px 130px 1fr;gap:.5rem;align-items:center;margin-top:.45rem">
+        <strong style="font-size:.72rem;color:var(--cinza-texto)">${label}</strong>
+        <select style="${inputStyle}" onchange="savePrizeCategory('${escHtml(cat.id)}','${key}','tipo',this.value)">${_prizeTypeOptions(prize.tipo || '')}</select>
+        <input style="${inputStyle}" type="text" value="${escHtml(prize.valor || '')}" placeholder="Valor, bem ou serviço" onchange="savePrizeCategory('${escHtml(cat.id)}','${key}','valor',this.value)"/>
+      </div>`;
+    };
+    return `<div style="padding:.75rem;border:1px solid var(--preto-borda);border-radius:8px;background:rgba(255,255,255,.02);margin-top:.55rem">
+      <div style="display:flex;align-items:center;gap:.5rem"><span class="cat-pill cat-${escHtml(cat.id)}">${escHtml(cat.id)}</span><strong style="font-size:.82rem">${escHtml(cat.nome || cat.id)}</strong></div>
+      ${place('campeao', 'Campeões')}
+      ${place('finalista', 'Finalistas')}
+    </div>`;
+  }).join('');
+  const distinctions = prizeCfg.distincoes.map((item, index) => `
+    <div style="display:grid;grid-template-columns:1fr 120px 1fr auto;gap:.5rem;align-items:center;margin-top:.5rem">
+      <input style="${inputStyle}" type="text" value="${escHtml(item.nome || '')}" placeholder="Nome da distinção" onchange="savePrizeDistinction(${index},'nome',this.value)"/>
+      <select style="${inputStyle}" onchange="savePrizeDistinction(${index},'tipo',this.value)">${_prizeTypeOptions(item.premio?.tipo || '')}</select>
+      <input style="${inputStyle}" type="text" value="${escHtml(item.premio?.valor || '')}" placeholder="Valor, bem ou serviço" onchange="savePrizeDistinction(${index},'valor',this.value)"/>
+      <button class="btn-icon btn-del" title="Remover distinção" onclick="deletePrizeDistinction(${index})"><i class="ph ph-trash"></i></button>
+    </div>`).join('');
+  return `
+    <div style="font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:var(--cinza-texto);padding:.6rem 0 .3rem;margin-top:.5rem;border-bottom:1px solid var(--preto-borda)">Gestão de Prémios</div>
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:.55rem 0;border-bottom:1px solid rgba(255,255,255,.04)">
+      <label style="font-size:.82rem;color:var(--branco);min-width:200px">Montante global <span style="color:var(--cinza-texto)">(opcional)</span></label>
+      <input style="${inputStyle};flex:1;max-width:320px" type="text" value="${escHtml(prizeCfg.montanteGlobal || '')}" placeholder="ex: 150 000 MZN" onchange="savePrizeGlobal(this.value)"/>
+    </div>
+    <p style="font-size:.72rem;color:var(--cinza-texto);line-height:1.5;margin:.55rem 0">Os cartões abaixo acompanham automaticamente as categorias ativas. Pode configurar prémios em dinheiro, bens, serviços ou combinações.</p>
+    ${categories || '<p style="color:var(--cinza-texto);font-size:.78rem">Crie primeiro as categorias do torneio.</p>'}
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-top:1rem">
+      <strong style="font-size:.8rem;color:var(--branco)">Distinções especiais</strong>
+      <button class="btn btn-secondary btn-sm" onclick="addPrizeDistinction()"><i class="ph ph-plus"></i> Adicionar</button>
+    </div>
+    ${distinctions || '<p style="font-size:.72rem;color:var(--cinza-texto);margin:.55rem 0">Sem distinções especiais configuradas.</p>'}`;
 }
 
 function renderConfigPanel() {
@@ -2567,6 +2629,8 @@ function renderConfigPanel() {
     ${fieldToggle('premiosVisible',       'Prémios',                  'ph-gift',              false)}
     ${fieldToggle('regulamentoVisible',   'Regulamento',              'ph-book-open',         true)}
 
+    ${renderPrizeConfigEditor(cfg)}
+
     ${section('Visibilidade de Secções (Página Principal)')}
     ${fieldToggle('liveStatsVisible',     'Torneio em Tempo Real',    'ph-activity',          true)}
     ${fieldToggle('navegarVisible',       'Navegar (cards)',          'ph-squares-four',      true)}
@@ -2615,6 +2679,57 @@ function saveConfigField(key, val) {
   _autoSync();
   if (key && key.startsWith('data')) { try { applyDateBounds(); } catch {} }
 }
+
+function _savePrizeConfig(prizeCfg) {
+  const cfg = getData('config') || {};
+  cfg.premiosConfig = prizeCfg;
+  setData('config', cfg);
+  _autoSync();
+  renderConfigPanel();
+}
+
+window.savePrizeGlobal = function(value) {
+  const cfg = getData('config') || {};
+  const prizeCfg = _prizeConfigValue(cfg);
+  prizeCfg.montanteGlobal = value.trim();
+  _savePrizeConfig(prizeCfg);
+};
+
+window.savePrizeCategory = function(catId, place, field, value) {
+  const cfg = getData('config') || {};
+  const prizeCfg = _prizeConfigValue(cfg);
+  prizeCfg.categorias[catId] = prizeCfg.categorias[catId] || {};
+  prizeCfg.categorias[catId][place] = prizeCfg.categorias[catId][place] || {};
+  prizeCfg.categorias[catId][place][field] = value.trim();
+  _savePrizeConfig(prizeCfg);
+};
+
+window.addPrizeDistinction = function() {
+  const cfg = getData('config') || {};
+  const prizeCfg = _prizeConfigValue(cfg);
+  prizeCfg.distincoes.push({ id: 'dist-' + Date.now(), nome: '', icone: 'ph-medal', premio: { tipo: '', valor: '' } });
+  _savePrizeConfig(prizeCfg);
+};
+
+window.savePrizeDistinction = function(index, field, value) {
+  const cfg = getData('config') || {};
+  const prizeCfg = _prizeConfigValue(cfg);
+  const item = prizeCfg.distincoes[index];
+  if (!item) return;
+  if (field === 'nome') item.nome = value.trim();
+  else {
+    item.premio = item.premio || {};
+    item.premio[field] = value.trim();
+  }
+  _savePrizeConfig(prizeCfg);
+};
+
+window.deletePrizeDistinction = function(index) {
+  const cfg = getData('config') || {};
+  const prizeCfg = _prizeConfigValue(cfg);
+  prizeCfg.distincoes.splice(index, 1);
+  _savePrizeConfig(prizeCfg);
+};
 
 // Aplica os limites (min/max) dos seletores de data a partir da config do torneio
 function applyDateBounds() {
@@ -2925,6 +3040,11 @@ window.deleteGruposAll = function(catId) {
   const cats = getData('categorias').filter(c => c.id !== catId);
   const grupos = getData('grupos').filter(g => g.cat !== catId);
   setData('categorias', cats); setData('grupos', grupos);
+  const ff = ffLoad();
+  if (ff[catId]) {
+    delete ff[catId];
+    ffSave(ff);
+  }
   renderCategorias(); toast('Categoria eliminada.');
 };
 
@@ -5135,8 +5255,9 @@ function ffRecalcBracket(catId) {
   toast(`Seeds recalculados para ${catId}.`);
 }
 
-// Lista das 8 categorias do torneio.
-const FF_ALL_CATS = ['M1', 'M2', 'F1', 'F2', 'F3', 'M3', 'M4', 'M5'];
+function ffCategoryIds() {
+  return (getData('categorias') || []).map(c => c.id).filter(Boolean);
+}
 
 // (A) Garante que existe um esqueleto de bracket para todas as categorias, para
 // que os jogos da fase final apareçam desde já (site público, calendário e
@@ -5145,7 +5266,7 @@ const FF_ALL_CATS = ['M1', 'M2', 'F1', 'F2', 'F3', 'M3', 'M4', 'M5'];
 function ffEnsureSkeletons() {
   const ff = ffLoad();
   let created = 0;
-  FF_ALL_CATS.forEach(catId => {
+  ffCategoryIds().forEach(catId => {
     if (ff[catId]?.generated) return;
     const grupos = getData('grupos').filter(g => g.cat === catId);
     if (!grupos.length) return; // categoria sem grupos definidos ainda
@@ -5166,7 +5287,7 @@ function ffAutoMaintain(opts = {}) {
   const created = ffEnsureSkeletons();
   const ff = ffLoad();
   let updated = 0;
-  FF_ALL_CATS.forEach(catId => {
+  ffCategoryIds().forEach(catId => {
     if (!ff[catId]?.generated) return;
     if (_ffCatLocked(catId, ff)) return;
     const note = _ffRegenPreserve(catId, ff);
@@ -5249,7 +5370,10 @@ function renderFaseFinal() {
   Object.keys(_ffProp).forEach(c => { if (_ffProp[c]?.generated) ffPropagate(c); });
 
   const ff   = ffLoad();
-  const cats = ['M1', 'M2', 'F1', 'F2', 'F3', 'M3', 'M4', 'M5'];
+  const cats = ffCategoryIds();
+  if (ffCurrentCat !== 'ALL' && !cats.includes(ffCurrentCat)) {
+    ffCurrentCat = cats[0] || 'ALL';
+  }
   document.getElementById('ffCatTabs').innerHTML = [
     ...cats.map(c =>
       `<button class="btn btn-sm ${c === ffCurrentCat ? 'btn-primary' : 'btn-ghost'}" onclick="ffSetCat('${c}')" style="min-width:3rem">${c}</button>`
@@ -5587,7 +5711,7 @@ window.ffReagendarFasesFinais = function() {
   if (!confirm('Reagendar Quartos e Meias-Finais de todas as categorias pelos intervalos configurados?\n\nAs datas, horas e campos actuais destes jogos serão redistribuídos automaticamente. Seeds, resultados e Finais mantêm-se.')) return;
   const ff = ffLoad();
   let count = 0;
-  FF_ALL_CATS.forEach(catId => {
+  ffCategoryIds().forEach(catId => {
     const cd = ff[catId];
     if (!cd?.generated) return;
     const qf = cd.jogos.filter(j => j.fase === 'QF');
@@ -5603,7 +5727,7 @@ window.ffReagendarFasesFinais = function() {
 
 // ---- Global view (all categories) ----
 function ffRenderGlobal() {
-  const cats = ['M1', 'M2', 'F1', 'F2', 'F3', 'M3', 'M4', 'M5'];
+  const cats = ffCategoryIds();
   const container = document.getElementById('ffBracket');
   const phaseLabel = { QF: 'Quartos', SF: 'Meias', F: 'Final' };
 
@@ -5694,7 +5818,7 @@ function ffRenderGlobal() {
 }
 
 window.ffGerarTodosBrackets = function() {
-  const cats = ['M1', 'M2', 'F1', 'F2', 'F3', 'M3', 'M4', 'M5'];
+  const cats = ffCategoryIds();
   const ff = ffLoad();
   const ready = cats.filter(c => !ff[c]?.generated && allGroupGamesDone(c));
   if (ready.length === 0) return toast('Nenhum bracket disponível para gerar (fase de grupos incompleta ou já gerados).', 'error');
@@ -5710,7 +5834,7 @@ window.ffGerarTodosBrackets = function() {
 
 window.ffGerarAleatoriosTodos = function() {
   if (!Auth.isAdmin()) return toast('Apenas administradores podem executar esta acção.', 'error');
-  const cats = ['M1', 'M2', 'F1', 'F2', 'F3', 'M3', 'M4', 'M5'];
+  const cats = ffCategoryIds();
   const generated = cats.filter(c => ffLoad()[c]?.generated);
   if (generated.length === 0) return toast('Nenhum bracket gerado. Gera os brackets primeiro.', 'error');
   if (!confirm(`Preencher resultados aleatórios em todos os brackets gerados (${generated.join(', ')})? (Apenas para testes)`)) return;
@@ -5746,7 +5870,7 @@ window.ffGerarAleatoriosTodos = function() {
 
 window.ffLimparResultadosTodos = function() {
   if (!Auth.isAdmin()) return toast('Apenas administradores podem executar esta acção.', 'error');
-  const cats = ['M1', 'M2', 'F1', 'F2', 'F3', 'M3', 'M4', 'M5'];
+  const cats = ffCategoryIds();
   const ff = ffLoad();
   const generated = cats.filter(c => ff[c]?.generated);
   if (generated.length === 0) return toast('Nenhum bracket gerado.', 'error');
@@ -5764,7 +5888,7 @@ window.ffLimparResultadosTodos = function() {
 
 window.ffResetarTodos = function() {
   if (!Auth.isAdmin()) return toast('Apenas administradores podem executar esta acção.', 'error');
-  const cats = ['M1', 'M2', 'F1', 'F2', 'F3', 'M3', 'M4', 'M5'];
+  const cats = ffCategoryIds();
   const ff = ffLoad();
   const generated = cats.filter(c => ff[c]?.generated);
   if (generated.length === 0) return toast('Nenhum bracket gerado.', 'error');
@@ -6312,7 +6436,28 @@ function _insDashboardHtml(entries) {
   </details>`;
 }
 
+function _insPublicReference(id) {
+  return 'PP-' + String(id || '').replace(/^ins-/, '').replace(/-p$/, '');
+}
+
+function _insAvailabilityLabel(raw) {
+  if (!raw) return '';
+  try {
+    const parsed = typeof raw === 'string' ? JSON.parse(raw) : raw;
+    if (!parsed || parsed.v !== 1 || !Array.isArray(parsed.datas)) return String(raw);
+    if (parsed.estado !== 'pontual') return 'Disponibilidade total';
+    const periodos = { manha: 'manhã', tarde: 'tarde', noite: 'noite', dia: 'dia inteiro' };
+    return 'Indisponível: ' + parsed.datas.map(item => {
+      const date = String(item.data || '').split('-').reverse().join('/');
+      return date + ' (' + (periodos[item.periodo] || item.periodo || 'período por indicar') + ')';
+    }).join('; ');
+  } catch (_) {
+    return String(raw);
+  }
+}
+
 function _insRowHtml(e, entries) {
+  const availability = _insAvailabilityLabel(e.observacoes);
   return `
                   <tr style="border-bottom:1px solid rgba(255,255,255,.04)" data-ins-id="${escHtml(e.id)}">
                     <td style="padding:.65rem .9rem">
@@ -6329,7 +6474,8 @@ function _insRowHtml(e, entries) {
                         return `<div style="font-size:.73rem;color:var(--cinza-texto)"><i class="ph ph-handshake"></i> Par: ${escHtml(e.parceiro)} <span style="color:${ok?'var(--verde)':'var(--amarelo)'}">${ok?'✓ confirmado':'pendente'}</span></div>`;
                       })() : '')}
                       ${e.clube ? `<div style="font-size:.72rem;color:#4A6058">${escHtml(e.clube)}</div>` : ''}
-                      ${e.observacoes && e.observacoes !== 'Importado da lista provisória do clube' ? `<div style="font-size:.72rem;color:#8AA396;margin-top:.25rem;max-width:280px"><i class="ph ph-note"></i> ${escHtml(e.observacoes)}</div>` : ''}
+                      <div style="font-size:.68rem;color:#7BB0FF;margin-top:.25rem;font-family:monospace" title="${escHtml(e.id)}"><i class="ph ph-identification-card"></i> ${escHtml(_insPublicReference(e.id))}</div>
+                      ${availability && availability !== 'Importado da lista provisória do clube' ? `<div style="font-size:.72rem;color:#8AA396;margin-top:.25rem;max-width:320px"><i class="ph ph-calendar-check"></i> ${escHtml(availability)}</div>` : ''}
                     </td>
                     <td style="padding:.65rem .9rem">
                       <span style="font-size:.68rem;font-weight:700;text-transform:uppercase;padding:.15rem .45rem;border-radius:4px;background:${e.tipo==='dupla'?'rgba(0,195,123,.12)':'rgba(245,197,24,.12)'};color:${e.tipo==='dupla'?'var(--verde)':'var(--amarelo)'}">
@@ -6393,7 +6539,7 @@ window._insApplyFilters = function() {
     if (fTipo === 'reserva') { if (!e.reservado) return false; }
     else if (fTipo && e.tipo !== fTipo) return false;
     if (q) {
-      const hay = [e.nome1, e.nome2, e.parceiro, e.telefone, e.email, e.categoria, e.observacoes]
+      const hay = [e.id, _insPublicReference(e.id), e.nome1, e.nome2, e.parceiro, e.telefone, e.email, e.categoria, _insAvailabilityLabel(e.observacoes)]
         .map(x => String(x || '').toLowerCase()).join(' ');
       if (hay.indexOf(q) < 0) return false;
     }
@@ -6637,8 +6783,55 @@ window.insEditBuildCats = function(selected) {
   if (cur) sel.value = cur;
 };
 
+window.insEditToggleAvailability = function() {
+  const pontual = document.getElementById('insEditAvailability')?.value === 'pontual';
+  const fields = document.getElementById('insEditUnavailableFields');
+  if (fields) fields.style.display = pontual ? '' : 'none';
+};
+
+function _insEditSetAvailability(raw) {
+  let parsed = null;
+  try { parsed = typeof raw === 'string' ? JSON.parse(raw) : raw; } catch (_) {}
+  const structured = parsed && parsed.v === 1 && Array.isArray(parsed.datas);
+  const state = structured && parsed.estado === 'pontual' ? 'pontual' : 'disponivel';
+  document.getElementById('insEditAvailability').value = state;
+  const dates = structured ? parsed.datas : [];
+  for (let i = 1; i <= 2; i++) {
+    document.getElementById('insEditDate' + i).value = dates[i - 1]?.data || '';
+    document.getElementById('insEditPeriod' + i).value = dates[i - 1]?.periodo || '';
+  }
+  const legacy = document.getElementById('insEditLegacyWrap');
+  const legacyText = document.getElementById('insEditLegacyObs');
+  const hasLegacy = !!raw && !structured && raw !== 'Importado da lista provisória do clube';
+  if (legacy) legacy.style.display = hasLegacy ? '' : 'none';
+  if (legacyText) legacyText.textContent = hasLegacy ? String(raw) : '';
+  const cfg = getData('config') || {};
+  ['insEditDate1', 'insEditDate2'].forEach(id => {
+    const input = document.getElementById(id);
+    input.min = cfg.dataGruposInicio || cfg.tornInicio || '';
+    input.max = cfg.dataFinais || cfg.tornFim || '';
+  });
+  insEditToggleAvailability();
+}
+
+function _insEditAvailabilityValue() {
+  const state = document.getElementById('insEditAvailability').value;
+  if (state !== 'pontual') return JSON.stringify({ v: 1, estado: 'disponivel', datas: [] });
+  const dates = [];
+  for (let i = 1; i <= 2; i++) {
+    const data = document.getElementById('insEditDate' + i).value;
+    const periodo = document.getElementById('insEditPeriod' + i).value;
+    if ((data && !periodo) || (!data && periodo)) throw new Error(`Completa a ${i}.ª data e o respetivo período.`);
+    if (data && periodo) dates.push({ data, periodo });
+  }
+  if (!dates.length) throw new Error('Indica pelo menos uma data de indisponibilidade.');
+  if (dates.length === 2 && dates[0].data === dates[1].data) throw new Error('As duas datas de indisponibilidade devem ser diferentes.');
+  return JSON.stringify({ v: 1, estado: 'pontual', datas: dates });
+}
+
 window.insAdminNew = function() {
   document.getElementById('insEditId').value = '';
+  document.getElementById('insEditReferenceWrap').style.display = 'none';
   document.getElementById('insEditNome').value = '';
   document.getElementById('insEditGenero').value = 'M';
   insEditBuildCats('');
@@ -6646,7 +6839,7 @@ window.insAdminNew = function() {
   document.getElementById('insEditEmail').value = '';
   document.getElementById('insEditParceiro').value = '';
   document.getElementById('insEditReservado').checked = false;
-  document.getElementById('insEditObs').value = '';
+  _insEditSetAvailability('');
   const t = document.getElementById('modalInscricaoTitle');
   if (t) t.innerHTML = '<i class="ph ph-plus"></i> Nova Pré-Inscrição';
   openModal('modalInscricao');
@@ -6659,6 +6852,8 @@ window.insAdminEdit = function(id) {
   const t = document.getElementById('modalInscricaoTitle');
   if (t) t.innerHTML = '<i class="ph ph-pencil-simple"></i> Editar Pré-Inscrição';
   document.getElementById('insEditId').value = e.id;
+  document.getElementById('insEditReferenceWrap').style.display = '';
+  document.getElementById('insEditReference').textContent = _insPublicReference(e.id) + ' · ' + e.id;
   document.getElementById('insEditNome').value = e.nome1 || '';
   document.getElementById('insEditGenero').value = e.genero === 'F' ? 'F' : 'M';
   insEditBuildCats(e.categoria || '');
@@ -6666,7 +6861,7 @@ window.insAdminEdit = function(id) {
   document.getElementById('insEditEmail').value = e.email || '';
   document.getElementById('insEditParceiro').value = e.parceiro || '';
   document.getElementById('insEditReservado').checked = !!e.reservado;
-  document.getElementById('insEditObs').value = e.observacoes || '';
+  _insEditSetAvailability(e.observacoes || '');
   openModal('modalInscricao');
 };
 
@@ -6682,7 +6877,7 @@ window.insAdminSave = async function() {
     const email = document.getElementById('insEditEmail').value.trim();
     const parceiro = document.getElementById('insEditParceiro').value.trim();
     const reservado = document.getElementById('insEditReservado').checked;
-    const obs = document.getElementById('insEditObs').value.trim();
+    const obs = _insEditAvailabilityValue();
 
     // ── Criar nova pré-inscrição (organização) ──
     if (!id) {
@@ -6706,7 +6901,7 @@ window.insAdminSave = async function() {
           id: base.id + '-p', criadoem: new Date().toISOString(),
           tipo: 'dupla', genero: genero, categoria: categoria,
           nome1: parReal, nome2: '', parceiro: nome, parid: parid, reservado: false,
-          telefone: null, email: null, observacoes: '', estado: 'nova'
+          telefone: null, email: null, observacoes: obs, estado: 'nova'
         });
       }
       novos.forEach(n => entries.push(n));
@@ -6741,6 +6936,7 @@ window.insAdminSave = async function() {
       entries.filter(x => x.parid === e.parid && x.id !== e.id).forEach(sib => {
         sib.categoria = categoria;
         sib.genero = genero;
+        sib.observacoes = obs;
         if (sib.parceiro && e.nome1) sib.parceiro = e.nome1;
       });
     }
@@ -6759,7 +6955,7 @@ window.insAdminSave = async function() {
     closeModal('modalInscricao');
     renderInscricoes();
     toast('Pré-inscrição actualizada.', 'success');
-  } catch (err) { toast('Erro ao guardar inscrição.', 'error'); }
+  } catch (err) { toast(err?.message || 'Erro ao guardar inscrição.', 'error'); }
 };
 
 // Anuncia o parceiro de uma reserva: cria a pré-inscrição do parceiro ligada por parid.
@@ -7071,12 +7267,10 @@ function uiForceLogout(sessionId, username) {
 // ============================================
 //  HELPER: category checkboxes in user modal
 // ============================================
-const _ALL_CATS = ['M1','M2','M3','M4','M5','F1','F2','F3'];
-
 function _buildCategoryCheckboxes(selectedCats) {
   const grid = document.getElementById('userCategoriesGrid');
   if (!grid) return;
-  grid.innerHTML = _ALL_CATS.map(cat => `
+  grid.innerHTML = (getData('categorias') || []).map(c => c.id).map(cat => `
     <label style="display:flex;align-items:center;gap:.4rem;cursor:pointer;font-size:.82rem">
       <input type="checkbox" value="${cat}" ${selectedCats.includes(cat) ? 'checked' : ''}
         style="accent-color:var(--verde);width:15px;height:15px">
@@ -7586,7 +7780,7 @@ window.gerarPanfletoClassificacoes = function() {
 // ============================================
 window.gerarPanfletoCampeoes = function() {
   const ff   = ppLoad('fasefinal') || {};
-  const CATS = ['M1', 'M2', 'F1', 'F2', 'F3', 'M3', 'M4', 'M5'];
+  const CATS = ffCategoryIds();
   const CAT_CLR = { M1:'#4A9EFF', M2:'#00C37B', M3:'#39FF8F', M4:'#F5C518', M5:'#FF9A3C', F1:'#FF6BB0', F2:'#C97BFF', F3:'#8B5CF6', F3:'#8B5CF6' };
 
   const champions = [];
@@ -7837,7 +8031,7 @@ window.gerarPanfletoFinalAnuncio = function(catId) {
 // ============================================
 window.gerarPanfletoDiaFinais = function() {
   const ff   = ffLoad();
-  const CATS = ['M1', 'M2', 'F1', 'F2', 'F3', 'M3', 'M4', 'M5'];
+  const CATS = ffCategoryIds();
   const CAT_CLR  = { M1:'#4A9EFF', M2:'#00C37B', M3:'#39FF8F', M4:'#F5C518', M5:'#FF9A3C', F1:'#FF6BB0', F2:'#C97BFF', F3:'#8B5CF6', F3:'#8B5CF6' };
   const CAT_NOME = { M1:'Masculino 1', M2:'Masculino 2', M3:'Masculino 3', M4:'Masculino 4', M5:'Masculino 5', F1:'Feminino 1', F2:'Feminino 2' };
   const W = 1080, PAD = 52, CARD_H = 196, CARD_GAP = 14, LIST_Y = 490;

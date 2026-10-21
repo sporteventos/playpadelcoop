@@ -202,9 +202,48 @@
               <input class="form-input" id="parceiroEmail" name="parceiroEmail" type="email" placeholder="opcional"/>
             </div>
             <datalist id="dlJogadores"></datalist>
-            <div class="form-field full">
-              <label class="form-label" for="observacoes">Observações</label>
-              <textarea class="form-textarea" id="observacoes" name="observacoes" placeholder="Horários preferidos, condicionantes ou informação útil para a organização."></textarea>
+            <div class="form-field full tp-availability">
+              <label class="form-label">Disponibilidade para os jogos <span class="req">*</span></label>
+              <p class="form-help">A resposta deve considerar a disponibilidade dos dois jogadores da dupla.</p>
+              <div class="toggle-wrap tp-availability-options">
+                <label class="toggle-pill"><input type="radio" name="disponibilidade" value="disponivel" checked> <i class="ph ph-check-circle"></i> Tenho disponibilidade</label>
+                <label class="toggle-pill"><input type="radio" name="disponibilidade" value="pontual"> <i class="ph ph-calendar-x"></i> Tenho indisponibilidade pontual</label>
+              </div>
+              <div id="indisponibilidadeFields" class="tp-unavailability" hidden>
+                <div class="tp-unavailability-row">
+                  <div class="form-field">
+                    <label class="form-label" for="indisponibilidadeData1">1.ª data indisponível <span class="req">*</span></label>
+                    <input class="form-input" id="indisponibilidadeData1" name="indisponibilidadeData1" type="date"/>
+                  </div>
+                  <div class="form-field">
+                    <label class="form-label" for="indisponibilidadePeriodo1">Período <span class="req">*</span></label>
+                    <select class="form-select" id="indisponibilidadePeriodo1" name="indisponibilidadePeriodo1">
+                      <option value="">— seleciona —</option>
+                      <option value="manha">Manhã</option>
+                      <option value="tarde">Tarde</option>
+                      <option value="noite">Noite</option>
+                      <option value="dia">Dia inteiro</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="tp-unavailability-row">
+                  <div class="form-field">
+                    <label class="form-label" for="indisponibilidadeData2">2.ª data <span style="font-weight:400;text-transform:none;letter-spacing:0">(opcional)</span></label>
+                    <input class="form-input" id="indisponibilidadeData2" name="indisponibilidadeData2" type="date"/>
+                  </div>
+                  <div class="form-field">
+                    <label class="form-label" for="indisponibilidadePeriodo2">Período</label>
+                    <select class="form-select" id="indisponibilidadePeriodo2" name="indisponibilidadePeriodo2">
+                      <option value="">— seleciona —</option>
+                      <option value="manha">Manhã</option>
+                      <option value="tarde">Tarde</option>
+                      <option value="noite">Noite</option>
+                      <option value="dia">Dia inteiro</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="tp-availability-warning"><i class="ph ph-warning-circle"></i><span>A organização terá em conta as indisponibilidades comunicadas, mas não garante o seu atendimento.</span></div>
+              </div>
             </div>
           </div>
           <div class="tp-step-actions"><button class="tp-button" type="button" data-step-back><i class="ph ph-arrow-left"></i> Voltar</button><button class="tp-button tp-button--primary" type="button" data-step-next>Rever inscrição <i class="ph ph-arrow-right"></i></button></div>
@@ -218,6 +257,7 @@
             <div class="tp-review-row"><span>Categoria</span><strong><span id="reviewCategory">—</span> · <span id="reviewGender">—</span></strong></div>
             <div class="tp-review-row"><span>Formato</span><strong id="reviewMode">—</strong></div>
             <div class="tp-review-row"><span>Parceiro(a)</span><strong id="reviewPartner">—</strong></div>
+            <div class="tp-review-row"><span>Disponibilidade</span><strong id="reviewAvailability">Tenho disponibilidade</strong></div>
           </div>
           <div class="tp-step-actions"><button class="tp-button" type="button" data-step-back><i class="ph ph-arrow-left"></i> Corrigir</button><button class="tp-button tp-button--primary" type="submit"><i class="ph ph-paper-plane-tilt"></i> Submeter inscrição</button></div>
         </section>
@@ -251,7 +291,7 @@
       <button type="button" id="copyReference" aria-label="Copiar referência"><i class="ph ph-copy"></i></button>
     </div>
     <div class="tp-success-actions">
-      <a id="btnWhatsApp" class="tp-button whatsapp" href="#" target="_blank" rel="noopener"><i class="ph ph-whatsapp-logo"></i> Confirmar via WhatsApp</a>
+      <a id="btnWhatsApp" class="tp-button whatsapp" href="#" target="_blank" rel="noopener"><i class="ph ph-whatsapp-logo"></i> Enviar cópia por WhatsApp</a>
       <a id="btnCheckStatus" class="tp-button" href="estado-inscricao.html"><i class="ph ph-magnifying-glass"></i> Consultar estado</a>
       <button class="tp-button" onclick="document.getElementById('stepSuccess').style.display='none';document.getElementById('stepForm').style.display='';"><i class="ph ph-plus"></i> Nova inscrição</button>
     </div>
@@ -466,6 +506,58 @@ document.addEventListener('DOMContentLoaded', function () {
     r.addEventListener('change', applyModo);
   });
   applyModo();
+
+  function getDisponibilidade(){
+    var r = document.querySelector('input[name="disponibilidade"]:checked');
+    return r ? r.value : 'disponivel';
+  }
+  function applyDisponibilidade(){
+    var pontual = getDisponibilidade() === 'pontual';
+    var fields = document.getElementById('indisponibilidadeFields');
+    fields.hidden = !pontual;
+    ['indisponibilidadeData1','indisponibilidadePeriodo1'].forEach(function(id){
+      document.getElementById(id).required = pontual;
+    });
+  }
+  function applyDisponibilidadeDateBounds(){
+    var cfg = ppGet('config') || {};
+    var min = cfg.dataGruposInicio || cfg.tornInicio || '';
+    var max = cfg.dataFinais || cfg.tornFim || '';
+    ['indisponibilidadeData1','indisponibilidadeData2'].forEach(function(id){
+      var input = document.getElementById(id);
+      input.min = min;
+      input.max = max;
+    });
+  }
+  function buildDisponibilidade(){
+    if (getDisponibilidade() !== 'pontual') {
+      return { valid: true, value: JSON.stringify({ v: 1, estado: 'disponivel', datas: [] }), text: 'Tenho disponibilidade' };
+    }
+    var labels = { manha: 'Manhã', tarde: 'Tarde', noite: 'Noite', dia: 'Dia inteiro' };
+    var dates = [];
+    for (var i = 1; i <= 2; i++) {
+      var data = document.getElementById('indisponibilidadeData' + i).value;
+      var periodo = document.getElementById('indisponibilidadePeriodo' + i).value;
+      if ((data && !periodo) || (!data && periodo)) {
+        return { valid: false, message: 'Seleciona a data e o período da ' + i + '.ª indisponibilidade.' };
+      }
+      if (data && periodo) dates.push({ data: data, periodo: periodo });
+    }
+    if (!dates.length) return { valid: false, message: 'Indica pelo menos uma data e o respetivo período de indisponibilidade.' };
+    if (dates.length === 2 && dates[0].data === dates[1].data) {
+      return { valid: false, message: 'Seleciona duas datas diferentes para as indisponibilidades.' };
+    }
+    return {
+      valid: true,
+      value: JSON.stringify({ v: 1, estado: 'pontual', datas: dates }),
+      text: dates.map(function(item){ return item.data.split('-').reverse().join('/') + ' · ' + labels[item.periodo]; }).join('; ')
+    };
+  }
+  document.querySelectorAll('input[name="disponibilidade"]').forEach(function(r){
+    r.addEventListener('change', applyDisponibilidade);
+  });
+  applyDisponibilidade();
+  applyDisponibilidadeDateBounds();
   window.dispatchEvent(new CustomEvent('pp:registration-ready'));
 
   // ── Contador de vagas (por género) ──
@@ -534,7 +626,10 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   }
   refreshVagas();
-  window.addEventListener('pp:datasynced', function(){ refreshVagas(); });
+  window.addEventListener('pp:datasynced', function(){
+    refreshVagas();
+    applyDisponibilidadeDateBounds();
+  });
 
 
   document.getElementById('insForm').addEventListener('submit', async function(ev){
@@ -555,6 +650,7 @@ document.addEventListener('DOMContentLoaded', function () {
     if (_selectedPartner) { parceiroTel = _selectedPartner.tel; parceiroEmail = _selectedPartner.email || ''; }
     if (form.parceiroTel) form.parceiroTel.classList.remove('invalid');
     var reserva       = (modo === 'reserva');
+    var disponibilidade = buildDisponibilidade();
     var erros = [];
     if (!nome1) { form.nome1.classList.add('invalid'); erros.push('Nome obrigatório.'); }
     if (!telefone) { form.telefone.classList.add('invalid'); erros.push('Telefone obrigatório.'); }
@@ -564,6 +660,7 @@ document.addEventListener('DOMContentLoaded', function () {
       if (parceiroNome.toLowerCase() === nome1.toLowerCase()) { erros.push('O(a) parceiro(a) tem de ser diferente de ti.'); }
       if (parceiroTel && parceiroTel.replace(/\D/g,'') === telefone.replace(/\D/g,'')) { erros.push('O telefone do(a) parceiro(a) tem de ser diferente do teu.'); }
     }
+    if (!disponibilidade.valid) erros.push(disponibilidade.message);
     if (erros.length) { errEl.textContent = erros.join(' '); errEl.style.display = ''; return; }
     errEl.style.display = 'none';
 
@@ -594,7 +691,7 @@ document.addEventListener('DOMContentLoaded', function () {
       reservado: reserva,
       telefone: telefone,
       email: form.email.value.trim(),
-      observacoes: form.observacoes.value.trim(),
+      observacoes: disponibilidade.value,
       estado: estadoInicial
     }];
     if (parceiroNome) {
@@ -611,7 +708,7 @@ document.addEventListener('DOMContentLoaded', function () {
         reservado: false,
         telefone: parceiroTel,
         email: parceiroEmail,
-        observacoes: '',
+        observacoes: disponibilidade.value,
         estado: estadoInicial
       });
     }
@@ -678,8 +775,8 @@ document.addEventListener('DOMContentLoaded', function () {
       + (parceiroNome ? '*Parceiro(a):* ' + parceiroNome + (parceiroTel ? ' (' + parceiroTel + ')' : '') + '\n' : '')
       + (reserva ? '*Parceiro(a):* (a anunciar — lugar reservado)\n' : '')
       + (modo === 'solo' ? '*Inscrição:* individual (sem parceiro por agora)\n' : '')
+      + '*Disponibilidade:* ' + disponibilidade.text + '\n'
       + (waitlist ? '*⏳ LISTA DE ESPERA* (vagas esgotadas)\n' : '')
-      + (entry.observacoes ? '*Obs.:* ' + entry.observacoes + '\n' : '')
       + '\n_Inscrição submetida em ' + new Date().toLocaleString('pt-PT') + '_';
 
     var waBtn = document.getElementById('btnWhatsApp');
@@ -702,7 +799,7 @@ document.addEventListener('DOMContentLoaded', function () {
         + (waitlist
             ? 'Entraste na LISTA DE ESPERA da categoria ' + categoria + '. A organização contacta-te se abrir uma vaga.'
             : 'A tua pré-inscrição na categoria ' + categoria + ' foi guardada.')
-        + (tel ? ' Clica em "Confirmar via WhatsApp" para a organização receber os teus dados.' : '')
+        + (tel ? ' Se quiseres, podes também enviar uma cópia dos dados à organização através do WhatsApp.' : '')
         + (syncOk ? '' : ' Nota: a sincronização automática falhou neste envio.');
     }
 
@@ -719,6 +816,8 @@ document.addEventListener('DOMContentLoaded', function () {
     form.reset();
     buildCats();
     applyModo();
+    applyDisponibilidade();
+    applyDisponibilidadeDateBounds();
     toggleParceiroFields();
     refreshVagas();
   });
