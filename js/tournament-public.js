@@ -209,7 +209,8 @@
         reviewAvailability: availability,
         summaryPlayer: value('nome1') || 'Por preencher',
         summaryCategory: value('categoria') || '—',
-        summaryPartner: mode === 'reserva' ? 'A anunciar' : (mode === 'solo' ? 'Individual' : (partner || 'Por indicar'))
+        summaryPartner: mode === 'reserva' ? 'A anunciar' : (mode === 'solo' ? 'Individual' : (partner || 'Por indicar')),
+        summaryAvailability: availability
       };
       Object.keys(pairs).forEach(function (id) {
         var element = document.getElementById(id);
