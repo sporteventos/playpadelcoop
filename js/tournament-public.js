@@ -171,6 +171,18 @@
         var category = form.elements.categoria;
         if (category && !category.value) invalid.push(category);
       }
+      if (step === 3) {
+        ['tshirtNome', 'tshirtTamanho'].forEach(function (name) {
+          var field = form.elements[name];
+          if (field && !String(field.value || '').trim()) invalid.push(field);
+        });
+        if (value('modo') === 'parceiro' && value('parceiro')) {
+          ['parceiroTshirtNome', 'parceiroTshirtTamanho'].forEach(function (name) {
+            var field = form.elements[name];
+            if (field && !String(field.value || '').trim()) invalid.push(field);
+          });
+        }
+      }
       invalid.forEach(function (field) { field.classList.add('invalid'); });
       if (invalid[0]) invalid[0].focus();
       return invalid.length === 0;
@@ -199,6 +211,13 @@
         if (dateCount) parts.push(dateCount + (dateCount === 1 ? ' data específica' : ' datas específicas'));
         availability = parts.join(' · ') || 'Condicionantes por indicar';
       }
+      var shirt = value('tshirtNome') && value('tshirtTamanho')
+        ? value('tshirtNome') + ' · ' + value('tshirtTamanho')
+        : 'Por preencher';
+      var shirts = shirt;
+      if (mode === 'parceiro' && partner && value('parceiroTshirtNome') && value('parceiroTshirtTamanho')) {
+        shirts += ' | ' + value('parceiroTshirtNome') + ' · ' + value('parceiroTshirtTamanho');
+      }
       var pairs = {
         reviewName: value('nome1') || '—',
         reviewContact: value('telefone') || '—',
@@ -206,10 +225,12 @@
         reviewGender: gender,
         reviewMode: modeLabels[mode] || '—',
         reviewPartner: mode === 'reserva' ? 'A anunciar' : (mode === 'solo' ? 'Sem parceiro por agora' : (partner || 'Por indicar')),
+        reviewShirts: shirts,
         reviewAvailability: availability,
         summaryPlayer: value('nome1') || 'Por preencher',
         summaryCategory: value('categoria') || '—',
         summaryPartner: mode === 'reserva' ? 'A anunciar' : (mode === 'solo' ? 'Individual' : (partner || 'Por indicar')),
+        summaryShirt: shirt,
         summaryAvailability: availability
       };
       Object.keys(pairs).forEach(function (id) {

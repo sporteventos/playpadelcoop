@@ -201,6 +201,39 @@
               <label class="form-label" for="parceiroEmail">Email do(a) parceiro(a)</label>
               <input class="form-input" id="parceiroEmail" name="parceiroEmail" type="email" placeholder="opcional"/>
             </div>
+            <div class="form-field full tp-shirt-section">
+              <div class="tp-constraint-heading">
+                <i class="ph ph-t-shirt"></i>
+                <span><strong>T-shirt do torneio</strong><small>Dados para personalização e entrega</small></span>
+              </div>
+              <div class="tp-unavailability-row">
+                <div class="form-field">
+                  <label class="form-label" for="tshirtNome">Nome na tua t-shirt <span class="req">*</span></label>
+                  <input class="form-input" id="tshirtNome" name="tshirtNome" type="text" maxlength="18" placeholder="ex: ABDULLAH" required/>
+                  <span class="form-help">Escreve exatamente como queres que apareça.</span>
+                </div>
+                <div class="form-field">
+                  <label class="form-label" for="tshirtTamanho">Tamanho <span class="req">*</span></label>
+                  <select class="form-select" id="tshirtTamanho" name="tshirtTamanho" required>
+                    <option value="">— seleciona —</option>
+                    <option value="S">S</option><option value="M">M</option><option value="L">L</option><option value="XL">XL</option><option value="XXL">XXL</option>
+                  </select>
+                </div>
+              </div>
+              <div class="tp-unavailability-row" id="parceiroTshirtFields" style="display:none">
+                <div class="form-field">
+                  <label class="form-label" for="parceiroTshirtNome">Nome na t-shirt do(a) parceiro(a) <span class="req">*</span></label>
+                  <input class="form-input" id="parceiroTshirtNome" name="parceiroTshirtNome" type="text" maxlength="18" placeholder="ex: ABDURAHMAN"/>
+                </div>
+                <div class="form-field">
+                  <label class="form-label" for="parceiroTshirtTamanho">Tamanho do(a) parceiro(a) <span class="req">*</span></label>
+                  <select class="form-select" id="parceiroTshirtTamanho" name="parceiroTshirtTamanho">
+                    <option value="">— seleciona —</option>
+                    <option value="S">S</option><option value="M">M</option><option value="L">L</option><option value="XL">XL</option><option value="XXL">XXL</option>
+                  </select>
+                </div>
+              </div>
+            </div>
             <datalist id="dlJogadores"></datalist>
             <div class="form-field full tp-availability">
               <label class="form-label">Disponibilidade para os jogos <span class="req">*</span></label>
@@ -284,7 +317,8 @@
             <div class="tp-review-row"><span>Categoria</span><strong><span id="reviewCategory">—</span> · <span id="reviewGender">—</span></strong></div>
             <div class="tp-review-row"><span>Formato</span><strong id="reviewMode">—</strong></div>
             <div class="tp-review-row"><span>Parceiro(a)</span><strong id="reviewPartner">—</strong></div>
-            <div class="tp-review-row"><span>Disponibilidade</span><strong id="reviewAvailability">Tenho disponibilidade</strong></div>
+            <div class="tp-review-row"><span>T-shirts</span><strong id="reviewShirts">—</strong></div>
+            <div class="tp-review-row"><span>Disponibilidade</span><strong id="reviewAvailability">Sem restrições</strong></div>
           </div>
           <div class="tp-step-actions"><button class="tp-button" type="button" data-step-back><i class="ph ph-arrow-left"></i> Corrigir</button><button class="tp-button tp-button--primary" type="submit"><i class="ph ph-paper-plane-tilt"></i> Submeter inscrição</button></div>
         </section>
@@ -300,6 +334,7 @@
         <div><span>Jogador</span><strong id="summaryPlayer">Por preencher</strong></div>
         <div><span>Categoria</span><strong id="summaryCategory">—</strong></div>
         <div><span>Parceiro</span><strong id="summaryPartner">Por indicar</strong></div>
+        <div><span>T-shirt</span><strong id="summaryShirt">Por preencher</strong></div>
         <div><span>Disponibilidade</span><strong id="summaryAvailability">Sem restrições</strong></div>
         <div><span>Estado</span><strong style="color:var(--tp-warning)">Pré-inscrição</strong></div>
       </div>
@@ -495,6 +530,11 @@ document.addEventListener('DOMContentLoaded', function () {
     var has = parceiroInput.value.trim().length > 0;
     document.getElementById('parceiroTelField').style.display = has ? '' : 'none';
     document.getElementById('parceiroEmailField').style.display = has ? '' : 'none';
+    var shirtFields = document.getElementById('parceiroTshirtFields');
+    var showPartnerShirt = has && getModo() === 'parceiro';
+    shirtFields.style.display = showPartnerShirt ? '' : 'none';
+    document.getElementById('parceiroTshirtNome').required = showPartnerShirt;
+    document.getElementById('parceiroTshirtTamanho').required = showPartnerShirt;
     if (has) applyKnownPartner(); else _selectedPartner = null;
   }
   parceiroInput.addEventListener('input', toggleParceiroFields);
@@ -520,12 +560,18 @@ document.addEventListener('DOMContentLoaded', function () {
       nameField.style.display = 'none';
       telField.style.display = 'none';
       emailField.style.display = 'none';
+      document.getElementById('parceiroTshirtFields').style.display = 'none';
+      document.getElementById('parceiroTshirtNome').required = false;
+      document.getElementById('parceiroTshirtTamanho').required = false;
       _selectedPartner = null;
       help.textContent = 'Reservas o lugar da tua dupla (2 vagas). Anuncias o(a) parceiro(a) mais tarde com a organização.';
     } else { // solo
       nameField.style.display = 'none';
       telField.style.display = 'none';
       emailField.style.display = 'none';
+      document.getElementById('parceiroTshirtFields').style.display = 'none';
+      document.getElementById('parceiroTshirtNome').required = false;
+      document.getElementById('parceiroTshirtTamanho').required = false;
       _selectedPartner = null;
       help.textContent = 'Inscreves-te sozinho(a) (1 vaga). A organização pode ajudar-te a encontrar parceiro(a).';
     }
@@ -692,22 +738,39 @@ document.addEventListener('DOMContentLoaded', function () {
     var parceiroNome  = (modo === 'parceiro' && form.parceiro ? form.parceiro.value.trim() : '');
     var parceiroTel   = (form.parceiroTel ? form.parceiroTel.value.trim() : '');
     var parceiroEmail = (form.parceiroEmail ? form.parceiroEmail.value.trim() : '');
+    var tshirtNome = form.tshirtNome.value.trim();
+    var tshirtTamanho = form.tshirtTamanho.value;
+    var parceiroTshirtNome = parceiroNome ? form.parceiroTshirtNome.value.trim() : '';
+    var parceiroTshirtTamanho = parceiroNome ? form.parceiroTshirtTamanho.value : '';
     if (_selectedPartner) { parceiroTel = _selectedPartner.tel; parceiroEmail = _selectedPartner.email || ''; }
-    if (form.parceiroTel) form.parceiroTel.classList.remove('invalid');
+    [form.parceiroTel, form.tshirtNome, form.tshirtTamanho, form.parceiroTshirtNome, form.parceiroTshirtTamanho].forEach(function(field){
+      if (field) field.classList.remove('invalid');
+    });
     var reserva       = (modo === 'reserva');
     var disponibilidade = buildDisponibilidade();
     var erros = [];
     if (!nome1) { form.nome1.classList.add('invalid'); erros.push('Nome obrigatório.'); }
     if (!telefone) { form.telefone.classList.add('invalid'); erros.push('Telefone obrigatório.'); }
     if (!categoria) { form.categoria.classList.add('invalid'); erros.push('Categoria obrigatória.'); }
+    if (!tshirtNome) { form.tshirtNome.classList.add('invalid'); erros.push('Indica o nome para a tua t-shirt.'); }
+    if (!tshirtTamanho) { form.tshirtTamanho.classList.add('invalid'); erros.push('Seleciona o tamanho da tua t-shirt.'); }
     if (parceiroNome) {
       if (!parceiroTel) { form.parceiroTel.classList.add('invalid'); erros.push('Telefone do(a) parceiro(a) obrigatório.'); }
+      if (!parceiroTshirtNome) { form.parceiroTshirtNome.classList.add('invalid'); erros.push('Indica o nome para a t-shirt do(a) parceiro(a).'); }
+      if (!parceiroTshirtTamanho) { form.parceiroTshirtTamanho.classList.add('invalid'); erros.push('Seleciona o tamanho da t-shirt do(a) parceiro(a).'); }
       if (parceiroNome.toLowerCase() === nome1.toLowerCase()) { erros.push('O(a) parceiro(a) tem de ser diferente de ti.'); }
       if (parceiroTel && parceiroTel.replace(/\D/g,'') === telefone.replace(/\D/g,'')) { erros.push('O telefone do(a) parceiro(a) tem de ser diferente do teu.'); }
     }
     if (!disponibilidade.valid) erros.push(disponibilidade.message);
     if (erros.length) { errEl.textContent = erros.join(' '); errEl.style.display = ''; return; }
     errEl.style.display = 'none';
+    var registrationMeta = JSON.parse(disponibilidade.value);
+    registrationMeta.v = 3;
+    registrationMeta.tshirts = {
+      principal: { nome: tshirtNome, tamanho: tshirtTamanho },
+      parceiro: parceiroNome ? { nome: parceiroTshirtNome, tamanho: parceiroTshirtTamanho } : null
+    };
+    var registrationMetaValue = JSON.stringify(registrationMeta);
 
     // Capacidade por género: solo=1 vaga, parceiro/reserva=2 vagas.
     // Se não houver vagas suficientes no género, a inscrição entra em LISTA DE ESPERA.
@@ -736,7 +799,7 @@ document.addEventListener('DOMContentLoaded', function () {
       reservado: reserva,
       telefone: telefone,
       email: form.email.value.trim(),
-      observacoes: disponibilidade.value,
+      observacoes: registrationMetaValue,
       estado: estadoInicial
     }];
     if (parceiroNome) {
@@ -753,7 +816,7 @@ document.addEventListener('DOMContentLoaded', function () {
         reservado: false,
         telefone: parceiroTel,
         email: parceiroEmail,
-        observacoes: disponibilidade.value,
+        observacoes: registrationMetaValue,
         estado: estadoInicial
       });
     }
@@ -820,6 +883,8 @@ document.addEventListener('DOMContentLoaded', function () {
       + (parceiroNome ? '*Parceiro(a):* ' + parceiroNome + (parceiroTel ? ' (' + parceiroTel + ')' : '') + '\n' : '')
       + (reserva ? '*Parceiro(a):* (a anunciar — lugar reservado)\n' : '')
       + (modo === 'solo' ? '*Inscrição:* individual (sem parceiro por agora)\n' : '')
+      + '*T-shirt:* ' + tshirtNome + ' · ' + tshirtTamanho + '\n'
+      + (parceiroNome ? '*T-shirt do(a) parceiro(a):* ' + parceiroTshirtNome + ' · ' + parceiroTshirtTamanho + '\n' : '')
       + '*Disponibilidade:* ' + disponibilidade.text + '\n'
       + (waitlist ? '*⏳ LISTA DE ESPERA* (vagas esgotadas)\n' : '')
       + '\n_Inscrição submetida em ' + new Date().toLocaleString('pt-PT') + '_';

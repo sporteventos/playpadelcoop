@@ -6444,7 +6444,7 @@ function _insAvailabilityLabel(raw) {
   if (!raw) return '';
   try {
     const parsed = typeof raw === 'string' ? JSON.parse(raw) : raw;
-    if (!parsed || ![1, 2].includes(parsed.v) || !Array.isArray(parsed.datas)) return String(raw);
+    if (!parsed || ![1, 2, 3].includes(parsed.v) || !Array.isArray(parsed.datas)) return String(raw);
     if (parsed.estado === 'disponivel') return 'Sem restrições';
     const periodos = { manha: 'manhã', tarde: 'tarde', noite: 'noite', dia: 'dia inteiro' };
     const parts = [];
@@ -6463,8 +6463,20 @@ function _insAvailabilityLabel(raw) {
   }
 }
 
+function _insTshirtLabel(raw, id) {
+  try {
+    const parsed = typeof raw === 'string' ? JSON.parse(raw) : raw;
+    const role = String(id || '').endsWith('-p') ? 'parceiro' : 'principal';
+    const shirt = parsed?.tshirts?.[role];
+    return shirt?.nome && shirt?.tamanho ? `${shirt.nome} · ${shirt.tamanho}` : '';
+  } catch (_) {
+    return '';
+  }
+}
+
 function _insRowHtml(e, entries) {
   const availability = _insAvailabilityLabel(e.observacoes);
+  const tshirt = _insTshirtLabel(e.observacoes, e.id);
   return `
                   <tr style="border-bottom:1px solid rgba(255,255,255,.04)" data-ins-id="${escHtml(e.id)}">
                     <td style="padding:.65rem .9rem">
@@ -6482,6 +6494,7 @@ function _insRowHtml(e, entries) {
                       })() : '')}
                       ${e.clube ? `<div style="font-size:.72rem;color:#4A6058">${escHtml(e.clube)}</div>` : ''}
                       <div style="font-size:.68rem;color:#7BB0FF;margin-top:.25rem;font-family:monospace" title="${escHtml(e.id)}"><i class="ph ph-identification-card"></i> ${escHtml(_insPublicReference(e.id))}</div>
+                      ${tshirt ? `<div style="font-size:.72rem;color:#C4D4CC;margin-top:.25rem"><i class="ph ph-t-shirt"></i> ${escHtml(tshirt)}</div>` : ''}
                       ${availability && availability !== 'Importado da lista provisória do clube' ? `<div style="font-size:.72rem;color:#8AA396;margin-top:.25rem;max-width:320px"><i class="ph ph-calendar-check"></i> ${escHtml(availability)}</div>` : ''}
                     </td>
                     <td style="padding:.65rem .9rem">
@@ -6546,7 +6559,7 @@ window._insApplyFilters = function() {
     if (fTipo === 'reserva') { if (!e.reservado) return false; }
     else if (fTipo && e.tipo !== fTipo) return false;
     if (q) {
-      const hay = [e.id, _insPublicReference(e.id), e.nome1, e.nome2, e.parceiro, e.telefone, e.email, e.categoria, _insAvailabilityLabel(e.observacoes)]
+      const hay = [e.id, _insPublicReference(e.id), e.nome1, e.nome2, e.parceiro, e.telefone, e.email, e.categoria, _insTshirtLabel(e.observacoes, e.id), _insAvailabilityLabel(e.observacoes)]
         .map(x => String(x || '').toLowerCase()).join(' ');
       if (hay.indexOf(q) < 0) return false;
     }
@@ -6760,9 +6773,16 @@ async function renderInscricoes() {
 
   document.getElementById('insAdminNew')?.addEventListener('click', () => insAdminNew());
   document.getElementById('insAdminExportCsv')?.addEventListener('click', () => {
-    const header = ['id','criadoem','tipo','genero','categoria','nome1','nome2','parceiro','parid','reservado','telefone','email','clube','observacoes','estado'];
+    const header = ['id','criadoem','tipo','genero','categoria','nome1','nome2','parceiro','parid','reservado','telefone','email','clube','tshirt_nome','tshirt_tamanho','disponibilidade','observacoes','estado'];
     const rows = [header.join(',')].concat(entries.map(e =>
-      header.map(k => '"' + String(e[k] || '').replace(/"/g, '""') + '"').join(',')
+      header.map(k => {
+        const shirt = _insTshirtLabel(e.observacoes, e.id).split(' · ');
+        const value = k === 'tshirt_nome' ? (shirt[0] || '')
+          : k === 'tshirt_tamanho' ? (shirt[1] || '')
+          : k === 'disponibilidade' ? _insAvailabilityLabel(e.observacoes)
+          : e[k];
+        return '"' + String(value || '').replace(/"/g, '""') + '"';
+      }).join(',')
     ));
     download('inscricoes-reentre.csv', rows.join('\n'), 'text/csv;charset=utf-8');
   });
@@ -6796,10 +6816,13 @@ window.insEditToggleAvailability = function() {
   if (fields) fields.style.display = condicionada ? '' : 'none';
 };
 
-function _insEditSetAvailability(raw) {
+let _insEditOriginalMeta = null;
+
+function _insEditSetAvailability(raw, id) {
   let parsed = null;
   try { parsed = typeof raw === 'string' ? JSON.parse(raw) : raw; } catch (_) {}
-  const structured = parsed && [1, 2].includes(parsed.v) && Array.isArray(parsed.datas);
+  const structured = parsed && [1, 2, 3].includes(parsed.v) && Array.isArray(parsed.datas);
+  _insEditOriginalMeta = structured ? parsed : null;
   const state = structured && parsed.estado !== 'disponivel' ? 'condicionada' : 'disponivel';
   document.getElementById('insEditAvailability').value = state;
   document.getElementById('insEditScheduleType').value = structured ? (parsed.horarioSemanal?.tipo || '') : '';
@@ -6809,6 +6832,10 @@ function _insEditSetAvailability(raw) {
     document.getElementById('insEditDate' + i).value = dates[i - 1]?.data || '';
     document.getElementById('insEditPeriod' + i).value = dates[i - 1]?.periodo || '';
   }
+  const shirtRole = String(id || '').endsWith('-p') ? 'parceiro' : 'principal';
+  const shirt = structured ? parsed.tshirts?.[shirtRole] : null;
+  document.getElementById('insEditShirtName').value = shirt?.nome || '';
+  document.getElementById('insEditShirtSize').value = shirt?.tamanho || '';
   const legacy = document.getElementById('insEditLegacyWrap');
   const legacyText = document.getElementById('insEditLegacyObs');
   const hasLegacy = !!raw && !structured && raw !== 'Importado da lista provisória do clube';
@@ -6824,8 +6851,14 @@ function _insEditSetAvailability(raw) {
 }
 
 function _insEditAvailabilityValue() {
+  const id = document.getElementById('insEditId').value;
   const state = document.getElementById('insEditAvailability').value;
-  if (state !== 'condicionada') return JSON.stringify({ v: 2, estado: 'disponivel', horarioSemanal: null, datas: [] });
+  const shirtRole = String(id || '').endsWith('-p') ? 'parceiro' : 'principal';
+  const tshirts = { ...(_insEditOriginalMeta?.tshirts || {}) };
+  const shirtName = document.getElementById('insEditShirtName').value.trim();
+  const shirtSize = document.getElementById('insEditShirtSize').value;
+  tshirts[shirtRole] = shirtName || shirtSize ? { nome: shirtName, tamanho: shirtSize } : null;
+  if (state !== 'condicionada') return JSON.stringify({ v: 3, estado: 'disponivel', horarioSemanal: null, datas: [], tshirts });
   const scheduleType = document.getElementById('insEditScheduleType').value;
   const scheduleTime = document.getElementById('insEditScheduleTime').value;
   if ((scheduleType && !scheduleTime) || (!scheduleType && scheduleTime)) {
@@ -6842,7 +6875,7 @@ function _insEditAvailabilityValue() {
   if (dates.length && !document.getElementById('insEditDate1').value) throw new Error('Preenche primeiro a 1.ª data de indisponibilidade.');
   if (dates.length === 2 && dates[0].data === dates[1].data) throw new Error('As duas datas de indisponibilidade devem ser diferentes.');
   if (!horarioSemanal && !dates.length) throw new Error('Indica uma limitação de horário ou pelo menos uma data específica.');
-  return JSON.stringify({ v: 2, estado: 'condicionada', horarioSemanal, datas: dates });
+  return JSON.stringify({ v: 3, estado: 'condicionada', horarioSemanal, datas: dates, tshirts });
 }
 
 window.insAdminNew = function() {
@@ -6855,7 +6888,7 @@ window.insAdminNew = function() {
   document.getElementById('insEditEmail').value = '';
   document.getElementById('insEditParceiro').value = '';
   document.getElementById('insEditReservado').checked = false;
-  _insEditSetAvailability('');
+  _insEditSetAvailability('', '');
   const t = document.getElementById('modalInscricaoTitle');
   if (t) t.innerHTML = '<i class="ph ph-plus"></i> Nova Pré-Inscrição';
   openModal('modalInscricao');
@@ -6877,7 +6910,7 @@ window.insAdminEdit = function(id) {
   document.getElementById('insEditEmail').value = e.email || '';
   document.getElementById('insEditParceiro').value = e.parceiro || '';
   document.getElementById('insEditReservado').checked = !!e.reservado;
-  _insEditSetAvailability(e.observacoes || '');
+  _insEditSetAvailability(e.observacoes || '', e.id);
   openModal('modalInscricao');
 };
 
