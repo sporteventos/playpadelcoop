@@ -6444,13 +6444,20 @@ function _insAvailabilityLabel(raw) {
   if (!raw) return '';
   try {
     const parsed = typeof raw === 'string' ? JSON.parse(raw) : raw;
-    if (!parsed || parsed.v !== 1 || !Array.isArray(parsed.datas)) return String(raw);
-    if (parsed.estado !== 'pontual') return 'Disponibilidade total';
+    if (!parsed || ![1, 2].includes(parsed.v) || !Array.isArray(parsed.datas)) return String(raw);
+    if (parsed.estado === 'disponivel') return 'Sem restrições';
     const periodos = { manha: 'manhã', tarde: 'tarde', noite: 'noite', dia: 'dia inteiro' };
-    return 'Indisponível: ' + parsed.datas.map(item => {
+    const parts = [];
+    if (parsed.horarioSemanal?.tipo && parsed.horarioSemanal?.hora) {
+      parts.push(parsed.horarioSemanal.tipo === 'a_partir'
+        ? `Dias úteis: a partir das ${parsed.horarioSemanal.hora}`
+        : `Dias úteis: jogo deve começar até às ${parsed.horarioSemanal.hora}`);
+    }
+    if (parsed.datas.length) parts.push('Indisponível: ' + parsed.datas.map(item => {
       const date = String(item.data || '').split('-').reverse().join('/');
       return date + ' (' + (periodos[item.periodo] || item.periodo || 'período por indicar') + ')';
-    }).join('; ');
+    }).join('; '));
+    return parts.join(' · ') || 'Condicionantes por indicar';
   } catch (_) {
     return String(raw);
   }
@@ -6492,7 +6499,7 @@ function _insRowHtml(e, entries) {
                       ${!e.telefone && !e.email ? '<span style="opacity:.5">—</span>' : ''}
                     </td>
                     <td style="padding:.65rem .9rem;color:var(--cinza-texto);font-size:.78rem;white-space:nowrap">
-                      ${new Date(e.criadoem || e.criadoEm).toLocaleDateString('pt-PT')}
+                      ${new Date(e.criadoem || e.criadoEm).toLocaleString('pt-PT', { dateStyle: 'short', timeStyle: 'short' })}
                     </td>
                     <td style="padding:.65rem .9rem;text-align:center">
                       ${e.estado==='cancelada'
@@ -6784,17 +6791,19 @@ window.insEditBuildCats = function(selected) {
 };
 
 window.insEditToggleAvailability = function() {
-  const pontual = document.getElementById('insEditAvailability')?.value === 'pontual';
+  const condicionada = document.getElementById('insEditAvailability')?.value === 'condicionada';
   const fields = document.getElementById('insEditUnavailableFields');
-  if (fields) fields.style.display = pontual ? '' : 'none';
+  if (fields) fields.style.display = condicionada ? '' : 'none';
 };
 
 function _insEditSetAvailability(raw) {
   let parsed = null;
   try { parsed = typeof raw === 'string' ? JSON.parse(raw) : raw; } catch (_) {}
-  const structured = parsed && parsed.v === 1 && Array.isArray(parsed.datas);
-  const state = structured && parsed.estado === 'pontual' ? 'pontual' : 'disponivel';
+  const structured = parsed && [1, 2].includes(parsed.v) && Array.isArray(parsed.datas);
+  const state = structured && parsed.estado !== 'disponivel' ? 'condicionada' : 'disponivel';
   document.getElementById('insEditAvailability').value = state;
+  document.getElementById('insEditScheduleType').value = structured ? (parsed.horarioSemanal?.tipo || '') : '';
+  document.getElementById('insEditScheduleTime').value = structured ? (parsed.horarioSemanal?.hora || '') : '';
   const dates = structured ? parsed.datas : [];
   for (let i = 1; i <= 2; i++) {
     document.getElementById('insEditDate' + i).value = dates[i - 1]?.data || '';
@@ -6816,7 +6825,13 @@ function _insEditSetAvailability(raw) {
 
 function _insEditAvailabilityValue() {
   const state = document.getElementById('insEditAvailability').value;
-  if (state !== 'pontual') return JSON.stringify({ v: 1, estado: 'disponivel', datas: [] });
+  if (state !== 'condicionada') return JSON.stringify({ v: 2, estado: 'disponivel', horarioSemanal: null, datas: [] });
+  const scheduleType = document.getElementById('insEditScheduleType').value;
+  const scheduleTime = document.getElementById('insEditScheduleTime').value;
+  if ((scheduleType && !scheduleTime) || (!scheduleType && scheduleTime)) {
+    throw new Error('Completa o tipo de limitação e a hora nos dias úteis.');
+  }
+  const horarioSemanal = scheduleType && scheduleTime ? { tipo: scheduleType, hora: scheduleTime } : null;
   const dates = [];
   for (let i = 1; i <= 2; i++) {
     const data = document.getElementById('insEditDate' + i).value;
@@ -6824,9 +6839,10 @@ function _insEditAvailabilityValue() {
     if ((data && !periodo) || (!data && periodo)) throw new Error(`Completa a ${i}.ª data e o respetivo período.`);
     if (data && periodo) dates.push({ data, periodo });
   }
-  if (!dates.length) throw new Error('Indica pelo menos uma data de indisponibilidade.');
+  if (dates.length && !document.getElementById('insEditDate1').value) throw new Error('Preenche primeiro a 1.ª data de indisponibilidade.');
   if (dates.length === 2 && dates[0].data === dates[1].data) throw new Error('As duas datas de indisponibilidade devem ser diferentes.');
-  return JSON.stringify({ v: 1, estado: 'pontual', datas: dates });
+  if (!horarioSemanal && !dates.length) throw new Error('Indica uma limitação de horário ou pelo menos uma data específica.');
+  return JSON.stringify({ v: 2, estado: 'condicionada', horarioSemanal, datas: dates });
 }
 
 window.insAdminNew = function() {

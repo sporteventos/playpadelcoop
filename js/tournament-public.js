@@ -116,6 +116,7 @@
 
       restoringDraft = true;
       var values = draft.values;
+      if (values.disponibilidade === 'pontual') values.disponibilidade = 'condicionada';
       ['genero', 'modo', 'disponibilidade'].forEach(function (name) {
         if (!values[name]) return;
         var radio = Array.prototype.find.call(form.querySelectorAll('input[name="' + name + '"]'), function (field) {
@@ -184,9 +185,20 @@
       var gender = value('genero') === 'F' ? 'Feminino' : 'Masculino';
       var partner = value('parceiro');
       var mode = value('modo') || 'parceiro';
-      var availability = value('disponibilidade') === 'pontual'
-        ? 'Indisponibilidade pontual indicada'
-        : 'Tenho disponibilidade';
+      var availability = 'Sem restrições';
+      if (value('disponibilidade') === 'condicionada') {
+        var parts = [];
+        var scheduleType = value('disponibilidadeHorarioTipo');
+        var scheduleTime = value('disponibilidadeHorario');
+        if (scheduleType && scheduleTime) {
+          parts.push(scheduleType === 'a_partir'
+            ? 'Dias úteis a partir das ' + scheduleTime
+            : 'Dias úteis: início até às ' + scheduleTime);
+        }
+        var dateCount = [value('indisponibilidadeData1'), value('indisponibilidadeData2')].filter(Boolean).length;
+        if (dateCount) parts.push(dateCount + (dateCount === 1 ? ' data específica' : ' datas específicas'));
+        availability = parts.join(' · ') || 'Condicionantes por indicar';
+      }
       var pairs = {
         reviewName: value('nome1') || '—',
         reviewContact: value('telefone') || '—',

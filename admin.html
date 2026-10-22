@@ -1154,11 +1154,29 @@
       <div class="form-group-modal">
         <label class="form-label" for="insEditAvailability">Disponibilidade para os jogos</label>
         <select class="form-input" id="insEditAvailability" onchange="insEditToggleAvailability()">
-          <option value="disponivel">Tenho disponibilidade</option>
-          <option value="pontual">Tenho indisponibilidade pontual</option>
+          <option value="disponivel">Sem restrições</option>
+          <option value="condicionada">Tenho condicionantes</option>
         </select>
       </div>
       <div id="insEditUnavailableFields" style="display:none">
+        <div style="padding:.65rem;border:1px solid var(--preto-borda);border-radius:8px;margin-bottom:.8rem">
+          <strong style="display:block;font-size:.78rem;margin-bottom:.5rem"><i class="ph ph-clock" style="color:var(--amarelo)"></i> Horário nos dias úteis</strong>
+          <div style="display:grid;grid-template-columns:1.5fr 1fr;gap:.6rem">
+            <div class="form-group-modal" style="margin:0">
+              <label class="form-label" for="insEditScheduleType">A dupla</label>
+              <select class="form-input" id="insEditScheduleType">
+                <option value="">— sem limitação —</option>
+                <option value="a_partir">Só pode jogar a partir das</option>
+                <option value="ate">Precisa de começar até às</option>
+              </select>
+            </div>
+            <div class="form-group-modal" style="margin:0">
+              <label class="form-label" for="insEditScheduleTime">Hora limite</label>
+              <input class="form-input" type="time" min="17:30" max="23:30" step="1800" id="insEditScheduleTime"/>
+            </div>
+          </div>
+        </div>
+        <strong style="display:block;font-size:.78rem;margin-bottom:.5rem"><i class="ph ph-calendar-x" style="color:var(--amarelo)"></i> Datas específicas (opcional)</strong>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:.6rem">
           <div class="form-group-modal">
             <label class="form-label" for="insEditDate1">1.ª data indisponível</label>
@@ -1183,7 +1201,7 @@
             </select>
           </div>
         </div>
-        <p class="form-hint" style="color:var(--amarelo);font-size:.74rem">Devem ser consideradas as indisponibilidades dos dois jogadores. A organização tentará atendê-las, sem garantia.</p>
+        <p class="form-hint" style="color:var(--amarelo);font-size:.74rem">Pedidos sujeitos à decisão final da organização. Será dada prioridade aos pedidos recebidos primeiro, mas a quantidade de duplas e os horários disponíveis pode impedir o seu atendimento.</p>
       </div>
       <div class="form-group-modal" id="insEditLegacyWrap" style="display:none">
         <label class="form-label">Observação antiga</label>

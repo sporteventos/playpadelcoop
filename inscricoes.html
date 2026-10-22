@@ -206,17 +206,43 @@
               <label class="form-label">Disponibilidade para os jogos <span class="req">*</span></label>
               <p class="form-help">A resposta deve considerar a disponibilidade dos dois jogadores da dupla.</p>
               <div class="toggle-wrap tp-availability-options">
-                <label class="toggle-pill"><input type="radio" name="disponibilidade" value="disponivel" checked> <i class="ph ph-check-circle"></i> Tenho disponibilidade</label>
-                <label class="toggle-pill"><input type="radio" name="disponibilidade" value="pontual"> <i class="ph ph-calendar-x"></i> Tenho indisponibilidade pontual</label>
+                <label class="toggle-pill"><input type="radio" name="disponibilidade" value="disponivel" checked> <i class="ph ph-check-circle"></i> Sem restrições</label>
+                <label class="toggle-pill"><input type="radio" name="disponibilidade" value="condicionada"> <i class="ph ph-sliders-horizontal"></i> Tenho condicionantes</label>
               </div>
               <div id="indisponibilidadeFields" class="tp-unavailability" hidden>
+                <div class="tp-constraint-block">
+                  <div class="tp-constraint-heading">
+                    <i class="ph ph-clock"></i>
+                    <span><strong>Horário nos dias úteis</strong><small>De segunda a sexta-feira (opcional)</small></span>
+                  </div>
+                  <div class="tp-unavailability-row">
+                    <div class="form-field">
+                      <label class="form-label" for="disponibilidadeHorarioTipo">A dupla</label>
+                      <select class="form-select" id="disponibilidadeHorarioTipo" name="disponibilidadeHorarioTipo">
+                        <option value="">— sem limitação de horário —</option>
+                        <option value="a_partir">Só pode jogar a partir das</option>
+                        <option value="ate">Precisa de começar o jogo até às</option>
+                      </select>
+                    </div>
+                    <div class="form-field">
+                      <label class="form-label" for="disponibilidadeHorario">Hora limite</label>
+                      <input class="form-input" id="disponibilidadeHorario" name="disponibilidadeHorario" type="time" min="17:30" max="23:30" step="1800"/>
+                    </div>
+                  </div>
+                  <p class="form-help">Exemplos: só poder jogar depois das 19:00 por motivos profissionais, ou precisar de começar até às 18:30 por motivos escolares.</p>
+                </div>
+                <div class="tp-constraint-block">
+                  <div class="tp-constraint-heading">
+                    <i class="ph ph-calendar-x"></i>
+                    <span><strong>Datas específicas</strong><small>Até duas indisponibilidades (opcional)</small></span>
+                  </div>
                 <div class="tp-unavailability-row">
                   <div class="form-field">
-                    <label class="form-label" for="indisponibilidadeData1">1.ª data indisponível <span class="req">*</span></label>
+                    <label class="form-label" for="indisponibilidadeData1">1.ª data indisponível</label>
                     <input class="form-input" id="indisponibilidadeData1" name="indisponibilidadeData1" type="date"/>
                   </div>
                   <div class="form-field">
-                    <label class="form-label" for="indisponibilidadePeriodo1">Período <span class="req">*</span></label>
+                    <label class="form-label" for="indisponibilidadePeriodo1">Período</label>
                     <select class="form-select" id="indisponibilidadePeriodo1" name="indisponibilidadePeriodo1">
                       <option value="">— seleciona —</option>
                       <option value="manha">Manhã</option>
@@ -242,7 +268,8 @@
                     </select>
                   </div>
                 </div>
-                <div class="tp-availability-warning"><i class="ph ph-warning-circle"></i><span>A organização terá em conta as indisponibilidades comunicadas, mas não garante o seu atendimento.</span></div>
+                </div>
+                <div class="tp-availability-warning"><i class="ph ph-warning-circle"></i><span>Estes pedidos estão sujeitos à decisão final da organização. Será dada prioridade aos pedidos recebidos primeiro, mas a quantidade de duplas e os horários disponíveis pode impedir o seu atendimento.</span></div>
               </div>
             </div>
           </div>
@@ -512,12 +539,9 @@ document.addEventListener('DOMContentLoaded', function () {
     return r ? r.value : 'disponivel';
   }
   function applyDisponibilidade(){
-    var pontual = getDisponibilidade() === 'pontual';
+    var condicionada = getDisponibilidade() === 'condicionada';
     var fields = document.getElementById('indisponibilidadeFields');
-    fields.hidden = !pontual;
-    ['indisponibilidadeData1','indisponibilidadePeriodo1'].forEach(function(id){
-      document.getElementById(id).required = pontual;
-    });
+    fields.hidden = !condicionada;
   }
   function applyDisponibilidadeDateBounds(){
     var cfg = ppGet('config') || {};
@@ -530,10 +554,16 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
   function buildDisponibilidade(){
-    if (getDisponibilidade() !== 'pontual') {
-      return { valid: true, value: JSON.stringify({ v: 1, estado: 'disponivel', datas: [] }), text: 'Tenho disponibilidade' };
+    if (getDisponibilidade() !== 'condicionada') {
+      return { valid: true, value: JSON.stringify({ v: 2, estado: 'disponivel', horarioSemanal: null, datas: [] }), text: 'Sem restrições' };
     }
     var labels = { manha: 'Manhã', tarde: 'Tarde', noite: 'Noite', dia: 'Dia inteiro' };
+    var horarioTipo = document.getElementById('disponibilidadeHorarioTipo').value;
+    var horario = document.getElementById('disponibilidadeHorario').value;
+    if ((horarioTipo && !horario) || (!horarioTipo && horario)) {
+      return { valid: false, message: 'Seleciona o tipo de limitação e a respetiva hora nos dias úteis.' };
+    }
+    var horarioSemanal = horarioTipo && horario ? { tipo: horarioTipo, hora: horario } : null;
     var dates = [];
     for (var i = 1; i <= 2; i++) {
       var data = document.getElementById('indisponibilidadeData' + i).value;
@@ -543,14 +573,28 @@ document.addEventListener('DOMContentLoaded', function () {
       }
       if (data && periodo) dates.push({ data: data, periodo: periodo });
     }
-    if (!dates.length) return { valid: false, message: 'Indica pelo menos uma data e o respetivo período de indisponibilidade.' };
+    if (dates.length && !document.getElementById('indisponibilidadeData1').value) {
+      return { valid: false, message: 'Preenche primeiro a 1.ª data de indisponibilidade.' };
+    }
     if (dates.length === 2 && dates[0].data === dates[1].data) {
       return { valid: false, message: 'Seleciona duas datas diferentes para as indisponibilidades.' };
     }
+    if (!horarioSemanal && !dates.length) {
+      return { valid: false, message: 'Indica uma limitação de horário nos dias úteis ou pelo menos uma data específica.' };
+    }
+    var textParts = [];
+    if (horarioSemanal) {
+      textParts.push(horarioTipo === 'a_partir'
+        ? 'Dias úteis: a partir das ' + horario
+        : 'Dias úteis: jogo deve começar até às ' + horario);
+    }
+    if (dates.length) {
+      textParts.push('Indisponível: ' + dates.map(function(item){ return item.data.split('-').reverse().join('/') + ' · ' + labels[item.periodo]; }).join('; '));
+    }
     return {
       valid: true,
-      value: JSON.stringify({ v: 1, estado: 'pontual', datas: dates }),
-      text: dates.map(function(item){ return item.data.split('-').reverse().join('/') + ' · ' + labels[item.periodo]; }).join('; ')
+      value: JSON.stringify({ v: 2, estado: 'condicionada', horarioSemanal: horarioSemanal, datas: dates }),
+      text: textParts.join(' | ')
     };
   }
   document.querySelectorAll('input[name="disponibilidade"]').forEach(function(r){

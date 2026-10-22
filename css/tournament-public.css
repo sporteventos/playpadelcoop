@@ -891,6 +891,46 @@ body.tournament-public {
   display: none;
 }
 
+.tp-constraint-block + .tp-constraint-block {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(245, 197, 24, 0.14);
+}
+
+.tp-constraint-heading {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  margin-bottom: 0.8rem;
+}
+
+.tp-constraint-heading > i {
+  display: grid;
+  width: 2rem;
+  height: 2rem;
+  flex: 0 0 2rem;
+  place-items: center;
+  border-radius: 8px;
+  color: var(--tp-warning);
+  background: rgba(245, 197, 24, 0.1);
+  font-size: 1rem;
+}
+
+.tp-constraint-heading span {
+  display: grid;
+  gap: 0.1rem;
+}
+
+.tp-constraint-heading strong {
+  color: var(--tp-text);
+  font-size: 0.78rem;
+}
+
+.tp-constraint-heading small {
+  color: var(--tp-muted);
+  font-size: 0.62rem;
+}
+
 .tp-unavailability-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
