@@ -356,6 +356,13 @@
     <span class="tp-eyebrow">PEDIDO RECEBIDO</span>
     <h2>Estás mais perto do campo.</h2>
     <p id="successMsg"></p>
+    <div class="tp-payment-notice" id="paymentNotice">
+      <i class="ph ph-wallet"></i>
+      <div>
+        <strong id="paymentNoticeTitle">Pagamento no clube</strong>
+        <p id="paymentNoticeText"></p>
+      </div>
+    </div>
     <div class="tp-registration-reference">
       <span>Referência da inscrição</span>
       <strong id="successReference">PP-</strong>
@@ -917,12 +924,18 @@ document.addEventListener('DOMContentLoaded', function () {
       + (parceiroNome ? '*T-shirt do(a) parceiro(a):* ' + parceiroTshirtNome + ' · ' + parceiroTshirtTamanho + '\n' : '')
       + '*Disponibilidade:* ' + disponibilidade.text + '\n'
       + (waitlist ? '*⏳ LISTA DE ESPERA* (vagas esgotadas)\n' : '')
+      + (waitlist
+          ? '*Pagamento:* aguarda o contacto da organização antes de efetuar qualquer pagamento.\n'
+          : '*Próximo passo:* contactar o clube para efetuar o pagamento presencial e confirmar a inscrição.\n')
       + '\n_Inscrição submetida em ' + new Date().toLocaleString('pt-PT') + '_';
 
     var waBtn = document.getElementById('btnWhatsApp');
     var noWa  = document.getElementById('successNoWa');
     if (tel) {
       waBtn.href = 'https://wa.me/' + tel + '?text=' + encodeURIComponent(msg);
+      waBtn.innerHTML = waitlist
+        ? '<i class="ph ph-whatsapp-logo"></i> Contactar a organização'
+        : '<i class="ph ph-whatsapp-logo"></i> Contactar o clube para pagamento';
       waBtn.style.display = '';
       if (noWa) noWa.style.display = 'none';
     } else {
@@ -938,9 +951,18 @@ document.addEventListener('DOMContentLoaded', function () {
       successMsg.textContent = 'Olá ' + nome1 + '! '
         + (waitlist
             ? 'Entraste na LISTA DE ESPERA da categoria ' + categoria + '. A organização contacta-te se abrir uma vaga.'
-            : 'A tua pré-inscrição na categoria ' + categoria + ' foi guardada.')
-        + (tel ? ' Se quiseres, podes também enviar uma cópia dos dados à organização através do WhatsApp.' : '')
+            : 'A tua pré-inscrição na categoria ' + categoria + ' foi recebida e está pendente de pagamento.')
         + (syncOk ? '' : ' Nota: a sincronização automática falhou neste envio.');
+    }
+    var paymentNotice = document.getElementById('paymentNotice');
+    var paymentNoticeTitle = document.getElementById('paymentNoticeTitle');
+    var paymentNoticeText = document.getElementById('paymentNoticeText');
+    if (paymentNotice && paymentNoticeTitle && paymentNoticeText) {
+      paymentNotice.classList.toggle('is-waitlist', waitlist);
+      paymentNoticeTitle.textContent = waitlist ? 'Aguarda uma vaga antes de pagar' : 'Pagamento presencial no clube';
+      paymentNoticeText.textContent = waitlist
+        ? 'Não efetues qualquer pagamento enquanto estiveres na lista de espera. Se abrir uma vaga, a organização entrará em contacto contigo com os próximos passos.'
+        : 'Para confirmar a inscrição e garantir a vaga, contacta o clube e efetua o pagamento diretamente nas instalações. A pré-inscrição só fica confirmada depois de a organização validar o pagamento.';
     }
 
     var publicReference = 'PP-' + entry.id.replace(/^ins-/, '').replace(/-p$/, '');

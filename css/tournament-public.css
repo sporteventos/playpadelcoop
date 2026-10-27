@@ -1182,6 +1182,52 @@ body.tournament-public {
   line-height: 1.6;
 }
 
+.tp-payment-notice {
+  display: flex;
+  gap: 0.9rem;
+  align-items: flex-start;
+  max-width: 620px;
+  margin: 0 auto 1.5rem;
+  padding: 1rem 1.1rem;
+  border: 1px solid rgba(245, 197, 24, 0.38);
+  border-radius: 14px;
+  color: var(--tp-text);
+  background: rgba(245, 197, 24, 0.08);
+  text-align: left;
+}
+
+.tp-payment-notice > i {
+  flex: 0 0 auto;
+  color: var(--tp-warning);
+  font-size: 1.45rem;
+}
+
+.tp-payment-notice strong,
+.tp-payment-notice p {
+  display: block;
+}
+
+.tp-payment-notice strong {
+  margin-bottom: 0.25rem;
+  font-size: 0.82rem;
+}
+
+.tp-payment-notice p {
+  margin: 0;
+  color: var(--tp-muted);
+  font-size: 0.76rem;
+  line-height: 1.55;
+}
+
+.tp-payment-notice.is-waitlist {
+  border-color: rgba(123, 176, 255, 0.34);
+  background: rgba(123, 176, 255, 0.08);
+}
+
+.tp-payment-notice.is-waitlist > i {
+  color: #7bb0ff;
+}
+
 .tp-registration-reference {
   display: inline-grid;
   grid-template-columns: auto auto auto;
