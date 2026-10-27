@@ -181,7 +181,7 @@ Deno.serve(async (request: Request) => {
     }
     getEngine();
     const rows = await db(
-      "config?select=key,value&key=in.(tornNome,tornClube,tornTelOrg)",
+      "config?select=key,value&key=in.(tornNome,tornClube,tornTelOrg,tornDatas,tornLocal)",
     );
     const config = Object.fromEntries(
       rows.map((row: { key: string; value: string }) => [row.key, row.value]),
