@@ -2623,7 +2623,7 @@ function renderConfigPanel() {
     ${fieldToggle('fasefinalVisible',     'Fase Final',               'ph-brackets-round',    true)}
     ${fieldToggle('jogadoresVisible',     'Jogadores',                'ph-users',             true)}
     ${fieldToggle('inscricoesVisible',    'Inscrições',               'ph-clipboard-text',    true)}
-    ${fieldToggle('inscritosVisible',     'Inscritos (duplas confirmadas)', 'ph-list-checks',   true)}
+    <div style="font-size:.72rem;color:var(--cinza-texto);padding:.2rem 0 .5rem"><strong style="color:var(--branco)">Inscritos</strong> permanece sempre acessível durante a fase de inscrições para mostrar participantes, duplas e vagas por categoria.</div>
     ${fieldToggle('estatisticasVisible',  'Estatísticas',             'ph-chart-bar',         true)}
     ${fieldToggle('premiosVisible',       'Prémios',                  'ph-gift',              false)}
     ${fieldToggle('regulamentoVisible',   'Regulamento',              'ph-book-open',         true)}

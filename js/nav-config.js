@@ -15,7 +15,6 @@
     'jogadores.html':     'jogadoresVisible',
     'inscricoes.html':    'inscricoesVisible',
     'estado-inscricao.html':'inscricoesVisible',
-    'inscritos.html':     'inscritosVisible',
     'estatisticas.html':  'estatisticasVisible',
     'premios.html':       'premiosVisible',
     'regulamento.html':   'regulamentoVisible',

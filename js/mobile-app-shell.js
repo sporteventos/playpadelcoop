@@ -11,7 +11,7 @@
   ];
 
   var secondaryTabs = [
-    { file: 'inscritos.html', label: 'Inscritos', icon: 'ph-list-checks', key: 'inscritosVisible', slot: 2 },
+    { file: 'inscritos.html', label: 'Inscritos', icon: 'ph-list-checks', key: null, slot: 2 },
     { file: 'premios.html', label: 'Prémios', icon: 'ph-gift', key: 'premiosVisible', slot: 2 },
     { file: 'regulamento.html', label: 'Regras', icon: 'ph-book-open', key: 'regulamentoVisible', slot: 2 }
   ];
