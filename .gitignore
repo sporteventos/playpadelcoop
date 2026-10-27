@@ -1,2 +1,7 @@
 playpadelcoop/
 playpadelcoop/
+.env
+.env.*
+supabase/.env
+supabase/.env.*
+supabase/.temp/
