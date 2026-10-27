@@ -10,17 +10,19 @@
   <title>Inscritos · Torneio Clausura</title>
   <link rel="stylesheet" href="css/style.css"/>
   <link rel="stylesheet" href="css/pages.css"/>
+  <link rel="stylesheet" href="css/tournament-public.css"/>
+  <link rel="stylesheet" href="css/inscritos.css"/>
   <script src="https://unpkg.com/@phosphor-icons/web@2.1.1/src/index.js" defer></script>
 </head>
-<body>
+<body class="tournament-public tournament-registered">
 
 <!-- NAVBAR -->
 <nav class="navbar" id="navbar">
   <a class="nav-logo" href="index.html">
     <img src="playpadellogo.jpg" alt="Play Padel" style="height:34px;width:34px;border-radius:7px;object-fit:cover;flex-shrink:0"/>
     <div class="nav-logo-text">
-      <span class="nav-logo-title">Play Padel</span>
-      <span class="nav-logo-sub">Torneio Clausura</span>
+      <span class="nav-logo-title" id="cfgNomeTorneio">Play Padel</span>
+      <span class="nav-logo-sub" id="cfgSubtituloNav">Torneio Clausura</span>
     </div>
   </a>
 
@@ -58,80 +60,119 @@
   </ul>
 </div>
 
-<!-- PAGE HERO -->
-<div class="page-hero">
-  <div class="page-hero-content">
-    <p class="page-hero-tag"><i class="ph ph-list-checks"></i> Participantes</p>
-    <h1 class="page-hero-title">Jogadores e <span>Duplas</span></h1>
-    <p class="page-hero-sub">Participantes já inscritos, organizados por categoria e nível</p>
-  </div>
-</div>
-
-<!-- FILTROS -->
-<div class="filters-bar" id="filtersBar">
-  <div class="filters-inner" style="display:flex;gap:.6rem;flex-wrap:wrap;align-items:center">
-    <div class="search-wrap search-wrap--large">
-      <i class="ph ph-magnifying-glass"></i>
-      <input type="search" id="searchInscrito" class="search-input" placeholder="Pesquisar dupla ou jogador…" autocomplete="off"/>
-      <span class="search-count" id="searchCount"></span>
+<header class="registered-hero">
+  <div class="tp-court-lines" aria-hidden="true"></div>
+  <div class="registered-hero__inner">
+    <div>
+      <div class="tp-status-pill">Participantes da edição</div>
+      <p class="tp-eyebrow" style="margin-top:1.4rem">Quem já entrou em campo</p>
+      <h1>JOGADORES E<br><span>DUPLAS.</span></h1>
+      <p class="registered-hero__copy">Consulta os participantes já pré-inscritos no <strong id="cfgHeroTournament">Torneio Clausura</strong>, o respetivo nível e a disponibilidade atual de cada categoria.</p>
+      <div class="registered-hero__actions">
+        <a href="inscricoes.html" class="tp-button tp-button--primary">Fazer a minha inscrição <i class="ph ph-arrow-right"></i></a>
+        <a href="estado-inscricao.html" class="tp-button">Consultar estado <i class="ph ph-magnifying-glass"></i></a>
+      </div>
     </div>
-    <select id="filtroGenero" style="background:var(--cinza-escuro,#1a1a1a);border:1px solid var(--preto-borda,#333);border-radius:8px;padding:.55rem .7rem;color:var(--branco,#fff);font-size:.9rem">
-      <option value="">Todos</option>
-      <option value="M">Masculino</option>
-      <option value="F">Feminino</option>
-    </select>
+    <aside class="registered-hero-card">
+      <div class="registered-hero-card__icon"><i class="ph ph-users-three"></i></div>
+      <p class="tp-eyebrow">Resumo em tempo real</p>
+      <div class="registered-hero-card__stats">
+        <div><strong id="heroParticipants">0</strong><span>Participantes</span></div>
+        <div><strong id="heroPairs">0</strong><span>Duplas</span></div>
+        <div><strong id="heroCategories">0</strong><span>Categorias</span></div>
+      </div>
+    </aside>
   </div>
-</div>
+</header>
 
-<!-- CONTEÚDO -->
-<main class="page-main" id="inscritosMain">
-  <div id="loadingBox" style="text-align:center;padding:3rem;color:var(--cinza-texto,#888)">
-    <i class="ph ph-circle-notch" style="font-size:2rem;display:inline-block;animation:spin 1s linear infinite"></i>
-    <p style="margin-top:.6rem">A carregar inscritos…</p>
-  </div>
-  <div id="capacitySummary" class="ins-capacity-summary"></div>
-  <div id="inscritosContent"></div>
-  <div class="empty-state hidden" id="emptyState">
-    <div class="empty-icon">🎾</div>
-    <p class="empty-title">Ainda não há participantes inscritos</p>
-    <p class="empty-sub">Os jogadores e as duplas aparecem aqui após a primeira pré-inscrição.</p>
-  </div>
+<main class="registered-main" id="inscritosMain">
+  <section>
+    <div class="registered-section-head">
+      <div>
+        <p class="tp-eyebrow">Disponibilidade por nível</p>
+        <h2>ESCOLHE A TUA<br><span>CATEGORIA.</span></h2>
+      </div>
+      <p>As vagas são atualizadas automaticamente. Quando uma categoria estiver completa, ainda podes inscrever-te como suplente.</p>
+    </div>
+    <div id="capacitySummary" class="ins-capacity-summary"></div>
+
+    <div class="registered-toolbar" id="filtersBar">
+      <div class="registered-search">
+        <i class="ph ph-magnifying-glass"></i>
+        <input type="search" id="searchInscrito" placeholder="Pesquisar jogador, dupla ou categoria…" autocomplete="off"/>
+        <span class="search-count" id="searchCount"></span>
+      </div>
+      <select id="filtroGenero" aria-label="Filtrar por género">
+        <option value="">Todas as categorias</option>
+        <option value="M">Masculino</option>
+        <option value="F">Feminino</option>
+      </select>
+    </div>
+
+    <div class="registered-results">
+      <div id="loadingBox" class="registered-loading">
+        <i class="ph ph-circle-notch"></i>
+        <p>A carregar participantes…</p>
+      </div>
+      <div id="inscritosContent"></div>
+      <div class="registered-empty hidden" id="emptyState">
+        <i class="ph ph-tennis-ball"></i>
+        <h3>Ainda não há participantes</h3>
+        <p>Os jogadores e as duplas aparecem aqui após a primeira pré-inscrição.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="registered-cta">
+    <div>
+      <p class="tp-eyebrow">Torneio Clausura</p>
+      <h2>O TEU NOME PODE SER<br><span>O PRÓXIMO.</span></h2>
+    </div>
+    <a href="inscricoes.html" class="tp-button tp-button--primary">Garantir o meu lugar <i class="ph ph-arrow-right"></i></a>
+  </section>
 </main>
 
 <footer class="footer">
-  <div class="footer-bottom" style="max-width:1200px;margin:0 auto">
-    <p class="footer-copy">© 2026 <span>Play Padel</span> · Torneio Clausura</p>
-    <a href="index.html" class="footer-copy" style="color:var(--verde);text-decoration:none">← Voltar ao início</a>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="footer-logo">
+        <img src="playpadellogo.jpg" alt="Play Padel" style="height:42px;width:42px;border-radius:9px;object-fit:cover"/>
+        <div><p class="footer-logo-title">Play Padel</p></div>
+      </div>
+      <p class="footer-desc" id="cfgRegisteredFooter">Participantes do Torneio Clausura<br/>26 de Novembro a 05 de Dezembro 2026 · Maputo</p>
+    </div>
+    <nav class="footer-links">
+      <a href="index.html"><i class="ph ph-house"></i> Início</a>
+      <a href="inscricoes.html"><i class="ph ph-clipboard-text"></i> Inscrições</a>
+      <a href="estado-inscricao.html"><i class="ph ph-magnifying-glass"></i> Estado</a>
+      <a href="regulamento.html"><i class="ph ph-book-open"></i> Regulamento</a>
+    </nav>
+  </div>
+  <div class="footer-bottom">
+    <p class="footer-copy" id="cfgRegisteredCopy">© 2026 Play Padel · Torneio Clausura · Maputo, Moçambique</p>
     <p class="footer-credit">Concebido por <a href="https://www.efforge.co.mz/" target="_blank" rel="noopener">EF Forge Technologies</a></p>
   </div>
 </footer>
-
-<style>
-@keyframes spin { to { transform: rotate(360deg); } }
-.ins-cat-block { max-width:1100px; margin:0 auto 2rem; }
-.ins-cat-head { display:flex; align-items:center; gap:.6rem; margin:1.4rem 0 .8rem; }
-.ins-cat-title { font-family:'Barlow Condensed',sans-serif; font-size:1.5rem; text-transform:uppercase; letter-spacing:.03em; margin:0; }
-.ins-cat-count { font-size:.75rem; color:var(--cinza-texto,#888); background:rgba(255,255,255,.05); padding:.2rem .6rem; border-radius:999px; }
-.ins-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:.7rem; }
-.ins-card { background:var(--cinza-escuro,#161616); border:1px solid var(--preto-borda,#2a2a2a); border-radius:12px; padding:.9rem 1rem; }
-.ins-card-num { font-size:.7rem; color:var(--cinza-texto,#888); font-weight:700; }
-.ins-player { display:flex; align-items:center; gap:.5rem; margin-top:.35rem; }
-.ins-player i { color:var(--verde,#00C37B); }
-.ins-player span { color:var(--branco,#fff); font-weight:600; font-size:.92rem; }
-.ins-genero-tag { font-size:.62rem; font-weight:700; text-transform:uppercase; padding:.12rem .45rem; border-radius:4px; }
-.ins-status-tag { font-size:.62rem; font-weight:700; text-transform:uppercase; padding:.12rem .45rem; border-radius:4px; margin-left:.3rem; }
-.ins-capacity-summary { max-width:1100px; margin:0 auto 1.5rem; display:grid; grid-template-columns:repeat(auto-fit,minmax(135px,1fr)); gap:.55rem; }
-.ins-capacity-card { background:rgba(255,255,255,.035); border:1px solid var(--preto-borda,#2a2a2a); border-radius:10px; padding:.7rem .8rem; }
-.ins-capacity-card strong { display:block; color:var(--branco,#fff); font-size:.85rem; }
-.ins-capacity-card span { display:block; margin-top:.2rem; color:var(--cinza-texto,#888); font-size:.7rem; }
-.ins-capacity-card.full { border-color:rgba(255,74,74,.4); }
-</style>
 
 <script src="js/data.js"></script>
 <script src="js/nav-config.js" defer></script>
 <script src="js/mobile-app-shell.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function () {
+
+  function applyConfig() {
+    var cfg = ppGet('config') || {};
+    var tournament = cfg.tornNome || 'Torneio Clausura';
+    var club = cfg.tornClube || 'Play Padel';
+    var location = cfg.tornLocal || 'Maputo';
+    var dates = cfg.tornDatas || '26 de Novembro a 05 de Dezembro 2026';
+    document.getElementById('cfgNomeTorneio').textContent = club;
+    document.getElementById('cfgSubtituloNav').textContent = tournament;
+    document.getElementById('cfgHeroTournament').textContent = tournament;
+    document.getElementById('cfgRegisteredFooter').innerHTML = 'Participantes do ' + esc(tournament) + '<br>' + esc(dates) + ' · ' + esc(location);
+    document.getElementById('cfgRegisteredCopy').textContent = '© 2026 ' + club + ' · ' + tournament + ' · ' + location + ', Moçambique';
+    document.title = 'Inscritos · ' + tournament;
+  }
 
   // Navbar scroll
   var navbar = document.getElementById('navbar');
@@ -143,15 +184,23 @@ document.addEventListener('DOMContentLoaded', function () {
   hamburger.addEventListener('click', function () {
     var open = drawer.classList.toggle('open');
     hamburger.setAttribute('aria-expanded', open);
+    hamburger.classList.toggle('active', open);
+  });
+  drawer.querySelectorAll('a').forEach(function (link) {
+    link.addEventListener('click', function () {
+      drawer.classList.remove('open');
+      hamburger.classList.remove('active');
+      hamburger.setAttribute('aria-expanded', 'false');
+    });
   });
 
   var ALL = [];
 
-  function catName(id) {
-    if (!id) return 'Sem categoria';
-    var cats = (typeof ppGet === 'function' ? ppGet('categorias') : null) || [];
-    var c = cats.find(function (x) { return x && x.id === id; });
-    return c && c.nome ? (id + ' · ' + c.nome) : id;
+  function categorySort(a, b) {
+    var aGender = (a && (a.tipo || a.id.charAt(0))) === 'F' ? 1 : 0;
+    var bGender = (b && (b.tipo || b.id.charAt(0))) === 'F' ? 1 : 0;
+    if (aGender !== bGender) return aGender - bGender;
+    return String(a.id || '').localeCompare(String(b.id || ''), undefined, { numeric: true });
   }
 
   function esc(s) {
@@ -197,7 +246,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     var content = document.getElementById('inscritosContent');
     var empty = document.getElementById('emptyState');
-    document.getElementById('searchCount').textContent = list.length + ' dupla(s)';
+    document.getElementById('searchCount').textContent = list.length + ' registo(s)';
 
     if (!list.length) {
       content.innerHTML = '';
@@ -209,8 +258,12 @@ document.addEventListener('DOMContentLoaded', function () {
     // Agrupar por categoria (nível), ordenado
     var groups = {};
     list.forEach(function (d) { (groups[d.cat] = groups[d.cat] || []).push(d); });
+    var categories = ppGet('categorias') || [];
     var keys = Object.keys(groups).sort(function (a, b) {
-      if (!a) return 1; if (!b) return -1; return a.localeCompare(b);
+      if (!a) return 1; if (!b) return -1;
+      var catA = categories.find(function (item) { return item.id === a; }) || { id: a, tipo: a.charAt(0) };
+      var catB = categories.find(function (item) { return item.id === b; }) || { id: b, tipo: b.charAt(0) };
+      return categorySort(catA, catB);
     });
 
     content.innerHTML = keys.map(function (k) {
@@ -223,16 +276,18 @@ document.addEventListener('DOMContentLoaded', function () {
           ? '<span class="ins-status-tag" style="background:rgba(0,195,123,.14);color:var(--verde)">Confirmada</span>'
           : '<span class="ins-status-tag" style="background:rgba(245,197,24,.12);color:var(--amarelo)">Pré-inscrição</span>';
         return '<div class="ins-card">'
-          + '<div style="display:flex;justify-content:space-between;align-items:center">'
-          + '<span class="ins-card-num">' + (d.n2 ? 'Dupla ' : 'Jogador ') + (i + 1) + '</span><span>' + gTag + statusTag + '</span></div>'
-          + '<div class="ins-player"><i class="ph ph-user"></i><span>' + esc(d.n1) + '</span></div>'
-          + (d.n2 ? '<div class="ins-player"><i class="ph ph-user"></i><span>' + esc(d.n2) + '</span></div>'
-                  : '<div class="ins-player"><i class="ph ph-user-circle-dashed" style="color:#888"></i><span style="color:#888;font-weight:500">individual</span></div>')
+          + '<div class="ins-card__head">'
+          + '<span class="ins-card-num">' + (d.n2 ? 'Dupla ' : 'Jogador ') + (i + 1) + '</span><span class="ins-card__tags">' + gTag + statusTag + '</span></div>'
+          + '<div class="ins-player"><span class="ins-player__avatar">1</span><span>' + esc(d.n1) + '</span></div>'
+          + (d.n2 ? '<div class="ins-player"><span class="ins-player__avatar">2</span><span>' + esc(d.n2) + '</span></div>'
+                  : '<div class="ins-player"><span class="ins-player__avatar" style="color:var(--tp-muted);background:rgba(255,255,255,.06)">—</span><span style="color:var(--tp-muted);font-weight:500">Inscrição individual</span></div>')
           + '</div>';
       }).join('');
+      var category = categories.find(function (item) { return item.id === k; });
+      var categoryName = category && category.nome ? category.nome : 'Sem categoria';
       return '<div class="ins-cat-block">'
-        + '<div class="ins-cat-head"><h2 class="ins-cat-title">' + esc(catName(k)) + '</h2>'
-        + '<span class="ins-cat-count">' + arr.length + ' dupla(s)</span></div>'
+        + '<div class="ins-cat-head"><h2 class="ins-cat-title"><span>' + esc(k || '—') + '</span> · ' + esc(categoryName) + '</h2>'
+        + '<span class="ins-cat-count">' + arr.length + ' registo(s)</span></div>'
         + '<div class="ins-grid">' + cards + '</div></div>';
     }).join('');
   }
@@ -247,22 +302,32 @@ document.addEventListener('DOMContentLoaded', function () {
     if (!entries || !entries.length) {
       try { entries = JSON.parse(localStorage.getItem('pp_inscricoes') || '[]'); } catch (_) { entries = []; }
     }
-    var categories = ppGet('categorias') || [];
+    var categories = (ppGet('categorias') || []).slice().sort(categorySort);
     var availability = ppCategoryAvailability(entries, categories, ppGet('grupos') || []);
     document.getElementById('capacitySummary').innerHTML = categories.map(function (cat) {
       var v = availability[cat.id];
+      var occupiedPct = v.total ? Math.min(100, Math.round((v.ocupadas / v.total) * 100)) : 0;
       return '<div class="ins-capacity-card' + (v.livres <= 0 ? ' full' : '') + '"><strong>' + esc(cat.id + ' · ' + cat.nome) + '</strong><span>'
         + (v.livres <= 0 ? 'Lotada · suplentes disponíveis' : v.livres + ' de ' + v.total + ' vagas livres')
-        + '</span></div>';
+        + '</span><div class="ins-capacity-card__bar"><i style="width:' + occupiedPct + '%"></i></div></div>';
     }).join('');
     ALL = buildDuplas(entries);
+    document.getElementById('heroParticipants').textContent = ALL.reduce(function (total, item) {
+      return total + 1 + (item.n2 && item.n2 !== '(a anunciar)' ? 1 : 0);
+    }, 0);
+    document.getElementById('heroPairs').textContent = ALL.filter(function (item) { return !!item.n2; }).length;
+    document.getElementById('heroCategories').textContent = new Set(ALL.map(function (item) { return item.cat; }).filter(Boolean)).size;
     document.getElementById('loadingBox').style.display = 'none';
     render();
   }
 
   document.getElementById('searchInscrito').addEventListener('input', render);
   document.getElementById('filtroGenero').addEventListener('change', render);
-  window.addEventListener('pp:datasynced', load);
+  window.addEventListener('pp:datasynced', function () {
+    applyConfig();
+    load();
+  });
+  applyConfig();
   load();
 });
 </script>
