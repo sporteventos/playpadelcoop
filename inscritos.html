@@ -319,10 +319,9 @@ document.addEventListener('DOMContentLoaded', function () {
       + '<section class="ins-capacity-group"><div class="ins-capacity-group__head"><i class="ph ph-person-simple-dress"></i><strong>Feminino</strong><span>' + femaleCategories.length + ' categorias</span></div>'
         + '<div class="ins-capacity-row ins-capacity-row--female">' + femaleCategories.map(capacityCard).join('') + '</div></section>';
     ALL = buildDuplas(entries);
-    document.getElementById('heroParticipants').textContent = ALL.reduce(function (total, item) {
-      return total + 1 + (item.n2 && item.n2 !== '(a anunciar)' ? 1 : 0);
-    }, 0);
-    document.getElementById('heroPairs').textContent = ALL.filter(function (item) { return !!item.n2; }).length;
+    var registrationStats = ppRegistrationStats(entries);
+    document.getElementById('heroParticipants').textContent = registrationStats.jogadores;
+    document.getElementById('heroPairs').textContent = registrationStats.duplas;
     document.getElementById('heroCategories').textContent = new Set(ALL.map(function (item) { return item.cat; }).filter(Boolean)).size;
     document.getElementById('loadingBox').style.display = 'none';
     render();

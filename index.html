@@ -208,11 +208,11 @@
       <span class="stat-label">CATEGORIAS</span>
     </div>
     <div class="stat-item">
-      <span class="stat-value" id="cfgStatDuplas">86</span>
+      <span class="stat-value" id="cfgStatDuplas">0</span>
       <span class="stat-label">DUPLAS</span>
     </div>
     <div class="stat-item">
-      <span class="stat-value" id="cfgStatJogadores">174</span>
+      <span class="stat-value" id="cfgStatJogadores">0</span>
       <span class="stat-label">JOGADORES</span>
     </div>
   </div>
@@ -570,6 +570,28 @@
 <script>
   /* Quadro de Apuramento — visível apenas se config.scoreboardVisible !== false */
   (function() {
+    var registrationStatsRequested = false;
+
+    function showRegistrationStats(entries) {
+      var stats = ppRegistrationStats(entries);
+      var pairs = document.getElementById('cfgStatDuplas');
+      var players = document.getElementById('cfgStatJogadores');
+      if (pairs) pairs.textContent = String(stats.duplas);
+      if (players) players.textContent = String(stats.jogadores);
+    }
+
+    function refreshRegistrationStats() {
+      showRegistrationStats(ppGet('inscricoes') || []);
+      if (registrationStatsRequested || !window.ppCloudState || !window.ppCloudState.fetchInscricoes) return;
+      registrationStatsRequested = true;
+      window.ppCloudState.fetchInscricoes().then(function (entries) {
+        ppSave('inscricoes', entries);
+        showRegistrationStats(entries);
+      }).catch(function (error) {
+        console.error('Não foi possível atualizar os totais de inscrições.', error);
+      });
+    }
+
     function applyConfig() {
       try {
         var cfg = JSON.parse(localStorage.getItem('pp_config') || 'null') || {};
@@ -587,13 +609,7 @@
         s('cfgLocal',          cfg.tornLocal);
         s('cfgDatas',          cfg.tornDatas);
 
-        // Estatísticas dinâmicas (duplas / jogadores)
-        try {
-          var nD = (ppGet('duplas') || []).length;
-          var nJ = (ppGet('jogadores') || []).length;
-          if (nD) s('cfgStatDuplas', String(nD));
-          if (nJ) s('cfgStatJogadores', String(nJ));
-        } catch (e) {}
+        refreshRegistrationStats();
         if (cfg.tornDescFooter) {
           var fd = document.getElementById('cfgFooterDesc');
           if (fd) fd.innerHTML = cfg.tornDescFooter.replace(/\n/g,'<br/>');

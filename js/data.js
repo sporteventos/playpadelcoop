@@ -145,6 +145,42 @@ function ppCategoryAvailability(entries, categories, groups) {
   return result;
 }
 
+function ppRegistrationStats(entries) {
+  var active = (entries || []).filter(function (entry) {
+    return entry && entry.estado !== 'cancelada' && entry.estado !== 'rejeitada' && entry.estado !== 'espera';
+  });
+  var groups = {};
+  var players = 0;
+  var pairs = 0;
+
+  active.forEach(function (entry) {
+    players += 1;
+    if (entry.parid) {
+      if (!groups[entry.parid]) groups[entry.parid] = [];
+      groups[entry.parid].push(entry);
+      return;
+    }
+    if (entry.nome2 || entry.parceiro) {
+      players += 1;
+      pairs += 1;
+    }
+  });
+
+  Object.keys(groups).forEach(function (pairId) {
+    var linked = groups[pairId];
+    if (linked.length > 1) {
+      pairs += 1;
+      return;
+    }
+    if (linked[0].parceiro && !linked[0].reservado) {
+      players += 1;
+      pairs += 1;
+    }
+  });
+
+  return { jogadores: players, duplas: pairs };
+}
+
 // ---- Cloud state (Supabase) ----
 const PP_CLOUD = {
   url: 'https://jjtsqsumczbhfgbgjxsd.supabase.co',
