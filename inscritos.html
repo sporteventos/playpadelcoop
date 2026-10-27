@@ -79,7 +79,7 @@
       <div class="registered-hero-card__stats">
         <div><strong id="heroParticipants">0</strong><span>Participantes</span></div>
         <div><strong id="heroPairs">0</strong><span>Duplas</span></div>
-        <div><strong id="heroCategories">0</strong><span>Categorias</span></div>
+        <div><strong id="heroWaitlist">0</strong><span>Em espera</span></div>
       </div>
     </aside>
   </div>
@@ -209,27 +209,54 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  // Constrói jogadores e duplas sem expor contactos ou inscrições canceladas/suplentes.
+  // Constrói jogadores, duplas e a ordem pública da lista de espera sem expor contactos.
   function buildDuplas(entries) {
-    var activas = (entries || []).filter(function (e) {
-      return e && e.estado !== 'cancelada' && e.estado !== 'rejeitada' && e.estado !== 'espera';
+    var publicas = (entries || []).filter(function (e) {
+      return e && e.estado !== 'cancelada' && e.estado !== 'rejeitada';
+    }).sort(function (a, b) {
+      var aTime = Date.parse(a.criadoem || a.criadoEm || '') || 0;
+      var bTime = Date.parse(b.criadoem || b.criadoEm || '') || 0;
+      return aTime - bTime;
     });
     var seenPar = {};
     var duplas = [];
-    activas.forEach(function (e) {
+    var waitlistPosition = {};
+    publicas.forEach(function (e) {
+      var sib = null;
       if (e.parid) {
         if (seenPar[e.parid]) return;
         seenPar[e.parid] = true;
-        var sib = activas.find(function (x) { return x.parid === e.parid && x.id !== e.id; });
+        sib = publicas.find(function (x) { return x.parid === e.parid && x.id !== e.id; });
         var n2 = sib ? sib.nome1 : (e.reservado ? '(a anunciar)' : (e.parceiro || '(a anunciar)'));
-        duplas.push({ cat: e.categoria || '', genero: e.genero || 'M', n1: e.nome1, n2: n2, status: e.estado === 'confirmada' && (!sib || sib.estado === 'confirmada') ? 'confirmada' : 'pendente' });
+        var pairWaitlisted = e.estado === 'espera' || (sib && sib.estado === 'espera');
+        var pairStatus = pairWaitlisted ? 'espera' : (e.estado === 'confirmada' && (!sib || sib.estado === 'confirmada') ? 'confirmada' : 'pendente');
+        var pairPosition = null;
+        if (pairWaitlisted) {
+          waitlistPosition[e.categoria] = (waitlistPosition[e.categoria] || 0) + 1;
+          pairPosition = waitlistPosition[e.categoria];
+        }
+        duplas.push({ cat: e.categoria || '', genero: e.genero || 'M', n1: e.nome1, n2: n2, status: pairStatus, waitlistPosition: pairPosition });
       } else if (e.nome2) {
-        duplas.push({ cat: e.categoria || '', genero: e.genero || 'M', n1: e.nome1, n2: e.nome2, status: e.estado === 'confirmada' ? 'confirmada' : 'pendente' });
+        var legacyWaitlisted = e.estado === 'espera';
+        var legacyPosition = null;
+        if (legacyWaitlisted) {
+          waitlistPosition[e.categoria] = (waitlistPosition[e.categoria] || 0) + 1;
+          legacyPosition = waitlistPosition[e.categoria];
+        }
+        duplas.push({ cat: e.categoria || '', genero: e.genero || 'M', n1: e.nome1, n2: e.nome2, status: legacyWaitlisted ? 'espera' : (e.estado === 'confirmada' ? 'confirmada' : 'pendente'), waitlistPosition: legacyPosition });
       } else {
-        duplas.push({ cat: e.categoria || '', genero: e.genero || 'M', n1: e.nome1, n2: null, status: e.estado === 'confirmada' ? 'confirmada' : 'pendente' });
+        var individualWaitlisted = e.estado === 'espera';
+        var individualPosition = null;
+        if (individualWaitlisted) {
+          waitlistPosition[e.categoria] = (waitlistPosition[e.categoria] || 0) + 1;
+          individualPosition = waitlistPosition[e.categoria];
+        }
+        duplas.push({ cat: e.categoria || '', genero: e.genero || 'M', n1: e.nome1, n2: null, status: individualWaitlisted ? 'espera' : (e.estado === 'confirmada' ? 'confirmada' : 'pendente'), waitlistPosition: individualPosition });
       }
     });
-    return duplas;
+    return duplas.sort(function (a, b) {
+      return (a.status === 'espera' ? 1 : 0) - (b.status === 'espera' ? 1 : 0);
+    });
   }
 
   function render() {
@@ -272,12 +299,17 @@ document.addEventListener('DOMContentLoaded', function () {
         var gTag = d.genero === 'F'
           ? '<span class="ins-genero-tag" style="background:rgba(255,105,180,.15);color:#FF9AC9">Fem</span>'
           : '<span class="ins-genero-tag" style="background:rgba(123,176,255,.15);color:#7BB0FF">Masc</span>';
-        var statusTag = d.status === 'confirmada'
-          ? '<span class="ins-status-tag" style="background:rgba(0,195,123,.14);color:var(--verde)">Confirmada</span>'
-          : '<span class="ins-status-tag" style="background:rgba(245,197,24,.12);color:var(--amarelo)">Pré-inscrição</span>';
-        return '<div class="ins-card">'
+        var statusTag = d.status === 'espera'
+          ? '<span class="ins-status-tag ins-status-tag--waitlist">Espera #' + d.waitlistPosition + '</span>'
+          : (d.status === 'confirmada'
+            ? '<span class="ins-status-tag" style="background:rgba(0,195,123,.14);color:var(--verde)">Confirmada</span>'
+            : '<span class="ins-status-tag" style="background:rgba(245,197,24,.12);color:var(--amarelo)">Pré-inscrição</span>');
+        var cardLabel = d.status === 'espera'
+          ? (d.n2 ? 'Dupla suplente' : 'Jogador suplente')
+          : (d.n2 ? 'Dupla ' : 'Jogador ') + (i + 1);
+        return '<div class="ins-card' + (d.status === 'espera' ? ' ins-card--waitlist' : '') + '">'
           + '<div class="ins-card__head">'
-          + '<span class="ins-card-num">' + (d.n2 ? 'Dupla ' : 'Jogador ') + (i + 1) + '</span><span class="ins-card__tags">' + gTag + statusTag + '</span></div>'
+          + '<span class="ins-card-num">' + cardLabel + '</span><span class="ins-card__tags">' + gTag + statusTag + '</span></div>'
           + '<div class="ins-player"><span class="ins-player__avatar">1</span><span>' + esc(d.n1) + '</span></div>'
           + (d.n2 ? '<div class="ins-player"><span class="ins-player__avatar">2</span><span>' + esc(d.n2) + '</span></div>'
                   : '<div class="ins-player"><span class="ins-player__avatar" style="color:var(--tp-muted);background:rgba(255,255,255,.06)">—</span><span style="color:var(--tp-muted);font-weight:500">Inscrição individual</span></div>')
@@ -285,9 +317,12 @@ document.addEventListener('DOMContentLoaded', function () {
       }).join('');
       var category = categories.find(function (item) { return item.id === k; });
       var categoryName = category && category.nome ? category.nome : 'Sem categoria';
+      var activeCount = arr.filter(function (item) { return item.status !== 'espera'; }).length;
+      var waitlistCount = arr.length - activeCount;
+      var countLabel = activeCount + ' ativo(s)' + (waitlistCount ? ' · ' + waitlistCount + ' em espera' : '');
       return '<div class="ins-cat-block">'
         + '<div class="ins-cat-head"><h2 class="ins-cat-title"><span>' + esc(k || '—') + '</span> · ' + esc(categoryName) + '</h2>'
-        + '<span class="ins-cat-count">' + arr.length + ' registo(s)</span></div>'
+        + '<span class="ins-cat-count">' + countLabel + '</span></div>'
         + '<div class="ins-grid">' + cards + '</div></div>';
     }).join('');
   }
@@ -307,8 +342,9 @@ document.addEventListener('DOMContentLoaded', function () {
     function capacityCard(cat) {
       var v = availability[cat.id];
       var occupiedPct = v.total ? Math.min(100, Math.round((v.ocupadas / v.total) * 100)) : 0;
+      var waitlistText = v.suplentes ? ' · ' + v.suplentes + ' jogador(es) suplente(s)' : '';
       return '<div class="ins-capacity-card' + (v.livres <= 0 ? ' full' : '') + '"><strong>' + esc(cat.id + ' · ' + cat.nome) + '</strong><span>'
-        + (v.livres <= 0 ? 'Lotada · suplentes disponíveis' : v.livres + ' de ' + v.total + ' vagas livres')
+        + (v.livres <= 0 ? 'Lotada' + waitlistText : v.livres + ' de ' + v.total + ' vagas livres' + waitlistText)
         + '</span><div class="ins-capacity-card__bar"><i style="width:' + occupiedPct + '%"></i></div></div>';
     }
     var maleCategories = categories.filter(function (cat) { return (cat.tipo || cat.id.charAt(0)) !== 'F'; });
@@ -322,7 +358,9 @@ document.addEventListener('DOMContentLoaded', function () {
     var registrationStats = ppRegistrationStats(entries);
     document.getElementById('heroParticipants').textContent = registrationStats.jogadores;
     document.getElementById('heroPairs').textContent = registrationStats.duplas;
-    document.getElementById('heroCategories').textContent = new Set(ALL.map(function (item) { return item.cat; }).filter(Boolean)).size;
+    document.getElementById('heroWaitlist').textContent = Object.keys(availability).reduce(function (total, categoryId) {
+      return total + availability[categoryId].suplentes;
+    }, 0);
     document.getElementById('loadingBox').style.display = 'none';
     render();
   }

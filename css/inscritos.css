@@ -400,6 +400,20 @@
   transform: translateY(-2px);
 }
 
+.ins-card--waitlist {
+  border-color: rgba(245, 197, 24, 0.34);
+  background: linear-gradient(145deg, rgba(55, 46, 12, 0.42), rgba(5, 28, 35, 0.9));
+}
+
+.ins-card--waitlist:hover {
+  border-color: rgba(245, 197, 24, 0.58);
+}
+
+.ins-card--waitlist .ins-player__avatar {
+  color: #281f00;
+  background: var(--amarelo);
+}
+
 .ins-card__head {
   display: flex;
   gap: 0.5rem;
@@ -434,6 +448,11 @@
 
 .ins-status-tag {
   margin-left: 0;
+}
+
+.ins-status-tag--waitlist {
+  color: var(--amarelo);
+  background: rgba(245, 197, 24, 0.14);
 }
 
 .ins-player {
