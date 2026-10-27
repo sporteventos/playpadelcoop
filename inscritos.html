@@ -304,13 +304,20 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     var categories = (ppGet('categorias') || []).slice().sort(categorySort);
     var availability = ppCategoryAvailability(entries, categories, ppGet('grupos') || []);
-    document.getElementById('capacitySummary').innerHTML = categories.map(function (cat) {
+    function capacityCard(cat) {
       var v = availability[cat.id];
       var occupiedPct = v.total ? Math.min(100, Math.round((v.ocupadas / v.total) * 100)) : 0;
       return '<div class="ins-capacity-card' + (v.livres <= 0 ? ' full' : '') + '"><strong>' + esc(cat.id + ' · ' + cat.nome) + '</strong><span>'
         + (v.livres <= 0 ? 'Lotada · suplentes disponíveis' : v.livres + ' de ' + v.total + ' vagas livres')
         + '</span><div class="ins-capacity-card__bar"><i style="width:' + occupiedPct + '%"></i></div></div>';
-    }).join('');
+    }
+    var maleCategories = categories.filter(function (cat) { return (cat.tipo || cat.id.charAt(0)) !== 'F'; });
+    var femaleCategories = categories.filter(function (cat) { return (cat.tipo || cat.id.charAt(0)) === 'F'; });
+    document.getElementById('capacitySummary').innerHTML =
+      '<section class="ins-capacity-group"><div class="ins-capacity-group__head"><i class="ph ph-person"></i><strong>Masculino</strong><span>' + maleCategories.length + ' categorias</span></div>'
+        + '<div class="ins-capacity-row ins-capacity-row--male">' + maleCategories.map(capacityCard).join('') + '</div></section>'
+      + '<section class="ins-capacity-group"><div class="ins-capacity-group__head"><i class="ph ph-person-simple-dress"></i><strong>Feminino</strong><span>' + femaleCategories.length + ' categorias</span></div>'
+        + '<div class="ins-capacity-row ins-capacity-row--female">' + femaleCategories.map(capacityCard).join('') + '</div></section>';
     ALL = buildDuplas(entries);
     document.getElementById('heroParticipants').textContent = ALL.reduce(function (total, item) {
       return total + 1 + (item.n2 && item.n2 !== '(a anunciar)' ? 1 : 0);

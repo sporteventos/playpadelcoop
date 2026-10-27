@@ -157,12 +157,54 @@
 }
 
 .ins-capacity-summary {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(145px, 1fr));
-  gap: 0.7rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
   margin-bottom: 2rem;
   min-width: 0;
   max-width: 100%;
+}
+
+.ins-capacity-group {
+  min-width: 0;
+}
+
+.ins-capacity-group__head {
+  display: flex;
+  gap: 0.45rem;
+  align-items: center;
+  margin-bottom: 0.55rem;
+  color: var(--tp-muted);
+  font-size: 0.68rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.ins-capacity-group__head i {
+  color: var(--tp-accent);
+  font-size: 0.95rem;
+}
+
+.ins-capacity-group__head strong {
+  color: var(--tp-text);
+}
+
+.ins-capacity-group__head span {
+  margin-left: auto;
+  font-size: 0.6rem;
+}
+
+.ins-capacity-row {
+  display: grid;
+  gap: 0.7rem;
+}
+
+.ins-capacity-row--male {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.ins-capacity-row--female {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 .ins-capacity-card {
@@ -521,7 +563,8 @@
     grid-template-columns: 1fr;
   }
 
-  .ins-capacity-summary {
+  .ins-capacity-row--male,
+  .ins-capacity-row--female {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
@@ -541,7 +584,8 @@
 }
 
 @media (max-width: 420px) {
-  .ins-capacity-summary {
+  .ins-capacity-row--male,
+  .ins-capacity-row--female {
     grid-template-columns: 1fr;
   }
 }

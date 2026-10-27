@@ -143,6 +143,9 @@
         <a href="jogadores.html" class="btn btn-secondary" id="btnVerJogadores">
           <i class="ph ph-users"></i> Jogadores
         </a>
+        <a href="inscritos.html" class="btn btn-secondary" id="btnVerInscritos">
+          <i class="ph ph-list-checks"></i> Ver inscritos
+        </a>
       </div>
 
       <div class="tp-event-facts">
@@ -295,6 +298,17 @@
         <h3 class="nav-card-title">Inscrições</h3>
         <p class="nav-card-desc">
           Registe jogadores, duplas e observações. Guarde a inscrição para o backoffice.
+        </p>
+        <div class="nav-card-arrow">→</div>
+      </a>
+
+      <a href="inscritos.html" class="nav-card nav-card--jogadores" id="cardInscritos">
+        <div class="nav-card-glow"></div>
+        <span class="nav-card-badge badge-novo">Em tempo real</span>
+        <div class="nav-card-icon"><i class="ph ph-list-checks"></i></div>
+        <h3 class="nav-card-title">Jogadores inscritos</h3>
+        <p class="nav-card-desc">
+          Consulta os jogadores, as duplas e as vagas disponíveis em cada categoria.
         </p>
         <div class="nav-card-arrow">→</div>
       </a>
@@ -631,6 +645,8 @@
         show('navLiInscritos',        cfg.inscritosVisible !== false);
         show('drawerLiInscritos',     cfg.inscritosVisible !== false);
         show('footerLiInscritos',     cfg.inscritosVisible !== false);
+        show('btnVerInscritos',       cfg.inscritosVisible !== false);
+        show('cardInscritos',         cfg.inscritosVisible !== false);
         show('navLiEstatisticas',     cfg.estatisticasVisible !== false);
         show('drawerLiEstatisticas',  cfg.estatisticasVisible !== false);
         show('navLiPremios',          cfg.premiosVisible === true);
