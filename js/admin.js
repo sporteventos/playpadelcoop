@@ -72,18 +72,19 @@ function setTelefone(nome, tel) {
   setData('telefones', t);
 }
 // Cria (ou reutiliza) um jogador no store a partir de um nome; dedup por nome (case-insensitive)
-function ensureJogador(nome, tel, genero) {
+function ensureJogador(nome, tel, genero, email) {
   nome = (nome || '').trim();
   if (!nome || nome.toLowerCase() === 'a definir') return null;
   const store = getData('jogadores') || [];
   let j = store.find(x => (x.nome || '').trim().toLowerCase() === nome.toLowerCase());
   let dirty = false;
   if (!j) {
-    j = { id: _nextEntityId('jogadores', 'j'), nome, tel: tel || '', genero: genero || '' };
+    j = { id: _nextEntityId('jogadores', 'j'), nome, tel: tel || '', email: email || '', genero: genero || '' };
     store.push(j);
     dirty = true;
   } else {
     if (tel && !j.tel) { j.tel = tel; dirty = true; }
+    if (email && !j.email) { j.email = email; dirty = true; }
     if (genero && !j.genero) { j.genero = genero; dirty = true; }
   }
   if (dirty) setData('jogadores', store);
@@ -2614,9 +2615,7 @@ function renderConfigPanel() {
     <div style="font-size:.72rem;color:var(--cinza-texto);padding:.2rem 0 .5rem">Estas datas definem os limites do calendário de jogos e a alocação automática das fases finais. Os campos <strong>— fim</strong> dos Quartos e Meias são opcionais: se preenchidos, esses jogos são distribuídos automaticamente por vários dias (do início ao fim). Deixe em branco para agendar tudo num único dia. O intervalo geral (${escHtml(str('dataGruposInicio','2026-11-26'))} a ${escHtml(str('dataFinais','2026-12-05'))}) é aplicado aos seletores de data.</div>
 
     ${section('Capacidade de Inscrições')}
-    ${fieldText('maxJogadoresM', 'Máx. jogadores Masculino', 'ex: 144', '144')}
-    ${fieldText('maxJogadoresF', 'Máx. jogadores Feminino',  'ex: 30',  '30')}
-    <div style="font-size:.72rem;color:var(--cinza-texto);padding:.2rem 0 .5rem">Limites independentes por género (cada dupla ocupa 2 vagas). Ex.: 120 masc. = 60 duplas · 48 fem. = 24 duplas. Ao atingir o limite de um género, as inscrições desse género entram em lista de espera.</div>
+    <div style="font-size:.78rem;color:var(--cinza-texto);padding:.35rem 0 .65rem">A capacidade é definida por categoria em <strong style="color:var(--branco)">Categorias &amp; Grupos</strong>. Cada grupo tem 4 duplas (8 jogadores). Quando uma categoria atinge o limite, as novas inscrições entram como suplentes nessa categoria.</div>
     ${section('Visibilidade de Páginas')}
     ${fieldToggle('calendarioVisible',    'Calendário',               'ph-calendar',          true)}
     ${fieldToggle('scoreboardVisible',    'Quadro de Apuramento',     'ph-monitor-play',      true)}
@@ -2983,7 +2982,8 @@ function renderCategorias() {
       <td><span class="cat-pill cat-${c.id}">${c.id}</span></td>
       <td class="td-mono">${c.nome}</td>
       <td><span class="badge ${c.tipo==='F' ? 'badge-amarelo':'badge-azul'}">${c.tipo === 'F' ? 'Feminino':'Masculino'}</span></td>
-      <td>${nGrupos} grupos</td>
+      <td>${parseInt(c.gruposPlaneados, 10) || Math.max(nGrupos, Math.round(ppCategoryCapacity(c, grupos) / 8))} grupos</td>
+      <td><strong>${ppCategoryCapacity(c, grupos)}</strong> jogadores<br><span class="td-muted">${ppCategoryCapacity(c, grupos) / 2} duplas</span></td>
       <td>
         <div style="display:flex;gap:0.35rem;flex-wrap:wrap;align-items:center">
           ${grupos.filter(g=>g.cat===c.id).map(g=>`<span class="badge badge-cinza" style="display:inline-flex;align-items:center;gap:.3rem">${g.letra}<button class="badge-x" onclick="removeGrupo('${g.id}')" title="Remover grupo ${g.id}" style="background:none;border:none;color:var(--vermelho);cursor:pointer;padding:0;font-size:.85rem;line-height:1;opacity:.7">&times;</button></span>`).join('')}
@@ -2992,12 +2992,76 @@ function renderCategorias() {
       </td>
       <td>
         <div style="display:flex;gap:0.3rem">
+          <button class="btn-icon btn-edit" onclick="editarCategoria('${c.id}')" title="Editar categoria"><i class="ph ph-pencil"></i></button>
           <button class="btn-icon btn-del" onclick="deleteGruposAll('${c.id}')" title="Apagar categoria"><i class="ph ph-trash"></i></button>
         </div>
       </td>
     </tr>`;
   }).join('');
 }
+
+window.novaCategoria = function() {
+  APP.editingId = null;
+  document.getElementById('modalCategoriaTitle').textContent = 'Nova Categoria';
+  document.getElementById('categoriaCodigo').disabled = false;
+  document.getElementById('categoriaCodigo').value = '';
+  document.getElementById('categoriaNome').value = '';
+  document.getElementById('categoriaTipo').value = 'M';
+  document.getElementById('categoriaNivel').value = '1';
+  document.getElementById('categoriaGrupos').value = '2';
+  openModal('modalCategoria');
+};
+
+window.editarCategoria = function(catId) {
+  const categoria = (getData('categorias') || []).find(c => c.id === catId);
+  if (!categoria) return;
+  const grupos = getData('grupos') || [];
+  APP.editingId = catId;
+  document.getElementById('modalCategoriaTitle').textContent = 'Editar Categoria';
+  document.getElementById('categoriaCodigo').disabled = true;
+  document.getElementById('categoriaCodigo').value = categoria.id;
+  document.getElementById('categoriaNome').value = categoria.nome || categoria.id;
+  document.getElementById('categoriaTipo').value = categoria.tipo === 'F' ? 'F' : 'M';
+  document.getElementById('categoriaNivel').value = categoria.nivel || 1;
+  document.getElementById('categoriaGrupos').value = categoria.gruposPlaneados || Math.max(1, Math.round(ppCategoryCapacity(categoria, grupos) / 8));
+  openModal('modalCategoria');
+};
+
+window.saveCategoria = function() {
+  const id = document.getElementById('categoriaCodigo').value.trim().toUpperCase();
+  const nome = document.getElementById('categoriaNome').value.trim();
+  const tipo = document.getElementById('categoriaTipo').value === 'F' ? 'F' : 'M';
+  const nivel = parseInt(document.getElementById('categoriaNivel').value, 10);
+  const gruposPlaneados = parseInt(document.getElementById('categoriaGrupos').value, 10);
+  if (!/^[MF][A-Z0-9]{1,7}$/.test(id)) return toast('Usa um código iniciado por M ou F, por exemplo M6 ou F3.', 'error');
+  if (!nome) return toast('Indica o nome da categoria.', 'error');
+  if (!nivel || nivel < 1) return toast('Indica um nível válido.', 'error');
+  if (!gruposPlaneados || gruposPlaneados < 1 || gruposPlaneados > 26) return toast('O número de grupos deve estar entre 1 e 26.', 'error');
+  if (id.charAt(0) !== tipo) return toast('O código deve começar pela letra do género selecionado.', 'error');
+
+  const categorias = getData('categorias') || [];
+  let categoria = categorias.find(c => c.id === id);
+  if (categoria && !APP.editingId) return toast('Já existe uma categoria com esse código.', 'error');
+  if (!categoria) {
+    categoria = { id };
+    categorias.push(categoria);
+  }
+  Object.assign(categoria, { nome, tipo, nivel, gruposPlaneados, duplasPorGrupo: 4 });
+  setData('categorias', categorias);
+
+  const grupos = getData('grupos') || [];
+  const existentes = grupos.filter(g => g.cat === id);
+  for (let i = existentes.length; i < gruposPlaneados; i++) {
+    const letra = String.fromCharCode(65 + i);
+    if (!grupos.some(g => g.id === `${id}-${letra}`)) grupos.push({ id: `${id}-${letra}`, cat: id, letra });
+  }
+  setData('grupos', grupos);
+  closeModal('modalCategoria');
+  renderCategorias();
+  Auth.log(APP.editingId ? 'UPDATE_CATEGORIA' : 'CREATE_CATEGORIA', 'categorias', `${id} · ${nome} · ${gruposPlaneados} grupos`);
+  toast(APP.editingId ? 'Categoria actualizada.' : 'Categoria criada.');
+  APP.editingId = null;
+};
 
 window.addGrupo = function(catId) {
   const letra = prompt(`Nova letra de grupo para ${catId} (ex: D, E...):`);
@@ -3007,6 +3071,13 @@ window.addGrupo = function(catId) {
   if (grupos.find(g => g.id === id)) return toast('Grupo já existe.', 'error');
   grupos.push({ id, cat: catId, letra: letra.toUpperCase() });
   setData('grupos', grupos);
+  const categorias = getData('categorias') || [];
+  const categoria = categorias.find(c => c.id === catId);
+  if (categoria) {
+    categoria.gruposPlaneados = Math.max(parseInt(categoria.gruposPlaneados, 10) || 0, grupos.filter(g => g.cat === catId).length);
+    categoria.duplasPorGrupo = 4;
+    setData('categorias', categorias);
+  }
   renderCategorias();
   toast(`Grupo ${id} adicionado.`);
 };
@@ -3022,6 +3093,13 @@ window.removeGrupo = function(grupoId) {
   if (!confirm(aviso)) return;
   // Remover o grupo
   setData('grupos', (getData('grupos') || []).filter(g => g.id !== grupoId));
+  const categorias = getData('categorias') || [];
+  const categoria = categorias.find(c => c.id === String(grupoId).split('-')[0]);
+  if (categoria) {
+    categoria.gruposPlaneados = Math.max(1, (getData('grupos') || []).filter(g => g.cat === categoria.id).length);
+    categoria.duplasPorGrupo = 4;
+    setData('categorias', categorias);
+  }
   // Desatribuir duplas (mantêm cat)
   if (nDuplas) {
     setData('duplas', duplas.map(d => d.grupo === grupoId ? { ...d, grupo: null } : d));
@@ -3153,6 +3231,7 @@ function renderJogadores(filter = '') {
       '<td>' + jogosJogador.length + ' <span class="td-muted">jogo' + (jogosJogador.length!==1?'s':'') + '</span></td>' +
       '<td>' + comRes + ' <span class="td-muted">result.</span></td>' +
       '<td style="font-size:.78rem;color:var(--cinza-texto)">' + (tel || '<span style="opacity:.35">\u2014</span>') + '</td>' +
+      '<td style="font-size:.78rem;color:var(--cinza-texto)">' + (jog.email ? escHtml(jog.email) : '<span style="opacity:.35">\u2014</span>') + '</td>' +
       '<td><div style="display:flex;gap:.15rem">' + waBtn +
         '<button class="btn-icon" onclick="editarJogador(decodeURIComponent(\'' + nomeEnc + '\'))" title="Editar"><i class="ph ph-pencil"></i></button>' +
         '<button class="btn-icon" style="color:var(--vermelho);opacity:.7" onclick="eliminarJogador(decodeURIComponent(\'' + nomeEnc + '\'))" title="Eliminar jogador"><i class="ph ph-trash"></i></button>' +
@@ -3167,6 +3246,8 @@ function editarJogador(nome) {
   document.getElementById('jogadorNomeActual').textContent = nome;
   document.getElementById('jogadorNomeNovo').value = nome;
   document.getElementById('jogadorTelefone').value = getTelefone(nome);
+  const jogador = (getData('jogadores') || []).find(j => j.nome === nome);
+  document.getElementById('jogadorEmail').value = jogador?.email || '';
   APP.editingId = nome;
   _renderJogadorGrupos(nome);
   openModal('modalJogador');
@@ -3243,7 +3324,12 @@ function saveJogador() {
   const nomeAntigo = APP.editingId;
   const nomeNovo   = document.getElementById('jogadorNomeNovo').value.trim();
   const telNovo    = document.getElementById('jogadorTelefone').value.trim();
+  const emailNovo  = document.getElementById('jogadorEmail').value.trim();
   if (!nomeNovo) { toast('Introduza o novo nome', 'error'); return; }
+  if (emailNovo && !document.getElementById('jogadorEmail').checkValidity()) {
+    toast('Introduza um email válido.', 'error');
+    return;
+  }
 
   if (nomeNovo !== nomeAntigo) {
     const oldTel = getTelefone(nomeAntigo);
@@ -3263,7 +3349,12 @@ function saveJogador() {
     // Update entity store
     const jogadoresStore = getData('jogadores') || [];
     const jIdx = jogadoresStore.findIndex(j => j.nome === nomeAntigo);
-    if (jIdx !== -1) { jogadoresStore[jIdx].nome = nomeNovo; jogadoresStore[jIdx].tel = telNovo || jogadoresStore[jIdx].tel; setData('jogadores', jogadoresStore); }
+    if (jIdx !== -1) {
+      jogadoresStore[jIdx].nome = nomeNovo;
+      jogadoresStore[jIdx].tel = telNovo || jogadoresStore[jIdx].tel;
+      jogadoresStore[jIdx].email = emailNovo;
+      setData('jogadores', jogadoresStore);
+    }
     Auth.log('RENAME_JOGADOR', 'jogadores', `"${nomeAntigo}" → "${nomeNovo}"`);
     toast(`"${nomeAntigo}" renomeado para "${nomeNovo}" em ${alterados} jogo${alterados!==1?'s':''}`, 'success');
   } else {
@@ -3271,8 +3362,15 @@ function saveJogador() {
     // Update tel in entity store
     const jogadoresStore = getData('jogadores') || [];
     const jIdx = jogadoresStore.findIndex(j => j.nome === nomeNovo);
-    if (jIdx !== -1) { jogadoresStore[jIdx].tel = telNovo; setData('jogadores', jogadoresStore); }
+    if (jIdx !== -1) {
+      jogadoresStore[jIdx].tel = telNovo;
+      jogadoresStore[jIdx].email = emailNovo;
+      setData('jogadores', jogadoresStore);
+    }
     toast('Guardado.', 'success');
+  }
+  if (!(getData('jogadores') || []).some(j => j.nome === nomeNovo)) {
+    ensureJogador(nomeNovo, telNovo, '', emailNovo);
   }
   closeModal('modalJogador');
   renderJogadores();
@@ -6628,26 +6726,20 @@ async function renderInscricoes() {
   const reservasPend = entries.filter(e => e.reservado && e.estado !== 'cancelada').length;
   const emEspera = entries.filter(e => e.estado === 'espera').length;
 
-  const _cfg = getData('config') || {};
-  const _cfgInt = (k, d) => { const v = parseInt(_cfg[k], 10); return (!v || v < 1) ? d : v; };
-  const vagasTotM = _cfgInt('maxJogadoresM', 144);
-  const vagasTotF = _cfgInt('maxJogadoresF', 30);
+  const categorias = getData('categorias') || [];
+  const grupos = getData('grupos') || [];
+  const disponibilidade = ppCategoryAvailability(entries, categorias, grupos);
+  const vagasTotM = categorias.filter(c => c.tipo !== 'F').reduce((n, c) => n + (disponibilidade[c.id]?.total || 0), 0);
+  const vagasTotF = categorias.filter(c => c.tipo === 'F').reduce((n, c) => n + (disponibilidade[c.id]?.total || 0), 0);
   const vagasTotal = vagasTotM + vagasTotF;
-  const _slots = e => 1 + (e.reservado ? 1 : 0);
-  const _activeOcc = entries.filter(e => e.estado !== 'rejeitada' && e.estado !== 'cancelada' && e.estado !== 'espera');
-  const ocupM = _activeOcc.filter(e => (e.genero || 'M') !== 'F').reduce((n, e) => n + _slots(e), 0);
-  const ocupF = _activeOcc.filter(e => (e.genero || 'M') === 'F').reduce((n, e) => n + _slots(e), 0);
-  const livresM = Math.max(0, vagasTotM - ocupM);
-  const livresF = Math.max(0, vagasTotF - ocupF);
+  const livresM = categorias.filter(c => c.tipo !== 'F').reduce((n, c) => n + (disponibilidade[c.id]?.livres || 0), 0);
+  const livresF = categorias.filter(c => c.tipo === 'F').reduce((n, c) => n + (disponibilidade[c.id]?.livres || 0), 0);
   const vagasLivres = livresM + livresF;
   const _vagaBg = (l, t) => l <= 0 ? 'rgba(255,74,74,.08)' : l <= Math.max(4, t * 0.12) ? 'rgba(245,197,24,.08)' : 'rgba(0,195,123,.06)';
   const _vagaFg = (l, t) => l <= 0 ? '#FF4A4A' : l <= Math.max(4, t * 0.12) ? 'var(--amarelo)' : 'var(--verde)';
 
-  const catMap  = {};
-  (getData('categorias') || []).forEach(c => { catMap[c.id] = c.nome; });
-
-  const catCounts = {};
-  entries.forEach(e => { catCounts[e.categoria] = (catCounts[e.categoria] || 0) + 1; });
+  const catMap = {};
+  categorias.forEach(c => { catMap[c.id] = c.nome; });
 
   el.innerHTML = `
     <div style="max-width:1100px">
@@ -6700,11 +6792,14 @@ async function renderInscricoes() {
           <div style="font-size:2rem;font-weight:800;color:#FFB020;line-height:1">${emEspera}</div>
           <div style="font-size:.68rem;text-transform:uppercase;letter-spacing:.06em;color:var(--cinza-texto);margin-top:.2rem">Em espera</div>
         </div>` : ''}
-        ${Object.entries(catCounts).sort((a,b)=>String(a[0]).localeCompare(String(b[0]))).map(([cat, n]) => `
-        <div class="card" style="padding:.9rem 1rem;text-align:center">
-          <div style="font-size:2rem;font-weight:800;color:var(--branco);line-height:1">${n}</div>
-          <div style="font-size:.68rem;text-transform:uppercase;letter-spacing:.06em;color:var(--cinza-texto);margin-top:.2rem">${cat ? escHtml(cat) : 'Sem categoria'}</div>
-        </div>`).join('')}
+        ${categorias.slice().sort((a,b)=>String(a.id).localeCompare(String(b.id))).map(cat => {
+          const v = disponibilidade[cat.id];
+          return `
+        <div class="card" style="padding:.9rem 1rem;text-align:center;background:${_vagaBg(v.livres,v.total)}">
+          <div style="font-size:2rem;font-weight:800;color:${_vagaFg(v.livres,v.total)};line-height:1">${v.livres} <span style="font-size:.9rem;font-weight:600;color:var(--cinza-texto)">/ ${v.total}</span></div>
+          <div style="font-size:.68rem;text-transform:uppercase;letter-spacing:.06em;color:var(--cinza-texto);margin-top:.2rem">${escHtml(cat.id)} · vagas livres${v.suplentes ? ` · ${v.suplentes} supl.` : ''}</div>
+        </div>`;
+        }).join('')}
       </div>
 
       ${reservasPend > 0 ? `<div class="card" style="padding:.7rem 1rem;margin-bottom:1rem;background:rgba(255,176,32,.08);border:1px solid rgba(255,176,32,.25);display:flex;align-items:center;gap:.6rem">
@@ -7079,19 +7174,19 @@ window.insAdminConfirm = async function(id) {
     e.estado = 'confirmada';
     e.confirmadoem = new Date().toISOString();
     // Criar o jogador do próprio inscrito
-    const j1 = ensureJogador(e.nome1, e.telefone, e.genero);
+    const j1 = ensureJogador(e.nome1, e.telefone, e.genero, e.email);
     // Criar a dupla quando existir par completo (nível inscrito)
     let duplaCriada = false;
     let aguardaParceiro = false;
     if (e.nome2) {
       // Legado: par indicado numa só inscrição
-      const j2 = ensureJogador(e.nome2, '', e.genero);
+      const j2 = ensureJogador(e.nome2, '', e.genero, '');
       if (j1 && j2) duplaCriada = !!ensureDupla(j1.id, j2.id, e.categoria);
     } else if (e.parid) {
       // Novo fluxo: cada membro tem a sua inscrição; a dupla nasce quando ambos confirmam
       const sibling = entries.find(x => x.parid === e.parid && x.id !== e.id);
       if (sibling && sibling.estado === 'confirmada') {
-        const j2 = ensureJogador(sibling.nome1, sibling.telefone, sibling.genero);
+        const j2 = ensureJogador(sibling.nome1, sibling.telefone, sibling.genero, sibling.email);
         if (j1 && j2) duplaCriada = !!ensureDupla(j1.id, j2.id, e.categoria);
       } else {
         aguardaParceiro = true;
@@ -7175,24 +7270,23 @@ window.insAdminPromote = async function(id) {
     const e = entries.find(x => x.id === id);
     if (!e) return;
     if (e.estado !== 'espera') { toast('Esta inscrição não está em lista de espera.', 'warning'); return; }
-    // Aviso se não houver vagas livres nesse género, mas permitir forçar.
-    const _cfg = getData('config') || {};
-    const _cfgInt = (k, d) => { const v = parseInt(_cfg[k], 10); return (!v || v < 1) ? d : v; };
-    const _isF = (e.genero || 'M') === 'F';
-    const _cap = _isF ? _cfgInt('maxJogadoresF', 30) : _cfgInt('maxJogadoresM', 144);
-    const ocup = entries.filter(x => x.estado !== 'rejeitada' && x.estado !== 'cancelada' && x.estado !== 'espera' && ((x.genero || 'M') === 'F') === _isF)
-      .reduce((n, x) => n + 1 + (x.reservado ? 1 : 0), 0);
-    const livres = _cap - ocup;
-    const nec = 1 + (e.reservado ? 1 : 0);
-    let msg = `Promover "${e.nome1}" da lista de espera para pendente?`;
-    if (livres < nec) msg += `\n\n⚠ Não há vagas ${_isF ? 'Femininas' : 'Masculinas'} suficientes (livres: ${Math.max(0, livres)}, necessárias: ${nec}). Vais exceder a capacidade.`;
+    const targets = e.parid
+      ? entries.filter(x => x.parid === e.parid && x.estado === 'espera')
+      : [e];
+    const capacidade = ppCategoryAvailability(entries, getData('categorias') || [], getData('grupos') || []);
+    const livres = capacidade[e.categoria]?.livres || 0;
+    const nec = targets.reduce((n, item) => n + 1 + (item.reservado || (item.nome2 && !item.parid) ? 1 : 0), 0);
+    let msg = `Promover ${targets.length > 1 ? 'a dupla de ' : ''}"${e.nome1}" da lista de espera para pendente?`;
+    if (livres < nec) msg += `\n\n⚠ Não há vagas suficientes na categoria ${e.categoria || 'selecionada'} (livres: ${Math.max(0, livres)}, necessárias: ${nec}). Vais exceder a capacidade.`;
     if (!confirm(msg)) return;
-    e.estado = 'nova';
+    targets.forEach(item => { item.estado = 'nova'; });
     localStorage.setItem('pp_inscricoes', JSON.stringify(entries));
-    if (window.ppCloudState && window.ppCloudState.upsertInscricao) await window.ppCloudState.upsertInscricao(e);
-    Auth.log('PROMOVER_INSCRICAO', 'inscricoes', `${e.nome1} (${e.categoria || 'Sem categoria'})`);
+    if (window.ppCloudState && window.ppCloudState.upsertInscricao) {
+      for (const item of targets) await window.ppCloudState.upsertInscricao(item);
+    }
+    Auth.log('PROMOVER_INSCRICAO', 'inscricoes', `${targets.map(item => item.nome1).join(' & ')} (${e.categoria || 'Sem categoria'})`);
     renderInscricoes();
-    toast(`Inscrição de "${e.nome1}" promovida (pendente).`, 'success');
+    toast(`${targets.length > 1 ? 'Dupla promovida' : `Inscrição de "${e.nome1}" promovida`} (pendente).`, 'success');
   } catch(err) { toast('Erro ao promover: ' + (err && err.message || err), 'error'); }
 };
 

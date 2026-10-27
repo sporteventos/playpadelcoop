@@ -24,49 +24,65 @@
       "id": "M1",
       "nome": "Masculino 1",
       "tipo": "M",
-      "nivel": 1
+      "nivel": 1,
+      "gruposPlaneados": 2,
+      "duplasPorGrupo": 4
     },
     {
       "id": "M2",
       "nome": "Masculino 2",
       "tipo": "M",
-      "nivel": 2
+      "nivel": 2,
+      "gruposPlaneados": 4,
+      "duplasPorGrupo": 4
     },
     {
       "id": "M3",
       "nome": "Masculino 3",
       "tipo": "M",
-      "nivel": 3
+      "nivel": 3,
+      "gruposPlaneados": 4,
+      "duplasPorGrupo": 4
     },
     {
       "id": "M4",
       "nome": "Masculino 4",
       "tipo": "M",
-      "nivel": 4
+      "nivel": 4,
+      "gruposPlaneados": 2,
+      "duplasPorGrupo": 4
     },
     {
       "id": "M5",
       "nome": "Masculino 5",
       "tipo": "M",
-      "nivel": 5
+      "nivel": 5,
+      "gruposPlaneados": 2,
+      "duplasPorGrupo": 4
     },
     {
       "id": "F1",
       "nome": "Feminino 1",
       "tipo": "F",
-      "nivel": 1
+      "nivel": 1,
+      "gruposPlaneados": 2,
+      "duplasPorGrupo": 4
     },
     {
       "id": "F2",
       "nome": "Feminino 2",
       "tipo": "F",
-      "nivel": 2
+      "nivel": 2,
+      "gruposPlaneados": 2,
+      "duplasPorGrupo": 4
     },
     {
       "id": "F3",
       "nome": "Feminino 3",
       "tipo": "F",
-      "nivel": 3
+      "nivel": 3,
+      "gruposPlaneados": 2,
+      "duplasPorGrupo": 4
     }
   ],
   "grupos": [],

@@ -39,6 +39,13 @@
     .ins-vagas-fill { height:100%; background:var(--verde); border-radius:999px; transition:width .4s ease; }
     .ins-vagas.low .ins-vagas-fill { background:var(--amarelo); }
     .ins-vagas.full .ins-vagas-fill { background:#FF4A4A; }
+    .ins-category-availability { display:grid; grid-template-columns:repeat(auto-fit,minmax(135px,1fr)); gap:.55rem; margin:0 0 1rem; }
+    .ins-category-slot { appearance:none; text-align:left; color:var(--branco); background:rgba(255,255,255,.035); border:1px solid var(--preto-borda); border-radius:10px; padding:.7rem .75rem; cursor:pointer; }
+    .ins-category-slot:hover, .ins-category-slot.active { border-color:var(--verde); background:rgba(0,195,123,.08); }
+    .ins-category-slot.low { border-color:rgba(245,197,24,.45); }
+    .ins-category-slot.full { border-color:rgba(255,74,74,.45); background:rgba(255,74,74,.06); }
+    .ins-category-slot strong { display:block; font-size:.88rem; }
+    .ins-category-slot span { display:block; margin-top:.18rem; color:var(--cinza-texto); font-size:.7rem; line-height:1.35; }
     .form-input.invalid, .form-select.invalid { border-color: #FF6B6B; }
     .form-textarea { min-height: 84px; resize: vertical; }
     .form-help { font-size: .74rem; color: #64796F; line-height: 1.45; }
@@ -154,6 +161,7 @@
 
         <section class="registration-step" data-step="2">
           <div class="tp-step-intro"><span class="tp-eyebrow">ETAPA 2</span><h3>Escolhe o teu desafio</h3><p>Seleciona o género e o nível em que pretendes competir. A disponibilidade é atualizada em tempo real.</p></div>
+          <div id="categoryAvailability" class="ins-category-availability" aria-label="Vagas disponíveis por categoria"></div>
           <div id="vagasBox" class="ins-vagas" style="display:none">
             <div class="ins-vagas-main">
               <i class="ph ph-users-three" style="font-size:1.4rem;color:var(--verde)"></i>
@@ -418,8 +426,9 @@ document.addEventListener('DOMContentLoaded', function () {
     var genero = document.querySelector('input[name="genero"]:checked');
     var g = genero ? genero.value : 'M';
     var categorias = (ppGet('categorias') || []).filter(function(c){ return c && c.id; });
-    var filtered = categorias.filter(function(c){ return c.id.charAt(0) === g; });
+    var filtered = categorias.filter(function(c){ return (c.tipo || c.id.charAt(0)) === g; });
     var sel = document.getElementById('categoria');
+    var selected = sel.value;
     sel.innerHTML = '<option value="">— selecciona —</option>';
     filtered.forEach(function(cat){
       var o = document.createElement('option');
@@ -427,6 +436,7 @@ document.addEventListener('DOMContentLoaded', function () {
       o.textContent = cat.id + ' · ' + cat.nome;
       sel.appendChild(o);
     });
+    if (filtered.some(function(cat){ return cat.id === selected; })) sel.value = selected;
     var help = document.getElementById('catHelp');
     if (help) help.textContent = filtered.length ? '' : 'Sem categorias disponíveis para este género.';
   }
@@ -434,6 +444,7 @@ document.addEventListener('DOMContentLoaded', function () {
   document.querySelectorAll('input[name="genero"]').forEach(function(r){
     r.addEventListener('change', function(){ buildCats(); renderPlayerDatalist(); if (typeof renderVagas === 'function') renderVagas(); });
   });
+  document.getElementById('categoria').addEventListener('change', function(){ if (typeof renderVagas === 'function') renderVagas(); });
   buildCats();
 
   // Autocomplete de jogadores (jogadores confirmados + já pré-inscritos), filtrado por género
@@ -651,17 +662,12 @@ document.addEventListener('DOMContentLoaded', function () {
   applyDisponibilidadeDateBounds();
   window.dispatchEvent(new CustomEvent('pp:registration-ready'));
 
-  // ── Contador de vagas (por género) ──
-  var VAGAS = { M: { total: 120, ocupadas: 0, livres: 120 }, F: { total: 48, ocupadas: 0, livres: 48 } };
-  function slotsOf(e){ return 1 + (e && e.reservado ? 1 : 0); }
-  function isActive(e){ return e && e.estado !== 'rejeitada' && e.estado !== 'cancelada' && e.estado !== 'espera'; }
+  // ── Contador de vagas por categoria ──
+  var VAGAS = {};
   function selGenero(){ var g = document.querySelector('input[name="genero"]:checked'); return g && g.value === 'F' ? 'F' : 'M'; }
-  function vagasG(){ return VAGAS[selGenero()]; }
+  function selCategoria(){ return document.getElementById('categoria').value; }
+  function vagasCategoria(){ return VAGAS[selCategoria()] || null; }
   async function refreshVagas(){
-    var cfg = (ppGet('config') || {});
-    var cfgInt = function(k, d){ var v = parseInt(cfg[k], 10); return (!v || v < 1) ? d : v; };
-    var totalM = cfgInt('maxJogadoresM', 144);
-    var totalF = cfgInt('maxJogadoresF', 30);
     var entries = [];
     try {
       if (window.ppCloudState && window.ppCloudState.fetchInscricoes) {
@@ -671,21 +677,42 @@ document.addEventListener('DOMContentLoaded', function () {
     if (!entries || !entries.length) {
       try { entries = JSON.parse(localStorage.getItem('pp_inscricoes') || '[]'); } catch(_) { entries = []; }
     }
-    var active = (entries || []).filter(isActive);
-    var ocupM = active.filter(function(e){ return (e.genero || 'M') !== 'F'; }).reduce(function(n,e){ return n + slotsOf(e); }, 0);
-    var ocupF = active.filter(function(e){ return (e.genero || 'M') === 'F'; }).reduce(function(n,e){ return n + slotsOf(e); }, 0);
-    VAGAS = {
-      M: { total: totalM, ocupadas: ocupM, livres: Math.max(0, totalM - ocupM) },
-      F: { total: totalF, ocupadas: ocupF, livres: Math.max(0, totalF - ocupF) },
-    };
+    VAGAS = ppCategoryAvailability(entries, ppGet('categorias') || [], ppGet('grupos') || []);
     renderVagas();
     return VAGAS;
+  }
+  function renderCategoryAvailability(){
+    var container = document.getElementById('categoryAvailability');
+    var categories = (ppGet('categorias') || []).filter(function(cat){
+      return cat && (cat.tipo || cat.id.charAt(0)) === selGenero();
+    });
+    container.innerHTML = categories.map(function(cat){
+      var v = VAGAS[cat.id] || { total: ppCategoryCapacity(cat, ppGet('grupos') || []), livres: 0, suplentes: 0 };
+      var state = v.livres <= 0 ? ' full' : (v.livres <= 4 ? ' low' : '');
+      var active = selCategoria() === cat.id ? ' active' : '';
+      var detail = v.livres <= 0
+        ? 'Lotada · inscrição como suplente' + (v.suplentes ? ' · ' + v.suplentes + ' em espera' : '')
+        : v.livres + ' de ' + v.total + ' vagas livres';
+      return '<button type="button" class="ins-category-slot' + state + active + '" data-category="' + cat.id + '">'
+        + '<strong>' + cat.id + ' · ' + cat.nome + '</strong><span>' + detail + '</span></button>';
+    }).join('');
+    container.querySelectorAll('[data-category]').forEach(function(button){
+      button.addEventListener('click', function(){
+        document.getElementById('categoria').value = button.getAttribute('data-category');
+        renderVagas();
+      });
+    });
   }
   function renderVagas(){
     var box = document.getElementById('vagasBox');
     if (!box) return;
-    var v = vagasG();
-    var gLabel = selGenero() === 'F' ? 'Feminino' : 'Masculino';
+    renderCategoryAvailability();
+    var categoryId = selCategoria();
+    var v = vagasCategoria();
+    if (!categoryId || !v) {
+      box.style.display = 'none';
+      return;
+    }
     box.style.display = '';
     document.getElementById('vagasLivres').textContent = v.livres;
     document.getElementById('vagasTotal').textContent = v.total;
@@ -698,21 +725,20 @@ document.addEventListener('DOMContentLoaded', function () {
     var lowThreshold = Math.max(4, Math.round(v.total * 0.12));
     if (v.livres <= 0) {
       box.classList.add('full');
-      sub.textContent = gLabel + ': vagas esgotadas — podes entrar na lista de espera e a organização contacta-te se abrir vaga.';
+      sub.textContent = categoryId + ': vagas esgotadas — ainda podes inscrever-te como suplente ou escolher outra categoria com vagas.';
     } else if (v.livres <= lowThreshold) {
       box.classList.add('low');
-      sub.textContent = gLabel + ': últimas vagas! ≈ ' + duplasLivres + ' dupla(s) ainda disponível(is).';
+      sub.textContent = categoryId + ': últimas vagas! ≈ ' + duplasLivres + ' dupla(s) ainda disponível(is).';
     } else {
-      sub.textContent = gLabel + ': ≈ ' + duplasLivres + ' dupla(s) ainda disponível(is).';
+      sub.textContent = categoryId + ': ≈ ' + duplasLivres + ' dupla(s) ainda disponível(is).';
     }
-    // Quando esgotado, o formulário passa a inscrever em lista de espera (não bloqueia).
     var submitBtn = document.querySelector('#insForm button[type="submit"]');
     if (submitBtn) {
       submitBtn.disabled = false;
       submitBtn.style.opacity = '';
       submitBtn.style.cursor = '';
       submitBtn.innerHTML = (v.livres <= 0)
-        ? '<i class="ph ph-hourglass-medium"></i> Entrar na lista de espera'
+        ? '<i class="ph ph-hourglass-medium"></i> Inscrever como suplente'
         : '<i class="ph ph-paper-plane-tilt"></i> Submeter inscrição';
     }
   }
@@ -772,14 +798,18 @@ document.addEventListener('DOMContentLoaded', function () {
     };
     var registrationMetaValue = JSON.stringify(registrationMeta);
 
-    // Capacidade por género: solo=1 vaga, parceiro/reserva=2 vagas.
-    // Se não houver vagas suficientes no género, a inscrição entra em LISTA DE ESPERA.
+    // Capacidade por categoria: solo=1 vaga, parceiro/reserva=2 vagas.
     var vagasNec = (modo === 'solo') ? 1 : 2;
     await refreshVagas();
-    var vGen = VAGAS[genero === 'F' ? 'F' : 'M'];
-    var waitlist = (vGen.livres < vagasNec);
+    var vCat = VAGAS[categoria];
+    var waitlist = !vCat || vCat.livres < vagasNec;
     if (waitlist) {
-      if (!confirm('As vagas ' + (genero === 'F' ? 'Femininas' : 'Masculinas') + ' estão esgotadas. Queres entrar na lista de espera? A organização contacta-te se abrir uma vaga.')) return;
+      var alternativas = Object.keys(VAGAS).filter(function(id){
+        var cat = (ppGet('categorias') || []).find(function(item){ return item.id === id; });
+        return id !== categoria && cat && (cat.tipo || id.charAt(0)) === genero && VAGAS[id].livres >= vagasNec;
+      });
+      var alternativesText = alternativas.length ? '\n\nCategorias com vagas: ' + alternativas.join(', ') + '.' : '';
+      if (!confirm('A categoria ' + categoria + ' não tem vagas suficientes para esta inscrição. Queres inscrever-te como suplente? A organização contacta-te se abrir uma vaga.' + alternativesText)) return;
     }
     var estadoInicial = waitlist ? 'espera' : 'nova';
 

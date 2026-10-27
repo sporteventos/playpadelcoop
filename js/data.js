@@ -10,14 +10,14 @@ const DEFAULTS = {
     { id: 3, nome: 'Stella Artois', icone: '??', activo: true },
   ],
   categorias: [
-    { id:'M1', nome:'Masculino 1', tipo:'M', nivel:1 },
-    { id:'M2', nome:'Masculino 2', tipo:'M', nivel:2 },
-    { id:'M3', nome:'Masculino 3', tipo:'M', nivel:3 },
-    { id:'M4', nome:'Masculino 4', tipo:'M', nivel:4 },
-    { id:'M5', nome:'Masculino 5', tipo:'M', nivel:5 },
-    { id:'F1', nome:'Feminino 1',  tipo:'F', nivel:1 },
-    { id:'F2', nome:'Feminino 2',  tipo:'F', nivel:2 },
-    { id:'F3', nome:'Feminino 3',  tipo:'F', nivel:3 },
+    { id:'M1', nome:'Masculino 1', tipo:'M', nivel:1, gruposPlaneados:2, duplasPorGrupo:4 },
+    { id:'M2', nome:'Masculino 2', tipo:'M', nivel:2, gruposPlaneados:4, duplasPorGrupo:4 },
+    { id:'M3', nome:'Masculino 3', tipo:'M', nivel:3, gruposPlaneados:4, duplasPorGrupo:4 },
+    { id:'M4', nome:'Masculino 4', tipo:'M', nivel:4, gruposPlaneados:2, duplasPorGrupo:4 },
+    { id:'M5', nome:'Masculino 5', tipo:'M', nivel:5, gruposPlaneados:2, duplasPorGrupo:4 },
+    { id:'F1', nome:'Feminino 1',  tipo:'F', nivel:1, gruposPlaneados:2, duplasPorGrupo:4 },
+    { id:'F2', nome:'Feminino 2',  tipo:'F', nivel:2, gruposPlaneados:2, duplasPorGrupo:4 },
+    { id:'F3', nome:'Feminino 3',  tipo:'F', nivel:3, gruposPlaneados:2, duplasPorGrupo:4 },
   ],
   grupos: [],
   jogadores: [],
@@ -104,6 +104,46 @@ function ppLoad(key) {
 }
 function ppSave(key, data) { localStorage.setItem('pp_' + key, JSON.stringify(data)); }
 function ppGet(key)  { return ppLoad(key) ?? JSON.parse(JSON.stringify(DEFAULTS[key] ?? [])); }
+
+const PP_CATEGORY_GROUP_DEFAULTS = {
+  M1: 2, M2: 4, M3: 4, M4: 2, M5: 2,
+  F1: 2, F2: 2, F3: 2,
+};
+
+function ppCategoryCapacity(category, groups) {
+  if (!category || !category.id) return 0;
+  var planned = parseInt(category.gruposPlaneados, 10);
+  if (!planned || planned < 1) {
+    planned = (groups || []).filter(function (group) { return group && group.cat === category.id; }).length;
+  }
+  if (!planned || planned < 1) planned = PP_CATEGORY_GROUP_DEFAULTS[category.id] || 1;
+  var pairsPerGroup = parseInt(category.duplasPorGrupo, 10);
+  if (!pairsPerGroup || pairsPerGroup < 1) pairsPerGroup = 4;
+  return planned * pairsPerGroup * 2;
+}
+
+function ppCategoryAvailability(entries, categories, groups) {
+  var result = {};
+  (categories || []).forEach(function (category) {
+    var total = ppCategoryCapacity(category, groups);
+    result[category.id] = { total: total, ocupadas: 0, livres: total, suplentes: 0 };
+  });
+  (entries || []).forEach(function (entry) {
+    if (!entry || !entry.categoria || !result[entry.categoria]) return;
+    var occupiesPartnerSlot = entry.reservado || (!!entry.nome2 && !entry.parid);
+    var slots = 1 + (occupiesPartnerSlot ? 1 : 0);
+    if (entry.estado === 'espera') {
+      result[entry.categoria].suplentes += slots;
+      return;
+    }
+    if (entry.estado === 'rejeitada' || entry.estado === 'cancelada') return;
+    result[entry.categoria].ocupadas += slots;
+  });
+  Object.keys(result).forEach(function (id) {
+    result[id].livres = Math.max(0, result[id].total - result[id].ocupadas);
+  });
+  return result;
+}
 
 // ---- Cloud state (Supabase) ----
 const PP_CLOUD = {

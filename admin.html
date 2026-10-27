@@ -410,6 +410,11 @@
             <h1 class="page-title">Categorias &amp; Grupos</h1>
             <p class="page-desc">Categorias do torneio e divisão em grupos</p>
           </div>
+          <div class="page-actions">
+            <button class="btn btn-primary" onclick="novaCategoria()">
+              <i class="ph ph-plus"></i> Nova Categoria
+            </button>
+          </div>
         </div>
         <div class="panel">
           <div class="table-wrap">
@@ -417,7 +422,7 @@
               <thead>
                 <tr>
                   <th>Código</th><th>Nome</th><th>Tipo</th><th>Grupos</th>
-                  <th>Letras</th><th>Ações</th>
+                  <th>Capacidade</th><th>Letras</th><th>Ações</th>
                 </tr>
               </thead>
               <tbody id="catsTableBody"></tbody>
@@ -455,6 +460,7 @@
                   <th id="thJogJogos" onclick="sortJogadores('jogos')" style="cursor:pointer;user-select:none">Jogos</th>
                   <th id="thJogRes" onclick="sortJogadores('resultados')" style="cursor:pointer;user-select:none">Resultados</th>
                   <th>Telefone</th>
+                  <th>Email</th>
                   <th></th>
                 </tr>
               </thead>
@@ -1084,6 +1090,10 @@
         <label class="form-label" for="jogadorTelefone">Telefone WhatsApp</label>
         <input class="form-input" type="tel" id="jogadorTelefone" placeholder="+258 84 123 4567"/>
       </div>
+      <div class="form-group-modal">
+        <label class="form-label" for="jogadorEmail">Email</label>
+        <input class="form-input" type="email" id="jogadorEmail" placeholder="nome@email.com"/>
+      </div>
       <div class="form-group-modal" id="jogadorGruposWrap" style="display:none">
         <label class="form-label" style="margin-bottom:.5rem">Grupos / Pares</label>
         <div id="jogadorGruposList"></div>
@@ -1223,6 +1233,48 @@
     <div class="modal-footer">
       <button class="btn btn-ghost" onclick="closeModal('modalInscricao')">Cancelar</button>
       <button class="btn btn-primary" onclick="insAdminSave()"><i class="ph ph-floppy-disk"></i> Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Categoria -->
+<div class="modal-overlay" id="modalCategoria" role="dialog" aria-modal="true" aria-labelledby="modalCategoriaTitle">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 class="modal-title" id="modalCategoriaTitle">Nova Categoria</h2>
+      <button class="modal-close" onclick="closeModal('modalCategoria')" aria-label="Fechar"><i class="ph ph-x"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group-modal">
+        <label class="form-label" for="categoriaCodigo">Código</label>
+        <input class="form-input" type="text" id="categoriaCodigo" placeholder="ex: M6" maxlength="8"/>
+      </div>
+      <div class="form-group-modal">
+        <label class="form-label" for="categoriaNome">Nome</label>
+        <input class="form-input" type="text" id="categoriaNome" placeholder="ex: Masculino 6"/>
+      </div>
+      <div class="form-grid-modal">
+        <div class="form-group-modal">
+          <label class="form-label" for="categoriaTipo">Género</label>
+          <select class="form-input" id="categoriaTipo">
+            <option value="M">Masculino</option>
+            <option value="F">Feminino</option>
+          </select>
+        </div>
+        <div class="form-group-modal">
+          <label class="form-label" for="categoriaNivel">Nível</label>
+          <input class="form-input" type="number" id="categoriaNivel" min="1" max="99" value="1"/>
+        </div>
+      </div>
+      <div class="form-group-modal">
+        <label class="form-label" for="categoriaGrupos">Número de grupos</label>
+        <input class="form-input" type="number" id="categoriaGrupos" min="1" max="26" value="2"/>
+        <p class="form-hint">Cada grupo tem 4 duplas (8 jogadores). Dois grupos correspondem a 16 vagas.</p>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modalCategoria')">Cancelar</button>
+      <button class="btn btn-primary" onclick="saveCategoria()"><i class="ph ph-floppy-disk"></i> Guardar</button>
     </div>
   </div>
 </div>

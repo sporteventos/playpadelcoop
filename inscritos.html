@@ -61,9 +61,9 @@
 <!-- PAGE HERO -->
 <div class="page-hero">
   <div class="page-hero-content">
-    <p class="page-hero-tag"><i class="ph ph-list-checks"></i> Confirmados</p>
-    <h1 class="page-hero-title">Duplas <span>Inscritas</span></h1>
-    <p class="page-hero-sub">Duplas com inscrição confirmada, organizadas por nível</p>
+    <p class="page-hero-tag"><i class="ph ph-list-checks"></i> Participantes</p>
+    <h1 class="page-hero-title">Jogadores e <span>Duplas</span></h1>
+    <p class="page-hero-sub">Participantes já inscritos, organizados por categoria e nível</p>
   </div>
 </div>
 
@@ -89,11 +89,12 @@
     <i class="ph ph-circle-notch" style="font-size:2rem;display:inline-block;animation:spin 1s linear infinite"></i>
     <p style="margin-top:.6rem">A carregar inscritos…</p>
   </div>
+  <div id="capacitySummary" class="ins-capacity-summary"></div>
   <div id="inscritosContent"></div>
   <div class="empty-state hidden" id="emptyState">
     <div class="empty-icon">🎾</div>
-    <p class="empty-title">Ainda não há duplas confirmadas</p>
-    <p class="empty-sub">As duplas aparecem aqui assim que a organização confirmar as inscrições.</p>
+    <p class="empty-title">Ainda não há participantes inscritos</p>
+    <p class="empty-sub">Os jogadores e as duplas aparecem aqui após a primeira pré-inscrição.</p>
   </div>
 </main>
 
@@ -118,6 +119,12 @@
 .ins-player i { color:var(--verde,#00C37B); }
 .ins-player span { color:var(--branco,#fff); font-weight:600; font-size:.92rem; }
 .ins-genero-tag { font-size:.62rem; font-weight:700; text-transform:uppercase; padding:.12rem .45rem; border-radius:4px; }
+.ins-status-tag { font-size:.62rem; font-weight:700; text-transform:uppercase; padding:.12rem .45rem; border-radius:4px; margin-left:.3rem; }
+.ins-capacity-summary { max-width:1100px; margin:0 auto 1.5rem; display:grid; grid-template-columns:repeat(auto-fit,minmax(135px,1fr)); gap:.55rem; }
+.ins-capacity-card { background:rgba(255,255,255,.035); border:1px solid var(--preto-borda,#2a2a2a); border-radius:10px; padding:.7rem .8rem; }
+.ins-capacity-card strong { display:block; color:var(--branco,#fff); font-size:.85rem; }
+.ins-capacity-card span { display:block; margin-top:.2rem; color:var(--cinza-texto,#888); font-size:.7rem; }
+.ins-capacity-card.full { border-color:rgba(255,74,74,.4); }
 </style>
 
 <script src="js/data.js"></script>
@@ -153,22 +160,24 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  // Constrói a lista de duplas confirmadas a partir das inscrições.
+  // Constrói jogadores e duplas sem expor contactos ou inscrições canceladas/suplentes.
   function buildDuplas(entries) {
-    var confirmadas = (entries || []).filter(function (e) { return e && e.estado === 'confirmada'; });
+    var activas = (entries || []).filter(function (e) {
+      return e && e.estado !== 'cancelada' && e.estado !== 'rejeitada' && e.estado !== 'espera';
+    });
     var seenPar = {};
     var duplas = [];
-    confirmadas.forEach(function (e) {
+    activas.forEach(function (e) {
       if (e.parid) {
         if (seenPar[e.parid]) return;
         seenPar[e.parid] = true;
-        var sib = confirmadas.find(function (x) { return x.parid === e.parid && x.id !== e.id; });
+        var sib = activas.find(function (x) { return x.parid === e.parid && x.id !== e.id; });
         var n2 = sib ? sib.nome1 : (e.reservado ? '(a anunciar)' : (e.parceiro || '(a anunciar)'));
-        duplas.push({ cat: e.categoria || '', genero: e.genero || 'M', n1: e.nome1, n2: n2 });
+        duplas.push({ cat: e.categoria || '', genero: e.genero || 'M', n1: e.nome1, n2: n2, status: e.estado === 'confirmada' && (!sib || sib.estado === 'confirmada') ? 'confirmada' : 'pendente' });
       } else if (e.nome2) {
-        duplas.push({ cat: e.categoria || '', genero: e.genero || 'M', n1: e.nome1, n2: e.nome2 });
+        duplas.push({ cat: e.categoria || '', genero: e.genero || 'M', n1: e.nome1, n2: e.nome2, status: e.estado === 'confirmada' ? 'confirmada' : 'pendente' });
       } else {
-        duplas.push({ cat: e.categoria || '', genero: e.genero || 'M', n1: e.nome1, n2: null });
+        duplas.push({ cat: e.categoria || '', genero: e.genero || 'M', n1: e.nome1, n2: null, status: e.estado === 'confirmada' ? 'confirmada' : 'pendente' });
       }
     });
     return duplas;
@@ -210,9 +219,12 @@ document.addEventListener('DOMContentLoaded', function () {
         var gTag = d.genero === 'F'
           ? '<span class="ins-genero-tag" style="background:rgba(255,105,180,.15);color:#FF9AC9">Fem</span>'
           : '<span class="ins-genero-tag" style="background:rgba(123,176,255,.15);color:#7BB0FF">Masc</span>';
+        var statusTag = d.status === 'confirmada'
+          ? '<span class="ins-status-tag" style="background:rgba(0,195,123,.14);color:var(--verde)">Confirmada</span>'
+          : '<span class="ins-status-tag" style="background:rgba(245,197,24,.12);color:var(--amarelo)">Pré-inscrição</span>';
         return '<div class="ins-card">'
           + '<div style="display:flex;justify-content:space-between;align-items:center">'
-          + '<span class="ins-card-num">Dupla ' + (i + 1) + '</span>' + gTag + '</div>'
+          + '<span class="ins-card-num">' + (d.n2 ? 'Dupla ' : 'Jogador ') + (i + 1) + '</span><span>' + gTag + statusTag + '</span></div>'
           + '<div class="ins-player"><i class="ph ph-user"></i><span>' + esc(d.n1) + '</span></div>'
           + (d.n2 ? '<div class="ins-player"><i class="ph ph-user"></i><span>' + esc(d.n2) + '</span></div>'
                   : '<div class="ins-player"><i class="ph ph-user-circle-dashed" style="color:#888"></i><span style="color:#888;font-weight:500">individual</span></div>')
@@ -235,6 +247,14 @@ document.addEventListener('DOMContentLoaded', function () {
     if (!entries || !entries.length) {
       try { entries = JSON.parse(localStorage.getItem('pp_inscricoes') || '[]'); } catch (_) { entries = []; }
     }
+    var categories = ppGet('categorias') || [];
+    var availability = ppCategoryAvailability(entries, categories, ppGet('grupos') || []);
+    document.getElementById('capacitySummary').innerHTML = categories.map(function (cat) {
+      var v = availability[cat.id];
+      return '<div class="ins-capacity-card' + (v.livres <= 0 ? ' full' : '') + '"><strong>' + esc(cat.id + ' · ' + cat.nome) + '</strong><span>'
+        + (v.livres <= 0 ? 'Lotada · suplentes disponíveis' : v.livres + ' de ' + v.total + ' vagas livres')
+        + '</span></div>';
+    }).join('');
     ALL = buildDuplas(entries);
     document.getElementById('loadingBox').style.display = 'none';
     render();
