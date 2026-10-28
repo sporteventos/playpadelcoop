@@ -97,7 +97,91 @@ function button(href, label, primary) {
 </td></tr></table>`;
 }
 
-export function renderEmail(event, config) {
+const PERIODS = {
+  manha: "Manhã",
+  tarde: "Tarde",
+  noite: "Noite",
+  dia: "Dia inteiro",
+};
+
+function parseMeta(value) {
+  if (!value) return {};
+  if (typeof value === "object") return value;
+  try {
+    const parsed = JSON.parse(value);
+    return parsed && typeof parsed === "object" ? parsed : {};
+  } catch {
+    return {};
+  }
+}
+
+function availabilityText(meta) {
+  if (meta.estado !== "condicionada") return "Sem restrições";
+  const parts = [];
+  const weekly = meta.horarioSemanal;
+  if (weekly && weekly.hora) {
+    parts.push(
+      weekly.tipo === "a_partir"
+        ? `Dias úteis: a partir das ${weekly.hora}`
+        : `Dias úteis: início até às ${weekly.hora}`,
+    );
+  }
+  (Array.isArray(meta.datas) ? meta.datas : []).forEach((item) => {
+    if (!item || !item.data) return;
+    parts.push(
+      `Indisponível a ${item.data.split("-").reverse().join("/")}${
+        PERIODS[item.periodo] ? ` (${PERIODS[item.periodo]})` : ""
+      }`,
+    );
+  });
+  return parts.length ? parts.join("\n") : "Condicionada";
+}
+
+function shirtText(shirt) {
+  if (!shirt || (!shirt.nome && !shirt.tamanho)) return "";
+  return [shirt.nome, shirt.tamanho].filter(Boolean).join(" · ");
+}
+
+export function registrationSummary(registration, categoryName) {
+  if (!registration) return null;
+  const meta = parseMeta(registration.observacoes);
+  const isPartnerRow = /-p$/.test(String(registration.id || ""));
+  const shirts = meta.tshirts || {};
+  const ownShirt = isPartnerRow ? shirts.parceiro : shirts.principal;
+  const partnerShirt = isPartnerRow ? shirts.principal : shirts.parceiro;
+  const partnerName = String(registration.parceiro || "").trim();
+  let format = "Dupla";
+  let partner = partnerName;
+  if (registration.reservado) {
+    format = "Dupla reservada";
+    partner = "A anunciar";
+  } else if (!partnerName) {
+    format = "Individual";
+    partner = "A organização ajuda a formar dupla";
+  }
+  const genders = { M: "Masculino", F: "Feminino" };
+  return {
+    phone: String(registration.telefone || "").trim(),
+    category: [registration.categoria, categoryName].filter(Boolean).join(
+      " · ",
+    ),
+    gender: genders[registration.genero] || "",
+    format,
+    partner,
+    shirt: shirtText(ownShirt),
+    partnerShirt: partnerName && !registration.reservado
+      ? shirtText(partnerShirt)
+      : "",
+    availability: meta.estado ? availabilityText(meta) : "",
+  };
+}
+
+/**
+ * @param {any} event
+ * @param {any} config
+ * @param {any} [summary]
+ */
+export function renderEmail(event, config, summary = null) {
   const message = MESSAGES[event.event_name];
   if (!message) throw new Error("unsupported_email_event");
   const tournament = config.tornNome || "Torneio Clausura";
@@ -116,7 +200,43 @@ export function renderEmail(event, config) {
   );
 
   const detailRow = (label, value) =>
-    `<tr><td style="padding:10px 0;border-bottom:1px solid #e3ece8;font-size:13px;color:#5b726b">${label}</td><td align="right" style="padding:10px 0;border-bottom:1px solid #e3ece8;font-size:14px;font-weight:bold;color:#0b2a24">${value}</td></tr>`;
+    `<tr><td valign="top" style="padding:10px 12px 10px 0;border-bottom:1px solid #e3ece8;font-size:13px;color:#5b726b;white-space:nowrap">${label}</td><td align="right" valign="top" style="padding:10px 0;border-bottom:1px solid #e3ece8;font-size:14px;font-weight:bold;color:#0b2a24;line-height:1.45">${value}</td></tr>`;
+  const sectionRow = (label) =>
+    `<tr><td colspan="2" style="padding:18px 0 4px 0;font-size:10px;font-weight:bold;letter-spacing:1.6px;color:#0b6b3a;text-transform:uppercase">${label}</td></tr>`;
+  const text = (value) => escapeHtml(value).replace(/\n/g, "<br>");
+  const info = summary || {};
+  const registrationRows = [
+    sectionRow("A tua inscrição"),
+    detailRow("Jogador", name),
+    info.phone ? detailRow("Contacto", text(info.phone)) : "",
+    detailRow(
+      "Categoria",
+      text(
+        [
+          info.category || event.payload.category,
+          info.category?.toLowerCase().includes(
+              String(info.gender).toLowerCase(),
+            )
+            ? ""
+            : info.gender,
+        ].filter(Boolean).join(" · "),
+      ) +
+        '<div style="font-size:11px;font-weight:normal;color:#5b726b">Nível sujeito a validação da organização</div>',
+    ),
+    info.format ? detailRow("Formato", text(info.format)) : "",
+    info.partner ? detailRow("Parceiro(a)", text(info.partner)) : "",
+    info.shirt || info.partnerShirt ? sectionRow("T-shirts") : "",
+    info.shirt ? detailRow("A tua t-shirt", text(info.shirt)) : "",
+    info.partnerShirt
+      ? detailRow("T-shirt do(a) parceiro(a)", text(info.partnerShirt))
+      : "",
+    info.availability ? sectionRow("Disponibilidade") : "",
+    info.availability ? detailRow("Restrições", text(info.availability)) : "",
+    sectionRow("Torneio"),
+    detailRow("Torneio", escapeHtml(tournament)),
+    dates ? detailRow("Datas", escapeHtml(dates)) : "",
+    place ? detailRow("Local", escapeHtml(place)) : "",
+  ].join("\n");
 
   const steps = message.steps.map((step, index) =>
     `<tr><td width="34" valign="top" style="padding:0 0 12px 0"><div style="width:24px;height:24px;line-height:24px;border-radius:12px;background:#04221c;color:#54f653;font-size:12px;font-weight:bold;text-align:center">${
@@ -165,7 +285,9 @@ export function renderEmail(event, config) {
 
 <tr><td bgcolor="#04221c" style="background:#04221c;border-radius:18px 18px 0 0;padding:28px 32px 30px 32px">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
-<td width="44" valign="middle"><span style="display:inline-block;width:34px;height:34px;line-height:34px;border-radius:9px;background:#0b3a33;color:#54f653;font-weight:bold;font-size:13px;text-align:center">PP</span></td>
+<td width="52" valign="middle"><img src="${SITE_URL}playpadellogo.jpg" width="44" height="44" alt="${
+    escapeHtml(club)
+  }" style="display:block;width:44px;height:44px;border:0;border-radius:10px"></td>
 <td valign="middle" style="padding-left:10px"><div style="font-size:13px;font-weight:bold;letter-spacing:1px;color:#ffffff;text-transform:uppercase">${
     escapeHtml(club)
   }</div><div style="font-size:10px;font-weight:bold;letter-spacing:1.5px;color:#54f653;text-transform:uppercase">${
@@ -200,11 +322,7 @@ export function renderEmail(event, config) {
     escapeHtml(reference)
   }</div>
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
-${detailRow("Jogador", name)}
-${detailRow("Torneio", escapeHtml(tournament))}
-${detailRow("Categoria", escapeHtml(event.payload.category))}
-${dates ? detailRow("Datas", escapeHtml(dates)) : ""}
-${place ? detailRow("Local", escapeHtml(place)) : ""}
+${registrationRows}
 </table>
 </td></tr>
 </table>

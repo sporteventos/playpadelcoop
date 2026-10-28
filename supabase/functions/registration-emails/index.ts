@@ -1,5 +1,5 @@
 import { DeliveryError, NotificationEngine } from "./engine.js";
-import { renderEmail } from "./templates.js";
+import { registrationSummary, renderEmail } from "./templates.js";
 
 type Event = {
   id: string;
@@ -89,9 +89,21 @@ function getEngine() {
   return engine;
 }
 
+async function categoryName(id: string | undefined): Promise<string> {
+  if (!id) return "";
+  try {
+    const rows = await db(
+      `categorias?select=nome&id=eq.${encodeURIComponent(id)}`,
+    );
+    return rows[0]?.nome || "";
+  } catch {
+    return "";
+  }
+}
+
 async function processEvent(event: Event, config: Record<string, string>) {
   const registrations = await db(
-    `inscricoes?select=estado,email&id=eq.${
+    `inscricoes?select=id,estado,email,telefone,categoria,genero,parceiro,reservado,observacoes&id=eq.${
       encodeURIComponent(event.registration_id)
     }`,
   );
@@ -111,7 +123,15 @@ async function processEvent(event: Event, config: Record<string, string>) {
     return;
   }
   try {
-    const content = event.rendered_content || renderEmail(event, config);
+    const content = event.rendered_content ||
+      renderEmail(
+        event,
+        config,
+        registrationSummary(
+          registration,
+          await categoryName(registration.categoria),
+        ),
+      );
     if (!event.rendered_content) {
       await updateEvent(event, { rendered_content: content }, true, false);
     }

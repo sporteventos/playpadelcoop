@@ -2,7 +2,10 @@ import {
   DeliveryError,
   NotificationEngine,
 } from "../functions/registration-emails/engine.js";
-import { renderEmail } from "../functions/registration-emails/templates.js";
+import {
+  registrationSummary,
+  renderEmail,
+} from "../functions/registration-emails/templates.js";
 import { PGlite } from "@electric-sql/pglite";
 
 function assert(condition, message = "Assertion failed") {
@@ -35,7 +38,7 @@ Deno.test("templates: acknowledgement, waitlist, promotion, confirmation and esc
   assert(content.body.includes("diretamente nas instalações"));
   assert(content.body.includes("PP-123"));
   assert(content.body.includes("&lt;img"));
-  assert(!content.body.includes("<img"));
+  assert(!content.body.includes("<img src=x"));
   assert(content.body.includes("&lt;Club&gt;"));
   assert(content.body.includes("https://wa.me/258841234567"));
   const waiting = renderEmail({
@@ -53,6 +56,60 @@ Deno.test("templates: acknowledgement, waitlist, promotion, confirmation and esc
     event_name: "registration_confirmed",
   }, config);
   assert(!confirmed.body.includes("pendente de pagamento"));
+  assert(content.body.includes("playpadellogo.jpg"));
+});
+
+Deno.test("templates: registration summary with partner, shirts and availability", () => {
+  const meta = {
+    v: 3,
+    estado: "condicionada",
+    horarioSemanal: { tipo: "a_partir", hora: "18:00" },
+    datas: [{ data: "2026-11-28", periodo: "manha" }],
+    tshirts: {
+      principal: { nome: "EDSON", tamanho: "L" },
+      parceiro: { nome: "<RUI>", tamanho: "M" },
+    },
+  };
+  const registration = {
+    id: "ins-123",
+    telefone: "+258 84 000 0000",
+    categoria: "M2",
+    genero: "M",
+    parceiro: "Rui Silva",
+    reservado: false,
+    observacoes: JSON.stringify(meta),
+  };
+  const body = renderEmail(
+    event,
+    { tornNome: "Clausura" },
+    registrationSummary(registration, "Masculino 2"),
+  ).body;
+  for (
+    const text of [
+      "M2 · Masculino 2<",
+      "Rui Silva",
+      "EDSON · L",
+      "&lt;RUI&gt; · M",
+      "Dias úteis: a partir das 18:00",
+      "Indisponível a 28/11/2026 (Manhã)",
+      "Nível sujeito a validação da organização",
+    ]
+  ) assert(body.includes(text), "missing " + text);
+  const partnerView = registrationSummary(
+    { ...registration, id: "ins-123-p", parceiro: "Edson" },
+    "",
+  );
+  assert(
+    partnerView.shirt === "<RUI> · M" &&
+      partnerView.partnerShirt === "EDSON · L",
+  );
+  const solo = registrationSummary({ ...registration, parceiro: "" }, "");
+  assert(solo.format === "Individual" && solo.partnerShirt === "");
+  const reserved = registrationSummary(
+    { ...registration, parceiro: "(A anunciar)", reservado: true },
+    "",
+  );
+  assert(reserved.partner === "A anunciar" && reserved.partnerShirt === "");
 });
 
 Deno.test("engine: caches OAuth, exact payload, accepts 202 and stable idempotency", async () => {
@@ -326,6 +383,7 @@ Deno.test("worker: private authentication, saved event, delivery polling, retry 
         return json([{ key: "tornNome", value: "Clausura" }]);
       }
       if (url.endsWith("/rpc/claim_registration_emails")) return json([queued]);
+      if (url.includes("/categorias?")) return json([{ nome: "Masculino 2" }]);
       if (url.includes("/inscricoes?")) {
         return json([{
           estado: mode === "stale" ? "cancelada" : "nova",
