@@ -570,26 +570,16 @@
 <script>
   /* Quadro de Apuramento — visível apenas se config.scoreboardVisible !== false */
   (function() {
-    var registrationStatsRequested = false;
-
-    function showRegistrationStats(entries) {
-      var stats = ppRegistrationStats(entries);
-      var pairs = document.getElementById('cfgStatDuplas');
-      var players = document.getElementById('cfgStatJogadores');
-      if (pairs) pairs.textContent = String(stats.duplas);
-      if (players) players.textContent = String(stats.jogadores);
-    }
-
     function refreshRegistrationStats() {
-      showRegistrationStats(ppGet('inscricoes') || []);
-      if (registrationStatsRequested || !window.ppCloudState || !window.ppCloudState.fetchInscricoes) return;
-      registrationStatsRequested = true;
-      window.ppCloudState.fetchInscricoes().then(function (entries) {
-        ppSave('inscricoes', entries);
-        showRegistrationStats(entries);
-      }).catch(function (error) {
-        console.error('Não foi possível atualizar os totais de inscrições.', error);
-      });
+      var categories = ppGet('categorias') || [];
+      var groups = ppGet('grupos') || [];
+      var players = categories.reduce(function (total, category) {
+        return total + ppCategoryCapacity(category, groups);
+      }, 0);
+      var pairsEl = document.getElementById('cfgStatDuplas');
+      var playersEl = document.getElementById('cfgStatJogadores');
+      if (pairsEl) pairsEl.textContent = String(players / 2);
+      if (playersEl) playersEl.textContent = String(players);
     }
 
     function applyConfig() {
