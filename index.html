@@ -688,7 +688,7 @@
     function renderSponsors(key, gridId) {
       var grid = document.getElementById(gridId);
       if (!grid) return;
-      var items = ppGet(key) || [];
+      var items = (ppGet(key) || []).slice().sort(function(a, b) { return (a.ordem == null ? 999 : a.ordem) - (b.ordem == null ? 999 : b.ordem); });
       if (!items.length) { grid.innerHTML = ''; return; }
       grid.innerHTML = items.map(function(p) {
         var href = p.url ? ' onclick="window.open(\''+p.url+'\',\'_blank\')"' : '';

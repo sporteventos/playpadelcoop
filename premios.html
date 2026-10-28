@@ -109,9 +109,9 @@
         </div>
         <div class="prize-podium-card__value">
           <small>PRÉMIO</small>
-          <strong>Ver categorias</strong>
+          <strong id="cfgPodiumChampion">Ver categorias</strong>
         </div>
-        <ul>
+        <ul id="cfgPodiumChampionList">
           <li><i class="ph ph-check-circle"></i> Troféu de campeão</li>
           <li><i class="ph ph-check-circle"></i> Prémio principal da categoria</li>
           <li><i class="ph ph-check-circle"></i> Reconhecimento oficial</li>
@@ -127,9 +127,9 @@
         </div>
         <div class="prize-podium-card__value">
           <small>PRÉMIO</small>
-          <strong>Ver categorias</strong>
+          <strong id="cfgPodiumFinalist">Ver categorias</strong>
         </div>
-        <ul>
+        <ul id="cfgPodiumFinalistList">
           <li><i class="ph ph-check-circle"></i> Troféu de finalista</li>
           <li><i class="ph ph-check-circle"></i> Prémio da categoria</li>
           <li><i class="ph ph-check-circle"></i> Reconhecimento oficial</li>
@@ -164,13 +164,14 @@
     <div class="prize-partners__content">
       <p class="tp-eyebrow">Parceiros dos prémios</p>
       <h2>Marcas que valorizam<br>quem entra em campo.</h2>
-      <p>Este espaço apresentará os patrocinadores e parceiros associados aos prémios desta edição.</p>
+      <p id="prizePartnersText">Este espaço apresentará os patrocinadores e parceiros associados aos prémios desta edição.</p>
     </div>
-    <div class="prize-partners__placeholder">
+    <div class="prize-partners__placeholder" id="prizePartnersPlaceholder">
       <i class="ph ph-handshake"></i>
       <strong>Parceiros a anunciar</strong>
       <span>A identidade das marcas será revelada com os prémios oficiais.</span>
     </div>
+    <div class="prize-partners__logos" id="prizePartnersLogos" hidden></div>
   </section>
 
   <section class="prize-cta">
@@ -239,9 +240,79 @@
       return (types[prize.tipo] ? types[prize.tipo] + ' · ' : '') + prize.valor;
     }
 
+    function prizeParts(prize) {
+      var result = { cash: '', cashNote: '', items: [] };
+      if (!prize || !prize.valor) return result;
+      String(prize.valor).split(/\s*[,;\n]\s*/).forEach(function (part) {
+        part = part.trim();
+        if (!part) return;
+        var match = !result.cash && part.match(/^(\d[\d.\s]*\s*(?:MZM|MZN|MT))\b\s*(.*)$/i);
+        if (match) {
+          result.cash = match[1].trim();
+          result.cashNote = match[2].replace(/^para\s+cada\s+/i, 'por ').trim();
+          return;
+        }
+        result.items.push(part.charAt(0).toUpperCase() + part.slice(1));
+      });
+      return result;
+    }
+
+    function cashAmount(text) {
+      return parseInt(String(text || '').replace(/\D/g, ''), 10) || 0;
+    }
+
+    function renderPodium(categories, categoryPrizes) {
+      var best = null;
+      var finalistSets = {};
+      categories.forEach(function (cat) {
+        var prizes = categoryPrizes[cat.id] || {};
+        var champion = prizeParts(prizes.campeao);
+        if (champion.cash && (!best || cashAmount(champion.cash) > cashAmount(best.cash))) best = champion;
+        var finalist = prizeParts(prizes.finalista);
+        if (finalist.items.length || finalist.cash) finalistSets[JSON.stringify(finalist)] = finalist;
+      });
+      var finalistValues = Object.keys(finalistSets).map(function (key) { return finalistSets[key]; });
+      var listHtml = function (items) {
+        return items.map(function (item) { return '<li><i class="ph ph-check-circle"></i> ' + escapeHtml(item) + '</li>'; }).join('');
+      };
+      if (best) {
+        document.getElementById('cfgPodiumChampion').textContent = 'Até ' + best.cash;
+        document.getElementById('cfgPodiumChampionList').innerHTML = listHtml(
+          ['Prémio em dinheiro ' + (best.cashNote || 'por jogador') + ' (valor por categoria)'].concat(best.items)
+        );
+      }
+      if (finalistValues.length === 1) {
+        var finalist = finalistValues[0];
+        document.getElementById('cfgPodiumFinalist').textContent = finalist.cash || 'Vouchers';
+        document.getElementById('cfgPodiumFinalistList').innerHTML = listHtml(finalist.items.slice(0, 4));
+      }
+    }
+
+    function renderPrizePartners() {
+      var cfg = ppGet('config') || {};
+      var sponsors = (ppGet('patrocinadores') || []).slice().sort(function (a, b) {
+        return (a.ordem == null ? 999 : a.ordem) - (b.ordem == null ? 999 : b.ordem);
+      });
+      var logos = document.getElementById('prizePartnersLogos');
+      var placeholder = document.getElementById('prizePartnersPlaceholder');
+      var visible = cfg.patrocinadoresVisible !== false && cfg.patrocinadoresVisible !== 'false' && sponsors.length;
+      logos.hidden = !visible;
+      placeholder.hidden = !!visible;
+      if (!visible) return;
+      document.getElementById('prizePartnersText').textContent = 'Os patrocinadores oficiais desta edição tornam possíveis os prémios, vouchers e surpresas para os vencedores.';
+      logos.innerHTML = sponsors.map(function (item) {
+        var logo = item.logo
+          ? '<img src="' + escapeHtml(item.logo) + '" alt="' + escapeHtml(item.nome) + '" loading="lazy"/>'
+          : '<span class="prize-partners__fallback">' + escapeHtml(item.nome) + '</span>';
+        return '<div class="prize-partners__logo">' + logo + '<small>' + escapeHtml(item.nome) + '</small></div>';
+      }).join('');
+    }
+
     function renderPrizeConfiguration() {
       var cfg = ppGet('config') || {};
-      var categories = ppGet('categorias') || [];
+      var categories = (ppGet('categorias') || []).slice().sort(function (a, b) {
+        return String(a.id).localeCompare(String(b.id), 'pt', { numeric: true });
+      });
       var prizeCfg = cfg.premiosConfig || {};
       if (typeof prizeCfg === 'string') {
         try { prizeCfg = JSON.parse(prizeCfg); } catch (_) { prizeCfg = {}; }
@@ -261,11 +332,28 @@
           + '<div class="prize-category-grid' + (list.length <= 3 ? ' prize-category-grid--three' : '') + '">'
           + list.map(function (cat) {
             var prizes = categoryPrizes[cat.id] || {};
-            return '<article><b>' + escapeHtml(cat.id) + '</b><span>' + escapeHtml(cat.nome || cat.id) + '</span>'
-              + '<small><strong>Campeões:</strong> ' + escapeHtml(prizeLabel(prizes.campeao)) + '<br>'
-              + '<strong>Finalistas:</strong> ' + escapeHtml(prizeLabel(prizes.finalista)) + '</small></article>';
+            var champion = prizeParts(prizes.campeao);
+            var finalist = prizeParts(prizes.finalista);
+            var headline = champion.cash
+              ? '<div class="prize-cat-card__cash"><strong>' + escapeHtml(champion.cash) + '</strong><em>' + escapeHtml(champion.cashNote || '') + '</em></div>'
+              : '';
+            var championItems = champion.items.length
+              ? '<ul>' + champion.items.map(function (item) { return '<li><i class="ph ph-check-circle"></i>' + escapeHtml(item) + '</li>'; }).join('') + '</ul>'
+              : (champion.cash ? '' : '<p class="prize-cat-card__empty">A anunciar</p>');
+            var finalistText = finalist.cash
+              ? [finalist.cash + (finalist.cashNote ? ' ' + finalist.cashNote : '')].concat(finalist.items)
+              : finalist.items;
+            return '<article class="prize-cat-card">'
+              + '<header><b>' + escapeHtml(cat.id) + '</b><span>' + escapeHtml(cat.nome || cat.id) + '</span></header>'
+              + '<div class="prize-cat-card__place"><small><i class="ph-fill ph-crown"></i> Campeões</small>' + headline + championItems + '</div>'
+              + '<div class="prize-cat-card__place prize-cat-card__place--runner"><small><i class="ph-fill ph-medal"></i> Finalistas</small>'
+              + '<p>' + escapeHtml(finalistText.length ? finalistText.join(' · ') : 'A anunciar') + '</p></div>'
+              + '</article>';
           }).join('') + '</div></div>';
       }).join('');
+
+      renderPodium(categories, categoryPrizes);
+      renderPrizePartners();
 
       var male = categories.filter(function (cat) { return (cat.tipo || String(cat.id).charAt(0)) === 'M'; }).length;
       var female = categories.filter(function (cat) { return (cat.tipo || String(cat.id).charAt(0)) === 'F'; }).length;
