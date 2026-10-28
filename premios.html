@@ -81,10 +81,9 @@
     <aside class="prize-reveal-card">
       <div class="prize-reveal-card__orb"><i class="ph ph-trophy"></i></div>
       <p class="tp-eyebrow">Prize pool</p>
-      <span class="prize-reveal-card__label">Montante global</span>
+      <span class="prize-reveal-card__label">Prémios em jogo</span>
       <strong id="cfgPrizePool">A anunciar</strong>
       <p id="cfgPrizePoolText">Consulta abaixo os prémios definidos para cada categoria.</p>
-      <div class="prize-reveal-card__status"><span></span> Informação oficial do torneio</div>
     </aside>
   </div>
 </header>
@@ -365,7 +364,7 @@
       var pool = prizeCfg.montanteGlobal || '';
       document.getElementById('cfgPrizePool').textContent = pool || 'A anunciar';
       document.getElementById('cfgPrizePoolText').textContent = pool
-        ? 'Montante global definido pela organização para esta edição.'
+        ? 'Em prémios para os vencedores: dinheiro, vouchers, medalhas, troféus e muitas surpresas.'
         : 'Consulta abaixo os prémios definidos para cada categoria.';
 
       var distinctions = Array.isArray(prizeCfg.distincoes) ? prizeCfg.distincoes : [];
