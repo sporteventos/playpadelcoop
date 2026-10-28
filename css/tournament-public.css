@@ -1228,6 +1228,25 @@ body.tournament-public {
   color: #7bb0ff;
 }
 
+.tp-level-notice {
+  max-width: none;
+  margin: 1.1rem 0 0;
+  border-color: rgba(123, 176, 255, 0.34);
+  background: rgba(123, 176, 255, 0.08);
+}
+
+.tp-level-notice > i {
+  color: #7bb0ff;
+}
+
+.tp-review-note {
+  display: block;
+  margin-top: 0.2rem;
+  color: var(--tp-muted);
+  font-size: 0.68rem;
+  font-weight: 500;
+}
+
 .tp-registration-reference {
   display: inline-grid;
   grid-template-columns: auto auto auto;
