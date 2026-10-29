@@ -2525,7 +2525,7 @@ function renderPrizeConfigEditor(cfg) {
       <label style="font-size:.82rem;color:var(--branco);min-width:200px">Montante global <span style="color:var(--cinza-texto)">(opcional)</span></label>
       <input style="${inputStyle};flex:1;max-width:320px" type="text" value="${escHtml(prizeCfg.montanteGlobal || '')}" placeholder="ex: 150 000 MZN" onchange="savePrizeGlobal(this.value)"/>
     </div>
-    <p style="font-size:.72rem;color:var(--cinza-texto);line-height:1.5;margin:.55rem 0">Os cartões abaixo acompanham automaticamente as categorias ativas. Pode configurar prémios em dinheiro, bens, serviços ou combinações.</p>
+    <p style="font-size:.72rem;color:var(--cinza-texto);line-height:1.5;margin:.55rem 0">Os cartões abaixo acompanham automaticamente as categorias activas. Pode configurar prémios em dinheiro, bens, serviços ou combinações.</p>
     ${categories || '<p style="color:var(--cinza-texto);font-size:.78rem">Crie primeiro as categorias do torneio.</p>'}
     <div style="display:flex;align-items:center;justify-content:space-between;margin-top:1rem">
       <strong style="font-size:.8rem;color:var(--branco)">Distinções especiais</strong>
@@ -3037,7 +3037,7 @@ window.saveCategoria = function() {
   if (!nome) return toast('Indica o nome da categoria.', 'error');
   if (!nivel || nivel < 1) return toast('Indica um nível válido.', 'error');
   if (!gruposPlaneados || gruposPlaneados < 1 || gruposPlaneados > 26) return toast('O número de grupos deve estar entre 1 e 26.', 'error');
-  if (id.charAt(0) !== tipo) return toast('O código deve começar pela letra do género selecionado.', 'error');
+  if (id.charAt(0) !== tipo) return toast('O código deve começar pela letra do género seleccionado.', 'error');
 
   const categorias = getData('categorias') || [];
   let categoria = categorias.find(c => c.id === id);
@@ -5207,7 +5207,7 @@ function _ffBuildPairs(q) {
       if (u?.grupo && l?.grupo && u.grupo === l.grupo) { valid = false; break; }
     }
     if (!valid) continue;
-    // Objetivo: PROTEGER os seeds mais altos. Cada seed de topo, por ordem
+    // Objectivo: PROTEGER os seeds mais altos. Cada seed de topo, por ordem
     // (S1, depois S2, S3, S4), deve apanhar o adversário legal mais fraco
     // possível (maior número de seed). Chave = nº de seed do adversário por
     // ordem de ranking; escolhemos a maior lexicograficamente. Sem colisão,
@@ -6143,7 +6143,7 @@ async function renderUtilizadores() {
             <th style="padding:.6rem .8rem;color:var(--cinza-texto);font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.05em">Role</th>
             <th style="padding:.6rem .8rem;color:var(--cinza-texto);font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.05em">Estado</th>
             <th style="padding:.6rem .8rem;color:var(--cinza-texto);font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.05em">Criado em</th>
-            <th style="padding:.6rem .8rem;color:var(--cinza-texto);font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.05em">Ações</th>
+            <th style="padding:.6rem .8rem;color:var(--cinza-texto);font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.05em">Acções</th>
           </tr>
         </thead>
         <tbody>
@@ -6964,7 +6964,7 @@ function _insEditAvailabilityValue() {
   for (let i = 1; i <= 2; i++) {
     const data = document.getElementById('insEditDate' + i).value;
     const periodo = document.getElementById('insEditPeriod' + i).value;
-    if ((data && !periodo) || (!data && periodo)) throw new Error(`Completa a ${i}.ª data e o respetivo período.`);
+    if ((data && !periodo) || (!data && periodo)) throw new Error(`Completa a ${i}.ª data e o respectivo período.`);
     if (data && periodo) dates.push({ data, periodo });
   }
   if (dates.length && !document.getElementById('insEditDate1').value) throw new Error('Preenche primeiro a 1.ª data de indisponibilidade.');
@@ -7277,7 +7277,7 @@ window.insAdminPromote = async function(id) {
     const livres = capacidade[e.categoria]?.livres || 0;
     const nec = targets.reduce((n, item) => n + 1 + (item.reservado || (item.nome2 && !item.parid) ? 1 : 0), 0);
     let msg = `Promover ${targets.length > 1 ? 'a dupla de ' : ''}"${e.nome1}" da lista de espera para pendente?`;
-    if (livres < nec) msg += `\n\n⚠ Não há vagas suficientes na categoria ${e.categoria || 'selecionada'} (livres: ${Math.max(0, livres)}, necessárias: ${nec}). Vais exceder a capacidade.`;
+    if (livres < nec) msg += `\n\n⚠ Não há vagas suficientes na categoria ${e.categoria || 'seleccionada'} (livres: ${Math.max(0, livres)}, necessárias: ${nec}). Vais exceder a capacidade.`;
     if (!confirm(msg)) return;
     targets.forEach(item => { item.estado = 'nova'; });
     localStorage.setItem('pp_inscricoes', JSON.stringify(entries));
@@ -8453,7 +8453,7 @@ function renderHorario() {
     if (saved) {
       dataFilter.value = saved;
     } else {
-      // Sem seleção anterior: assume o dia atual se houver jogos hoje;
+      // Sem selecção anterior: assume o dia actual se houver jogos hoje;
       // caso contrário, o primeiro dia disponível (default do <select>).
       const todayStr = new Date().toLocaleDateString('en-CA'); // YYYY-MM-DD local
       if (dates.includes(todayStr)) dataFilter.value = todayStr;

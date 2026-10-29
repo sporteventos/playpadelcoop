@@ -67,7 +67,7 @@
       <div class="tp-status-pill">Participantes da edição</div>
       <p class="tp-eyebrow" style="margin-top:1.4rem">Quem já entrou em campo</p>
       <h1>JOGADORES E<br><span>DUPLAS.</span></h1>
-      <p class="registered-hero__copy">Consulta os participantes já pré-inscritos no <strong id="cfgHeroTournament">Torneio Clausura</strong>, o respetivo nível e a disponibilidade atual de cada categoria.</p>
+      <p class="registered-hero__copy">Consulta os participantes já pré-inscritos no <strong id="cfgHeroTournament">Torneio Clausura</strong>, o respectivo nível e a disponibilidade actual de cada categoria.</p>
       <div class="registered-hero__actions">
         <a href="inscricoes.html" class="tp-button tp-button--primary">Fazer a minha inscrição <i class="ph ph-arrow-right"></i></a>
         <a href="estado-inscricao.html" class="tp-button">Consultar estado <i class="ph ph-magnifying-glass"></i></a>
@@ -92,7 +92,7 @@
         <p class="tp-eyebrow">Disponibilidade por nível</p>
         <h2>ESCOLHE A TUA<br><span>CATEGORIA.</span></h2>
       </div>
-      <p>As vagas são atualizadas automaticamente. Quando uma categoria estiver completa, ainda podes inscrever-te como suplente.</p>
+      <p>As vagas são actualizadas automaticamente. Quando uma categoria estiver completa, ainda podes inscrever-te como suplente.</p>
     </div>
     <div id="capacitySummary" class="ins-capacity-summary"></div>
 
@@ -319,7 +319,7 @@ document.addEventListener('DOMContentLoaded', function () {
       var categoryName = category && category.nome ? category.nome : 'Sem categoria';
       var activeCount = arr.filter(function (item) { return item.status !== 'espera'; }).length;
       var waitlistCount = arr.length - activeCount;
-      var countLabel = activeCount + ' ativo(s)' + (waitlistCount ? ' · ' + waitlistCount + ' em espera' : '');
+      var countLabel = activeCount + ' activo(s)' + (waitlistCount ? ' · ' + waitlistCount + ' em espera' : '');
       return '<div class="ins-cat-block">'
         + '<div class="ins-cat-head"><h2 class="ins-cat-title"><span>' + esc(k || '—') + '</span> · ' + esc(categoryName) + '</h2>'
         + '<span class="ins-cat-count">' + countLabel + '</span></div>'

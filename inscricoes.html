@@ -160,7 +160,7 @@
         </section>
 
         <section class="registration-step" data-step="2">
-          <div class="tp-step-intro"><span class="tp-eyebrow">ETAPA 2</span><h3>Escolhe o teu desafio</h3><p>Seleciona o género e o nível em que pretendes competir. A disponibilidade é atualizada em tempo real.</p></div>
+          <div class="tp-step-intro"><span class="tp-eyebrow">ETAPA 2</span><h3>Escolhe o teu desafio</h3><p>Selecciona o género e o nível em que pretendes competir. A disponibilidade é actualizada em tempo real.</p></div>
           <div id="categoryAvailability" class="ins-category-availability" aria-label="Vagas disponíveis por categoria"></div>
           <div id="vagasBox" class="ins-vagas" style="display:none">
             <div class="ins-vagas-main">
@@ -179,7 +179,7 @@
             </div>
             <div class="form-field">
               <label class="form-label" for="categoria">Nível pretendido <span class="req">*</span></label>
-              <select class="form-select" id="categoria" name="categoria" required><option value="">— seleciona —</option></select>
+              <select class="form-select" id="categoria" name="categoria" required><option value="">— selecciona —</option></select>
               <span class="form-help" id="catHelp"></span>
             </div>
           </div>
@@ -225,12 +225,12 @@
                 <div class="form-field">
                   <label class="form-label" for="tshirtNome">Nome na tua t-shirt <span class="req">*</span></label>
                   <input class="form-input" id="tshirtNome" name="tshirtNome" type="text" maxlength="18" placeholder="ex: ABDULLAH" required/>
-                  <span class="form-help">Escreve exatamente como queres que apareça.</span>
+                  <span class="form-help">Escreve exactamente como queres que apareça.</span>
                 </div>
                 <div class="form-field">
                   <label class="form-label" for="tshirtTamanho">Tamanho <span class="req">*</span></label>
                   <select class="form-select" id="tshirtTamanho" name="tshirtTamanho" required>
-                    <option value="">— seleciona —</option>
+                    <option value="">— selecciona —</option>
                     <option value="S">S</option><option value="M">M</option><option value="L">L</option><option value="XL">XL</option><option value="XXL">XXL</option>
                   </select>
                 </div>
@@ -243,7 +243,7 @@
                 <div class="form-field">
                   <label class="form-label" for="parceiroTshirtTamanho">Tamanho do(a) parceiro(a) <span class="req">*</span></label>
                   <select class="form-select" id="parceiroTshirtTamanho" name="parceiroTshirtTamanho">
-                    <option value="">— seleciona —</option>
+                    <option value="">— selecciona —</option>
                     <option value="S">S</option><option value="M">M</option><option value="L">L</option><option value="XL">XL</option><option value="XXL">XXL</option>
                   </select>
                 </div>
@@ -292,7 +292,7 @@
                   <div class="form-field">
                     <label class="form-label" for="indisponibilidadePeriodo1">Período</label>
                     <select class="form-select" id="indisponibilidadePeriodo1" name="indisponibilidadePeriodo1">
-                      <option value="">— seleciona —</option>
+                      <option value="">— selecciona —</option>
                       <option value="manha">Manhã</option>
                       <option value="tarde">Tarde</option>
                       <option value="noite">Noite</option>
@@ -308,7 +308,7 @@
                   <div class="form-field">
                     <label class="form-label" for="indisponibilidadePeriodo2">Período</label>
                     <select class="form-select" id="indisponibilidadePeriodo2" name="indisponibilidadePeriodo2">
-                      <option value="">— seleciona —</option>
+                      <option value="">— selecciona —</option>
                       <option value="manha">Manhã</option>
                       <option value="tarde">Tarde</option>
                       <option value="noite">Noite</option>
@@ -344,7 +344,7 @@
     <aside class="tp-registration-summary">
       <span class="tp-eyebrow">O TEU RESUMO</span>
       <h3>Pré-inscrição</h3>
-      <p>Este resumo é atualizado automaticamente à medida que preenches os dados.</p>
+      <p>Este resumo é actualizado automaticamente à medida que preenches os dados.</p>
       <div class="tp-summary-list">
         <div><span>Jogador</span><strong id="summaryPlayer">Por preencher</strong></div>
         <div><span>Categoria</span><strong id="summaryCategory">—</strong></div>
@@ -640,7 +640,7 @@ document.addEventListener('DOMContentLoaded', function () {
     var horarioTipo = document.getElementById('disponibilidadeHorarioTipo').value;
     var horario = document.getElementById('disponibilidadeHorario').value;
     if ((horarioTipo && !horario) || (!horarioTipo && horario)) {
-      return { valid: false, message: 'Seleciona o tipo de limitação e a respetiva hora nos dias úteis.' };
+      return { valid: false, message: 'Selecciona o tipo de limitação e a respectiva hora nos dias úteis.' };
     }
     var horarioSemanal = horarioTipo && horario ? { tipo: horarioTipo, hora: horario } : null;
     var dates = [];
@@ -648,7 +648,7 @@ document.addEventListener('DOMContentLoaded', function () {
       var data = document.getElementById('indisponibilidadeData' + i).value;
       var periodo = document.getElementById('indisponibilidadePeriodo' + i).value;
       if ((data && !periodo) || (!data && periodo)) {
-        return { valid: false, message: 'Seleciona a data e o período da ' + i + '.ª indisponibilidade.' };
+        return { valid: false, message: 'Selecciona a data e o período da ' + i + '.ª indisponibilidade.' };
       }
       if (data && periodo) dates.push({ data: data, periodo: periodo });
     }
@@ -656,7 +656,7 @@ document.addEventListener('DOMContentLoaded', function () {
       return { valid: false, message: 'Preenche primeiro a 1.ª data de indisponibilidade.' };
     }
     if (dates.length === 2 && dates[0].data === dates[1].data) {
-      return { valid: false, message: 'Seleciona duas datas diferentes para as indisponibilidades.' };
+      return { valid: false, message: 'Selecciona duas datas diferentes para as indisponibilidades.' };
     }
     if (!horarioSemanal && !dates.length) {
       return { valid: false, message: 'Indica uma limitação de horário nos dias úteis ou pelo menos uma data específica.' };
@@ -800,11 +800,11 @@ document.addEventListener('DOMContentLoaded', function () {
     if (!telefone) { form.telefone.classList.add('invalid'); erros.push('Telefone obrigatório.'); }
     if (!categoria) { form.categoria.classList.add('invalid'); erros.push('Categoria obrigatória.'); }
     if (!tshirtNome) { form.tshirtNome.classList.add('invalid'); erros.push('Indica o nome para a tua t-shirt.'); }
-    if (!tshirtTamanho) { form.tshirtTamanho.classList.add('invalid'); erros.push('Seleciona o tamanho da tua t-shirt.'); }
+    if (!tshirtTamanho) { form.tshirtTamanho.classList.add('invalid'); erros.push('Selecciona o tamanho da tua t-shirt.'); }
     if (parceiroNome) {
       if (!parceiroTel) { form.parceiroTel.classList.add('invalid'); erros.push('Telefone do(a) parceiro(a) obrigatório.'); }
       if (!parceiroTshirtNome) { form.parceiroTshirtNome.classList.add('invalid'); erros.push('Indica o nome para a t-shirt do(a) parceiro(a).'); }
-      if (!parceiroTshirtTamanho) { form.parceiroTshirtTamanho.classList.add('invalid'); erros.push('Seleciona o tamanho da t-shirt do(a) parceiro(a).'); }
+      if (!parceiroTshirtTamanho) { form.parceiroTshirtTamanho.classList.add('invalid'); erros.push('Selecciona o tamanho da t-shirt do(a) parceiro(a).'); }
       if (parceiroNome.toLowerCase() === nome1.toLowerCase()) { erros.push('O(a) parceiro(a) tem de ser diferente de ti.'); }
       if (parceiroTel && parceiroTel.replace(/\D/g,'') === telefone.replace(/\D/g,'')) { erros.push('O telefone do(a) parceiro(a) tem de ser diferente do teu.'); }
     }
@@ -939,8 +939,8 @@ document.addEventListener('DOMContentLoaded', function () {
       + '*Disponibilidade:* ' + disponibilidade.text + '\n'
       + (waitlist ? '*⏳ LISTA DE ESPERA* (vagas esgotadas)\n' : '')
       + (waitlist
-          ? '*Pagamento:* aguarda o contacto da organização antes de efetuar qualquer pagamento.\n'
-          : '*Próximo passo:* contactar o clube para efetuar o pagamento presencial e confirmar a inscrição.\n')
+          ? '*Pagamento:* aguarda o contacto da organização antes de efectuar qualquer pagamento.\n'
+          : '*Próximo passo:* contactar o clube para efectuar o pagamento presencial e confirmar a inscrição.\n')
       + '\n_Inscrição submetida em ' + new Date().toLocaleString('pt-PT') + '_';
 
     var waBtn = document.getElementById('btnWhatsApp');
@@ -975,8 +975,8 @@ document.addEventListener('DOMContentLoaded', function () {
       paymentNotice.classList.toggle('is-waitlist', waitlist);
       paymentNoticeTitle.textContent = waitlist ? 'Aguarda uma vaga antes de pagar' : 'Pagamento presencial no clube';
       paymentNoticeText.textContent = waitlist
-        ? 'Não efetues qualquer pagamento enquanto estiveres na lista de espera. Se abrir uma vaga, a organização entrará em contacto contigo com os próximos passos.'
-        : 'Para confirmar a inscrição e garantir a vaga, contacta o clube e efetua o pagamento diretamente nas instalações. A pré-inscrição só fica confirmada depois de a organização validar o pagamento.';
+        ? 'Não efectues qualquer pagamento enquanto estiveres na lista de espera. Se abrir uma vaga, a organização entrará em contacto contigo com os próximos passos.'
+        : 'Para confirmar a inscrição e garantir a vaga, contacta o clube e efectua o pagamento directamente nas instalações. A pré-inscrição só fica confirmada depois de a organização validar o pagamento.';
     }
 
     var publicReference = 'PP-' + entry.id.replace(/^ins-/, '').replace(/-p$/, '');

@@ -35,7 +35,7 @@ Deno.test("templates: acknowledgement, waitlist, promotion, confirmation and esc
   const content = renderEmail(event, config);
   assert(content.subject === "Pré-inscrição recebida — Clausura");
   assert(content.body.includes("pendente de pagamento"));
-  assert(content.body.includes("diretamente nas instalações"));
+  assert(content.body.includes("directamente nas instalações"));
   assert(content.body.includes("PP-123"));
   assert(content.body.includes("&lt;img"));
   assert(!content.body.includes("<img src=x"));
@@ -45,7 +45,7 @@ Deno.test("templates: acknowledgement, waitlist, promotion, confirmation and esc
     ...event,
     event_name: "registration_waitlisted",
   }, config);
-  assert(waiting.body.includes("Não efetues qualquer pagamento"));
+  assert(waiting.body.includes("Não efectues qualquer pagamento"));
   const promoted = renderEmail({
     ...event,
     event_name: "registration_promoted",

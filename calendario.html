@@ -297,7 +297,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const label = `${ppWeekday(d).substring(0,3)} ${ppFormatDate(d)}`;
     dayTabs.appendChild(makeTab(d, label, d === activeDia));
   });
-  // Trazer o dia ativo para a vista (scroll horizontal das tabs)
+  // Trazer o dia activo para a vista (scroll horizontal das tabs)
   const _activeTab = dayTabs.querySelector('.day-tab.active');
   if (_activeTab && activeDia !== 'todos' && typeof _activeTab.scrollIntoView === 'function') {
     _activeTab.scrollIntoView({ inline: 'center', block: 'nearest' });

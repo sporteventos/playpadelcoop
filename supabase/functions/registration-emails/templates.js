@@ -23,7 +23,7 @@ const MESSAGES = {
     stepsTitle: "Próximos passos",
     steps: [
       "Contacta o clube para combinar o pagamento.",
-      "Efetua o pagamento diretamente nas instalações do clube.",
+      "Efectua o pagamento directamente nas instalações do clube.",
       "A organização valida o pagamento e confirma a tua inscrição.",
     ],
     contactLabel: "Contactar o clube para pagamento",
@@ -38,7 +38,7 @@ const MESSAGES = {
     tone: "info",
     stepsTitle: "Importante",
     steps: [
-      "Não efetues qualquer pagamento enquanto estiveres na lista de espera.",
+      "Não efectues qualquer pagamento enquanto estiveres na lista de espera.",
       "Se abrir uma vaga, a organização entra em contacto contigo.",
       "Podes acompanhar o estado da tua inscrição a qualquer momento.",
     ],
@@ -55,7 +55,7 @@ const MESSAGES = {
     stepsTitle: "Próximos passos",
     steps: [
       "Contacta o clube para combinar o pagamento.",
-      "Efetua o pagamento diretamente nas instalações do clube.",
+      "Efectua o pagamento directamente nas instalações do clube.",
       "A organização valida o pagamento e confirma a tua inscrição.",
     ],
     contactLabel: "Contactar o clube para pagamento",
