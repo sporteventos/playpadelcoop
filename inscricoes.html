@@ -538,9 +538,16 @@ document.addEventListener('DOMContentLoaded', function () {
       _selectedPartner = { tel: cand.tel, email: cand.email || '' };
       telF.value = _maskTel(cand.tel);
       telF.readOnly = true; telF.classList.add('locked');
-      emailF.value = cand.email ? _maskEmail(cand.email) : '';
-      emailF.readOnly = true; emailF.classList.add('locked');
-      if (help) help.textContent = 'Parceiro(a) já registado — contactos obtidos automaticamente.';
+      if (cand.email) {
+        emailF.value = _maskEmail(cand.email);
+        emailF.readOnly = true; emailF.classList.add('locked');
+      } else {
+        if (emailF.readOnly) emailF.value = '';
+        emailF.readOnly = false; emailF.classList.remove('locked');
+      }
+      if (help) help.textContent = cand.email
+        ? 'Parceiro(a) já registado — contactos obtidos automaticamente.'
+        : 'Parceiro(a) já registado — telefone obtido automaticamente. Podes indicar o email (opcional).';
     } else {
       if (_selectedPartner) { // estava bloqueado, agora nome livre → limpar
         telF.value = ''; emailF.value = '';
@@ -782,7 +789,7 @@ document.addEventListener('DOMContentLoaded', function () {
     var tshirtTamanho = form.tshirtTamanho.value;
     var parceiroTshirtNome = parceiroNome ? form.parceiroTshirtNome.value.trim() : '';
     var parceiroTshirtTamanho = parceiroNome ? form.parceiroTshirtTamanho.value : '';
-    if (_selectedPartner) { parceiroTel = _selectedPartner.tel; parceiroEmail = _selectedPartner.email || ''; }
+    if (_selectedPartner) { parceiroTel = _selectedPartner.tel; parceiroEmail = _selectedPartner.email || parceiroEmail; }
     [form.parceiroTel, form.tshirtNome, form.tshirtTamanho, form.parceiroTshirtNome, form.parceiroTshirtTamanho].forEach(function(field){
       if (field) field.classList.remove('invalid');
     });
