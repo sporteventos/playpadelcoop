@@ -34,6 +34,7 @@ const DEFAULTS = {
     { id: 'fisiolab',        nome: 'Fisiolab',         logo: 'parceiros/fisiolab.png',              url: '', ordem: 5 },
     { id: 'matchpoint',      nome: 'Match Point',      logo: 'parceiros/matchpoint.JPG',            url: '', ordem: 6 },
     { id: 'bonaqua',         nome: 'Bonaqua',          logo: 'patrocinadores/bonaqua.jpg',          url: '', ordem: 7 },
+    { id: 'montebelomilibangalala', nome: 'Montebelo Milibangalala', logo: 'patrocinadores/montebelomilibangalala.jpg', url: '', ordem: 8 },
   ],
   parceiros: [
     { id: 'montebelo',  nome: 'Montebelo Hotéis', logo: 'parceiros/montebelo hoteis.png',   url: '' },
