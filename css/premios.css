@@ -887,3 +887,12 @@
     grid-template-columns: repeat(2, 1fr);
   }
 }
+
+.prize-cat-card__cash--runner {
+  margin: 0.25rem 0 0.35rem;
+}
+
+.prize-cat-card__cash--runner strong {
+  color: var(--tp-text);
+  font-size: 1.5rem;
+}

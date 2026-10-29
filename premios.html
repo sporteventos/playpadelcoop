@@ -262,12 +262,14 @@
 
     function renderPodium(categories, categoryPrizes) {
       var best = null;
+      var bestFinalist = null;
       var finalistSets = {};
       categories.forEach(function (cat) {
         var prizes = categoryPrizes[cat.id] || {};
         var champion = prizeParts(prizes.campeao);
         if (champion.cash && (!best || cashAmount(champion.cash) > cashAmount(best.cash))) best = champion;
         var finalist = prizeParts(prizes.finalista);
+        if (finalist.cash && (!bestFinalist || cashAmount(finalist.cash) > cashAmount(bestFinalist.cash))) bestFinalist = finalist;
         if (finalist.items.length || finalist.cash) finalistSets[JSON.stringify(finalist)] = finalist;
       });
       var finalistValues = Object.keys(finalistSets).map(function (key) { return finalistSets[key]; });
@@ -280,7 +282,12 @@
           ['Prémio em dinheiro ' + (best.cashNote || 'por jogador') + ' (valor por categoria)'].concat(best.items)
         );
       }
-      if (finalistValues.length === 1) {
+      if (bestFinalist) {
+        document.getElementById('cfgPodiumFinalist').textContent = 'Até ' + bestFinalist.cash;
+        document.getElementById('cfgPodiumFinalistList').innerHTML = listHtml(
+          ['Prémio em dinheiro ' + (bestFinalist.cashNote || 'por dupla') + ' (valor por categoria)'].concat(bestFinalist.items.slice(0, 3))
+        );
+      } else if (finalistValues.length === 1) {
         var finalist = finalistValues[0];
         document.getElementById('cfgPodiumFinalist').textContent = finalist.cash || 'Vouchers';
         document.getElementById('cfgPodiumFinalistList').innerHTML = listHtml(finalist.items.slice(0, 4));
@@ -339,14 +346,15 @@
             var championItems = champion.items.length
               ? '<ul>' + champion.items.map(function (item) { return '<li><i class="ph ph-check-circle"></i>' + escapeHtml(item) + '</li>'; }).join('') + '</ul>'
               : (champion.cash ? '' : '<p class="prize-cat-card__empty">A anunciar</p>');
-            var finalistText = finalist.cash
-              ? [finalist.cash + (finalist.cashNote ? ' ' + finalist.cashNote : '')].concat(finalist.items)
-              : finalist.items;
+            var finalistCash = finalist.cash
+              ? '<div class="prize-cat-card__cash prize-cat-card__cash--runner"><strong>' + escapeHtml(finalist.cash) + '</strong><em>' + escapeHtml(finalist.cashNote || '') + '</em></div>'
+              : '';
             return '<article class="prize-cat-card">'
               + '<header><b>' + escapeHtml(cat.id) + '</b><span>' + escapeHtml(cat.nome || cat.id) + '</span></header>'
               + '<div class="prize-cat-card__place"><small><i class="ph-fill ph-crown"></i> Campeões</small>' + headline + championItems + '</div>'
               + '<div class="prize-cat-card__place prize-cat-card__place--runner"><small><i class="ph-fill ph-medal"></i> Finalistas</small>'
-              + '<p>' + escapeHtml(finalistText.length ? finalistText.join(' · ') : 'A anunciar') + '</p></div>'
+              + finalistCash
+              + '<p>' + escapeHtml(finalist.items.length ? finalist.items.join(' · ') : (finalist.cash ? '' : 'A anunciar')) + '</p></div>'
               + '</article>';
           }).join('') + '</div></div>';
       }).join('');
