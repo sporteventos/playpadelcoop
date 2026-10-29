@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#00C37B">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Play Padel">
+  <meta name="description" content="Anuncia o teu parceiro(a) no Torneio Clausura"/>
+  <title>Anunciar parceiro(a) · Torneio Clausura</title>
+  <meta name="robots" content="noindex"/>
+  <meta name="referrer" content="no-referrer"/>
+  <link rel="stylesheet" href="css/style.css"/>
+  <link rel="stylesheet" href="css/pages.css"/>
+  <link rel="stylesheet" href="css/tournament-public.css"/>
+  <link rel="stylesheet" href="css/estado-inscricao.css"/>
+  <link rel="stylesheet" href="css/anunciar-parceiro.css"/>
+  <script src="https://unpkg.com/@phosphor-icons/web@2.1.1/src/index.js" defer></script>
+</head>
+<body class="tournament-public registration-status-page partner-announce-page">
+
+<nav class="navbar" id="navbar">
+  <a class="nav-logo" href="index.html">
+    <img src="playpadellogo.jpg" alt="Play Padel" style="height:34px;width:34px;border-radius:7px;object-fit:cover;flex-shrink:0"/>
+    <div class="nav-logo-text">
+      <span class="nav-logo-title" id="cfgNomeTorneio">Play Padel</span>
+      <span class="nav-logo-sub" id="cfgSubtituloNav">Torneio Clausura</span>
+    </div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html"><i class="ph ph-house nav-icon"></i> Início</a></li>
+    <li><a href="inscricoes.html"><i class="ph ph-clipboard-text nav-icon"></i> Inscrições</a></li>
+    <li><a href="inscritos.html"><i class="ph ph-list-checks nav-icon"></i> Inscritos</a></li>
+    <li><a href="premios.html"><i class="ph ph-gift nav-icon"></i> Prémios</a></li>
+    <li><a href="regulamento.html"><i class="ph ph-book-open nav-icon"></i> Regulamento</a></li>
+  </ul>
+  <button class="nav-hamburger" id="hamburger" aria-label="Abrir menu" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<div class="nav-drawer" id="navDrawer">
+  <ul>
+    <li><a href="index.html"><i class="ph ph-house"></i> Início</a></li>
+    <li><a href="inscricoes.html"><i class="ph ph-clipboard-text"></i> Inscrições</a></li>
+    <li><a href="inscritos.html"><i class="ph ph-list-checks"></i> Inscritos</a></li>
+    <li><a href="premios.html"><i class="ph ph-gift"></i> Prémios</a></li>
+    <li><a href="regulamento.html"><i class="ph ph-book-open"></i> Regulamento</a></li>
+  </ul>
+</div>
+
+<header class="registration-status-hero">
+  <div class="tp-court-lines" aria-hidden="true"></div>
+  <div class="registration-status-hero__inner">
+    <div>
+      <div class="tp-status-pill">Vaga de dupla reservada</div>
+      <p class="tp-eyebrow">Self-service</p>
+      <h1>Anuncia o teu<br><span>parceiro(a).</span></h1>
+      <p>Completa a tua dupla no <strong id="cfgHeroTournament">Torneio Clausura</strong> sem precisares de contactar a organização.</p>
+    </div>
+    <div class="registration-status-hero__icon"><i class="ph ph-users-three"></i></div>
+  </div>
+</header>
+
+<main class="registration-status-main">
+  <section class="registration-lookup-card" id="announceLoading">
+    <div class="registration-status-empty"><i class="ph ph-spinner ph-spin"></i><h3>A carregar a reserva…</h3></div>
+  </section>
+
+  <section class="registration-lookup-card" id="announceMessage" hidden aria-live="polite"></section>
+
+  <section class="registration-lookup-card" id="announceCard" hidden>
+    <div class="registration-lookup-card__head">
+      <span class="tp-eyebrow">A tua pré-inscrição</span>
+      <h2 id="announcePlayer">Jogador</h2>
+      <div class="registration-status-card__meta partner-announce-meta">
+        <span><i class="ph ph-medal"></i><span id="announceCategory"></span></span>
+        <span><i class="ph ph-hash"></i><span id="announceReference"></span></span>
+        <span><i class="ph ph-calendar"></i>Prazo: <span id="announceDeadline"></span></span>
+      </div>
+      <p>Indica os dados do teu parceiro(a). Depois de submetido, o parceiro(a) fica associado à tua inscrição e a organização é notificada. Para alterar posteriormente, contacta a organização.</p>
+    </div>
+    <form id="announceForm" novalidate>
+      <div class="registration-lookup-fields partner-announce-fields">
+        <label class="partner-announce-fields__wide">
+          <span>Nome completo do(a) parceiro(a) *</span>
+          <div><i class="ph ph-user"></i><input id="partnerName" name="nome" type="text" maxlength="80" autocomplete="off" placeholder="Nome e apelido" required/></div>
+        </label>
+        <label>
+          <span>Telefone *</span>
+          <div><i class="ph ph-phone"></i><input id="partnerPhone" name="telefone" type="tel" inputmode="tel" autocomplete="off" placeholder="+258 84 000 0000" required/></div>
+        </label>
+        <label>
+          <span>Email (opcional)</span>
+          <div><i class="ph ph-envelope-simple"></i><input id="partnerEmail" name="email" type="email" autocomplete="off" placeholder="parceiro@email.com"/></div>
+        </label>
+        <label>
+          <span>Nome na t-shirt *</span>
+          <div><i class="ph ph-t-shirt"></i><input id="partnerShirtName" name="tshirtNome" type="text" maxlength="18" autocomplete="off" placeholder="ex: ABDULLAH" required/></div>
+        </label>
+        <label>
+          <span>Tamanho da t-shirt *</span>
+          <div><i class="ph ph-ruler"></i><select id="partnerShirtSize" name="tshirtTamanho" required>
+            <option value="">— selecciona —</option>
+            <option value="S">S</option><option value="M">M</option><option value="L">L</option><option value="XL">XL</option><option value="XXL">XXL</option>
+          </select></div>
+        </label>
+      </div>
+      <p class="partner-announce-note"><i class="ph ph-info"></i>O nível do(a) parceiro(a) está sujeito a validação pela organização. Se indicares o email, o parceiro(a) recebe a confirmação da pré-inscrição.</p>
+      <p class="registration-lookup-error" id="announceError" hidden></p>
+      <button type="submit" class="tp-button tp-button--primary" id="announceSubmit">
+        <i class="ph ph-user-plus"></i> Anunciar parceiro(a)
+      </button>
+    </form>
+    <div class="registration-lookup-privacy"><i class="ph ph-shield-check"></i><span>Este link é pessoal. Não o partilhes com outras pessoas.</span></div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="footer-bottom" style="max-width:1200px;margin:0 auto">
+    <p class="footer-copy" id="cfgStatusCopy">© 2026 <span>Play Padel</span> · Torneio Clausura</p>
+    <a href="inscricoes.html" class="footer-copy" style="color:var(--verde);text-decoration:none">Fazer inscrição</a>
+    <p class="footer-credit">Concebido por <a href="https://www.efforge.co.mz/" target="_blank" rel="noopener">EF Forge Technologies</a></p>
+  </div>
+</footer>
+
+<script src="js/data.js?v=23"></script>
+<script src="js/nav-config.js" defer></script>
+<script src="js/mobile-app-shell.js"></script>
+<script src="js/anunciar-parceiro.js"></script>
+<script>if("serviceWorker"in navigator){navigator.serviceWorker.register("/playpadelcoop/sw.js").catch(function(){});}</script>
+</body>
+</html>

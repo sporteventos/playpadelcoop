@@ -112,6 +112,30 @@ Deno.test("templates: registration summary with partner, shirts and availability
   assert(reserved.partner === "A anunciar" && reserved.partnerShirt === "");
 });
 
+Deno.test("templates: self-service partner announcement link", () => {
+  const summary = {
+    category: "M2",
+    format: "Dupla",
+    partner: "A anunciar",
+    announceUrl:
+      "https://sporteventos.github.io/playpadelcoop/anunciar-parceiro.html?t=abc123",
+    announceDeadline: "25/11/2026",
+  };
+  const link = renderEmail(
+    { ...event, event_name: "registration_partner_link" },
+    {},
+    summary,
+  );
+  assert(link.subject.startsWith("Já podes anunciar o teu parceiro(a)"));
+  assert(link.body.includes("anunciar-parceiro.html?t=abc123"));
+  assert(link.body.includes("25/11/2026"));
+  assert(link.body.includes("directamente"));
+  const received = renderEmail(event, {}, summary);
+  assert(received.body.includes("Anunciar parceiro(a)"));
+  const plain = renderEmail(event, {}, { ...summary, announceUrl: "" });
+  assert(!plain.body.includes("anunciar-parceiro.html"));
+});
+
 Deno.test("engine: caches OAuth, exact payload, accepts 202 and stable idempotency", async () => {
   const calls = [];
   const engine = new NotificationEngine(engineConfig, (url, options) => {

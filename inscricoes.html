@@ -596,7 +596,7 @@ document.addEventListener('DOMContentLoaded', function () {
       document.getElementById('parceiroTshirtNome').required = false;
       document.getElementById('parceiroTshirtTamanho').required = false;
       _selectedPartner = null;
-      help.textContent = 'Reservas o lugar da tua dupla (2 vagas). Anuncias o(a) parceiro(a) mais tarde com a organização.';
+      help.textContent = 'Reservas o lugar da tua dupla (2 vagas). Recebes por email um link pessoal para anunciares o(a) parceiro(a) mais tarde, sem precisares de contactar a organização.';
     } else { // solo
       nameField.style.display = 'none';
       telField.style.display = 'none';
@@ -966,6 +966,11 @@ document.addEventListener('DOMContentLoaded', function () {
         + (waitlist
             ? 'Entraste na LISTA DE ESPERA da categoria ' + categoria + '. A organização contacta-te se abrir uma vaga.'
             : 'A tua pré-inscrição na categoria ' + categoria + ' foi recebida e está pendente de pagamento.')
+        + (reserva
+            ? (form.email.value.trim()
+                ? ' Enviámos para o teu email um link pessoal para anunciares o(a) parceiro(a) quando souberes com quem vais jogar.'
+                : ' Para anunciares o(a) parceiro(a) mais tarde, contacta a organização.')
+            : '')
         + (syncOk ? '' : ' Nota: a sincronização automática falhou neste envio.');
     }
     var paymentNotice = document.getElementById('paymentNotice');

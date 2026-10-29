@@ -1,5 +1,5 @@
 import { DeliveryError, NotificationEngine } from "./engine.js";
-import { registrationSummary, renderEmail } from "./templates.js";
+import { registrationSummary, renderEmail, SITE_URL } from "./templates.js";
 
 type Event = {
   id: string;
@@ -101,6 +101,26 @@ async function categoryName(id: string | undefined): Promise<string> {
   }
 }
 
+async function partnerToken(id: string) {
+  try {
+    const rows = await db(
+      `partner_tokens?select=token,used_at&registration_id=eq.${
+        encodeURIComponent(id)
+      }`,
+    );
+    return rows[0] && !rows[0].used_at ? String(rows[0].token || "") : "";
+  } catch {
+    return "";
+  }
+}
+
+function announceDeadline(start: string | undefined) {
+  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(start || ""));
+  if (!match) return "";
+  const day = new Date(Date.UTC(+match[1], +match[2] - 1, +match[3] - 1));
+  return day.toISOString().slice(0, 10).split("-").reverse().join("/");
+}
+
 async function processEvent(event: Event, config: Record<string, string>) {
   const registrations = await db(
     `inscricoes?select=id,estado,email,telefone,categoria,genero,parceiro,reservado,observacoes&id=eq.${
@@ -122,16 +142,31 @@ async function processEvent(event: Event, config: Record<string, string>) {
     await updateEvent(event, { status: "skipped_no_email" });
     return;
   }
+  if (
+    event.event_name === "registration_partner_link" && !registration.reservado
+  ) {
+    await updateEvent(event, {
+      status: "skipped_stale",
+      last_error: "partner_already_announced",
+    });
+    return;
+  }
   try {
-    const content = event.rendered_content ||
-      renderEmail(
-        event,
-        config,
-        registrationSummary(
-          registration,
-          await categoryName(registration.categoria),
-        ),
+    let content = event.rendered_content;
+    if (!content) {
+      const summary: Record<string, string> | null = registrationSummary(
+        registration,
+        await categoryName(registration.categoria),
       );
+      const token = registration.reservado
+        ? await partnerToken(registration.id)
+        : "";
+      if (summary && token) {
+        summary.announceUrl = SITE_URL + "anunciar-parceiro.html?t=" + token;
+        summary.announceDeadline = announceDeadline(config.tornInicio);
+      }
+      content = renderEmail(event, config, summary);
+    }
     if (!event.rendered_content) {
       await updateEvent(event, { rendered_content: content }, true, false);
     }
@@ -201,7 +236,7 @@ Deno.serve(async (request: Request) => {
     }
     getEngine();
     const rows = await db(
-      "config?select=key,value&key=in.(tornNome,tornClube,tornTelOrg,tornDatas,tornLocal)",
+      "config?select=key,value&key=in.(tornNome,tornClube,tornTelOrg,tornDatas,tornLocal,tornInicio)",
     );
     const config = Object.fromEntries(
       rows.map((row: { key: string; value: string }) => [row.key, row.value]),

@@ -9,7 +9,7 @@ export function escapeHtml(value) {
     })[character]);
 }
 
-const SITE_URL = "https://sporteventos.github.io/playpadelcoop/";
+export const SITE_URL = "https://sporteventos.github.io/playpadelcoop/";
 
 const MESSAGES = {
   registration_received: {
@@ -59,6 +59,22 @@ const MESSAGES = {
       "A organização valida o pagamento e confirma a tua inscrição.",
     ],
     contactLabel: "Contactar o clube para pagamento",
+  },
+  registration_partner_link: {
+    eyebrow: "Anunciar parceiro(a)",
+    subject: "Já podes anunciar o teu parceiro(a)",
+    title: "Já sabes com quem vais jogar?",
+    text:
+      "A tua pré-inscrição reservou a vaga da dupla. Agora podes anunciar o teu parceiro(a) directamente no site, sem precisares de contactar o clube.",
+    badge: "Vaga reservada",
+    tone: "info",
+    stepsTitle: "Como funciona",
+    steps: [
+      "Abre o link pessoal abaixo (não o partilhes com outras pessoas).",
+      "Indica o nome, telefone e t-shirt do teu parceiro(a).",
+      "O teu parceiro(a) recebe a confirmação da pré-inscrição por email, se o indicares.",
+    ],
+    contactLabel: "Falar com a organização",
   },
   registration_confirmed: {
     eyebrow: "Inscrição confirmada",
@@ -238,6 +254,19 @@ export function renderEmail(event, config, summary = null) {
     place ? detailRow("Local", escapeHtml(place)) : "",
   ].join("\n");
 
+  const announceBlock = info.announceUrl
+    ? `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:22px 0 0 0;background:#e6efff;border:1px solid #7bb0ff;border-radius:14px">
+<tr><td style="padding:18px 20px">
+<div style="font-size:11px;font-weight:bold;letter-spacing:1.5px;color:#1f4f99;text-transform:uppercase">Parceiro(a) por anunciar</div>
+<p style="margin:6px 0 14px 0;font-size:14px;line-height:1.55;color:#20365c">Quando souberes com quem vais jogar, anuncia o teu parceiro(a) através deste link pessoal${
+      info.announceDeadline
+        ? ` até <strong>${escapeHtml(info.announceDeadline)}</strong>`
+        : ""
+    }. Não partilhes este link.</p>
+${button(info.announceUrl, "Anunciar parceiro(a)", true)}
+</td></tr></table>`
+    : "";
+
   const steps = message.steps.map((step, index) =>
     `<tr><td width="34" valign="top" style="padding:0 0 12px 0"><div style="width:24px;height:24px;line-height:24px;border-radius:12px;background:#04221c;color:#54f653;font-size:12px;font-weight:bold;text-align:center">${
       index + 1
@@ -326,6 +355,7 @@ ${registrationRows}
 </table>
 </td></tr>
 </table>
+${announceBlock}
 
 <div style="margin:26px 0 12px 0;font-size:11px;font-weight:bold;letter-spacing:2px;color:#0b6b3a;text-transform:uppercase">${
     escapeHtml(message.stepsTitle)

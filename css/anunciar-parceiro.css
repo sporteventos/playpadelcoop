@@ -1,0 +1,80 @@
+.partner-announce-fields {
+  grid-template-columns: 1fr 1fr;
+}
+
+.partner-announce-fields__wide {
+  grid-column: 1 / -1;
+}
+
+.partner-announce-fields select {
+  width: 100%;
+  padding: 0.9rem 0;
+  border: 0;
+  outline: 0;
+  color: var(--tp-text);
+  background: transparent;
+  font: inherit;
+  font-size: 0.85rem;
+}
+
+.partner-announce-fields select option {
+  color: #111;
+}
+
+.partner-announce-meta {
+  margin: 0.6rem 0 1rem;
+}
+
+.partner-announce-note {
+  display: flex;
+  gap: 0.55rem;
+  margin: 0 0 1rem;
+  color: var(--tp-muted);
+  font-size: 0.75rem;
+  line-height: 1.55;
+}
+
+.partner-announce-note i {
+  color: var(--tp-accent);
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+.partner-announce-result {
+  text-align: center;
+}
+
+.partner-announce-result > i {
+  font-size: 3rem;
+  color: var(--status-color, var(--tp-accent));
+}
+
+.partner-announce-result h2 {
+  margin: 0.6rem 0 0.4rem;
+  color: var(--tp-text);
+  font-family: "Barlow Condensed", sans-serif;
+  font-size: 2rem;
+  text-transform: uppercase;
+}
+
+.partner-announce-result p {
+  margin: 0 auto 1.4rem;
+  max-width: 34rem;
+  color: var(--tp-muted);
+  font-size: 0.85rem;
+  line-height: 1.6;
+}
+
+.partner-announce-result .tp-button {
+  display: inline-flex;
+}
+
+.partner-announce-fields .invalid {
+  border-color: var(--tp-danger);
+}
+
+@media (max-width: 640px) {
+  .partner-announce-fields {
+    grid-template-columns: 1fr;
+  }
+}

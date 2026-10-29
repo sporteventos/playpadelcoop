@@ -6804,7 +6804,7 @@ async function renderInscricoes() {
 
       ${reservasPend > 0 ? `<div class="card" style="padding:.7rem 1rem;margin-bottom:1rem;background:rgba(255,176,32,.08);border:1px solid rgba(255,176,32,.25);display:flex;align-items:center;gap:.6rem">
         <i class="ph ph-warning" style="color:#FFB020;font-size:1.3rem"></i>
-        <div style="font-size:.82rem;color:var(--branco)"><strong>${reservasPend}</strong> reserva(s) com parceiro por anunciar. <span style="color:var(--cinza-texto)">Usa o filtro "Reservas" e a acção <i class="ph ph-user-plus"></i> para anunciar o parceiro.</span></div>
+        <div style="font-size:.82rem;color:var(--branco)"><strong>${reservasPend}</strong> reserva(s) com parceiro por anunciar. <span style="color:var(--cinza-texto)">Usa o filtro "Reservas" e a acção <i class="ph ph-user-plus"></i> para anunciar o parceiro. Os jogadores com email também podem anunciar o parceiro sozinhos através do link enviado por email.</span></div>
       </div>` : ''}
 
       ${total > 0 ? _insDashboardHtml(entries) : ''}
