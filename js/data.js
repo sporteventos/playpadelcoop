@@ -190,6 +190,14 @@ const PP_CLOUD = {
   rowId: 'playpadelcoop-main',
   keys: ['campos', 'categorias', 'grupos', 'jogadores', 'duplas', 'jogos', 'fasefinal', 'telefones', 'inscricoes', 'patrocinadores', 'parceiros', 'config'],
 };
+function ppHasStaffSession() { return !!(window.PP_AUTH && window.PP_AUTH.token); }
+// Visitantes só lêem vistas sem contactos; o staff autenticado lê as tabelas completas.
+var PP_PUBLIC_INSCRICOES_COLS = 'id,criadoem,tipo,genero,categoria,nome1,nome2,estado,parceiro,parid,reservado';
+async function ppCloudRpc(name, body) {
+  var r = await fetch(PP_CLOUD.url + '/rest/v1/rpc/' + name, { method: 'POST', headers: ppCloudHeaders(), body: JSON.stringify(body || {}) });
+  if (!r.ok) throw new Error('Cloud rpc ' + name + ' failed: ' + r.status);
+  return r.json();
+}
 function ppCloudHeaders(prefer) {
   var token = (window.PP_AUTH && window.PP_AUTH.token) ? window.PP_AUTH.token : PP_CLOUD.key;
   var h = { 'apikey': PP_CLOUD.key, 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' };
@@ -240,7 +248,9 @@ async function ppCloudPushState(stateObj) {
   if (!r.ok) throw new Error('Cloud push failed: ' + r.status);
 }
 async function ppCloudFetchInscricoes() {
-  var endpoint = PP_CLOUD.url + '/rest/v1/' + encodeURIComponent(PP_CLOUD.inscricoesTable) + '?select=*&order=criadoem.desc';
+  var endpoint = ppHasStaffSession()
+    ? PP_CLOUD.url + '/rest/v1/' + encodeURIComponent(PP_CLOUD.inscricoesTable) + '?select=*&order=criadoem.desc'
+    : PP_CLOUD.url + '/rest/v1/inscricoes_publicas?select=' + PP_PUBLIC_INSCRICOES_COLS + '&order=criadoem.desc';
   var r = await fetch(endpoint, { headers: ppCloudHeaders() });
   if (!r.ok) throw new Error('Cloud inscricoes fetch failed: ' + r.status);
   var rows = await r.json();
@@ -250,22 +260,15 @@ async function ppCloudLookupInscricoes(criteria) {
   var input = criteria || {};
   var digits = String(input.telefone || '').replace(/\D/g, '');
   var id = String(input.id || '').trim();
-  var params = new URLSearchParams();
-  params.set('select', 'id,criadoem,tipo,genero,categoria,nome1,estado,parceiro,parid,reservado');
-  params.set('order', 'criadoem.desc');
-  params.set('limit', '10');
-  if (id) params.set('id', 'eq.' + id);
-  if (digits) {
-    if (digits.length < 8) return [];
-    var localDigits = digits.slice(-9);
-    params.set('telefone', 'like.*' + localDigits.split('').join('*') + '*');
-  }
-  if (!id && !digits) return [];
-  var endpoint = PP_CLOUD.url + '/rest/v1/' + encodeURIComponent(PP_CLOUD.inscricoesTable) + '?' + params.toString();
-  var r = await fetch(endpoint, { headers: ppCloudHeaders() });
-  if (!r.ok) throw new Error('Cloud inscricoes lookup failed: ' + r.status);
-  var rows = await r.json();
+  if (!id && digits.length < 8) return [];
+  var rows = await ppCloudRpc('registration_lookup', { p_phone: digits, p_reference: id });
   return Array.isArray(rows) ? rows : [];
+}
+async function ppCloudRegistrationConflict(categoria, people) {
+  return ppCloudRpc('registration_conflict', { p_categoria: categoria, p_people: people || [] });
+}
+async function ppCloudPlayerContactHint(nome) {
+  return ppCloudRpc('player_contact_hint', { p_nome: nome });
 }
 async function ppCloudUpsertInscricao(entry) {
   var endpoint = PP_CLOUD.url + '/rest/v1/' + encodeURIComponent(PP_CLOUD.inscricoesTable) + '?on_conflict=id';
@@ -278,7 +281,8 @@ async function ppCloudUpsertInscricao(entry) {
   payload.criadoem = entry.criadoem || entry.criadoEm || null;
   var r = await fetch(endpoint, {
     method: 'POST',
-    headers: ppCloudHeaders('resolution=merge-duplicates,return=minimal'),
+    // Visitantes só podem inserir: o upsert exige leitura da linha, reservada ao staff.
+    headers: ppCloudHeaders(ppHasStaffSession() ? 'resolution=merge-duplicates,return=minimal' : 'return=minimal'),
     body: JSON.stringify([payload]),
   });
   if (!r.ok) throw new Error('Cloud inscricao upsert failed: ' + r.status);
@@ -355,8 +359,10 @@ async function ppTableDeleteMissing(table, localIds, idCol) {
   }
 }
 
+var PP_PUBLIC_VIEWS = { jogadores: 'jogadores_publicos' };
 async function ppTablePull(table) {
-  var r = await fetch(PP_CLOUD.url + '/rest/v1/' + table + '?select=raw', { headers: ppCloudHeaders() });
+  var source = (!ppHasStaffSession() && PP_PUBLIC_VIEWS[table]) || table;
+  var r = await fetch(PP_CLOUD.url + '/rest/v1/' + source + '?select=raw', { headers: ppCloudHeaders() });
   if (!r.ok) throw new Error('pull ' + table + ' ' + r.status);
   return (await r.json()).map(function (x) { return x.raw; });
 }
@@ -375,9 +381,22 @@ async function ppUpsertMap(table, keyCol, valCol, obj, deleteMissing) {
 }
 
 function ppApplyNormalizedState(state) {
+  // Uma leitura anónima não traz contactos: preservar os que já existem localmente
+  // para que o Admin nunca os apague ao sincronizar antes do login.
+  if (!state._authed && Array.isArray(state.jogadores)) {
+    var localById = {};
+    (ppLoad('jogadores') || []).forEach(function (j) { if (j && j.id != null) localById[String(j.id)] = j; });
+    state.jogadores = state.jogadores.map(function (j) {
+      var prev = j && localById[String(j.id)];
+      if (!prev) return j;
+      var merged = Object.assign({}, j);
+      ['tel', 'telefone', 'email'].forEach(function (k) { if (prev[k] && !merged[k]) merged[k] = prev[k]; });
+      return merged;
+    });
+  }
   PP_ENTITIES.forEach(function (e) { if (Array.isArray(state[e.key])) ppSave(e.key, state[e.key]); });
   if (state.fasefinal) ppSave('fasefinal', state.fasefinal);
-  if (state.telefones) ppSave('telefones', state.telefones);
+  if (state.telefones && (state._authed || Object.keys(state.telefones).length)) ppSave('telefones', state.telefones);
   if (state.config && Object.keys(state.config).length) {
     var merged = Object.assign({}, DEFAULTS.config, ppLoad('config') || {}, state.config);
     ppSave('config', merged);
@@ -385,6 +404,7 @@ function ppApplyNormalizedState(state) {
 }
 
 async function ppNormalizedPull() {
+  var authed = ppHasStaffSession();
   var results = await Promise.all(PP_ENTITIES.map(function (e) { return ppTablePull(e.table); }));
   var state = {};
   PP_ENTITIES.forEach(function (e, i) { state[e.key] = results[i]; });
@@ -396,6 +416,7 @@ async function ppNormalizedPull() {
   state.fasefinal = trio[0];
   state.telefones = trio[1];
   state.config = trio[2];
+  state._authed = authed;
   var hasAny = PP_ENTITIES.some(function (e) { return (state[e.key] || []).length; })
     || Object.keys(state.fasefinal).length || Object.keys(state.telefones).length || Object.keys(state.config).length;
   return hasAny ? state : null;
@@ -465,6 +486,8 @@ window.ppCloudState = {
   },
   fetchInscricoes: ppCloudFetchInscricoes,
   lookupInscricoes: ppCloudLookupInscricoes,
+  registrationConflict: ppCloudRegistrationConflict,
+  playerContactHint: ppCloudPlayerContactHint,
   upsertInscricao: ppCloudUpsertInscricao,
   deleteInscricao: ppCloudDeleteInscricao,
 };

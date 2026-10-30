@@ -409,7 +409,7 @@
   </div>
 </footer>
 
-<script src="js/data.js?v=23"></script>
+<script src="js/data.js?v=30"></script>
 <script src="js/nav-config.js" defer></script>
 <script src="js/mobile-app-shell.js"></script>
 <script src="js/tournament-public.js"></script>
@@ -514,49 +514,48 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // Mostrar campos de contacto do parceiro apenas quando há parceiro indicado
   var parceiroInput = document.getElementById('parceiro');
-  var _selectedPartner = null; // { tel, email } quando o parceiro é um jogador conhecido
-  function _maskTel(t){
-    var d = String(t || '').replace(/\s+/g, '');
-    if (d.length <= 4) return d;
-    return d.slice(0, 4) + ' •••• ' + d.slice(-3);
-  }
-  function _maskEmail(e){
-    e = String(e || '');
-    var at = e.indexOf('@');
-    if (at < 1) return e;
-    var user = e.slice(0, at), dom = e.slice(at + 1);
-    var uMask = user.charAt(0) + '•••';
-    return uMask + '@' + dom;
-  }
-  function applyKnownPartner(){
+  var _selectedPartner = null; // { hasEmail } quando o parceiro é um jogador conhecido (contactos ficam no servidor)
+  var _hintCache = {};
+  function unlockPartnerContacts(){
     var telF = document.getElementById('parceiroTel');
     var emailF = document.getElementById('parceiroEmail');
     var help = document.getElementById('parceiroTelHelp');
+    if (_selectedPartner) { telF.value = ''; emailF.value = ''; }
+    _selectedPartner = null;
+    telF.readOnly = false; telF.classList.remove('locked');
+    emailF.readOnly = false; emailF.classList.remove('locked');
+    if (help) help.textContent = 'Necessário para o parceiro ter a sua própria pré-inscrição e confirmação individual.';
+  }
+  async function applyKnownPartner(){
     var nome = parceiroInput.value.trim();
-    var cand = _playerCands && _playerCands[nome];
-    if (cand && cand.tel) {
-      _selectedPartner = { tel: cand.tel, email: cand.email || '' };
-      telF.value = _maskTel(cand.tel);
-      telF.readOnly = true; telF.classList.add('locked');
-      if (cand.email) {
-        emailF.value = _maskEmail(cand.email);
-        emailF.readOnly = true; emailF.classList.add('locked');
-      } else {
-        if (emailF.readOnly) emailF.value = '';
-        emailF.readOnly = false; emailF.classList.remove('locked');
-      }
-      if (help) help.textContent = cand.email
-        ? 'Parceiro(a) já registado — contactos obtidos automaticamente.'
-        : 'Parceiro(a) já registado — telefone obtido automaticamente. Podes indicar o email (opcional).';
-    } else {
-      if (_selectedPartner) { // estava bloqueado, agora nome livre → limpar
-        telF.value = ''; emailF.value = '';
-      }
-      _selectedPartner = null;
-      telF.readOnly = false; telF.classList.remove('locked');
-      emailF.readOnly = false; emailF.classList.remove('locked');
-      if (help) help.textContent = 'Necessário para o parceiro ter a sua própria pré-inscrição e confirmação individual.';
+    if (!(_playerCands && _playerCands[nome])) { unlockPartnerContacts(); return; }
+    var hint = _hintCache[nome];
+    if (!hint) {
+      try {
+        hint = window.ppCloudState && window.ppCloudState.playerContactHint
+          ? await window.ppCloudState.playerContactHint(nome) : null;
+      } catch (_) { hint = null; }
+      if (hint) _hintCache[nome] = hint;
     }
+    if (parceiroInput.value.trim() !== nome) return;
+    if (!hint || !hint.found) { unlockPartnerContacts(); return; }
+    var telF = document.getElementById('parceiroTel');
+    var emailF = document.getElementById('parceiroEmail');
+    var help = document.getElementById('parceiroTelHelp');
+    var wasKnown = !!_selectedPartner;
+    _selectedPartner = { hasEmail: !!hint.hasEmail };
+    telF.value = hint.telMask || '';
+    telF.readOnly = true; telF.classList.add('locked');
+    if (hint.hasEmail) {
+      emailF.value = hint.emailMask || '';
+      emailF.readOnly = true; emailF.classList.add('locked');
+    } else {
+      if (emailF.readOnly || wasKnown) emailF.value = '';
+      emailF.readOnly = false; emailF.classList.remove('locked');
+    }
+    if (help) help.textContent = hint.hasEmail
+      ? 'Parceiro(a) já registado — contactos obtidos automaticamente.'
+      : 'Parceiro(a) já registado — telefone obtido automaticamente. Podes indicar o email (opcional).';
   }
   function toggleParceiroFields(){
     var has = parceiroInput.value.trim().length > 0;
@@ -789,7 +788,8 @@ document.addEventListener('DOMContentLoaded', function () {
     var tshirtTamanho = form.tshirtTamanho.value;
     var parceiroTshirtNome = parceiroNome ? form.parceiroTshirtNome.value.trim() : '';
     var parceiroTshirtTamanho = parceiroNome ? form.parceiroTshirtTamanho.value : '';
-    if (_selectedPartner) { parceiroTel = _selectedPartner.tel; parceiroEmail = _selectedPartner.email || parceiroEmail; }
+    var knownPartner = !!(_selectedPartner && parceiroNome);
+    if (knownPartner) { parceiroTel = ''; parceiroEmail = _selectedPartner.hasEmail ? '' : parceiroEmail; }
     [form.parceiroTel, form.tshirtNome, form.tshirtTamanho, form.parceiroTshirtNome, form.parceiroTshirtTamanho].forEach(function(field){
       if (field) field.classList.remove('invalid');
     });
@@ -802,7 +802,7 @@ document.addEventListener('DOMContentLoaded', function () {
     if (!tshirtNome) { form.tshirtNome.classList.add('invalid'); erros.push('Indica o nome para a tua t-shirt.'); }
     if (!tshirtTamanho) { form.tshirtTamanho.classList.add('invalid'); erros.push('Selecciona o tamanho da tua t-shirt.'); }
     if (parceiroNome) {
-      if (!parceiroTel) { form.parceiroTel.classList.add('invalid'); erros.push('Telefone do(a) parceiro(a) obrigatório.'); }
+      if (!parceiroTel && !knownPartner) { form.parceiroTel.classList.add('invalid'); erros.push('Telefone do(a) parceiro(a) obrigatório.'); }
       if (!parceiroTshirtNome) { form.parceiroTshirtNome.classList.add('invalid'); erros.push('Indica o nome para a t-shirt do(a) parceiro(a).'); }
       if (!parceiroTshirtTamanho) { form.parceiroTshirtTamanho.classList.add('invalid'); erros.push('Selecciona o tamanho da t-shirt do(a) parceiro(a).'); }
       if (parceiroNome.toLowerCase() === nome1.toLowerCase()) { erros.push('O(a) parceiro(a) tem de ser diferente de ti.'); }
@@ -867,28 +867,20 @@ document.addEventListener('DOMContentLoaded', function () {
         reservado: false,
         telefone: parceiroTel,
         email: parceiroEmail,
-        observacoes: registrationMetaValue,
+        observacoes: knownPartner
+          ? JSON.stringify(Object.assign({}, registrationMeta, { contactoConhecido: true }))
+          : registrationMetaValue,
         estado: estadoInicial
       });
     }
     var entry = novos[0];
 
-    // Anti-duplicado: mesma categoria + mesmo telefone (dígitos) ou mesmo nome, para cada inscrito
+    // Anti-duplicado: mesma categoria + mesmo telefone (dígitos) ou mesmo nome, verificado no servidor
     try {
-      if (window.ppCloudState && window.ppCloudState.fetchInscricoes) {
-        var existentes = await window.ppCloudState.fetchInscricoes();
-        var dupName = null;
-        novos.forEach(function(en){
-          var telD = String(en.telefone || '').replace(/\D/g, '');
-          var nmN  = en.nome1.toLowerCase();
-          var hit  = (existentes || []).some(function(x){
-            if (x.categoria !== categoria) return false;
-            var xtel  = String(x.telefone || '').replace(/\D/g, '');
-            var xnome = String(x.nome1 || '').trim().toLowerCase();
-            return (telD && xtel === telD) || xnome === nmN;
-          });
-          if (hit && !dupName) dupName = en.nome1;
-        });
+      if (window.ppCloudState && window.ppCloudState.registrationConflict) {
+        var dupName = await window.ppCloudState.registrationConflict(categoria, novos.map(function(en){
+          return { nome: en.nome1, telefone: en.telefone || '' };
+        }));
         if (dupName) {
           errEl.textContent = 'Já existe uma pré-inscrição nesta categoria com o contacto ou nome de "' + dupName + '". Se precisas de alterar algo, contacta a organização.';
           errEl.style.display = '';

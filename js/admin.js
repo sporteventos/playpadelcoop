@@ -4793,6 +4793,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       if (window.ppDataReady) await window.ppDataReady;
       const result = await doLogin(u, p);
       if (result.ok) {
+        await staffResync();
         document.getElementById('loginOverlay').style.display = 'none';
         document.getElementById('adminShell').classList.add('visible');
         initAdmin();
@@ -4805,11 +4806,19 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   if (isLoggedIn()) {
+    await staffResync();
     document.getElementById('loginOverlay').style.display = 'none';
     document.getElementById('adminShell').classList.add('visible');
     initAdmin();
   }
 });
+
+// A primeira sincronização da página é anónima (sem contactos). Depois do login,
+// voltar a ler com a sessão de staff antes de qualquer edição ou envio.
+async function staffResync() {
+  if (!(window.PP_AUTH && window.PP_AUTH.token) || !window.ppCloudState) return;
+  try { await window.ppCloudState.pullToLocal(); } catch (_) {}
+}
 
 function initAdmin() {
   // Populate entity stores if they're empty (e.g. first load on file:// protocol)
