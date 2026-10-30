@@ -6760,7 +6760,7 @@ async function renderInscricoes() {
         <div style="display:flex;gap:.5rem;flex-wrap:wrap">
           <button class="btn btn-primary" id="insAdminNew"><i class="ph ph-plus"></i> Nova pré-inscrição</button>
           <button class="btn btn-secondary" id="insAdminExportCsv"><i class="ph ph-table"></i> Exportar CSV</button>
-          <button class="btn" style="background:rgba(255,74,74,.12);color:#FF4A4A;border:1px solid rgba(255,74,74,.25)" id="insAdminClear"><i class="ph ph-trash"></i> Limpar tudo</button>
+          <button class="btn danger-btn" style="background:rgba(255,74,74,.12);color:#FF4A4A;border:1px solid rgba(255,74,74,.25)" id="insAdminClear"><i class="ph ph-trash"></i> Limpar tudo</button>
         </div>
       </div>
 
