@@ -351,9 +351,9 @@ document.addEventListener('DOMContentLoaded', function () {
     var maleCategories = categories.filter(function (cat) { return (cat.tipo || cat.id.charAt(0)) !== 'F'; });
     var femaleCategories = categories.filter(function (cat) { return (cat.tipo || cat.id.charAt(0)) === 'F'; });
     document.getElementById('capacitySummary').innerHTML =
-      '<section class="ins-capacity-group"><div class="ins-capacity-group__head"><i class="ph ph-person"></i><strong>Masculino</strong><span>' + maleCategories.length + ' categorias</span></div>'
+      '<section class="ins-capacity-group"><div class="ins-capacity-group__head"><i class="ph ph-gender-male"></i><strong>Masculino</strong><span>' + maleCategories.length + ' categorias</span></div>'
         + '<div class="ins-capacity-row ins-capacity-row--male">' + maleCategories.map(capacityCard).join('') + '</div></section>'
-      + '<section class="ins-capacity-group"><div class="ins-capacity-group__head"><i class="ph ph-person-simple-dress"></i><strong>Feminino</strong><span>' + femaleCategories.length + ' categorias</span></div>'
+      + '<section class="ins-capacity-group"><div class="ins-capacity-group__head"><i class="ph ph-gender-female"></i><strong>Feminino</strong><span>' + femaleCategories.length + ' categorias</span></div>'
         + '<div class="ins-capacity-row ins-capacity-row--female">' + femaleCategories.map(capacityCard).join('') + '</div></section>';
     ALL = buildDuplas(entries);
     var registrationStats = ppRegistrationStats(entries);
