@@ -6751,7 +6751,7 @@ async function renderInscricoes() {
   categorias.forEach(c => { catMap[c.id] = c.nome; });
 
   el.innerHTML = `
-    <div style="max-width:1100px">
+    <div style="width:100%">
       <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;flex-wrap:wrap;margin-bottom:1.25rem">
         <div>
           <h2 style="margin:0 0 .25rem;font-family:'Barlow Condensed',sans-serif;font-size:1.5rem;text-transform:uppercase">Pré-Inscrições</h2>
@@ -6852,11 +6852,11 @@ async function renderInscricoes() {
             <button class="btn-icon" title="Limpar filtros" onclick="_insClearFilters()"><i class="ph ph-x-circle" style="color:var(--cinza-texto)"></i></button>
             <span id="insFiltroCount" style="font-size:.72rem;color:var(--cinza-texto);margin-left:auto">${total} de ${total}</span>
           </div>
-          <div class="card" style="padding:0;overflow:hidden">
-            <table style="width:100%;border-collapse:collapse;font-size:.83rem">
+          <div class="card" style="padding:0;overflow-x:auto">
+            <table style="width:100%;border-collapse:collapse;font-size:.83rem;min-width:900px">
               <thead>
                 <tr style="background:rgba(255,255,255,.03);border-bottom:1px solid var(--preto-borda)">
-                  <th style="padding:.65rem .9rem;text-align:left;font-weight:700;text-transform:uppercase;letter-spacing:.05em;font-size:.68rem;color:var(--cinza-texto)">Nome</th>
+                  <th style="padding:.65rem .9rem;text-align:left;font-weight:700;text-transform:uppercase;letter-spacing:.05em;font-size:.68rem;color:var(--cinza-texto);width:32%;min-width:280px">Nome</th>
                   <th style="padding:.65rem .9rem;text-align:left;font-weight:700;text-transform:uppercase;letter-spacing:.05em;font-size:.68rem;color:var(--cinza-texto)">Tipo</th>
                   <th style="padding:.65rem .9rem;text-align:left;font-weight:700;text-transform:uppercase;letter-spacing:.05em;font-size:.68rem;color:var(--cinza-texto)">Categoria</th>
                   <th style="padding:.65rem .9rem;text-align:left;font-weight:700;text-transform:uppercase;letter-spacing:.05em;font-size:.68rem;color:var(--cinza-texto)">Contacto</th>
