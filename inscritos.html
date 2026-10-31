@@ -11,7 +11,7 @@
   <link rel="stylesheet" href="css/style.css"/>
   <link rel="stylesheet" href="css/pages.css"/>
   <link rel="stylesheet" href="css/tournament-public.css"/>
-  <link rel="stylesheet" href="css/inscritos.css"/>
+  <link rel="stylesheet" href="css/inscritos.css?v=2"/>
   <script src="https://unpkg.com/@phosphor-icons/web@2.1.1/src/index.js" defer></script>
 </head>
 <body class="tournament-public tournament-registered">
@@ -343,7 +343,8 @@ document.addEventListener('DOMContentLoaded', function () {
       var v = availability[cat.id];
       var occupiedPct = v.total ? Math.min(100, Math.round((v.ocupadas / v.total) * 100)) : 0;
       var waitlistText = v.suplentes ? ' · ' + v.suplentes + ' jogador(es) suplente(s)' : '';
-      return '<div class="ins-capacity-card' + (v.livres <= 0 ? ' full' : '') + '"><strong>' + esc(cat.id + ' · ' + cat.nome) + '</strong><span>'
+      var almost = v.livres > 0 && v.total && v.livres / v.total <= 0.25;
+      return '<div class="ins-capacity-card' + (v.livres <= 0 ? ' full' : (almost ? ' almost' : '')) + '"><strong>' + esc(cat.id + ' · ' + cat.nome) + '</strong><span>'
         + (v.livres <= 0 ? 'Lotada' + waitlistText : v.livres + ' de ' + v.total + ' vagas livres' + waitlistText)
         + '</span><div class="ins-capacity-card__bar"><i style="width:' + occupiedPct + '%"></i></div></div>';
     }
