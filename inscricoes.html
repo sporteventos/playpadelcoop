@@ -830,7 +830,7 @@ document.addEventListener('DOMContentLoaded', function () {
         return id !== categoria && cat && (cat.tipo || id.charAt(0)) === genero && VAGAS[id].livres >= vagasNec;
       });
       var alternativesText = alternativas.length ? '\n\nCategorias com vagas: ' + alternativas.join(', ') + '.' : '';
-      if (!confirm('A categoria ' + categoria + ' não tem vagas suficientes para esta inscrição. Queres inscrever-te como suplente? A organização contacta-te se abrir uma vaga.' + alternativesText)) return;
+      if (!confirm('A categoria ' + categoria + ' não tem vagas suficientes para esta inscrição. Queres inscrever-te como suplente? Se abrir uma vaga, sobes automaticamente pela ordem da lista de espera e recebes um email.' + alternativesText)) return;
     }
     var estadoInicial = waitlist ? 'espera' : 'nova';
 
@@ -956,7 +956,7 @@ document.addEventListener('DOMContentLoaded', function () {
     if (successMsg) {
       successMsg.textContent = 'Olá ' + nome1 + '! '
         + (waitlist
-            ? 'Entraste na LISTA DE ESPERA da categoria ' + categoria + '. A organização contacta-te se abrir uma vaga.'
+            ? 'Entraste na LISTA DE ESPERA da categoria ' + categoria + '. Se abrir uma vaga, sobes automaticamente pela ordem da lista de espera e recebes um email.'
             : 'A tua pré-inscrição na categoria ' + categoria + ' foi recebida e está pendente de pagamento.')
         + (reserva
             ? (form.email.value.trim()
@@ -972,7 +972,7 @@ document.addEventListener('DOMContentLoaded', function () {
       paymentNotice.classList.toggle('is-waitlist', waitlist);
       paymentNoticeTitle.textContent = waitlist ? 'Aguarda uma vaga antes de pagar' : 'Pagamento presencial no clube';
       paymentNoticeText.textContent = waitlist
-        ? 'Não efectues qualquer pagamento enquanto estiveres na lista de espera. Se abrir uma vaga, a organização entrará em contacto contigo com os próximos passos.'
+        ? 'Não efectues qualquer pagamento enquanto estiveres na lista de espera. Se abrir uma vaga, a tua inscrição sobe automaticamente pela ordem da lista de espera e recebes um email com os próximos passos.'
         : 'Para confirmar a inscrição e garantir a vaga, contacta o clube e efectua o pagamento directamente nas instalações. A pré-inscrição só fica confirmada depois de a organização validar o pagamento.';
     }
 

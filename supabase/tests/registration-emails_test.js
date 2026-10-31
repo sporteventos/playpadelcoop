@@ -50,7 +50,7 @@ Deno.test("templates: acknowledgement, waitlist, promotion, confirmation and esc
     ...event,
     event_name: "registration_promoted",
   }, config);
-  assert(promoted.body.includes("retirou a tua inscrição da lista de espera"));
+  assert(promoted.body.includes("a tua inscrição saiu da lista de espera"));
   const confirmed = renderEmail({
     ...event,
     event_name: "registration_confirmed",

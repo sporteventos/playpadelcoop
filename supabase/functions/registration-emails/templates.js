@@ -39,7 +39,7 @@ const MESSAGES = {
     stepsTitle: "Importante",
     steps: [
       "Não efectues qualquer pagamento enquanto estiveres na lista de espera.",
-      "Se abrir uma vaga, a organização entra em contacto contigo.",
+      "Se abrir uma vaga, sobes automaticamente pela ordem da lista de espera e recebes um email.",
       "Podes acompanhar o estado da tua inscrição a qualquer momento.",
     ],
     contactLabel: "Falar com a organização",
@@ -49,7 +49,7 @@ const MESSAGES = {
     subject: "Vaga disponível para a tua inscrição",
     title: "Abriu uma vaga para ti!",
     text:
-      "A organização retirou a tua inscrição da lista de espera. A pré-inscrição está agora pendente de pagamento.",
+      "Abriu uma vaga na categoria e a tua inscrição saiu da lista de espera. A pré-inscrição está agora pendente de pagamento.",
     badge: "Pendente de pagamento",
     tone: "warning",
     stepsTitle: "Próximos passos",

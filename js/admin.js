@@ -2615,7 +2615,7 @@ function renderConfigPanel() {
     <div style="font-size:.72rem;color:var(--cinza-texto);padding:.2rem 0 .5rem">Estas datas definem os limites do calendário de jogos e a alocação automática das fases finais. Os campos <strong>— fim</strong> dos Quartos e Meias são opcionais: se preenchidos, esses jogos são distribuídos automaticamente por vários dias (do início ao fim). Deixe em branco para agendar tudo num único dia. O intervalo geral (${escHtml(str('dataGruposInicio','2026-11-26'))} a ${escHtml(str('dataFinais','2026-12-05'))}) é aplicado aos seletores de data.</div>
 
     ${section('Capacidade de Inscrições')}
-    <div style="font-size:.78rem;color:var(--cinza-texto);padding:.35rem 0 .65rem">A capacidade é definida por categoria em <strong style="color:var(--branco)">Categorias &amp; Grupos</strong>. Cada grupo tem 4 duplas (8 jogadores). Quando uma categoria atinge o limite, as novas inscrições entram como suplentes nessa categoria.</div>
+    <div style="font-size:.78rem;color:var(--cinza-texto);padding:.35rem 0 .65rem">A capacidade é definida por categoria em <strong style="color:var(--branco)">Categorias &amp; Grupos</strong>. Cada grupo tem 4 duplas (8 jogadores). Quando uma categoria atinge o limite, as novas inscrições entram como suplentes nessa categoria. Quando abre uma vaga, o primeiro suplente da categoria sobe automaticamente e recebe um email.</div>
     ${section('Visibilidade de Páginas')}
     ${fieldToggle('calendarioVisible',    'Calendário',               'ph-calendar',          true)}
     ${fieldToggle('scoreboardVisible',    'Quadro de Apuramento',     'ph-monitor-play',      true)}
@@ -6581,6 +6581,30 @@ function _insTshirtLabel(raw, id) {
   }
 }
 
+// Posição na lista de espera por categoria (mesma regra do servidor e de inscritos.html):
+// ordem de inscrição; uma dupla conta como uma posição.
+function _insWaitlistPositions(entries) {
+  const units = {};
+  (entries || []).forEach(x => {
+    if (!x || x.estado !== 'espera') return;
+    const key = x.parid || x.id;
+    const t = Date.parse(x.criadoem || x.criadoEm || '') || 0;
+    if (!units[key]) units[key] = { key, cat: x.categoria || '', t, ids: [] };
+    units[key].t = Math.min(units[key].t, t);
+    units[key].ids.push(x.id);
+  });
+  const pos = {}, count = {};
+  Object.values(units)
+    .sort((a, b) => a.t - b.t || String(a.key).localeCompare(String(b.key)))
+    .forEach(u => { count[u.cat] = (count[u.cat] || 0) + 1; u.ids.forEach(id => { pos[id] = count[u.cat]; }); });
+  return pos;
+}
+let _insWaitlistCache = { entries: null, pos: {} };
+function _insWaitlistPosition(e, entries) {
+  if (_insWaitlistCache.entries !== entries) _insWaitlistCache = { entries, pos: _insWaitlistPositions(entries) };
+  return _insWaitlistCache.pos[e.id];
+}
+
 function _insRowHtml(e, entries) {
   const availability = _insAvailabilityLabel(e.observacoes);
   const tshirt = _insTshirtLabel(e.observacoes, e.id);
@@ -6625,7 +6649,7 @@ function _insRowHtml(e, entries) {
                       ${e.estado==='cancelada'
                         ? `<span style="font-size:.66rem;font-weight:700;text-transform:uppercase;padding:.2rem .55rem;border-radius:999px;background:rgba(255,74,74,.15);color:#FF7A7A">Cancelada</span>`
                         : (e.estado==='espera'
-                          ? `<span style="font-size:.66rem;font-weight:700;text-transform:uppercase;padding:.2rem .55rem;border-radius:999px;background:rgba(255,176,32,.15);color:#FFB020">Em espera</span>`
+                          ? `<span style="font-size:.66rem;font-weight:700;text-transform:uppercase;padding:.2rem .55rem;border-radius:999px;background:rgba(255,176,32,.15);color:#FFB020">Em espera${_insWaitlistPosition(e, entries) ? ' #' + _insWaitlistPosition(e, entries) : ''}</span>`
                           : `<span style="font-size:.66rem;font-weight:700;text-transform:uppercase;padding:.2rem .55rem;border-radius:999px;background:${e.estado==='confirmada'?'rgba(0,195,123,.15)':'rgba(245,197,24,.12)'};color:${e.estado==='confirmada'?'var(--verde)':'var(--amarelo)'}">
                         ${e.estado==='confirmada' ? 'Confirmada' : 'Pendente'}
                       </span>`)}
@@ -6635,7 +6659,7 @@ function _insRowHtml(e, entries) {
                       ${e.telefone && e.estado!=='cancelada' ? `<a class="btn-icon" style="color:#25D366" target="_blank" title="Contactar por WhatsApp (${e.estado==='confirmada'?'confirmação':'lembrete de pagamento'})" href="${waLink(e.telefone, _insWaMsg(e))}"><i class="ph ph-whatsapp-logo"></i></a>` : ''}
                       ${e.reservado && e.estado!=='cancelada' ? `<button class="btn-icon" title="Anunciar parceiro (cria a pré-inscrição do parceiro)" onclick="insAdminAnnounce('${escHtml(e.id)}')"><i class="ph ph-user-plus" style="color:#7BB0FF"></i></button>` : ''}
                       ${e.estado==='espera'
-                        ? `<button class="btn-icon" title="Promover da lista de espera (passa a pendente e ocupa vaga)" onclick="insAdminPromote('${escHtml(e.id)}')"><i class="ph ph-arrow-fat-up" style="color:var(--verde)"></i></button>`
+                        ? `<button class="btn-icon" title="Promover já da lista de espera (passa a pendente e ocupa vaga). Normalmente acontece sozinho quando abre uma vaga, pela ordem da lista." onclick="insAdminPromote('${escHtml(e.id)}')"><i class="ph ph-arrow-fat-up" style="color:var(--verde)"></i></button>`
                         : (e.estado==='cancelada'
                           ? `<button class="btn-icon" title="Reativar inscrição (volta a pendente)" onclick="insAdminReactivate('${escHtml(e.id)}')"><i class="ph ph-arrow-u-up-left" style="color:var(--verde)"></i></button>`
                           : (e.estado==='confirmada'
@@ -7148,8 +7172,9 @@ window.insAdminAnnounce = async function(id) {
     entries.push(sib);
     localStorage.setItem('pp_inscricoes', JSON.stringify(entries));
     if (window.ppCloudState && window.ppCloudState.upsertInscricao) {
-      try { await window.ppCloudState.upsertInscricao(e); } catch (_) {}
+      // Parceiro primeiro, para a promoção automática avaliar a dupla completa.
       try { await window.ppCloudState.upsertInscricao(sib); } catch (_) {}
+      try { await window.ppCloudState.upsertInscricao(e); } catch (_) {}
     }
     if (window.ppCloudState && window.ppCloudState.enabled) await window.ppCloudState.pushFromLocal();
     if (typeof Auth !== 'undefined' && Auth && Auth.log) Auth.log('ANUNCIAR_PARCEIRO', 'inscricoes', `${e.nome1} → ${nome}`);
@@ -7251,7 +7276,7 @@ window.insAdminCancel = async function(id) {
     if (window.ppCloudState && window.ppCloudState.upsertInscricao) await window.ppCloudState.upsertInscricao(e);
     Auth.log('CANCELAR_INSCRICAO', 'inscricoes', `${e.nome1}${e.parceiro ? ' (par: ' + e.parceiro + ')' : ''} (${e.categoria || 'Sem categoria'})`);
     renderInscricoes();
-    toast(`Inscrição de "${e.nome1}" cancelada. Vaga libertada.`, 'warning');
+    toast(`Inscrição de "${e.nome1}" cancelada. Vaga libertada — se houver lista de espera, o primeiro sobe automaticamente.`, 'warning');
   } catch(err) { toast('Erro ao cancelar: ' + (err && err.message || err), 'error'); }
 };
 
